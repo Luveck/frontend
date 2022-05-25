@@ -1,26 +1,24 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { Router } from '@angular/router';
+
 import { CoreConfigService } from '@core/services/config.service';
 
 @Component({
-  selector: 'app-auth-login-v2',
-  templateUrl: './auth-login-v2.component.html',
-  styleUrls: ['./auth-login-v2.component.scss'],
+  selector: 'app-auth-login-v1',
+  templateUrl: './auth-login-v1.component.html',
+  styleUrls: ['./auth-login-v1.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class AuthLoginV2Component implements OnInit {
+export class AuthLoginV1Component implements OnInit {
   //  Public
   public coreConfig: any;
   public loginForm: FormGroup;
-  public loading = false;
   public submitted = false;
-  public returnUrl: string;
-  public error = '';
   public passwordTextType: boolean;
+  public _nivelDeSeguridad:number = 30
 
   // Private
   private _unsubscribeAll: Subject<any>;
@@ -29,13 +27,9 @@ export class AuthLoginV2Component implements OnInit {
    * Constructor
    *
    * @param {CoreConfigService} _coreConfigService
+   * @param {FormBuilder} _formBuilder
    */
-  constructor(
-    private _coreConfigService: CoreConfigService,
-    private _formBuilder: FormBuilder,
-    private _route: ActivatedRoute,
-    private _router: Router
-  ) {
+  constructor(private _coreConfigService: CoreConfigService, private _formBuilder: FormBuilder) {
     this._unsubscribeAll = new Subject();
 
     // Configure the layout
@@ -68,21 +62,16 @@ export class AuthLoginV2Component implements OnInit {
     this.passwordTextType = !this.passwordTextType;
   }
 
+  /**
+   * On Submit
+   */
   onSubmit() {
     this.submitted = true;
-
+    console.log(this.loginForm.value)
     // stop here if form is invalid
     if (this.loginForm.invalid) {
       return;
     }
-
-    // Login
-    this.loading = true;
-
-    // redirect to home page
-    setTimeout(() => {
-      this._router.navigate(['/']);
-    }, 100);
   }
 
   // Lifecycle Hooks
@@ -94,11 +83,8 @@ export class AuthLoginV2Component implements OnInit {
   ngOnInit(): void {
     this.loginForm = this._formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required]
+      password: ['', [Validators.required]]
     });
-
-    // get return url from route parameters or default to '/'
-    this.returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/';
 
     // Subscribe to config changes
     this._coreConfigService.config.pipe(takeUntil(this._unsubscribeAll)).subscribe(config => {
@@ -114,4 +100,28 @@ export class AuthLoginV2Component implements OnInit {
     this._unsubscribeAll.next();
     this._unsubscribeAll.complete();
   }
+
+/*   validNivelPass(e:any){
+    let pass = e.target.value
+
+    if (pass.length!=0){
+      if (tiene_numeros(pass) && tiene_letras(pass)){
+         this._nivelDeSeguridad += 30;
+      }
+      if (tiene_minusculas(pass) && tiene_mayusculas(pass)){
+         this._nivelDeSeguridad += 30;
+      }
+      if (pass.length >= 4 && pass.length <= 5){
+         this._nivelDeSeguridad += 10;
+      }else{
+         if (pass.length >= 6 && pass.length <= 8){
+            this._nivelDeSeguridad += 30;
+         }else{
+            if (pass.length > 8){
+               this._nivelDeSeguridad += 40;
+            }
+         }
+      }
+   }
+  } */
 }
