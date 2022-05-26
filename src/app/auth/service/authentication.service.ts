@@ -81,10 +81,10 @@ export class AuthenticationService {
       ); */
   }
 
-  login(email: string, password: string) {
+  login(userInfo:{email: string, password: string}) {
     return this._http
-      .post<any>(`${environment.apiUrl}/users/authenticate`, { email, password })
-      .pipe(
+      .post<any>(`${environment.apiUrl}/Security/login`, userInfo).subscribe(res => console.log(res))
+      /* .pipe(
         map(user => {
           // login successful if there's a jwt token in the response
           if (user && user.token) {
@@ -108,7 +108,7 @@ export class AuthenticationService {
 
           return user;
         })
-      );
+      ); */
   }
 
   /**

@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 import { CoreConfigService } from '@core/services/config.service';
+import { AuthenticationService } from 'app/auth/service';
 
 @Component({
   selector: 'app-auth-login-v1',
@@ -29,7 +30,7 @@ export class AuthLoginV1Component implements OnInit {
    * @param {CoreConfigService} _coreConfigService
    * @param {FormBuilder} _formBuilder
    */
-  constructor(private _coreConfigService: CoreConfigService, private _formBuilder: FormBuilder) {
+  constructor(private _coreConfigService: CoreConfigService, private _formBuilder: FormBuilder, private authenticationService:AuthenticationService) {
     this._unsubscribeAll = new Subject();
 
     // Configure the layout
@@ -67,10 +68,11 @@ export class AuthLoginV1Component implements OnInit {
    */
   onSubmit() {
     this.submitted = true;
-    console.log(this.loginForm.value)
     // stop here if form is invalid
     if (this.loginForm.invalid) {
       return;
+    }else{
+      this.authenticationService.login(this.loginForm.value)
     }
   }
 
