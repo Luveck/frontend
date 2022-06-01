@@ -19,7 +19,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.contentHeader = {
       headerTitle: 'Home',
-      actionButton: true,
+      actionButton: false,
       breadcrumb: {
         type: '',
         links: [

@@ -15,13 +15,13 @@ const routes = [
     path: 'sample',
     component: SampleComponent,
     data: { animation: 'sample' },
-    canActivate: [AuthGuard]
+    //canActivate: [AuthGuard]
   },
   {
     path: 'home',
     component: HomeComponent,
     data: { animation: 'home' },
-    canActivate: [AuthGuard]
+    //canActivate: [AuthGuard]
   }
 ];
 

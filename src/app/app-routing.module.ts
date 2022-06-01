@@ -9,7 +9,6 @@ const routes: Routes = [
   {
     path: 'sample',
     loadChildren: () => import('./main/sample/sample.module').then(m => m.SampleModule),
-
   },
   {
     path: '',

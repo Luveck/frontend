@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
@@ -17,6 +17,11 @@ import { coreConfig } from 'app/app-config';
 import { AppComponent } from 'app/app.component';
 import { LayoutModule } from 'app/layout/layout.module';
 import { AppRoutingModule } from './app-routing.module';
+
+//formato de fechas
+import { registerLocaleData } from '@angular/common';
+import localeEsHn from '@angular/common/locales/es-HN';
+registerLocaleData(localeEsHn, 'es-Hn');
 
 @NgModule({
   declarations: [AppComponent],
@@ -40,7 +45,9 @@ import { AppRoutingModule } from './app-routing.module';
     // App modules
     LayoutModule
   ],
-
+  providers: [
+    { provide: LOCALE_ID, useValue: 'es-Hn' },
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule {}

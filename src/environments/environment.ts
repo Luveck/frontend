@@ -4,8 +4,7 @@
 
 export const environment = {
   production: false,
-  hmr: false,
-  apiUrl: 'https://luveckservicesecurity.azurewebsites.net/api'
+  hmr: false
 };
 
 /*

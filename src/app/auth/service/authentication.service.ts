@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -10,7 +10,9 @@ import { ToastrService } from 'ngx-toastr';
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
   //public
+  baseUrl:string = 'https://luveckservicesecurity.azurewebsites.net/api'
   public currentUser: Observable<User>;
+
 
   //private
   private currentUserSubject: BehaviorSubject<User>;
@@ -52,8 +54,10 @@ export class AuthenticationService {
    * @returns user
    */
   register(userInfo:User){
+    console.log(`${this.baseUrl}/Security/Create`)
+    console.log(userInfo)
     return this._http
-      .post<any>(`${environment.apiUrl}/Security/Create`, userInfo).subscribe(res => console.log(res))
+      .post<any>(`${this.baseUrl}/Security/Create`, userInfo).subscribe(res => console.log(res))
 /*       .pipe(
         map(user => {
           // login successful if there's a jwt token in the response
@@ -83,7 +87,7 @@ export class AuthenticationService {
 
   login(userInfo:{email: string, password: string}) {
     return this._http
-      .post<any>(`${environment.apiUrl}/Security/login`, userInfo).subscribe(res => console.log(res))
+      .post<any>(`https://luveckservicesecurity.azurewebsites.net/api/Security/Login`, userInfo).subscribe(res => console.log(res))
       /* .pipe(
         map(user => {
           // login successful if there's a jwt token in the response
@@ -120,5 +124,21 @@ export class AuthenticationService {
     localStorage.removeItem('currentUser');
     // notify
     this.currentUserSubject.next(null);
+  }
+
+
+  registro(userInfo){
+
+    const params = {
+      userName: "Elvin",
+      email: "elvinj@gmail.com",
+      password: "G14t7227ls@dos",
+      name: "Elvin",
+      lastName: "Caceres",
+      dni: "0306-1998-00959",
+    }
+
+    var o = this._http.post('https://luveckservicesecurity.azurewebsites.net/api/Security/Create', params)
+    o.subscribe(res => console.log(res))
   }
 }

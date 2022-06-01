@@ -68,10 +68,11 @@ export class AuthRegisterV1Component implements OnInit {
   onSubmit() {
     this.submitted = true;
     // stop here if form is invalid
-    if (this.registerForm.invalid) {
+    if (!this.registerForm.invalid) {
       return;
     }else{
-      this.authenticationService.register(this.registerForm.value)
+      //console.log(this.registerForm.value)
+      this.authenticationService.registro(this.registerForm.value)
     }
   }
 
