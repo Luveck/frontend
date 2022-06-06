@@ -72,7 +72,7 @@ export class AuthRegisterV1Component implements OnInit {
       return;
     }else{
       //console.log(this.registerForm.value)
-      this.authenticationService.registro(this.registerForm.value)
+      this.authenticationService.register(this.registerForm.value)
     }
   }
 

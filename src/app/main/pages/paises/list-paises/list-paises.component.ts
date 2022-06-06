@@ -16,13 +16,12 @@ export class ListPaisesComponent implements OnInit {
   private _unsubscribeAll: Subject<any>;
   public contentHeader: object;
 
-  rows:Pais[]
   public ColumnMode = ColumnMode;
 
   @ViewChild(DatatableComponent) table: DatatableComponent;
   @ViewChild('tableRowDetails') tableRowDetails: any;
 
-  constructor(private _zonasServ:ZonasService) {
+  constructor(public zonasServ:ZonasService) {
     this._unsubscribeAll = new Subject();
   }
 
@@ -52,8 +51,10 @@ export class ListPaisesComponent implements OnInit {
       }
     };
 
-    this._zonasServ.getPaises()
-      .then(res => {console.log(res); this.rows = res})
-      .catch(err => console.log(err))
+    if(!this.zonasServ.listCountries){
+      this.zonasServ.getPaises()
+        .then(res => console.log(res))
+        .catch(err => console.log(err))
+    }
   }
 }

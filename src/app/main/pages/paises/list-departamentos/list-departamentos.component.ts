@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ZonasService } from 'app/main/services/zonas.service';
+import { BehaviorSubject, Subject } from 'rxjs';
+import { Departamento } from '../interfaces';
 
 @Component({
   selector: 'app-list-departamentos',
@@ -6,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./list-departamentos.component.scss']
 })
 export class ListDepartamentosComponent implements OnInit {
+  private _unsubscribeAll: Subject<any>;
   public contentHeader: object;
 
-  constructor() { }
+  rows:Departamento[]
+
+  constructor(private _zonasServ:ZonasService ) { }
 
   ngOnInit(): void {
     this.contentHeader = {
@@ -34,6 +40,10 @@ export class ListDepartamentosComponent implements OnInit {
         ]
       }
     };
+
+    this._zonasServ.getDepartamentos()
+      .then(res => {console.log(res); this.rows = res})
+      .catch(err => console.log(err))
   }
 
 }

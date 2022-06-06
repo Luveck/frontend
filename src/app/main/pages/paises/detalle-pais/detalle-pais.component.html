@@ -2,5 +2,80 @@
   <div class="content-body">
     <!-- content-header component -->
     <app-content-header [contentHeader]="contentHeader"></app-content-header>
+
+    <form class="form">
+      <div class="row">
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label for="first-name-column">Nombre</label>
+            <input
+              type="text"
+              id="first-name-column"
+              class="form-control"
+              placeholder="Nombre Pais"
+              name="fname-column"
+            />
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label for="last-name-column">iso3</label>
+            <input
+              type="text"
+              id="last-name-column"
+              class="form-control"
+              placeholder="iso3"
+              name="lname-column"
+            />
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label for="city-column">Código Area</label>
+            <input type="text" id="city-column" class="form-control" placeholder="+504" name="city-column" />
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label for="country-floating">Divisa</label>
+            <input
+              type="text"
+              id="country-floating"
+              class="form-control"
+              name="country-floating"
+              placeholder="HNL"
+            />
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label for="company-column">Nombre Divisa</label>
+            <input
+              type="text"
+              id="company-column"
+              class="form-control"
+              name="company-column"
+              placeholder="Divisa"
+            />
+          </div>
+        </div>
+        <div class="col-md-6 col-12">
+          <div class="form-group">
+            <label for="email-id-column">Simbolo Divisa</label>
+            <input
+              type="email"
+              id="email-id-column"
+              class="form-control"
+              name="email-id-column"
+              placeholder="L"
+            />
+          </div>
+        </div>
+        <div class="col-12">
+          <button type="submit" rippleEffect class="btn btn-primary mr-1">Submit</button>
+          <button type="reset" rippleEffect class="btn btn-outline-secondary">Reset</button>
+        </div>
+      </div>
+    </form>
   </div>
 </div>

@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
-import { environment } from 'environments/environment';
 import { User, Role } from 'app/auth/models';
-import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
+import { DataService } from 'app/main/services/data.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
@@ -21,8 +20,9 @@ export class AuthenticationService {
    *
    * @param {HttpClient} _http
    * @param {ToastrService} _toastrService
+   * @param {Router} _router
    */
-  constructor(private _http: HttpClient, private _toastrService: ToastrService) {
+  constructor(private _http: HttpClient, private _dataServ: DataService, private _router:Router) {
     this.currentUserSubject = new BehaviorSubject<User>(JSON.parse(localStorage.getItem('currentUser')));
     this.currentUser = this.currentUserSubject.asObservable();
   }
@@ -54,65 +54,28 @@ export class AuthenticationService {
    * @returns user
    */
   register(userInfo:User){
-    console.log(`${this.baseUrl}/Security/Create`)
-    console.log(userInfo)
-    return this._http
-      .post<any>(`${this.baseUrl}/Security/Create`, userInfo).subscribe(res => console.log(res))
-/*       .pipe(
-        map(user => {
-          // login successful if there's a jwt token in the response
-          if (user && user.token) {
-            // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('currentUser', JSON.stringify(user));
-
-            // Display welcome toast!
-            setTimeout(() => {
-              this._toastrService.success(
-                'You have successfully logged in as an ' +
-                  user.role +
-                  ' user to Vuexy. Now you can start to explore. Enjoy! 🎉',
-                '👋 Welcome, ' + user.firstName + '!',
-                { toastClass: 'toast ngx-toastr', closeButton: true }
-              );
-            }, 2500);
-
-            // notify
-            this.currentUserSubject.next(user);
-          }
-
-          return user;
-        })
-      ); */
+    this._http
+      .post<any>(`${this.baseUrl}/Security/Create`, userInfo)
+      .subscribe(user => {
+        if (user && user.token) {
+          localStorage.setItem('currentUser', JSON.stringify(user.token));
+          this.decodeToken(user.token)
+        }
+      })
   }
 
-  login(userInfo:{email: string, password: string}) {
-    return this._http
-      .post<any>(`https://luveckservicesecurity.azurewebsites.net/api/Security/Login`, userInfo).subscribe(res => console.log(res))
-      /* .pipe(
-        map(user => {
-          // login successful if there's a jwt token in the response
-          if (user && user.token) {
-            // store user details and jwt token in local storage to keep user logged in between page refreshes
-            localStorage.setItem('currentUser', JSON.stringify(user));
-
-            // Display welcome toast!
-            setTimeout(() => {
-              this._toastrService.success(
-                'You have successfully logged in as an ' +
-                  user.role +
-                  ' user to Vuexy. Now you can start to explore. Enjoy! 🎉',
-                '👋 Welcome, ' + user.firstName + '!',
-                { toastClass: 'toast ngx-toastr', closeButton: true }
-              );
-            }, 2500);
-
-            // notify
-            this.currentUserSubject.next(user);
-          }
-
-          return user;
-        })
-      ); */
+  login(userInfo: { email: string, password: string }) {
+    this._http
+      .post<any>(`${this.baseUrl}/Security/Login`, userInfo)
+      .subscribe(user => {
+        if (user && user.token) {
+          localStorage.setItem('currentUser', JSON.stringify(user.token));
+          this.decodeToken(user.token)
+          this._router.navigate(['/sample/home'])
+        }
+      }, ()=>{
+        this._dataServ.fir('Usuario o contraseña invalidos.', 'error')
+      })
   }
 
   /**
@@ -127,18 +90,24 @@ export class AuthenticationService {
   }
 
 
-  registro(userInfo){
 
-    const params = {
-      userName: "Elvin",
-      email: "elvinj@gmail.com",
-      password: "G14t7227ls@dos",
-      name: "Elvin",
-      lastName: "Caceres",
-      dni: "0306-1998-00959",
-    }
+  decodeToken (token:string) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
 
-    var o = this._http.post('https://luveckservicesecurity.azurewebsites.net/api/Security/Create', params)
-    o.subscribe(res => console.log(res))
+    let userInfo = JSON.parse(jsonPayload)
+    this.currentUserSubject.next(userInfo);
   }
 }
+
+/* const params = {
+  userName: "Elvin",
+  email: "elvinj@gmail.com",
+  password: "G14t7227ls@dos",
+  name: "Elvin",
+  lastName: "Caceres",
+  dni: "0306-1998-00959",
+} */

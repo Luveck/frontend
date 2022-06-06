@@ -21,37 +21,37 @@ const routes = [
     path: 'zona/listpaises',
     component: ListPaisesComponent,
     data: { animation: 'listpaises' },
-    //canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   },
   {
-    path: 'zona/detallepais',
+    path: 'zona/detallepais/:id',
     component: DetallePaisComponent,
     data: { animation: 'detallepais' },
-    //canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'zona/listdepartamentos',
     component: ListDepartamentosComponent,
     data: { animation: 'listdepartamentos' },
-    //canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'zona/detalledepartamento',
     component: DetalleDepartamentoComponent,
     data: { animation: 'detalledepartamento' },
-    //canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'zona/listciudades',
     component: ListCiudadesComponent,
     data: { animation: 'listciudades' },
-    //canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   },
   {
     path: 'zona/detalleciudad',
     component: DetalleCiudadComponent,
     data: { animation: 'detalleciudad' },
-    //canActivate: [AuthGuard]
+    canActivate: [AuthGuard]
   }
 ];
 

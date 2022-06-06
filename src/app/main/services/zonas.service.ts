@@ -7,8 +7,8 @@ import { Pais, Departamento, Ciudad } from '../pages/paises/interfaces';
   providedIn: 'root'
 })
 export class ZonasService{
-  baseURL:string = 'https://luveckapi.azurewebsites.net/api/Administration'
-  listCountries:Array<Pais>
+  baseURL:string = 'https://luveckapi.azurewebsites.net/api/'
+  listCountries:Pais[]
   listDepartments:Array<Departamento>
   listCities:Array<Ciudad>
 
@@ -18,18 +18,16 @@ export class ZonasService{
 
   getPaises(): Promise<any[]> {
     return new Promise((resolve, reject) => {
-
-      this._http.get(`${this.baseURL}/GetCountries`).subscribe((response: any) => {
+      this._http.get(`${this.baseURL}/Administration/GetCountries`).subscribe((response: any) => {
         this.listCountries = response
         resolve(this.listCountries);
       }, reject);
     });
   }
 
-  getPaisById(id:number):Promise<any[]>{
+  getPaisById(id:string):Promise<any[]>{
     return new Promise((resolve, reject) => {
-      this._http.get(`${this.baseURL}/GetCountryById?Id=${id}`).subscribe((res:any) =>{
-        this.listCountries = res
+      this._http.get(`${this.baseURL}/Administration/GetCountryById?Id=${id}`).subscribe((res:any) =>{
         resolve(this.listCountries)
       }, reject)
     })
@@ -37,7 +35,7 @@ export class ZonasService{
 
   getDepartamentos():Promise<any[]>{
     return new Promise((resolve, reject) => {
-      this._http.get(`${this.baseURL}/GetDepartment`).subscribe((res:any) =>{
+      this._http.get(`${this.baseURL}/Department/GetDepartment`).subscribe((res:any) =>{
         this.listCountries = res
         resolve(this.listCountries)
       }, reject)
@@ -55,7 +53,7 @@ export class ZonasService{
 
   getCiudades():Promise<any[]>{
     return new Promise((resolve, reject) => {
-      this._http.get(`${this.baseURL}/GetCities`).subscribe((res:any) =>{
+      this._http.get(`${this.baseURL}/Administration/GetCities`).subscribe((res:any) =>{
         this.listCountries = res
         resolve(this.listCountries)
       }, reject)

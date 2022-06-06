@@ -2,7 +2,7 @@
   <div class="content-body">
     <app-content-header [contentHeader]="contentHeader"></app-content-header>
 
-<button type="button" class="btn btn-primary" rippleEffect [routerLink]="['/pages/zona/detallepais']">Registrar país</button>
+<button type="button" class="btn btn-primary" rippleEffect [routerLink]="['/pages/zona/detallepais', 'new']">Registrar país</button>
 
 </div>
 </div>
@@ -28,7 +28,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let pais of rows">
+          <tr *ngFor="let pais of zonasServ.listCountries">
             <td>{{pais.name}}</td>
             <td>{{pais.iso3}}</td>
             <td>+{{pais.phoneCode}}</td>
@@ -40,19 +40,14 @@
             <td>{{pais.creationDate |date:'M/d/yy, h:mm a'}}</td>
             <td>{{pais.updateBy}}</td>
             <td>{{pais.updateDate |date:'M/d/yy, h:mm a'}}</td>
-            <td class="overflow-hidden">
-              <div ngbDropdown container="body">
-                <button type="button" class="btn btn-sm hide-arrow" ngbDropdownToggle data-toggle="dropdown">
-                  <i data-feather="more-vertical"></i>
+            <td>
+              <div style="display:flex;">
+                <button type="button" class="btn btn-icon btn-flat-success" rippleEffect [routerLink]="['/pages/zona/detallepais', pais.id]">
+                  <span [data-feather]="'edit'"></span>
                 </button>
-                <div ngbDropdownMenu>
-                  <a ngbDropdownItem href="javascript:void(0);">
-                    <i data-feather="edit-2"class="mr-50"></i><span>Edit</span>
-                  </a>
-                  <a ngbDropdownItem href="javascript:void(0);">
-                    <i data-feather="trash" class="mr-50"></i><span>Delete</span>
-                  </a>
-                </div>
+                <button type="button" class="btn btn-icon btn-flat-danger" rippleEffect>
+                  <span [data-feather]="'x'"></span>
+                </button>
               </div>
             </td>
           </tr>

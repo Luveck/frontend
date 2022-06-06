@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ZonasService } from 'app/main/services/zonas.service';
+import { Subject } from 'rxjs';
+import { Ciudad } from '../interfaces';
 
 @Component({
   selector: 'app-list-ciudades',
@@ -6,9 +9,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./list-ciudades.component.scss']
 })
 export class ListCiudadesComponent implements OnInit {
+  private _unsubscribeAll: Subject<any>;
   public contentHeader: object;
 
-  constructor() { }
+  rows:Ciudad[]
+
+  constructor(private _zonasServ:ZonasService) { }
 
   ngOnInit(): void {
     this.contentHeader = {
@@ -34,6 +40,10 @@ export class ListCiudadesComponent implements OnInit {
         ]
       }
     };
+
+    this._zonasServ.getCiudades()
+    .then(res => {console.log(res); this.rows = res})
+    .catch(err => console.log(err))
   }
 
 }

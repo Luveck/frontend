@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute} from '@angular/router'
+import { ZonasService } from 'app/main/services/zonas.service';
 
 @Component({
   selector: 'app-detalle-pais',
@@ -7,10 +9,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DetallePaisComponent implements OnInit {
   public contentHeader: object;
+  private paisId:string
 
-  constructor() { }
+  constructor(private route: ActivatedRoute, private _zonasServ:ZonasService) { }
 
   ngOnInit(): void {
+    this.paisId = this.route.snapshot.params['id']
+
     this.contentHeader = {
       headerTitle: 'Detalle País',
       actionButton: false,
@@ -39,6 +44,12 @@ export class DetallePaisComponent implements OnInit {
         ]
       }
     };
+
+    if(this.paisId != 'new'){
+      this._zonasServ.getPaisById(this.paisId)
+      .then(res => {console.log(res)})
+      .catch(err => console.log(err))
+    }
   }
 
 }
