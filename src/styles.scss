@@ -1,6 +1,4 @@
-@import '@core/scss/core.scss';
-@import './assets/scss/styles';
+/* You can add global styles to this file, and also import other style files */
 
-.swal2-title{
-  color: #000 !important;
-}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

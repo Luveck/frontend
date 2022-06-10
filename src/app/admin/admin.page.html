@@ -1,0 +1,82 @@
+<div class="admin-content">
+  <mat-toolbar color="primary">
+    <button mat-icon-button (click)="sidenav.toggle()" *ngIf="mobileQuery.matches"><mat-icon>menu</mat-icon></button>
+    <span>Luveck - Pasión por vivir</span>
+    <span class="example-spacer"></span>
+    <button mat-button [matMenuTriggerFor]="menu">
+      <img appNotImage [src]="img">
+      {{nombre}}
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="onLogout()">
+        <mat-icon>logout</mat-icon>
+        <span>Cerrar sesión</span>
+      </button>
+    </mat-menu>
+  </mat-toolbar>
+
+
+  <mat-sidenav-container class="sidenav-container">
+    <mat-sidenav #sidenav class="sidenav-body" [opened]="mobileQuery.matches ?false :true" [mode]="mobileQuery.matches ?'over' :'side'"
+      [fixedInViewport]="mobileQuery.matches" [fixedTopGap]="56" [fixedBottomGap]="1">
+      <mat-nav-list>
+        <mat-list-item routerLink="home">
+          <mat-icon mat-list-icon>home</mat-icon>
+          <div mat-line>Inicio</div>
+          <div mat-line>Vista general</div>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+
+          <mat-accordion>
+            <mat-expansion-panel>
+              <mat-expansion-panel-header>
+
+                  <mat-list-item>
+                    <mat-icon mat-list-icon>public</mat-icon>
+                    <div mat-line>Paises</div>
+                    <div mat-line>Gestión de paises</div>
+                  </mat-list-item>
+
+              </mat-expansion-panel-header>
+
+              <mat-nav-list>
+                <mat-list-item>
+                  <mat-icon mat-list-icon>flag</mat-icon>
+                  <div mat-line>Paises</div>
+                </mat-list-item>
+                <mat-list-item>
+                  <mat-icon mat-list-icon>map</mat-icon>
+                  <div mat-line>Departamentos</div>
+                </mat-list-item>
+                <mat-list-item>
+                  <mat-icon mat-list-icon>apartment</mat-icon>
+                  <div mat-line>Ciudades</div>
+                </mat-list-item>
+              </mat-nav-list>
+            </mat-expansion-panel>
+          </mat-accordion>
+
+
+
+
+
+        <mat-divider></mat-divider>
+        <mat-list-item routerLink="categorias">
+          <mat-icon mat-list-icon>bookmark</mat-icon>
+          <div mat-line>Categorías</div>
+          <div mat-line>Gestión de categorías</div>
+        </mat-list-item>
+
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <router-outlet></router-outlet>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+
+  <mat-toolbar class="example-footer">
+    <span *ngIf="!mobileQuery.matches">Luveck - Pasión por vivir &copy; Derechos reservados 2022</span>
+    <span *ngIf="mobileQuery.matches">Luveck - Pasión por vivir &copy; 2022</span>
+  </mat-toolbar>
+</div>

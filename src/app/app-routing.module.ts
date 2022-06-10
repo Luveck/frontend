@@ -1,29 +1,20 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    path: 'pages',
-    loadChildren: () => import('./main/pages/pages.module').then(m => m.PagesModule)
-  },
-  {
-    path: 'sample',
-    loadChildren: () => import('./main/sample/sample.module').then(m => m.SampleModule),
-  },
-  {
     path: '',
-    redirectTo: '/sample/home',
+    redirectTo: 'admin',
     pathMatch: 'full'
   },
   {
-    path: '**',
-    redirectTo: '/pages/miscellaneous/error' //Error 404 - Page not found
+    path: 'admin',
+    loadChildren: () => import('./admin/admin.module').then(m => m.AdminPageModule)
   }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
   exports: [RouterModule]
 })
-
 export class AppRoutingModule { }
