@@ -24,7 +24,7 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          npm run build --prod
+          npm run build
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
@@ -52,4 +52,4 @@ jobs:
           app-name: 'luveck'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AAADB2CE2240447C9C124F4585C43A9C }}
-          package: ./dist/vuexy
+          package: ./dist/luveck-frntend
