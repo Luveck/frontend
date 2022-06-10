@@ -7,7 +7,6 @@ import { AdminPageRoutingModule } from './admin-routing.module';
 import { AdminPage } from './admin.page';
 import { MaterialModule } from '../material.module';
 import { ComponentsModule } from '../components/components.module';
-import { NgMaterialMultilevelMenuModule } from 'ng-material-multilevel-menu';
 
 @NgModule({
   imports: [
@@ -15,8 +14,7 @@ import { NgMaterialMultilevelMenuModule } from 'ng-material-multilevel-menu';
     FormsModule,
     AdminPageRoutingModule,
     MaterialModule,
-    ComponentsModule,
-    NgMaterialMultilevelMenuModule
+    ComponentsModule
   ],
   declarations: [AdminPage]
 })
