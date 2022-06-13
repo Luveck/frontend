@@ -4,8 +4,13 @@
     <span>Luveck - Pasión por vivir</span>
     <span class="example-spacer"></span>
     <button mat-button [matMenuTriggerFor]="menu">
-      <img appNotImage [src]="img">
-      {{nombre}}
+      <div class="nameDate">
+        <div class="nam">
+          <span>{{nombre}}</span>
+          <span>{{rol}}</span>
+        </div>
+        <img appNotImage [src]="img">
+      </div>
     </button>
     <mat-menu #menu="matMenu">
       <button mat-menu-item (click)="onLogout()">
@@ -40,15 +45,15 @@
               </mat-expansion-panel-header>
 
               <mat-nav-list>
-                <mat-list-item>
+                <mat-list-item routerLink="paises">
                   <mat-icon mat-list-icon>flag</mat-icon>
                   <div mat-line>Paises</div>
                 </mat-list-item>
-                <mat-list-item>
+                <mat-list-item routerLink="departamentos">
                   <mat-icon mat-list-icon>map</mat-icon>
                   <div mat-line>Departamentos</div>
                 </mat-list-item>
-                <mat-list-item>
+                <mat-list-item routerLink="ciudades">
                   <mat-icon mat-list-icon>apartment</mat-icon>
                   <div mat-line>Ciudades</div>
                 </mat-list-item>
@@ -70,8 +75,8 @@
       </mat-nav-list>
     </mat-sidenav>
 
-    <mat-sidenav-content>
-      <router-outlet></router-outlet>
+    <mat-sidenav-content [@fadeIn]="fadeIn(outlet)">
+      <router-outlet #outlet="outlet"></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>
 

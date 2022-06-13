@@ -2,13 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { HomePage } from './home.page';
+import { DepartamentosPage } from './departamentos.page';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
     path: '',
-    component: HomePage
+    component: DepartamentosPage
   }
 ];
 
@@ -18,6 +18,7 @@ const routes: Routes = [
     FormsModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [HomePage]
+  declarations: [DepartamentosPage]
 })
-export class HomePageModule {}
+
+export class DepartamentosPageModule {}

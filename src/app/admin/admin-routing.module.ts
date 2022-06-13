@@ -9,7 +9,23 @@ const routes: Routes = [
     children: [
       {
         path: 'home',
-        loadChildren: () => import('../pages/home/home.module').then( m => m.HomePageModule)
+        loadChildren: () => import('../pages/home/home.module').then( m => m.HomePageModule),
+        data: {animation: 'homePage'}
+      },
+      {
+        path: 'paises',
+        loadChildren: () => import('../pages/paises/paises.module').then( m => m.PaisesPageModule),
+        data: {animation: 'paisesPage'}
+      },
+      {
+        path: 'ciudades',
+        loadChildren: () => import('../pages/ciudades/ciudades.module').then( m => m.CiudadesPageModule),
+        data: {animation: 'ciudadesPage'}
+      },
+      {
+        path: 'departamentos',
+        loadChildren: () => import('../pages/departamentos/departamentos.module').then( m => m.DepartamentosPageModule),
+        data: {animation: 'departamentosPage'}
       },
       {
         path: '',

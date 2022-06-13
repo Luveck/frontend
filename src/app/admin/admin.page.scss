@@ -45,12 +45,9 @@ img{
   height: 50px;
 }
 
-mat-sidenav-content{
-  box-sizing: border-box;
-  overflow: hidden;
-}
 
- */
+*/
+
 
  .admin-content{
    height: 100%;
@@ -61,12 +58,25 @@ mat-sidenav-content{
      .example-spacer {
       flex: 1 1 auto;
     }
-
-    img{
-      height: 40px;
-      width: 40px;
-      border-radius: 50%;
-      border: 2px solid #fff;
+    .nameDate{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .nam{
+        display: flex;
+        flex-direction: column;
+        align-content: center;
+        span{
+          line-height: 15px;
+        }
+      }
+      img{
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        margin-left: .5rem;
+      }
     }
    }
 
@@ -93,6 +103,11 @@ mat-sidenav-content{
       }
     }
    }
+
+  mat-sidenav-content{
+    box-sizing: border-box;
+    overflow: hidden;
+  }
 
   .example-footer{
     bottom: 0;
