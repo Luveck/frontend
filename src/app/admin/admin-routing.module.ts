@@ -13,19 +13,8 @@ const routes: Routes = [
         data: {animation: 'homePage'}
       },
       {
-        path: 'paises',
-        loadChildren: () => import('../pages/paises/paises.module').then( m => m.PaisesPageModule),
-        data: {animation: 'paisesPage'}
-      },
-      {
-        path: 'ciudades',
-        loadChildren: () => import('../pages/ciudades/ciudades.module').then( m => m.CiudadesPageModule),
-        data: {animation: 'ciudadesPage'}
-      },
-      {
-        path: 'departamentos',
-        loadChildren: () => import('../pages/departamentos/departamentos.module').then( m => m.DepartamentosPageModule),
-        data: {animation: 'departamentosPage'}
+        path: 'zonas',
+        loadChildren: () => import('../pages/zonas.pages/zonas.module').then( m => m.ZonasModule),
       },
       {
         path: '',
@@ -45,4 +34,5 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
+
 export class AdminPageRoutingModule {}

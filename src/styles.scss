@@ -2,3 +2,20 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mat-sidenav{
+  top: 0 !important;
+}
+
+span.chip{
+  color: #fff;
+  font-weight: 600;
+  padding: 0.2rem 1rem;
+  border-radius: 30px;
+  &.active{
+    background-color: #14ce63;
+  }
+  &.inactive{
+    background-color: #ff0000;
+  }
+}

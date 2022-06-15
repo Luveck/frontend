@@ -1,29 +1,11 @@
 <div class="admin-content">
-  <mat-toolbar color="primary">
-    <button mat-icon-button (click)="sidenav.toggle()" *ngIf="mobileQuery.matches"><mat-icon>menu</mat-icon></button>
-    <span>Luveck - Pasión por vivir</span>
-    <span class="example-spacer"></span>
-    <button mat-button [matMenuTriggerFor]="menu">
-      <div class="nameDate">
-        <div class="nam">
-          <span>{{nombre}}</span>
-          <span>{{rol}}</span>
-        </div>
-        <img appNotImage [src]="img">
-      </div>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="onLogout()">
-        <mat-icon>logout</mat-icon>
-        <span>Cerrar sesión</span>
-      </button>
-    </mat-menu>
-  </mat-toolbar>
-
-
   <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav class="sidenav-body" [opened]="mobileQuery.matches ?false :true" [mode]="mobileQuery.matches ?'over' :'side'"
       [fixedInViewport]="mobileQuery.matches" [fixedTopGap]="56" [fixedBottomGap]="1">
+      <header>
+        <h1>Luveck</h1>
+        <mat-slide-toggle [formControl]="toggleControl" class="mr-8"></mat-slide-toggle>
+      </header>
       <mat-nav-list>
         <mat-list-item routerLink="home">
           <mat-icon mat-list-icon>home</mat-icon>
@@ -45,15 +27,15 @@
               </mat-expansion-panel-header>
 
               <mat-nav-list>
-                <mat-list-item routerLink="paises">
+                <mat-list-item routerLink="zonas/paises">
                   <mat-icon mat-list-icon>flag</mat-icon>
                   <div mat-line>Paises</div>
                 </mat-list-item>
-                <mat-list-item routerLink="departamentos">
+                <mat-list-item routerLink="zonas/departamentos">
                   <mat-icon mat-list-icon>map</mat-icon>
                   <div mat-line>Departamentos</div>
                 </mat-list-item>
-                <mat-list-item routerLink="ciudades">
+                <mat-list-item routerLink="zonas/ciudades">
                   <mat-icon mat-list-icon>apartment</mat-icon>
                   <div mat-line>Ciudades</div>
                 </mat-list-item>
@@ -76,12 +58,29 @@
     </mat-sidenav>
 
     <mat-sidenav-content [@fadeIn]="fadeIn(outlet)">
+      <mat-toolbar>
+        <button mat-icon-button (click)="sidenav.toggle()" *ngIf="mobileQuery.matches"><mat-icon>menu</mat-icon></button>
+        <span class="example-spacer"></span>
+
+
+        <button mat-button [matMenuTriggerFor]="menu">
+          <div class="nameDate">
+            <div class="nam">
+              <span>{{nombre}}</span>
+              <span>{{rol}}</span>
+            </div>
+            <img appNotImage [src]="img">
+          </div>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="onLogout()">
+            <mat-icon>logout</mat-icon>
+            <span>Cerrar sesión</span>
+          </button>
+        </mat-menu>
+      </mat-toolbar>
+
       <router-outlet #outlet="outlet"></router-outlet>
     </mat-sidenav-content>
   </mat-sidenav-container>
-
-  <mat-toolbar class="example-footer">
-    <span *ngIf="!mobileQuery.matches">Luveck - Pasión por vivir &copy; Derechos reservados 2022</span>
-    <span *ngIf="mobileQuery.matches">Luveck - Pasión por vivir &copy; 2022</span>
-  </mat-toolbar>
 </div>

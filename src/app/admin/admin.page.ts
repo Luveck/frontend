@@ -1,6 +1,10 @@
 import {MediaMatcher} from '@angular/cdk/layout';
-import { ChangeDetectorRef, Component, OnInit, ViewEncapsulation} from '@angular/core'
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { ChangeDetectorRef, Component, HostBinding, OnInit, ViewEncapsulation} from '@angular/core'
+import { FormControl } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
+
+import { AuthService } from '../services/auth.service';
 import { fadeIn } from './animatios';
 
 @Component({
@@ -19,7 +23,15 @@ export class AdminPage implements OnInit {
 
   private _mobileQueryListener: () => void;
 
-  constructor(private changeDetectorRef:ChangeDetectorRef, private media: MediaMatcher){
+  @HostBinding('class') className = '';
+  toggleControl = new FormControl(false);
+
+  constructor(
+    private changeDetectorRef:ChangeDetectorRef,
+    private media: MediaMatcher,
+    public authServ:AuthService,
+    private overlay: OverlayContainer
+  ){
     this.mobileQuery = this.media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => this.changeDetectorRef.detectChanges();
     this.mobileQuery.addEventListener('change', this._mobileQueryListener)
@@ -32,10 +44,19 @@ export class AdminPage implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.authServ.getCurrentUser()
+    this.toggleControl.valueChanges.subscribe((darkMode) => {
+      const darkClassName = 'theme-dark';
+      this.className = darkMode ? darkClassName : '';
+      if (darkMode) {
+        this.overlay.getContainerElement().classList.add(darkClassName);
+      } else {
+        this.overlay.getContainerElement().classList.remove(darkClassName);
+      }
+    });
   }
 
   onLogout(){
-    console.log('pto')
+    this.authServ.logout()
   }
 }

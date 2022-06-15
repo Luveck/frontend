@@ -1,0 +1,48 @@
+main{
+  width: 94%;
+  margin: 0.5rem auto;
+
+  .example-loading-shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 56px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .example-rate-limit-reached {
+    max-width: 360px;
+    text-align: center;
+  }
+
+  header{
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin: 0 1rem;
+    .mat-form-field {
+      font-size: 14px;
+      width: 60%;
+      padding: 0;
+    }
+    button{
+      margin-bottom: 1rem;
+    }
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th{
+    font-weight: 600;
+  }
+  td, th {
+    width: auto;
+  }
+}
