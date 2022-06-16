@@ -7,7 +7,7 @@ import { Pais, Departamento, Ciudad } from '../interfaces/zonas.model';
   providedIn: 'root'
 })
 export class ZonasService{
-  baseURL:string = 'https://luveckapi.azurewebsites.net/api/'
+  baseURL:string = 'https://luveckapi.azurewebsites.net/api'
   listCountries:Pais[] | undefined |any
   listDepartments:Array<Departamento> | undefined |any
   listCities:Array<Ciudad> | undefined |any
