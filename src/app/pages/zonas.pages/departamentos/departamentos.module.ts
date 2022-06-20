@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 
 import { DepartamentosPage } from './departamentos.page';
 import { RouterModule, Routes } from '@angular/router';
+import { ComponentsModule } from 'src/app/components/components.module';
+import { MaterialModule } from 'src/app/material.module';
 
 const routes: Routes = [
   {
@@ -16,6 +18,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    ComponentsModule,
+    MaterialModule,
     RouterModule.forChild(routes)
   ],
   declarations: [DepartamentosPage]

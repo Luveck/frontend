@@ -1,0 +1,6 @@
+<ul class="breadcrumb">
+  <li *ngFor="let link of breadcrumb?.links">
+    <a *ngIf="link.isLink" routerLink="{{ link?.link }}">{{ link?.name }}</a>
+    <span *ngIf="!link.isLink">{{ link?.name }}</span>
+  </li>
+</ul>

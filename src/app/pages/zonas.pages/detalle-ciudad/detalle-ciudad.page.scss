@@ -1,0 +1,24 @@
+main{
+  width: 94%;
+  margin: 1rem auto;
+  .wrapForm{
+    width: 90%;
+    padding: 10px 0;
+    margin: auto;
+    .inputs{
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      mat-form-field{
+        width: 90%;
+        margin: auto;
+        align-content: center;
+      }
+    }
+    .btns{
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+    }
+  }
+}

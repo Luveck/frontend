@@ -12,12 +12,12 @@ const routes: Routes = [
     loadChildren: () => import('./admin/admin.module').then(m => m.AdminPageModule)
   },
   {
-    path: 'admin',
-    loadChildren: () => import('./admin/admin.module').then(m => m.AdminPageModule)
-  },
-  {
     path: 'authentication',
     loadChildren: () => import('./pages/auth.Pages/authentification.module').then(m => m.AuthenticationModule)
+  },
+    {
+    path: '**',
+    redirectTo: '/admin/miscellaneous/error' //Error 404 - Page not found
   }
 ];
 

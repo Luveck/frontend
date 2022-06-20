@@ -7,23 +7,19 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   {
     path: 'login',
-    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule),
-    data: {animation: 'loginPage'}
+    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
   },
   {
     path: 'register',
-    loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule),
-    data: {animation: 'registerPage'}
+    loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule)
   },
   {
     path: 'reset-password',
-    loadChildren: () => import('./reset-password/reset-password.module').then( m => m.ResetPasswordPageModule),
-    data: {animation: 'reset-passwordPage'}
+    loadChildren: () => import('./reset-password/reset-password.module').then( m => m.ResetPasswordPageModule)
   },
   {
     path: 'forgot-password',
-    loadChildren: () => import('./forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule),
-    data: {animation: 'forgot-passwordPage'}
+    loadChildren: () => import('./forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
   }
 ];
 

@@ -5,14 +5,13 @@ import { FormControl } from '@angular/forms';
 import { RouterOutlet } from '@angular/router';
 
 import { AuthService } from '../services/auth.service';
-import { fadeIn } from './animatios';
+import { fadeAnimation } from './animatios';
 
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.page.html',
   styleUrls: ['./admin.page.scss'],
-  encapsulation: ViewEncapsulation.None,
-  animations: [fadeIn]
+  animations: [fadeAnimation]
 })
 
 export class AdminPage implements OnInit {

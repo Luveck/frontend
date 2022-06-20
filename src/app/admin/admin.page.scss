@@ -10,9 +10,21 @@
       header{
         display: flex;
         justify-content: space-around;
+        align-items: center;
         margin: 0;
         padding: 1rem;
-        padding-bottom: 0;
+        h1{
+          margin: 0;
+        }
+        .togleTheme{
+          display: flex;
+          gap: .1rem;
+          align-items: center;
+        }
+      }
+      mat-list-item.active{
+        background: var(--primary-color);
+        color: #fff;
       }
       .mat-expansion-panel {
 

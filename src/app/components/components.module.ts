@@ -1,21 +1,27 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+
 import { MaterialModule } from '../material.module';
-import { ToolbarComponent } from './toolbar/toolbar.component';
+import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+import { DialogConfComponent } from './dialog-conf/dialog-conf.component';
 
 @NgModule({
   declarations: [
-    ToolbarComponent
+    BreadcrumbComponent,
+    DialogConfComponent
   ],
   imports: [
+    RouterModule,
     CommonModule,
     MaterialModule,
     ReactiveFormsModule,
     FormsModule
   ],
   exports: [
-    ToolbarComponent
+    BreadcrumbComponent,
+    DialogConfComponent
   ]
 })
 

@@ -1,14 +1,40 @@
 <main>
-  <mat-card class="example-card">
-    <mat-card-title>Shiba Inu</mat-card-title>
-    <mat-card-subtitle>Dog Breed</mat-card-subtitle>
-    <mat-card-content>
-      <p>This card indeterminates progress bar.</p>
-      <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quo ducimus voluptas, quia dicta aliquid, reiciendis quam labore ullam nulla maiores eum quisquam quae, nisi et ad qui aut quod delectus?</p>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button>LIKE</button>
-      <button mat-button>SHARE</button>
-    </mat-card-actions>
-  </mat-card>
+  <div class="contentForm mat-elevation-z8">
+    <div class="formHeader">
+      <h2>!Bienvenido a Luveck! 👋</h2>
+      <p>Inicia sesión con tu correo</p>
+    </div>
+    <div class="formContent">
+      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" novalidate class="d-flex-center">
+
+        <mat-form-field>
+          <input matInput placeholder="Email" formControlName="email">
+          <mat-error *ngIf="!loginForm.get('email')?.errors?.required && (loginForm.get('email')?.errors?.pattern)">
+            Por favor ingrese un correo valido
+          </mat-error>
+          <mat-error
+            *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched) && loginForm.get('email')?.errors?.required">
+            Correo requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+          <input matInput type="password" placeholder="Password" formControlName="password">
+          <mat-error *ngIf="!loginForm.get('password')?.errors?.required">
+            La longitud de la contraseña debe ser mayor o igual a 8 y la contraseña debe contener uno o más caracteres
+            en mayúsculas, minúsculas, numéricos y especiales.
+          </mat-error>
+          <mat-error
+            *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched) && loginForm.get('password')?.errors?.required">
+            Contraseña requerida
+          </mat-error>
+        </mat-form-field>
+
+        <div class="mt-top">
+          <button [disabled]="!loginForm.valid" mat-raised-button color="primary" mat-button>Iniciar Sesión</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
 </main>

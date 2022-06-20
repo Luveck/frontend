@@ -1,0 +1,25 @@
+<main>
+  <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
+
+  <form class="wrapForm" [formGroup]="newCiudadForm" autocomplete="off">
+    <div class="inputs">
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Nombre" formControlName="name">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Código estado</mat-label>
+        <input matInput placeholder="HND" formControlName="stateCode">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Id Departamento</mat-label>
+        <input matInput placeholder="" formControlName="departmentId" readonly>
+      </mat-form-field>
+    </div>
+
+    <div class="btns">
+      <button mat-raised-button color="primary" [disabled]="newCiudadForm.invalid" (click)="addEditCiudad()">Guardar <mat-icon>save</mat-icon></button>
+      <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
+    </div>
+  </form>
+</main>

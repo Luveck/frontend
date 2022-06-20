@@ -4,10 +4,14 @@
       [fixedInViewport]="mobileQuery.matches" [fixedTopGap]="56" [fixedBottomGap]="1">
       <header>
         <h1>Luveck</h1>
-        <mat-slide-toggle [formControl]="toggleControl" class="mr-8"></mat-slide-toggle>
+        <div class="togleTheme">
+          🌞
+          <mat-slide-toggle [formControl]="toggleControl" class="mr-8"></mat-slide-toggle>
+          🌙
+        </div>
       </header>
       <mat-nav-list>
-        <mat-list-item routerLink="home">
+        <mat-list-item routerLink="home" routerLinkActive="active">
           <mat-icon mat-list-icon>home</mat-icon>
           <div mat-line>Inicio</div>
           <div mat-line>Vista general</div>
@@ -17,35 +21,29 @@
           <mat-accordion>
             <mat-expansion-panel>
               <mat-expansion-panel-header>
-
                   <mat-list-item>
                     <mat-icon mat-list-icon>public</mat-icon>
                     <div mat-line>Paises</div>
                     <div mat-line>Gestión de paises</div>
                   </mat-list-item>
-
               </mat-expansion-panel-header>
 
               <mat-nav-list>
-                <mat-list-item routerLink="zonas/paises">
+                <mat-list-item routerLink="zonas/paises" routerLinkActive="active">
                   <mat-icon mat-list-icon>flag</mat-icon>
                   <div mat-line>Paises</div>
                 </mat-list-item>
-                <mat-list-item routerLink="zonas/departamentos">
+                <mat-list-item routerLink="zonas/departamentos" routerLinkActive="active">
                   <mat-icon mat-list-icon>map</mat-icon>
                   <div mat-line>Departamentos</div>
                 </mat-list-item>
-                <mat-list-item routerLink="zonas/ciudades">
+                <mat-list-item routerLink="zonas/ciudades" routerLinkActive="active">
                   <mat-icon mat-list-icon>apartment</mat-icon>
                   <div mat-line>Ciudades</div>
                 </mat-list-item>
               </mat-nav-list>
             </mat-expansion-panel>
           </mat-accordion>
-
-
-
-
 
         <mat-divider></mat-divider>
         <mat-list-item routerLink="categorias">
@@ -54,10 +52,17 @@
           <div mat-line>Gestión de categorías</div>
         </mat-list-item>
 
+        <mat-divider></mat-divider>
+        <mat-list-item routerLink="miscellaneous/not-authorized">
+          <mat-icon mat-list-icon>bookmark</mat-icon>
+          <div mat-line>SBU</div>
+          <div mat-line>Unidad estratégica de negocio</div>
+        </mat-list-item>
+
       </mat-nav-list>
     </mat-sidenav>
 
-    <mat-sidenav-content [@fadeIn]="fadeIn(outlet)">
+    <mat-sidenav-content [@fadeAnimation]="outlet.isActivated ? outlet.activatedRoute : ''">
       <mat-toolbar>
         <button mat-icon-button (click)="sidenav.toggle()" *ngIf="mobileQuery.matches"><mat-icon>menu</mat-icon></button>
         <span class="example-spacer"></span>

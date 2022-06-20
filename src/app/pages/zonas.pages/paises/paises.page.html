@@ -1,6 +1,11 @@
 <main>
+  <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
+
   <header>
-    <button mat-raised-button color="primary" (click)="on('nuevo')">Agregar País</button>
+    <button mat-raised-button color="primary" (click)="on('new')">
+      <mat-icon>add</mat-icon>
+      Agregar País
+    </button>
 
     <mat-form-field appearance="standard">
       <mat-icon matPrefix>search</mat-icon>
@@ -38,19 +43,34 @@
         </td>
       </ng-container>
 
+      <ng-container matColumnDef="createBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Creado por</th>
+        <td mat-cell *matCellDef="let row"> {{row.createBy}} </td>
+      </ng-container>
+
       <ng-container matColumnDef="creationDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de creación </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de creación </th>
         <td mat-cell *matCellDef="let row"> {{row.creationDate |date:'M/d/yy, h:mm a'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="updateBy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Modificado por</th>
+        <td mat-cell *matCellDef="let row"> {{row.updateBy}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="updateDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha de modificación </th>
+        <td mat-cell *matCellDef="let row"> {{row.updateDate |date:'M/d/yy, h:mm a'}} </td>
       </ng-container>
 
       <ng-container matColumnDef="acctions">
         <th mat-header-cell *matHeaderCellDef> Acciones </th>
-        <td mat-cell *matCellDef="let row" style="display: flex;">
+        <td mat-cell *matCellDef="let row" style="display: flex; justify-content: center; align-items: center;">
           <button mat-icon-button color="accent" (click)="on(row.id)">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="dialog(row.id)">
-            <mat-icon>hide_source</mat-icon>
+          <button mat-icon-button color="warn" (click)="dialog(row.id, row.status)">
+            <mat-icon>{{row.status ?'radio_button_checked' :'radio_button_unchecked'}}</mat-icon>
           </button>
         </td>
       </ng-container>

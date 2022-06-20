@@ -1,15 +1,50 @@
-.body{
-  overflow: hidden;
-  box-sizing: content-box;
-  width: 90%;
-  height: 100%;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  .centro{
-    width: 150px;
-    height: 150px;
-    background-color: yellowgreen;
+main{
+  width: 94%;
+  margin: 0.5rem auto;
+
+  .example-loading-shade {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 56px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .example-rate-limit-reached {
+    max-width: 360px;
+    text-align: center;
+  }
+
+  header{
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin: 0 1rem;
+    .mat-form-field {
+      font-size: 14px;
+      width: 50%;
+      padding: 0;
+    }
+    button{
+      margin-bottom: 1rem;
+    }
+  }
+
+  table {
+    width: 100%;
+  }
+
+  th{
+    color: var(--dark-text);
+    font-weight: 900;
+  }
+  td, th {
+    width: auto;
+    text-align: center;
   }
 }

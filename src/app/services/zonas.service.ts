@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
 import { Pais, Departamento, Ciudad } from '../interfaces/zonas.model';
 
 @Injectable({
@@ -16,51 +15,39 @@ export class ZonasService{
 
   constructor(private _http:HttpClient) {}
 
+  /* Endpoints de Paies */
   getPaises() {
     return this._http.get<Pais[]>(`${this.baseURL}/Administration/GetCountries`)
   }
 
-  getPaisById(id:string):Promise<any[]>{
-    return new Promise((resolve, reject) => {
-      this._http.get(`${this.baseURL}/Administration/GetCountryById?Id=${id}`).subscribe((res:any) =>{
-        resolve(this.listCountries)
-      }, reject)
-    })
+  getPaisById(id:string){
+    return this._http.get<Pais>(`${this.baseURL}/Administration/GetCountryById?Id=${id}`)
   }
 
-  getDepartamentos():Promise<any[]>{
-    return new Promise((resolve, reject) => {
-      this._http.get(`${this.baseURL}/Department/GetDepartment`).subscribe((res:any) =>{
-        this.listCountries = res
-        resolve(this.listCountries)
-      }, reject)
-    })
+  addOrUpdatePais(data:any){
+    return this._http.post(`${this.baseURL}/Administration/CreateUpdateCountry`, data)
   }
 
-  getDepartamentoById(id:number):Promise<any[]>{
-    return new Promise((resolve, reject) => {
-      this._http.get(`${this.baseURL}/GetDepartmentById?Id=${id}`).subscribe((res:any) =>{
-        this.listCountries = res
-        resolve(this.listCountries)
-      }, reject)
-    })
+  /* Endpoints de Departamentos */
+  getDepartamentos(){
+    return this._http.get<Departamento[]>(`${this.baseURL}/Department/GetDepartment`)
   }
 
-  getCiudades():Promise<any[]>{
-    return new Promise((resolve, reject) => {
-      this._http.get(`${this.baseURL}/Administration/GetCities`).subscribe((res:any) =>{
-        this.listCountries = res
-        resolve(this.listCountries)
-      }, reject)
-    })
+  getDepartamentoById(id:string){
+    return this._http.get<Departamento>(`${this.baseURL}/Department/GetDepartmentById?Id=${id}`)
+
   }
 
-  getCiudadesById(id:number):Promise<any[]>{
-    return new Promise((resolve, reject) => {
-      this._http.get(`${this.baseURL}/GetCityById?Id=${id}`).subscribe((res:any) =>{
-        this.listCountries = res
-        resolve(this.listCountries)
-      }, reject)
-    })
+  /* Endpoints de Ciudades */
+  getCiudades(){
+    return this._http.get<Ciudad[]>(`${this.baseURL}/Administration/GetCities`)
+  }
+
+  getCiudadById(id:string){
+    return this._http.get<Ciudad>(`${this.baseURL}/Administration/GetCityById?Id=${id}`)
+  }
+
+  addOrUpdateCiudad(data:any){
+    return this._http.post(`${this.baseURL}/Administration/CreateUpdateCity`, data)
   }
 }

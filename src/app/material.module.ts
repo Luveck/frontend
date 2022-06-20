@@ -17,7 +17,7 @@ import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatCardModule} from '@angular/material/card';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
-import {MatChipsModule} from '@angular/material/chips';
+import {MatSnackBarModule} from '@angular/material/snack-bar'
 
 
 const matModules = [
@@ -39,7 +39,7 @@ const matModules = [
   MatNativeDateModule,
   MatCardModule,
   MatSlideToggleModule,
-  MatChipsModule
+  MatSnackBarModule
 ];
 
 @NgModule({

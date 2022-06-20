@@ -1,5 +1,5 @@
 export interface Pais{
-  "id": number,
+  "id"?: number,
   "iso"?: string,
   "name": string,
   "iso3": string,
@@ -17,7 +17,7 @@ export interface Pais{
 export interface Departamento extends Pais{
   "id": number,
   "name": string,
-  "statusCode": string,
+  "stateCode": string,
   "countryId": number,
   "country": Pais
 }
