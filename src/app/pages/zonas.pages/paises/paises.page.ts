@@ -1,8 +1,10 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core'
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { Pais } from 'src/app/interfaces/zonas.model';
 
 import { DataService } from 'src/app/services/data.service';
@@ -40,6 +42,7 @@ export class PaisesPage implements AfterViewInit {
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
+    private _dialog: MatDialog,
     private _zonasServ:ZonasService,
     private _dataServ:DataService
   ){}
@@ -80,17 +83,20 @@ export class PaisesPage implements AfterViewInit {
     this._dataServ.goTo('admin/zonas/detalle-pais', id)
   }
 
-  dialog(id: number, estado:boolean) {
+  dialog(id: number, estado: boolean) {
     let paisEnCuestion = this.dataSource.data.filter(pais => pais.id === id)
-    let msg = estado ?'¿Seguro de querer inhabilitar este pais?' :'¿Seguro de querer habilitar este pais?'
+    let msg = estado ? '¿Seguro de querer inhabilitar este pais?' : '¿Seguro de querer habilitar este pais?'
 
-    this._dataServ.confirmDialog(msg)
+    this._dialog.open(DialogConfComponent, {
+      data: `${msg}`
+    })
+      .afterClosed()
       .subscribe((confirmado: Boolean) => {
         if (confirmado) {
           paisEnCuestion[0].status = !paisEnCuestion[0].status
           let respuesta = this._zonasServ.addOrUpdatePais(paisEnCuestion[0])
           respuesta.subscribe(() => {
-            this._dataServ.openSnackBar('Registro actualizado', true)
+            this._dataServ.fir('Registro actualizado', 'success')
           })
         }
       })

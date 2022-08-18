@@ -1,11 +1,14 @@
-import {MediaMatcher} from '@angular/cdk/layout';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { ChangeDetectorRef, Component, HostBinding, OnInit, ViewEncapsulation} from '@angular/core'
+import { Component, HostBinding, OnInit} from '@angular/core'
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { RouterOutlet } from '@angular/router';
 
+import { fadeAnimation } from '../animations';
+import { DialogConfComponent } from '../components/dialog-conf/dialog-conf.component';
 import { AuthService } from '../services/auth.service';
-import { fadeAnimation } from './animatios';
+//import { AuthService } from '../services/auth.service';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-admin',
@@ -15,25 +18,32 @@ import { fadeAnimation } from './animatios';
 })
 
 export class AdminPage implements OnInit {
-  mobileQuery: MediaQueryList;
-  nombre: String = 'Elvin';
-  rol: string = 'Administrador'
-  img:String = 'https://phantom-marca.unidadeditorial.es/8e53ec302fd064f14da87c7c1ed7503f/resize/1320/f/jpg/assets/multimedia/imagenes/2022/02/28/16460366222901.jpg'
-
-  private _mobileQueryListener: () => void;
+  img:String = 'assets/user.png'
+  displayName:string = ''
+  rol:string = ''
 
   @HostBinding('class') className = '';
-  toggleControl = new FormControl(false);
+  toggleControl = new FormControl();
 
   constructor(
-    private changeDetectorRef:ChangeDetectorRef,
-    private media: MediaMatcher,
+    private _overlay: OverlayContainer,
+    private _dialogo: MatDialog,
+    private _dataServ: DataService,
     public authServ:AuthService,
-    private overlay: OverlayContainer
   ){
-    this.mobileQuery = this.media.matchMedia('(max-width: 600px)');
-    this._mobileQueryListener = () => this.changeDetectorRef.detectChanges();
-    this.mobileQuery.addEventListener('change', this._mobileQueryListener)
+    const darkClassName = 'theme-dark';
+    this.toggleControl.valueChanges.subscribe(themeState => {
+      this.className = themeState
+        ?darkClassName
+        : ''
+      if(themeState){
+        this._dataServ.setTheme('dark')
+        this._overlay.getContainerElement().classList.add(darkClassName);
+      }else{
+        this._dataServ.setTheme('light')
+        this._overlay.getContainerElement().classList.remove(darkClassName);
+      }
+    });
   }
 
   fadeIn(outlet:RouterOutlet) {
@@ -43,19 +53,21 @@ export class AdminPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authServ.getCurrentUser()
-    this.toggleControl.valueChanges.subscribe((darkMode) => {
-      const darkClassName = 'theme-dark';
-      this.className = darkMode ? darkClassName : '';
-      if (darkMode) {
-        this.overlay.getContainerElement().classList.add(darkClassName);
-      } else {
-        this.overlay.getContainerElement().classList.remove(darkClassName);
-      }
-    });
+    let theme = this._dataServ.getTheme()
+    theme === 'dark'
+      ?this.toggleControl.setValue(true)
+      :this.toggleControl.setValue(false)
   }
 
   onLogout(){
-    this.authServ.logout()
+    this._dialogo.open(DialogConfComponent, {
+      data: `¿Seguro de querer Cerrar la sesión?`
+    })
+    .afterClosed()
+    .subscribe((confirmado: Boolean) => {
+      if (confirmado) {
+        this.authServ.logOut()
+      }
+    })
   }
 }

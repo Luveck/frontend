@@ -1,14 +1,9 @@
 <div class="admin-content">
   <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #sidenav class="sidenav-body" [opened]="mobileQuery.matches ?false :true" [mode]="mobileQuery.matches ?'over' :'side'"
-      [fixedInViewport]="mobileQuery.matches" [fixedTopGap]="56" [fixedBottomGap]="1">
+    <mat-sidenav #sidenav class="sidenav-body mat-elevation-z8" mode="side" opened
+       [fixedTopGap]="56" [fixedBottomGap]="1">
       <header>
-        <h1>Luveck</h1>
-        <div class="togleTheme">
-          🌞
-          <mat-slide-toggle [formControl]="toggleControl" class="mr-8"></mat-slide-toggle>
-          🌙
-        </div>
+        <img src="assets/luveck_logo.png">
       </header>
       <mat-nav-list>
         <mat-list-item routerLink="home" routerLinkActive="active">
@@ -18,66 +13,113 @@
         </mat-list-item>
         <mat-divider></mat-divider>
 
-          <mat-accordion>
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                  <mat-list-item>
-                    <mat-icon mat-list-icon>public</mat-icon>
-                    <div mat-line>Paises</div>
-                    <div mat-line>Gestión de paises</div>
-                  </mat-list-item>
-              </mat-expansion-panel-header>
-
-              <mat-nav-list>
-                <mat-list-item routerLink="zonas/paises" routerLinkActive="active">
-                  <mat-icon mat-list-icon>flag</mat-icon>
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-list-item>
+                  <mat-icon mat-list-icon>public</mat-icon>
                   <div mat-line>Paises</div>
+                  <div mat-line>Gestión de paises</div>
                 </mat-list-item>
-                <mat-list-item routerLink="zonas/departamentos" routerLinkActive="active">
-                  <mat-icon mat-list-icon>map</mat-icon>
-                  <div mat-line>Departamentos</div>
-                </mat-list-item>
-                <mat-list-item routerLink="zonas/ciudades" routerLinkActive="active">
-                  <mat-icon mat-list-icon>apartment</mat-icon>
-                  <div mat-line>Ciudades</div>
-                </mat-list-item>
-              </mat-nav-list>
-            </mat-expansion-panel>
-          </mat-accordion>
+            </mat-expansion-panel-header>
 
+            <mat-nav-list>
+              <mat-list-item routerLink="zonas/paises" routerLinkActive="active">
+                <mat-icon mat-list-icon>flag</mat-icon>
+                <div mat-line>Paises</div>
+              </mat-list-item>
+              <mat-list-item routerLink="zonas/departamentos" routerLinkActive="active">
+                <mat-icon mat-list-icon>map</mat-icon>
+                <div mat-line>Departamentos</div>
+              </mat-list-item>
+              <mat-list-item routerLink="zonas/ciudades" routerLinkActive="active">
+                <mat-icon mat-list-icon>apartment</mat-icon>
+                <div mat-line>Ciudades</div>
+              </mat-list-item>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
         <mat-divider></mat-divider>
-        <mat-list-item routerLink="categorias">
-          <mat-icon mat-list-icon>bookmark</mat-icon>
-          <div mat-line>Categorías</div>
-          <div mat-line>Gestión de categorías</div>
-        </mat-list-item>
 
+        <mat-list-item routerLink="sbu" routerLinkActive="active">
+          <mat-icon mat-list-icon>check_box</mat-icon>
+          <div mat-line>SBU's</div>
+          <div mat-line>Gestion de SBU's</div>
+        </mat-list-item>
         <mat-divider></mat-divider>
-        <mat-list-item routerLink="miscellaneous/not-authorized">
-          <mat-icon mat-list-icon>bookmark</mat-icon>
-          <div mat-line>SBU</div>
-          <div mat-line>Unidad estratégica de negocio</div>
-        </mat-list-item>
 
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-list-item>
+                  <mat-icon mat-list-icon>admin_panel_settings</mat-icon>
+                  <div mat-line>Seguridad</div>
+                  <div mat-line>Gestión de seguridad</div>
+                </mat-list-item>
+            </mat-expansion-panel-header>
+
+            <mat-nav-list>
+              <mat-list-item routerLink="security/usuarios" routerLinkActive="active">
+                <mat-icon mat-list-icon>group</mat-icon>
+                <div mat-line>Usuarios</div>
+              </mat-list-item>
+              <mat-list-item routerLink="security/roles" routerLinkActive="active">
+                <mat-icon mat-list-icon>contacts</mat-icon>
+                <div mat-line>Roles</div>
+              </mat-list-item>
+              <mat-list-item routerLink="security/roles" routerLinkActive="active">
+                <mat-icon mat-list-icon>topic</mat-icon>
+                <div mat-line>Módulos</div>
+              </mat-list-item>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+        <mat-divider></mat-divider>
+
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-list-item>
+                  <mat-icon mat-list-icon>inventory</mat-icon>
+                  <div mat-line>Inventario</div>
+                  <div mat-line>Gestión de inventario</div>
+                </mat-list-item>
+            </mat-expansion-panel-header>
+
+            <mat-nav-list>
+              <mat-list-item routerLink="inventario/categorias" routerLinkActive="active">
+                <mat-icon mat-list-icon>bookmark</mat-icon>
+                <div mat-line>Categorías</div>
+              </mat-list-item>
+              <mat-list-item routerLink="inventario/productos" routerLinkActive="active">
+                <mat-icon mat-list-icon>shopping_basket</mat-icon>
+                <div mat-line>Productos</div>
+              </mat-list-item>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </mat-accordion>
+        <mat-divider></mat-divider>
       </mat-nav-list>
     </mat-sidenav>
 
     <mat-sidenav-content [@fadeAnimation]="outlet.isActivated ? outlet.activatedRoute : ''">
       <mat-toolbar>
-        <button mat-icon-button (click)="sidenav.toggle()" *ngIf="mobileQuery.matches"><mat-icon>menu</mat-icon></button>
+        Luveck - Pasión por vivir
         <span class="example-spacer"></span>
-
 
         <button mat-button [matMenuTriggerFor]="menu">
           <div class="nameDate">
             <div class="nam">
-              <span>{{nombre}}</span>
-              <span>{{rol}}</span>
+              <span>{{authServ.userData.name}} {{authServ.userData.lastName}}</span>
+              <span>{{authServ.userData.role}}</span>
             </div>
             <img appNotImage [src]="img">
           </div>
         </button>
         <mat-menu #menu="matMenu">
+          <div class="togleTheme">
+            🌞<mat-slide-toggle [formControl]="toggleControl"></mat-slide-toggle>🌙
+          </div>
           <button mat-menu-item (click)="onLogout()">
             <mat-icon>logout</mat-icon>
             <span>Cerrar sesión</span>

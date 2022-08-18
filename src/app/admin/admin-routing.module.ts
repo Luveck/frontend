@@ -16,21 +16,24 @@ const routes: Routes = [
         loadChildren: () => import('../pages/zonas.pages/zonas.module').then( m => m.ZonasModule),
       },
       {
-        path: 'miscellaneous',
-        loadChildren: () => import('../pages/miscellaneous/miscellaneous.module').then( m => m.MiscellaneousModule),
+        path: 'sbu',
+        loadChildren: () => import('../pages/sbu/sbu.module').then( m => m.SbuPageModule),
       },
       {
-        path: '',
-        redirectTo: '/admin/home',
-        pathMatch: 'full'
-      }
+        path: 'security',
+        loadChildren: () => import('../pages/security.pages/security.module').then( m => m.SecurityModule),
+      },
+      {
+        path: 'inventario',
+        loadChildren: () => import('../pages/inventario.pages/security.module').then( m => m.InventarioModule),
+      },
     ]
   },
   {
     path: '',
     redirectTo: '/admin/home',
     pathMatch: 'full'
-  }
+  },
 ];
 
 @NgModule({

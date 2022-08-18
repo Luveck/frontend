@@ -58,4 +58,4 @@ jobs:
           app-name: 'luveck'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_AAADB2CE2240447C9C124F4585C43A9C }}
-          package: ./dist/luveck-frntend
+          package: ./dist/luveck-frontend

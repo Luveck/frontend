@@ -1,40 +1,39 @@
-<main>
-  <div class="contentForm mat-elevation-z8">
-    <div class="formHeader">
-      <h2>!Bienvenido a Luveck! 👋</h2>
-      <p>Inicia sesión con tu correo</p>
+<main class="login-section">
+  <div class="container-form">
+    <div class="titles">
+      <img src="assets/luveck_logo.png">
+      <p>Bienvenido al sitema Luveck</p>
     </div>
-    <div class="formContent">
-      <form [formGroup]="loginForm" (ngSubmit)="onLogin()" novalidate class="d-flex-center">
+    <form [formGroup]="loginForm" autocomplete="off">
+      <mat-form-field appearance="outline">
+        <mat-label>DNI</mat-label>
+        <input matInput placeholder="DNI de usuario" formControlName="dni">
+        <mat-icon matPrefix>person</mat-icon>
+        <mat-error>
+          DNI requerido
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field>
-          <input matInput placeholder="Email" formControlName="email">
-          <mat-error *ngIf="!loginForm.get('email')?.errors?.required && (loginForm.get('email')?.errors?.pattern)">
-            Por favor ingrese un correo valido
-          </mat-error>
-          <mat-error
-            *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched) && loginForm.get('email')?.errors?.required">
-            Correo requerido
-          </mat-error>
-        </mat-form-field>
+      <p style="text-align: end;"><span [routerLink]="['/forgotpassword']">Olvide mi contraseña</span></p>
+      <mat-form-field appearance="outline">
+        <mat-label>Contraseña</mat-label>
+        <input matInput [type]="hidePassword ?'password' :'text'" placeholder="Contraseña" formControlName="password" required>
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+          <mat-icon>{{hidePassword ?'visibility_off' :'visibility'}}</mat-icon>
+        </button>
+        <mat-error>
+          Contraseña requerida
+        </mat-error>
+      </mat-form-field>
 
-        <mat-form-field>
-          <input matInput type="password" placeholder="Password" formControlName="password">
-          <mat-error *ngIf="!loginForm.get('password')?.errors?.required">
-            La longitud de la contraseña debe ser mayor o igual a 8 y la contraseña debe contener uno o más caracteres
-            en mayúsculas, minúsculas, numéricos y especiales.
-          </mat-error>
-          <mat-error
-            *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched) && loginForm.get('password')?.errors?.required">
-            Contraseña requerida
-          </mat-error>
-        </mat-form-field>
+      <mat-checkbox formControlName="remember">Recordar usuario</mat-checkbox>
+      <br>
 
-        <div class="mt-top">
-          <button [disabled]="!loginForm.valid" mat-raised-button color="primary" mat-button>Iniciar Sesión</button>
-        </div>
+      <button mat-raised-button color="primary" [disabled]="!loginForm.valid"
+        (click)="onLogin(loginForm.value)">Iniciar Sesión
+      </button>
 
-      </form>
-    </div>
+      <p>¿Nuevo en la plataforma?  <span [routerLink]="['/register']">Crea una cuenta</span></p>
+    </form>
   </div>
 </main>

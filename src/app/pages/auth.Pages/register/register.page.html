@@ -1,1 +1,94 @@
-register works
+<main class="login-section">
+  <div class="container-form">
+    <div class="titles">
+      <img src="assets/luveck_logo.png">
+      <p>Bienvenido al sitema Luveck</p>
+    </div>
+    <form [formGroup]="registerForm" autocomplete="off">
+      <mat-form-field appearance="outline">
+        <mat-label>DNI</mat-label>
+        <input matInput placeholder="DNI de usuario" formControlName="dni">
+        <mat-error
+          *ngIf="registerForm.get('dni')?.invalid && (registerForm.get('dni')?.dirty || registerForm.get('dni')?.touched) && registerForm.get('dni')?.errors?.['required']">
+          DNI requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>email</mat-label>
+        <input matInput placeholder="Correo" formControlName="email">
+        <mat-error *ngIf="!registerForm.get('email')?.errors?.['required'] && (registerForm.get('email')?.errors?.['pattern'])">
+          Correo invalido
+        </mat-error>
+        <mat-error
+          *ngIf="registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched) && registerForm.get('email')?.errors?.['required']">
+          Correo requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Nombre de usuario" formControlName="name" required>
+        <mat-error
+          *ngIf="registerForm.get('name')?.invalid && (registerForm.get('name')?.dirty || registerForm.get('name')?.touched) && registerForm.get('name')?.errors?.['required']">
+          Nombre requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Apellido</mat-label>
+        <input matInput placeholder="Apellido de usuario" formControlName="lastName" required>
+        <mat-error
+          *ngIf="registerForm.get('lastName')?.invalid && (registerForm.get('lastName')?.dirty || registerForm.get('lastName')?.touched) && registerForm.get('lastName')?.errors?.['required']">
+          Apellido requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Teléfono</mat-label>
+        <input matInput placeholder="Teléfono" formControlName="phone" required>
+        <mat-error *ngIf="!registerForm.get('phone')?.errors?.['required'] && (registerForm.get('phone')?.errors?.['pattern'])">
+          Teléfono invalido
+        </mat-error>
+        <mat-error
+          *ngIf="registerForm.get('phone')?.invalid && (registerForm.get('phone')?.dirty || registerForm.get('phone')?.touched) && registerForm.get('phone')?.errors?.['required']">
+          Teléfono requerido
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Contraseña</mat-label>
+        <input matInput [type]="hidePassword ?'password' :'text'" formControlName="password" placeholder="Contraseña" [NgPasswordValidator]="options">
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+          <mat-icon>{{hidePassword ?'visibility_off' :'visibility'}}</mat-icon>
+        </button>
+        <mat-error *ngIf="!registerForm.get('password')?.errors?.['required'] && (registerForm.get('password')?.errors?.['pattern'])">
+          Contraseña insegura
+        </mat-error>
+        <mat-error
+          *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched) && registerForm.get('password')?.errors?.['required']">
+          Contraseña requerida
+        </mat-error>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" [disabled]="registerForm.invalid"
+        (click)="onRegister(registerForm.value)">Registo
+      </button>
+
+      <p>¿Ya tienes una cuenta? <span [routerLink]="['/login']">Inicia sesión</span></p>
+    </form>
+  </div>
+</main>
+
+
+<!--
+          <div class="validation">
+          <ul>
+            <li>Letras minusculas</li>
+            <li>Letras mayusculas</li>
+            <li>Al menos un número</li>
+            <li>Al menos un caracter especial</li>
+            <li>Minimio 8 caracteres</li>
+          </ul>
+        </div>
+ -->

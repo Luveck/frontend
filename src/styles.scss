@@ -1,4 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+@import './myStyles.scss';
 
 router-outlet~* {
   position: absolute;
@@ -13,27 +14,31 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   top: 0 !important;
 }
 
-span.chip{
-  color: #fff;
-  font-weight: 600;
-  padding: 0.2rem 1rem;
-  border-radius: 30px;
-  &.active{
-    background-color: #14ce63;
-  }
-  &.inactive{
-    background-color: #ff0000;
-  }
+/* Scroll */
+::-webkit-scrollbar{
+  width: 8px;
+}
+::-webkit-scrollbar-thumb{
+  border-radius: 10px;
+  background-color: #145483;
+  box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+}
+::-webkit-scrollbar-track{
+  border-radius: 10px;
+  background-color: transparent;
+  box-shadow: inset 0 0 6px rgba(0,0,0,.3);
 }
 
-.snackBarSuccess{
-  background: #45a374 !important;
-  color: #fff !important;
-  font-weight: bold;
-}
-
-.snackBarFail{
-  background: #ce6060 !important;
-  color: #fff !important;
-  font-weight: bold;
+/* Loading data */
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(#145483, .4);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

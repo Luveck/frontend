@@ -65,7 +65,7 @@ export class DetalleCiudadPage implements OnInit {
     this.newCiudadForm.patchValue({
       name: this.currentCiudad.name,
       stateCode: this.currentCiudad.stateCode,
-      departmentId: this.currentCiudad.departmentId.toString()
+//      stateId: this.currentCiudad.stateId.toString()
     })
   }
 
@@ -84,14 +84,13 @@ export class DetalleCiudadPage implements OnInit {
       }
       let peticion = this._zonasServ.addOrUpdateCiudad(data)
       peticion.subscribe(() => {
-        this._dataServ.openSnackBar('Registro agregado', true)
+        this._dataServ.fir('Registro agregado', 'success')
         this._dataServ.goBack()
       }, err => console.log(err))
     }else{
       let data = {
         "id": parseInt(this.ciudadId),
         ...this.newCiudadForm.value,
-        "status": this.currentCiudad.status,
         "createBy": this.currentCiudad.createBy,
         "creationDate": this.currentCiudad.creationDate,
         "updateBy": "elvin",
@@ -99,7 +98,7 @@ export class DetalleCiudadPage implements OnInit {
       }
       let peticion = this._zonasServ.addOrUpdateCiudad(data)
       peticion.subscribe(() => {
-        this._dataServ.openSnackBar('Registro actualizado', true)
+        this._dataServ.fir('Registro actualizado', 'success')
         this._dataServ.goBack()
       }, err => console.log(err))
     }

@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../material.module';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { DialogConfComponent } from './dialog-conf/dialog-conf.component';
+import { DataService } from '../services/data.service';
 
 @NgModule({
   declarations: [

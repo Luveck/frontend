@@ -2,14 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { ErrorPage } from './error.page';
+import { RolesPage } from './roles.page';
 import { RouterModule, Routes } from '@angular/router';
 import { MaterialModule } from 'src/app/material.module';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 const routes: Routes = [
   {
     path: '',
-    component: ErrorPage
+    component: RolesPage
   }
 ];
 
@@ -17,9 +18,10 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    ComponentsModule,
     MaterialModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [ErrorPage]
+  declarations: [RolesPage]
 })
-export class ErrorPageModule {}
+export class RolesPageModule {}

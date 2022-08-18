@@ -1,11 +1,10 @@
-# LuveckFrntend
+# LuveckFrontend
 
-# Credenciales Portal Azure:
- email: coding@yourappland.com
- contraseña: @ppl@nd&2022 
- url: Microsoft Azure App Service - Welcome 
- (https://luveck.azurewebsites.net)
-
+## Credenciales Portal Azure:
+ -email: coding@yourappland.com
+ -contraseña: @ppl@nd&2022 
+ -url: https://luveck.azurewebsites.net
+ 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.0.1.
 
 ## Development server

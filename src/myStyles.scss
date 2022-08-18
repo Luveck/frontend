@@ -235,6 +235,10 @@ $themeDark: (
 // Theme Init
 @include mat.all-component-themes($themeLight);
 
+.theme-light {
+  @include mat.all-component-themes($themeLight);
+}
+
 .theme-dark {
   @include mat.all-component-themes($themeDark);
 }
@@ -260,4 +264,8 @@ $themeDark: (
   .mat-badge-content {
     font-family: 'Roboto';
   }
+}
+
+.mat-expansion-panel-body{
+  padding: 0 1rem !important;
 }

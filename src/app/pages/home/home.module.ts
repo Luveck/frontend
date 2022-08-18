@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 
 import { HomePage } from './home.page';
 import { RouterModule, Routes } from '@angular/router';
+import { MaterialModule } from 'src/app/material.module';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 const routes: Routes = [
   {
@@ -16,6 +18,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     FormsModule,
+    ComponentsModule,
+    MaterialModule,
     RouterModule.forChild(routes)
   ],
   declarations: [HomePage]

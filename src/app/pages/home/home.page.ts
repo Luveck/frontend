@@ -1,4 +1,5 @@
-import { Component, OnInit  } from '@angular/core'
+import { Component, OnInit, ViewChild } from '@angular/core'
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-home',
@@ -7,7 +8,10 @@ import { Component, OnInit  } from '@angular/core'
 })
 
 export class HomePage implements OnInit {
-  constructor(){}
+
+  constructor(
+    private _dialogo:MatDialog
+  ){}
 
   ngOnInit(): void {
 

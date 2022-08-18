@@ -17,19 +17,12 @@ export interface Breadcrumb {
   styleUrls: ['./breadcrumb.component.scss']
 })
 export class BreadcrumbComponent implements OnInit {
-  // input variable
+
   @Input() breadcrumb: Breadcrumb |any;
 
   constructor() {}
 
-  // Lifecycle Hooks
-  // -----------------------------------------------------------------------------------------------------
-
-  /**
-   * On init
-   */
   ngOnInit() {
-    // concatenate default properties with passed properties
     this.breadcrumb = this.breadcrumb;
   }
 }

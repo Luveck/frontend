@@ -1,4 +1,6 @@
 import { Component, OnInit  } from '@angular/core'
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgPasswordValidatorOptions } from 'ng-password-validator';
 
 @Component({
   selector: 'app-reset-password',
@@ -7,9 +9,37 @@ import { Component, OnInit  } from '@angular/core'
 })
 
 export class ResetPasswordPage implements OnInit {
-  constructor(){}
+  public resetPassForm = new FormGroup({
+    password: new FormControl(['', [Validators.required, Validators.pattern(
+      '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$'
+    )]]),
+    confirmPass: new FormControl(['', [Validators.required]])
+  })
+
+  hidePassword:boolean = true;
+  options:NgPasswordValidatorOptions = {
+    'heading': 'Requisitos',
+    'successMessage': 'Contraseña segura',
+    'rules': {
+      'password': {
+        'type': "range",
+        'min': 8,
+        'max': 12
+      },
+      'include-symbol': true,
+      'include-number': true,
+      'include-lowercase-characters': true,
+      'include-uppercase-characters': true,
+    }
+  }
+
+  constructor(private _formBuilder: FormBuilder,){}
 
   ngOnInit(): void {
 
+  }
+
+  resetPass(formData:any){
+    console.log(formData)
   }
 }

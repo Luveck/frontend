@@ -1,6 +1,15 @@
+export interface User {
+  email: string,
+  password: string,
+  name: string,
+  lastName: string,
+  role: string,
+  token: string,
+}
+
+
 export interface Pais{
-  "id"?: number,
-  "iso"?: string,
+  "id": number,
   "name": string,
   "iso3": string,
   "phoneCode": string,
@@ -14,22 +23,25 @@ export interface Pais{
   "updateDate": string
 }
 
-export interface Departamento extends Pais{
+export interface Departamento{
   "id": number,
   "name": string,
   "stateCode": string,
   "countryId": number,
-  "country": Pais
+  "countryCode": string,
+  "countryName": string
 }
 
-export interface Ciudad extends Departamento{
+export interface Ciudad{
   "id": number,
   "name": string,
+  "stateId": number,
   "stateCode": string,
+  "stateName": string,
+  "countryId": number,
+  "countryName": string,
   "createBy": string,
   "creationDate": string,
   "updateBy": string,
-  "updateDate": string,
-  "departmentId": number,
-  "department": Departamento
+  "updateDate": string
 }

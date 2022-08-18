@@ -1,77 +1,109 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { lastValueFrom } from 'rxjs';
+import { DataService } from './data.service';
 
-import { User } from '../interfaces/users.model';
-
-@Injectable({ providedIn: 'root' })
-
+@Injectable({
+  providedIn: 'root'
+})
 export class AuthService {
-  //public
-  baseUrl:string = 'https://luveckservicesecurity.azurewebsites.net/api'
-  public currentUser:User | undefined
+  userToken:any = null
+  userData:any = null
 
-  constructor(private _http: HttpClient, private _router:Router) {}
-
-
-  public getCurrentUser() {
-    let token: string |any = localStorage.getItem('currentUser')
-    this.decodeToken(token)
+  constructor(private _dataServ:DataService, private _http:HttpClient) {
+    this.getCurrentUser()
   }
 
-  register(userInfo:User){
-    this._http.post<any>(`${this.baseUrl}/Security/Create`, userInfo)
-      .subscribe(user => {
-        if (user && user.token) {
-          localStorage.setItem('currentUser', JSON.stringify(user.token));
-          this.decodeToken(user.token)
-        }
-      })
-  }
-
-  login(userInfo: { email: string, password: string }) {
-    this._http.post<any>(`${this.baseUrl}/Security/Login`, userInfo)
-      .subscribe(user => {
-        if (user && user.token) {
-          localStorage.setItem('currentUser', JSON.stringify(user.token));
-          this.decodeToken(user.token)
-          this._router.navigate(['/home'])
-        }
-      }, ()=>{
-        console.log('Usuario o contraseña invalidos.')
-      })
-  }
-
-  /**
-   * User logout
-   *
-   */
-  logout() {
-    localStorage.removeItem('currentUser');
-    this._router.navigate(['authentication/login'])
-  }
-
-
-
-  decodeToken (token:string) {
-    if(token){
-      var base64Url = token.split('.')[1];
-      var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-
-      let userInfo = JSON.parse(jsonPayload)
-      console.log(userInfo)
+  getCurrentUser(){
+    const currentUser = localStorage.getItem('LuveckUserData')
+    if (currentUser){
+      this.userData = JSON.parse(currentUser)
+      this.userToken = this.userData.token
+      this.decodeToken(this.userToken)
     }
   }
-}
 
-/* const params = {
-  userName: "Elvin",
-  email: "elvinj@gmail.com",
-  password: "G14t7227ls@dos",
-  name: "Elvin",
-  lastName: "Caceres",
-  dni: "0306-1998-00959",
-} */
+  public async login(formData:any){
+    let info = {
+      "dni": formData.dni,
+      "password": formData.password
+    }
+    try {
+      const result$ = this._http.post('https://luveckservicesecurity.azurewebsites.net/api/Security/Login', info)
+      let data:any = await lastValueFrom(result$)
+      console.log(data)
+      this.userToken = data.token
+      this.userData = {
+        name: data.name,
+        lastName: data.lastName,
+        role: data.role.name,
+        token: this.userToken
+      }
+      if(formData.remember){
+        localStorage.setItem('LuveckUserData', JSON.stringify(this.userData));
+      }
+      this.decodeToken(this.userToken)
+    } catch (error:any) {
+      console.log(error)
+      let msgError = error.error
+      this._dataServ.fir(`${msgError}`, 'error')
+    }
+  }
+
+  public async register(formData:any){
+    console.log(formData)
+    try {
+      const result$ = this._http.post('https://luveckservicesecurity.azurewebsites.net/api/Security/Register', formData)
+      let resData:any = await lastValueFrom(result$)
+      console.log(resData)
+      this.userToken = resData.token
+      this.userData = {
+        dni: formData.dni,
+        email: formData.email,
+        name: formData.name,
+        lastName: formData.lastName,
+        phone: formData.phone,
+        role: resData.role.name,
+        token: this.userToken
+      }
+      localStorage.setItem('LuveckUserData', JSON.stringify(this.userData))
+      this.decodeToken(this.userToken)
+    } catch (error:any) {
+      console.log(error)
+      let msgError = error.error
+      this._dataServ.fir(`${msgError}`, 'error')
+    }
+  }
+
+  private decodeToken (token:any) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    let tokenData = JSON.parse(jsonPayload)
+    if(this.checkTokenDate(tokenData.exp)){
+      this._dataServ.goTo('/admin/home')
+    }else{
+      this.logOut()
+      this._dataServ.fir('Credenciales vencidas', 'error')
+    }
+  }
+
+  checkTokenDate(exp:number):boolean{
+    let dateToken = new Date(exp * 1000)
+    let dateNow = new Date()
+    if(dateNow >= dateToken){
+      return false
+    }else{
+      return true
+    }
+  }
+
+  public logOut(){
+    this.userToken = null
+    this.userData = null
+    localStorage.removeItem('LuveckUserData');
+    this._dataServ.goTo('login')
+  }
+}

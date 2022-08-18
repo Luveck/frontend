@@ -91,7 +91,7 @@ export class DetallePaisPage implements OnInit {
       }
       let peticion = this._zonasServ.addOrUpdatePais(data)
       peticion.subscribe(res => {
-        this._dataServ.openSnackBar('Registro agregado', true)
+        this._dataServ.fir('Registro agregado', 'success')
         this._dataServ.goBack()
       }, err => console.log(err))
     }else{
@@ -106,7 +106,7 @@ export class DetallePaisPage implements OnInit {
       }
       let peticion = this._zonasServ.addOrUpdatePais(data)
       peticion.subscribe(res => {
-        this._dataServ.openSnackBar('Registro actualizado', true)
+        this._dataServ.fir('Registro actualizado', 'success')
         this._dataServ.goBack()
       }, err => console.log(err))
     }

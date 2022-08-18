@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "luveck-frntend": {
+    "LuveckFrontend": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +17,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/luveck-frntend",
+            "allowedCommonJsDependencies": [
+              "sweetalert2"
+            ],
+            "outputPath": "dist/luveck-frontend",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -28,8 +31,8 @@
               "src/assets"
             ],
             "styles": [
-              "src/myStyles.scss",
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/sweetalert2/src/sweetalert2.scss"
             ],
             "scripts": []
           },
@@ -38,13 +41,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "10kb",
+                  "maximumError": "10kb"
                 }
               ],
               "fileReplacements": [
@@ -70,10 +73,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "luveck-frntend:build:production"
+              "browserTarget": "LuveckFrontend:build:production"
             },
             "development": {
-              "browserTarget": "luveck-frntend:build:development"
+              "browserTarget": "LuveckFrontend:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -81,7 +84,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "luveck-frntend:build"
+            "browserTarget": "LuveckFrontend:build"
           }
         },
         "test": {
