@@ -14,7 +14,7 @@
         </mat-error>
       </mat-form-field>
 
-      <p style="text-align: end;"><span [routerLink]="['/forgotpassword']">Olvide mi contraseña</span></p>
+      <p style="text-align: end;"><span [routerLink]="['/authentication/forgotpassword']">Olvide mi contraseña</span></p>
       <mat-form-field appearance="outline">
         <mat-label>Contraseña</mat-label>
         <input matInput [type]="hidePassword ?'password' :'text'" placeholder="Contraseña" formControlName="password" required>
@@ -33,7 +33,7 @@
         (click)="onLogin(loginForm.value)">Iniciar Sesión
       </button>
 
-      <p>¿Nuevo en la plataforma?  <span [routerLink]="['/register']">Crea una cuenta</span></p>
+      <p>¿Nuevo en la plataforma?  <span [routerLink]="['/authentication/register']">Crea una cuenta</span></p>
     </form>
   </div>
 </main>
