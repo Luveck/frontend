@@ -42,3 +42,21 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   align-items: center;
   justify-content: center;
 }
+
+
+span.chip{
+  color: #fff;
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border-radius: 30px;
+  &.active{
+    background-color: #14ce63;
+  }
+  &.inactive{
+    background-color: #ff0000;
+  }
+}
+
+
+
+

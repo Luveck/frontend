@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Pais, Departamento, Ciudad } from '../interfaces/zonas.model';
+import { Pais, Departamento, Ciudad } from '../interfaces/models';
 
 @Injectable({
   providedIn: 'root'

@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
-import { Pais } from 'src/app/interfaces/zonas.model';
+import { Pais } from 'src/app/interfaces/models';
 
 import { DataService } from 'src/app/services/data.service';
 import { ZonasService } from 'src/app/services/zonas.service';
@@ -34,7 +34,7 @@ export class PaisesPage implements AfterViewInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:Pais[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['name', 'currency', 'phoneCode', 'status', 'createBy', 'creationDate', 'updateBy', 'updateDate', 'acctions'];
+  displayedColumns: string[] = ['name', 'currency', 'phoneCode', 'status', 'creationDate', 'acctions'];
   dataSource = new MatTableDataSource<Pais>(this.ELEMENT_DATA);
 
   resultsLength = 0;

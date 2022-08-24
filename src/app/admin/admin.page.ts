@@ -1,8 +1,10 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
+import { HttpClient } from '@angular/common/http';
 import { Component, HostBinding, OnInit} from '@angular/core'
 import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterOutlet } from '@angular/router';
+import { Observable } from 'rxjs';
 
 import { fadeAnimation } from '../animations';
 import { DialogConfComponent } from '../components/dialog-conf/dialog-conf.component';
@@ -21,11 +23,13 @@ export class AdminPage implements OnInit {
   img:String = 'assets/user.png'
   displayName:string = ''
   rol:string = ''
+  menuList:Observable<any[]> | undefined
 
   @HostBinding('class') className = '';
   toggleControl = new FormControl();
 
   constructor(
+    private _http: HttpClient,
     private _overlay: OverlayContainer,
     private _dialogo: MatDialog,
     private _dataServ: DataService,
@@ -53,6 +57,7 @@ export class AdminPage implements OnInit {
   }
 
   ngOnInit(): void {
+    this.menuList = this._http.get<[]>("/assets/menu.json")
     let theme = this._dataServ.getTheme()
     theme === 'dark'
       ?this.toggleControl.setValue(true)

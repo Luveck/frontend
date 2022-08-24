@@ -6,6 +6,11 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 
+//formato de fechas
+import { registerLocaleData } from '@angular/common';
+import localeEsHn from '@angular/common/locales/es-HN';
+registerLocaleData(localeEsHn, 'es-Hn');
+
 @NgModule({
   declarations: [
     AppComponent

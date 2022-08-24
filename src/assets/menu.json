@@ -1,0 +1,70 @@
+[
+  {
+    "text": "Inicio",
+    "subText": "Vista General",
+    "icon": "home",
+    "routerLink": "home"
+  },
+  {
+    "text": "SBU's",
+    "subText": "Gestión de sbu's",
+    "icon": "check_box",
+    "routerLink": "sbu"
+  },
+  {
+    "text": "Paises",
+    "subText": "Gestión de paises",
+    "icon": "public",
+    "children": [
+      {
+        "text": "Paises",
+        "icon": "flag",
+        "routerLink": "zonas/paises"
+      },
+      {
+        "text": "Departamentos",
+        "icon": "map",
+        "routerLink": "zonas/departamentos"
+      },
+      {
+        "text": "Ciudades",
+        "icon": "apartment",
+        "routerLink": "zonas/ciudades"
+      }
+    ]
+  },
+  {
+    "text": "Seguridad",
+    "subText": "Gestión de seguridad",
+    "icon": "admin_panel_settings",
+    "children": [
+      {
+        "text": "Usuarios",
+        "icon": "group",
+        "routerLink": "security/usuarios"
+      },
+      {
+        "text": "Roles",
+        "icon": "contacts",
+        "routerLink": "security/roles"
+      }
+    ]
+  },
+  {
+    "text": "Inventario",
+    "subText": "Gestión de inventario",
+    "icon": "inventory",
+    "children": [
+      {
+        "text": "Categorías",
+        "icon": "bookmark",
+        "routerLink": "inventario/categorias"
+      },
+      {
+        "text": "Productos",
+        "icon": "shopping_basket",
+        "routerLink": "inventario/productos"
+      }
+    ]
+  }
+]

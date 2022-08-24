@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute } from '@angular/router'
-import { Ciudad } from 'src/app/interfaces/zonas.model'
+import { Ciudad } from 'src/app/interfaces/models'
 import { DataService } from 'src/app/services/data.service'
 import { ZonasService } from 'src/app/services/zonas.service'
 

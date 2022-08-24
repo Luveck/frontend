@@ -3,7 +3,7 @@ import { AfterViewInit, Component, Input, ViewChild } from '@angular/core'
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Ciudad } from 'src/app/interfaces/zonas.model';
+import { Ciudad } from 'src/app/interfaces/models';
 
 import { DataService } from 'src/app/services/data.service';
 import { ZonasService } from 'src/app/services/zonas.service';
