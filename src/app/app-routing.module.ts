@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './guards/login.guard';
 
+const newLocal = './pages/auth.Pages/auth.module';
 const routes: Routes = [
   {
     path: '',
@@ -15,7 +16,7 @@ const routes: Routes = [
   },
   {
     path: 'authentication',
-    loadChildren: () => import('./pages/auth.pages/auth.module').then(m => m.AuthModule)
+    loadChildren: () => import(newLocal).then(m => m.AuthModule)
   },
   {
     path: '**',
