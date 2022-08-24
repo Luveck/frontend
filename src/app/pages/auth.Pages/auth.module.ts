@@ -32,4 +32,4 @@ const routes: Routes = [
   ]
 })
 
-export class AuthenticationModule {}
+export class AuthModule {}
