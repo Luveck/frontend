@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { RouterModule, Routes } from '@angular/router';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { CustomMatPaginatorIntl } from '../paginator-es';
 
 const routes: Routes = [
   {
@@ -33,6 +35,12 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes)
+  ],
+  providers: [
+    {
+      provide: MatPaginatorIntl,
+      useClass: CustomMatPaginatorIntl
+    }
   ]
 })
 

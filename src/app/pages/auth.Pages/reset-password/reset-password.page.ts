@@ -1,5 +1,5 @@
 import { Component, OnInit  } from '@angular/core'
-import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgPasswordValidatorOptions } from 'ng-password-validator';
 
 @Component({
@@ -10,10 +10,10 @@ import { NgPasswordValidatorOptions } from 'ng-password-validator';
 
 export class ResetPasswordPage implements OnInit {
   public resetPassForm = new FormGroup({
-    password: new FormControl(['', [Validators.required, Validators.pattern(
+    Newpassword: new FormControl('', [Validators.required, Validators.pattern(
       '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$'
-    )]]),
-    confirmPass: new FormControl(['', [Validators.required]])
+    )]),
+    confirmPass: new FormControl('', [Validators.required])
   })
 
   hidePassword:boolean = true;
@@ -33,7 +33,7 @@ export class ResetPasswordPage implements OnInit {
     }
   }
 
-  constructor(private _formBuilder: FormBuilder,){}
+  constructor(){}
 
   ngOnInit(): void {
 

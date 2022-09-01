@@ -15,26 +15,27 @@
       </mat-nav-list>
 
       <ng-template #parentMenu let-menu="menu">
-        <mat-list-item [routerLink]="menu.routerLink" routerLinkActive="is-active" [routerLinkActiveOptions]="{exact:
-            true}">
+        <mat-list-item [routerLink]="menu.routerLink" routerLinkActive="is-active" [routerLinkActiveOptions]="{exact:true}">
           <mat-icon>{{menu.icon}}</mat-icon> {{menu.text}}
         </mat-list-item>
       </ng-template>
 
-      <ng-template #childMenu let-menu="menu">
-        <mat-expansion-panel [class.mat-elevation-z0]="true">
-          <mat-expansion-panel-header>
-            <mat-icon mat-list-icon>{{menu.icon}}</mat-icon>{{menu.text}}
-          </mat-expansion-panel-header>
-          <mat-nav-list>
-            <mat-list-item [routerLink]="submenu.routerLink" *ngFor="let submenu of menu.children"
-              routerLinkActive="is-active" [routerLinkActiveOptions]="{exact:
+      <mat-accordion>
+        <ng-template #childMenu let-menu="menu">
+          <mat-expansion-panel [class.mat-elevation-z0]="true">
+            <mat-expansion-panel-header>
+              <mat-icon mat-list-icon>{{menu.icon}}</mat-icon>{{menu.text}}
+            </mat-expansion-panel-header>
+            <mat-nav-list>
+              <mat-list-item [routerLink]="submenu.routerLink" *ngFor="let submenu of menu.children"
+                routerLinkActive="is-active" [routerLinkActiveOptions]="{exact:
                     true}">
-              <mat-icon>{{submenu.icon}}</mat-icon> {{submenu.text}}
-            </mat-list-item>
-          </mat-nav-list>
-        </mat-expansion-panel>
-      </ng-template>
+                <mat-icon>{{submenu.icon}}</mat-icon> {{submenu.text}}
+              </mat-list-item>
+            </mat-nav-list>
+          </mat-expansion-panel>
+        </ng-template>
+      </mat-accordion>
     </mat-sidenav>
 
     <mat-sidenav-content [@fadeAnimation]="outlet.isActivated ? outlet.activatedRoute : ''">
@@ -55,6 +56,10 @@
           <div class="togleTheme">
             🌞<mat-slide-toggle [formControl]="toggleControl"></mat-slide-toggle>🌙
           </div>
+          <button mat-menu-item (click)="onLogout()">
+            <mat-icon>manage_accounts</mat-icon>
+            <span>Cuenta</span>
+          </button>
           <button mat-menu-item (click)="onLogout()">
             <mat-icon>logout</mat-icon>
             <span>Cerrar sesión</span>

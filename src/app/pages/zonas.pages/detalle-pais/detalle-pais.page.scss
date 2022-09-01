@@ -2,6 +2,46 @@ main{
   width: 90%;
   padding-top: 6rem;
   margin: 0 auto;
+  .fm_header{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    section.avatar{
+      padding: .5rem;
+      display: flex;
+      align-items: center;
+      .datos{
+        margin: 0.5rem;
+        p{
+          font-size: 2em;
+        }
+        .bots{
+          margin-top: 1rem;
+          width: 100%;
+          text-align: center;
+          button{
+            margin: 0 0.5rem 0 0;
+          }
+        }
+      }
+    }
+    section.resumen{
+      padding: 1rem;
+      ul{
+        border-left: 1px solid gray;
+        list-style: none;
+        padding-left: .4rem;
+        li{
+          .example-tab-icon {
+            margin-right: 8px;
+          }
+          margin: 0.3rem 0;
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+  }
   .wrapForm{
     width: 90%;
     padding: 10px 0;

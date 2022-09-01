@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, AfterViewInit } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute } from '@angular/router'
 import { Pais } from 'src/app/interfaces/models'
@@ -11,9 +11,9 @@ import { ZonasService } from 'src/app/services/zonas.service'
   styleUrls: ['./detalle-pais.page.scss'],
 })
 
-export class DetallePaisPage implements OnInit {
+export class DetallePaisPage implements AfterViewInit {
   public paisId !: string
-  private currentPais !: Pais
+  currentPais!: Pais
 
   public newPaisForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -49,7 +49,7 @@ export class DetallePaisPage implements OnInit {
     private _dataServ: DataService,
   ){}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.paisId = this._route.snapshot.params['id']
     this.paisId != 'new'
       ?this.getPaisById()

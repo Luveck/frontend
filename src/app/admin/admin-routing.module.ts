@@ -25,7 +25,7 @@ const routes: Routes = [
       },
       {
         path: 'inventario',
-        loadChildren: () => import('../pages/inventario.pages/security.module').then( m => m.InventarioModule),
+        loadChildren: () => import('../pages/inventario.pages/inventario.module').then( m => m.InventarioModule),
       },
       {
         path: '',

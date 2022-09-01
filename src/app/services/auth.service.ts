@@ -83,7 +83,7 @@ export class AuthService {
     }).join(''));
     let tokenData = JSON.parse(jsonPayload)
     if(this.checkTokenDate(tokenData.exp)){
-      this._dataServ.goTo('/admin/home')
+      //this._dataServ.goTo('/admin/home')
     }else{
       this.logOut()
       this._dataServ.fir('Credenciales vencidas', 'error')

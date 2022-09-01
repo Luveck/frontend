@@ -1,3 +1,32 @@
 <main>
-  main page categorias
+  <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
+
+  <header>
+    <button mat-raised-button color="primary" (click)="on()">
+      <mat-icon>add</mat-icon>
+      Agregar Categoría
+    </button>
+  </header>
+
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+
+  <div class="catesCont">
+    <mat-card class="cat mat-elevation-z8" *ngFor="let cat of catServ.categorias">
+      <div class="cat_header">
+        <span>{{cat.name}}</span>
+        <span class="chip" [ngClass]="{'active': cat.state == true, 'inactive': cat.state == false}">{{cat.state ?'Habilitada' :'Inhabilitado'}}</span>
+      </div>
+      <div class="cat_body">
+        <p><span>Fecha de creación: </span>{{cat.creationDate |date:'M/d/yy'}}</p>
+      </div>
+      <div class="cat_actions">
+        <button mat-raised-button color="primary" (click)="on(cat.id)">
+          Ver detalles
+          <mat-icon>arrow_forward</mat-icon>
+        </button>
+      </div>
+    </mat-card>
+  </div>
 </main>

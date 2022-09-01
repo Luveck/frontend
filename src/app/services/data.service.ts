@@ -3,12 +3,11 @@ import { Router } from '@angular/router';
 import { Location } from '@angular/common'
 import Swal from 'sweetalert2';
 
-import { DialogConfComponent } from '../components/dialog-conf/dialog-conf.component';
-
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
+  baseURL:string = 'https://luveckapi.azurewebsites.net/api'
 
   constructor(
     private _router:Router,

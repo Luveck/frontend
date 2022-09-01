@@ -3,15 +3,17 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { RouterModule, Routes } from '@angular/router';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { CustomMatPaginatorIntl } from '../paginator-es';
 
 const routes: Routes = [
   {
     path: 'categorias',
-    loadChildren: () => import('./productos/productos.module').then( m => m.productosPageModule)
+    loadChildren: () => import('./categorias/categorias.module').then( m => m.CategoriasPageModule)
   },
   {
     path: 'productos',
-    loadChildren: () => import('./categorias/categorias.module').then( m => m.CategoriasPageModule)
+    loadChildren: () => import('./productos/productos.module').then( m => m.productosPageModule)
   }
 ];
 
@@ -21,6 +23,12 @@ const routes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes)
+  ],
+  providers: [
+    {
+      provide: MatPaginatorIntl,
+      useClass: CustomMatPaginatorIntl
+    }
   ]
 })
 

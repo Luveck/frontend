@@ -14,7 +14,7 @@
     </mat-form-field>
   </header>
 
-  <div class="example-loading-shade" *ngIf="isLoadingResults">
+  <div class="loading-shade" *ngIf="isLoadingResults">
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
   </div>
 
@@ -51,10 +51,10 @@
       <ng-container matColumnDef="acctions">
         <th mat-header-cell *matHeaderCellDef> Acciones </th>
         <td mat-cell *matCellDef="let row">
-          <button mat-icon-button color="accent" (click)="on(row.id)">
+          <button mat-icon-button color="accent" (click)="on(row.id)" matTooltip="Editar país">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="dialog(row.id, row.status)">
+          <button mat-icon-button color="warn" (click)="dialog(row.id, row.status)" matTooltip="{{row.status ?'Deshabilitar país' :'Habilitar país'}}">
             <mat-icon>{{row.status ?'radio_button_checked' :'radio_button_unchecked'}}</mat-icon>
           </button>
         </td>

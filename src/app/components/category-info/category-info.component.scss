@@ -1,0 +1,80 @@
+mat-dialog-container{
+  height: 463px;
+}
+.mat-dialog-title{
+  text-align: center;
+}
+.mat-dialog-content{
+  height: auto;
+}
+.content{
+  .fm1{
+    padding: 1rem;
+    .fm_header{
+      width: 100%;
+      display: flex;
+      section.avatar{
+        width: 40%;
+        padding: .5rem;
+        display: flex;
+        align-items: center;
+        .datos{
+          margin: 0.5rem;
+          p{
+            font-size: 20px;
+          }
+          .bots{
+            margin-top: 1rem;
+            width: 100%;
+            text-align: center;
+            button{
+              margin: 0 0.5rem 0 0;
+            }
+          }
+        }
+      }
+      section.resumen{
+        width: 60%;
+        padding: 1rem;
+        ul{
+          border-left: 1px solid gray;
+          list-style: none;
+          padding-left: .4rem;
+          li{
+            .example-tab-icon {
+              margin-right: 8px;
+            }
+            margin: 0.3rem 0;
+            display: flex;
+            align-items: center;
+          }
+        }
+      }
+    }
+    .fm_content{
+      width: 90%;
+      margin: 0 auto;
+      padding-top: .5rem;
+      .wrapForm{
+        p{
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
+        .inputs{
+          display: flex;
+          justify-content: center;
+          gap: 0 .5rem;
+          .mat-form-field {
+            width: 50%;
+            font-size: 14px;
+            padding: 0;
+          }
+        }
+      }
+    }
+  }
+}
+.mat-dialog-actions{
+  border-top: 1px solid gray;
+  justify-content: center;
+}
