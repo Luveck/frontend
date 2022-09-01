@@ -26,7 +26,7 @@ export class ProductosService {
       "nameCategory": "Pastillas"
     },
     {
-      "id": 1,
+      "id": 2,
       "name": "Panadol",
       "description": "pastillas bla bla",
       "presentation": "Caja",
@@ -41,7 +41,7 @@ export class ProductosService {
       "nameCategory": "Pastillas"
     },
     {
-      "id": 1,
+      "id": 3,
       "name": "Panadol",
       "description": "pastillas bla bla",
       "presentation": "Caja",
@@ -56,7 +56,7 @@ export class ProductosService {
       "nameCategory": "Pastillas"
     },
     {
-      "id": 1,
+      "id": 4,
       "name": "Panadol",
       "description": "pastillas bla bla",
       "presentation": "Caja",
@@ -71,7 +71,7 @@ export class ProductosService {
       "nameCategory": "Pastillas"
     },
     {
-      "id": 1,
+      "id": 5,
       "name": "Panadol",
       "description": "pastillas bla bla",
       "presentation": "Caja",
@@ -86,7 +86,7 @@ export class ProductosService {
       "nameCategory": "Pastillas"
     },
     {
-      "id": 1,
+      "id": 6,
       "name": "Panadol",
       "description": "pastillas bla bla",
       "presentation": "Caja",
@@ -116,8 +116,8 @@ export class ProductosService {
     return this._http.get<Producto>(`${this._dataServ.baseURL}/Administration/GetProductsById?Id=${id}`)
   }
 
-/*   public addCategoria(name:string, state:boolean){
-    let dataCat:Producto = {
+  public addProducto(prod:Producto | any){
+    /* let dataCat:Producto = {
       "name": name,
       "state": state,
       "createBy": `${this.autnServ.userData.name} ${this.autnServ.userData.lastName}`,
@@ -126,24 +126,23 @@ export class ProductosService {
       "updateDate": new Date().toISOString()
     }
     console.log(dataCat)
-    return this._http.post(`${this._dataServ.baseURL}/Administration/CreateCategory`, dataCat)
-  } */
-
-  public deleteProd(id:number){
-    return this._http.delete(`${this._dataServ.baseURL}/Administration/DeleteCategory?Id=${id}`)
+    return this._http.post(`${this._dataServ.baseURL}/Administration/CreateCategory`, dataCat) */
   }
 
-/*   public updateCat(name:string, state:boolean, cat:Producto | any){
-    let catToUpdate:Producto = {
+  public deleteProd(id:number){
+    return this._http.delete(`${this._dataServ.baseURL}/Administration/DeleteProduct?Id=${id}`)
+  }
+
+  public updateProd(prod:Producto | any){
+    /* let prodToUpdate:Producto = {
       "id": cat?.id,
       "name": name,
-      "state": state,
       "createBy": cat?.createBy,
       "creationDate": cat?.creationDate,
       "updateBy": `${this.autnServ.userData.name} ${this.autnServ.userData.lastName}`,
       "updateDate": new Date().toISOString()
     }
-    console.log(catToUpdate)
-    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdateCategory`, catToUpdate)
-  } */
+    console.log(prodToUpdate)
+    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdateCategory`, catToUpdate) */
+  }
 }

@@ -4,18 +4,18 @@
   <div class="fm_header" *ngIf="paisId != 'new'">
     <section class="avatar">
       <div class="datos">
-        <p>{{currentPais?.name}}</p>
+        <p>{{currentPais.name}}</p>
         <div class="bots">
-          <span class="chip" [ngClass]="{'active': currentPais?.status == true, 'inactive': currentPais?.status == false}">{{currentPais?.status ?'Activo' :'Inactivo'}}</span>
+          <span class="chip" [ngClass]="{'active': currentPais.status == true, 'inactive': currentPais.status == false}">{{currentPais.status ?'Activo' :'Inactivo'}}</span>
         </div>
       </div>
     </section>
     <section class="resumen">
       <ul>
-        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentPais?.createBy}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentPais?.creationDate |date:'M/d/yy'}}</li>
-        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentPais?.updateBy}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentPais?.updateDate |date:'M/d/yy'}}</li>
+        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentPais.createBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentPais.creationDate |date:'M/d/yy'}}</li>
+        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentPais.updateBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentPais.updateDate |date:'M/d/yy'}}</li>
       </ul>
     </section>
   </div>

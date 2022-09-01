@@ -1,0 +1,60 @@
+<main>
+  <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
+
+  <div class="fm_header" *ngIf="prodId != 'new'">
+    <section class="avatar">
+      <div class="datos">
+        <p>{{currentProd.name}}</p>
+        <div class="bots">
+
+        </div>
+      </div>
+    </section>
+    <section class="resumen">
+      <ul>
+        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentProd.createBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentProd.creationDate |date:'M/d/yy'}}</li>
+        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentProd.updateBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentProd.updateDate |date:'M/d/yy'}}</li>
+      </ul>
+    </section>
+  </div>
+
+  <form class="wrapForm" [formGroup]="prodForm" autocomplete="off">
+    <div class="inputs">
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Nombre" formControlName="name">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Descripción</mat-label>
+        <input matInput placeholder="Descripción" formControlName="description">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Presentación</mat-label>
+        <input matInput placeholder="Presentación" formControlName="presentation">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Cantidad</mat-label>
+        <input matInput type="number" formControlName="quantity">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Tipo de venta</mat-label>
+        <input matInput placeholder="Tipo venta" formControlName="typeSell">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Costo</mat-label>
+        <input matInput type="number" formControlName="cost">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Categoría</mat-label>
+        <input matInput formControlName="nameCategory">
+      </mat-form-field>
+    </div>
+
+    <div class="btns">
+      <button mat-raised-button color="primary" [disabled]="prodForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
+      <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
+    </div>
+  </form>
+</main>

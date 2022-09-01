@@ -81,7 +81,7 @@ export class productosPage implements OnInit {
   }
 
   on(id?:string){
-    this._dataServ.goTo('admin/zonas/detalle-pais', id)
+    this._dataServ.goTo('admin/inventario/detalle-producto', id)
   }
 
   dialog(id: number) {
@@ -93,6 +93,7 @@ export class productosPage implements OnInit {
         if (confirmado) {
           let respuesta = this._prodServ.deleteProd(id)
           respuesta.subscribe(() => {
+            this._dataServ.fir('Producto eliminado', 'success')
           })
         }
       })
