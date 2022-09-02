@@ -14,6 +14,7 @@ import { ZonasService } from 'src/app/services/zonas.service'
 export class DetallePaisPage implements OnInit {
   public paisId !: string
   currentPais!: Pais
+  isLoadingResults:boolean = true
 
   public newPaisForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -60,6 +61,7 @@ export class DetallePaisPage implements OnInit {
     let res = this._zonasServ.getPaisById(this.paisId)
     res.subscribe(data => {
       this.currentPais = data
+      this.isLoadingResults = false
       this.initValores()
     }, (err => console.log(err)))
   }

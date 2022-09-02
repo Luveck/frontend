@@ -2,14 +2,8 @@
   {
     "text": "Inicio",
     "subText": "Vista General",
-    "icon": "home",
+    "icon": "house",
     "routerLink": "home"
-  },
-  {
-    "text": "SBU's",
-    "subText": "Gestión de sbu's",
-    "icon": "check_box",
-    "routerLink": "sbu"
   },
   {
     "text": "Paises",
@@ -20,11 +14,6 @@
         "text": "Paises",
         "icon": "flag",
         "routerLink": "zonas/paises"
-      },
-      {
-        "text": "Departamentos",
-        "icon": "map",
-        "routerLink": "zonas/departamentos"
       },
       {
         "text": "Ciudades",
@@ -57,7 +46,7 @@
     "children": [
       {
         "text": "Categorías",
-        "icon": "bookmark",
+        "icon": "bookmarks",
         "routerLink": "inventario/categorias"
       },
       {

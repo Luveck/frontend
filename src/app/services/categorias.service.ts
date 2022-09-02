@@ -28,7 +28,7 @@ export class CategoriasService {
   public addCategoria(name:string, state:boolean){
     let dataCat:Categoria = {
       "name": name,
-      "state": state,
+      "isDeleted": state,
       "createBy": `${this.autnServ.userData.name} ${this.autnServ.userData.lastName}`,
       "creationDate": new Date().toISOString(),
       "updateBy": `${this.autnServ.userData.name} ${this.autnServ.userData.lastName}`,
@@ -46,7 +46,7 @@ export class CategoriasService {
     let catToUpdate:Categoria = {
       "id": cat?.id,
       "name": name,
-      "state": state,
+      "isDeleted": state,
       "createBy": cat?.createBy,
       "creationDate": cat?.creationDate,
       "updateBy": `${this.autnServ.userData.name} ${this.autnServ.userData.lastName}`,

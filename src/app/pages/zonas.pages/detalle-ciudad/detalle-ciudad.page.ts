@@ -13,12 +13,16 @@ import { ZonasService } from 'src/app/services/zonas.service'
 
 export class DetalleCiudadPage implements OnInit {
   public ciudadId !: string
-  private currentCiudad !: Ciudad
+  currentCiudad !: Ciudad
+  isLoadingResults:boolean = true
 
   public newCiudadForm = new FormGroup({
     name: new FormControl('', Validators.required),
+    stateId: new FormControl('', Validators.required),
     stateCode: new FormControl('', Validators.required),
-    departmentId: new FormControl('1'),
+    stateName: new FormControl('', Validators.required),
+    countryId: new FormControl('', Validators.required),
+    countryName: new FormControl('', Validators.required),
   })
 
   public breadcrumb = {
@@ -57,6 +61,7 @@ export class DetalleCiudadPage implements OnInit {
     let res = this._zonasServ.getCiudadById(this.ciudadId)
     res.subscribe(data => {
       this.currentCiudad = data
+      this.isLoadingResults = false
       this.initValores()
     }, (err => console.log(err)))
   }

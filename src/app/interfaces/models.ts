@@ -50,7 +50,7 @@ export interface Ciudad{
 export interface Categoria{
   id?: number
   name: string
-  state: boolean
+  isDeleted: boolean
   createBy: string
   creationDate: string
   updateBy?: string
@@ -62,9 +62,9 @@ export interface Producto{
   name: string
   description: string
   presentation: string
-  quantity: number
+  quantity: number | any
   typeSell: string
-  cost: number
+  cost: number | any
   createBy: string
   creationDate: string
   updateBy: string

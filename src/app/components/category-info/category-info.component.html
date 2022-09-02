@@ -7,7 +7,8 @@
           <div class="datos">
             <p>{{currentCategoria?.name}}</p>
             <div class="bots">
-              <button mat-flat-button color="warn" (click)="delete(currentCategoria?.id!)">Eliminar categoría</button>
+              <!-- <button mat-flat-button color="warn" (click)="delete(currentCategoria?.id!)">Eliminar categoría</button> -->
+              <span class="chip" [ngClass]="{'inactive': currentCategoria?.isDeleted == true, 'active': currentCategoria?.isDeleted == false}">{{currentCategoria?.isDeleted ?'Inctivo' :'Activo'}}</span>
             </div>
           </div>
         </section>
@@ -30,10 +31,10 @@
             <mat-form-field appearance="outline">
               <mat-label>Estado</mat-label>
               <mat-select [(ngModel)]="state">
-                <mat-option [value]= "true">
+                <mat-option [value]= "false">
                   Habilitada
                 </mat-option>
-                <mat-option [value]= "false">
+                <mat-option [value]= "true">
                   Inhabilitada
                 </mat-option>
               </mat-select>

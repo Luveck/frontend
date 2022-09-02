@@ -32,7 +32,7 @@ export class CiudadesPage implements AfterViewInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:Ciudad[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns:string[] = ['name', 'stateCode', 'createBy', 'creationDate', 'updateBy', 'updateDate'];
+  displayedColumns:string[] = ['name', 'stateName', 'countryName', 'creationDate', 'acctions'];
   dataSource = new MatTableDataSource<Ciudad>(this.ELEMENT_DATA);
 
   resultsLength = 0;

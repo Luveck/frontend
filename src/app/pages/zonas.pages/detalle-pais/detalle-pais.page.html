@@ -1,8 +1,13 @@
 <main>
   <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
 
+  <div class="loading-shade" *ngIf="isLoadingResults && paisId != 'new'">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+
   <div class="fm_header" *ngIf="paisId != 'new'">
     <section class="avatar">
+      <img src="https://flagcdn.com/{{currentPais.iso3.toLowerCase()}}.svg" alt="">
       <div class="datos">
         <p>{{currentPais.name}}</p>
         <div class="bots">
@@ -27,8 +32,8 @@
         <input matInput placeholder="Nombre" formControlName="name">
       </mat-form-field>
       <mat-form-field appearance="fill">
-        <mat-label>Iso 3</mat-label>
-        <input matInput placeholder="HND" formControlName="iso3">
+        <mat-label>Código Iso</mat-label>
+        <input matInput placeholder="HN" formControlName="iso3">
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Código de área</mat-label>

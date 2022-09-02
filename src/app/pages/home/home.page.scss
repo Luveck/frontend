@@ -1,106 +1,37 @@
 main{
-  width: 94%;
+  width: 90%;
   margin: 0 auto;
   padding-top: 6rem;
   .btn{
     width: 100%;
     text-align: center;
-    mat-form-field{
-      width: 40%;
-    }
   }
-
-  .chartCard {
-    height: calc(40vh);
-    mat-card-header{
-      padding: 0 .5rem;
-      display: flex;
-      justify-content: space-between;
-      p{
-        margin: 0;
-        mat-icon{
-          margin-right: .5rem;
-        }
-      }
-    }
-    mat-card-content{
-      padding: 0;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      .chartBox {
-        width: 90%;
-        height: 90%;
-      }
-    }
-  }
-
-  .cardsInfo{
-    margin: 1.5rem auto 0 auto;
+  .mainBody{
     width: 80%;
-    height: 150px;
-    display: grid;
-    grid-template-columns: 30% 70% ;
-    .funciones{
-      padding: 1rem;
-      display: grid;
-      grid-template-rows: 1fr 1fr;
-      gap: 10px;
-      border-right: 5px solid #958f96;
-      .funcCard{
-        cursor: pointer;
-        background-color: #145483;
-        color: #fff;
-        .content{
-          font-size: 1.3rem;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          mat-icon{
-            margin-right: .5rem;
-            overflow: visible;
-            text-align: center;
-          }
-          p{
-            margin: 0;
-          }
-        }
+    margin: 0 auto;
+    margin-top: 1rem;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    mat-card{
+      margin: 0.5rem;
+      width: 350px;
+      height: 150px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      mat-icon{
+        color: #14ce63;
+        font-size: 5rem;
+        overflow: visible;
       }
-    }
-    .otherCards{
-      padding: 1rem;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      gap: 10px;
-      .infoCard{
-        background-color: #145483;
-        color: #fff;
+      .texto{
+        width: 100%;
         text-align: center;
-        padding: 1rem 0;
-        .content{
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          span{
-            font-weight: 600;
-            font-size: 1.1em;
-            margin-bottom: .5rem;
-          }
-          .contMsg{
-            display: flex;
-            h1{
-              font-size: 3rem;
-              margin: 0 5px;
-            }
-            p{
-              padding-top: 10px;
-            }
-          }
+        span{
+          font-size: 2rem;
         }
       }
     }

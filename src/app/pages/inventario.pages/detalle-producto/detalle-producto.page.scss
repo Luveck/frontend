@@ -10,6 +10,10 @@ main{
       padding: .5rem;
       display: flex;
       align-items: center;
+      img{
+        width: 130px;
+        height: 130px;
+      }
       .datos{
         margin: 0.5rem;
         p{
@@ -30,7 +34,7 @@ main{
       ul{
         border-left: 1px solid gray;
         list-style: none;
-        padding-left: .4rem;
+        padding-left: 1rem;
         li{
           .example-tab-icon {
             margin-right: 8px;

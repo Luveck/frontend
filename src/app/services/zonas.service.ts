@@ -7,6 +7,9 @@ import { DataService } from './data.service';
   providedIn: 'root'
 })
 export class ZonasService{
+  //listCountriesFake:Pais[] = []
+  //listCitiesFake:Ciudad[] = []
+
   listCountries:Pais[] | undefined |any
   listDepartments:Array<Departamento> | undefined |any
   listCities:Array<Ciudad> | undefined |any

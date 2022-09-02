@@ -1,6 +1,29 @@
 <main>
   <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
 
+  <div class="loading-shade" *ngIf="isLoadingResults && ciudadId != 'new'">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+
+  <div class="fm_header" *ngIf="ciudadId != 'new'">
+    <section class="avatar">
+      <div class="datos">
+        <p>{{currentCiudad.name}}</p>
+        <div class="bots">
+
+        </div>
+      </div>
+    </section>
+    <section class="resumen">
+      <ul>
+        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentCiudad.createBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentCiudad.creationDate |date:'M/d/yy'}}</li>
+        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentCiudad.updateBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentCiudad.updateDate |date:'M/d/yy'}}</li>
+      </ul>
+    </section>
+  </div>
+
   <form class="wrapForm" [formGroup]="newCiudadForm" autocomplete="off">
     <div class="inputs">
       <mat-form-field appearance="fill">
@@ -8,12 +31,24 @@
         <input matInput placeholder="Nombre" formControlName="name">
       </mat-form-field>
       <mat-form-field appearance="fill">
-        <mat-label>Código estado</mat-label>
+        <mat-label>Id departamento</mat-label>
+        <input matInput placeholder="HND" formControlName="stateId">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Código departamento</mat-label>
         <input matInput placeholder="HND" formControlName="stateCode">
       </mat-form-field>
       <mat-form-field appearance="fill">
-        <mat-label>Id Departamento</mat-label>
-        <input matInput placeholder="" formControlName="departmentId" readonly>
+        <mat-label>Nombre departamento</mat-label>
+        <input matInput placeholder="HND" formControlName="stateName">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Código país</mat-label>
+        <input matInput placeholder="HND" formControlName="countryId">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre país</mat-label>
+        <input matInput placeholder="HND" formControlName="countryName">
       </mat-form-field>
     </div>
 

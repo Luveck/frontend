@@ -4,7 +4,6 @@ import { ActivatedRoute } from '@angular/router'
 import { Producto } from 'src/app/interfaces/models'
 import { DataService } from 'src/app/services/data.service'
 import { ProductosService } from 'src/app/services/productos.service'
-import { ZonasService } from 'src/app/services/zonas.service'
 
 @Component({
   selector: 'app-detalle-producto',
@@ -60,6 +59,7 @@ export class DetalleProductoPage implements OnInit {
 
   getPaisById(){
     this.currentProd = this._prodServ.productos[this.prodId]
+    this.initValores()
 /*     let res = this._prodServ.getCategoriaById(this.prodId)
     res.subscribe(data => {
       this.currentProd = data
@@ -69,12 +69,13 @@ export class DetalleProductoPage implements OnInit {
 
   initValores(){
     this.prodForm.patchValue({
-/*       name: this.currentPais.name,
-      iso3: this.currentPais.iso3,
-      phoneCode: this.currentPais.phoneCode,
-      currency: this.currentPais.currency,
-      currencyName: this.currentPais.currencyName,
-      currencySymbol: this.currentPais.currencySymbol */
+      name: this.currentProd.name,
+      description: this.currentProd.description,
+      presentation: this.currentProd.presentation,
+      quantity: this.currentProd.quantity,
+      typeSell: this.currentProd.typeSell,
+      cost: this.currentProd.cost,
+      nameCategory: this.currentProd.name
     })
   }
 

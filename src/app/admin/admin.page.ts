@@ -22,7 +22,7 @@ import { DataService } from '../services/data.service';
 export class AdminPage implements OnInit {
   img:String = 'assets/user.png'
   displayName:string = ''
-  rol:string = ''
+  rol:string = 'Adminstrador'
   menuList:Observable<any[]> | undefined
 
   @HostBinding('class') className = '';

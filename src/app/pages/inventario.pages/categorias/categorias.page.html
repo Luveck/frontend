@@ -16,7 +16,7 @@
     <mat-card class="cat mat-elevation-z8" *ngFor="let cat of catServ.categorias">
       <div class="cat_header">
         <span>{{cat.name}}</span>
-        <span class="chip" [ngClass]="{'active': cat.state == true, 'inactive': cat.state == false}">{{cat.state ?'Habilitada' :'Inhabilitado'}}</span>
+        <span class="chip" [ngClass]="{'inactive': cat.isDeleted == true, 'active': cat.isDeleted == false}">{{cat.isDeleted ?'Incctivo' :'Activo'}}</span>
       </div>
       <div class="cat_body">
         <p><span>Fecha de creación: </span>{{cat.creationDate |date:'M/d/yy'}}</p>

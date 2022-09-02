@@ -29,7 +29,7 @@ export class CategoryInfoComponent implements OnInit {
         console.log(res)
         this.currentCategoria = res
         this.name = this.currentCategoria.name
-        this.state = this.currentCategoria.state
+        this.state = this.currentCategoria.isDeleted
       })
     }
   }
