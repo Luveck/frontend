@@ -1,7 +1,14 @@
+mat-dialog-container{
+  height: 463px;
+}
+.mat-dialog-title{
+  text-align: center;
+  margin: 0;
+}
+.mat-dialog-content{
+  height: auto;
+}
 main{
-  width: 90%;
-  padding-top: 6rem;
-  margin: 0 auto;
   .fm_header{
     width: 100%;
     display: flex;
@@ -47,9 +54,8 @@ main{
     }
   }
   .wrapForm{
-    width: 90%;
+    width: 100%;
     padding: 10px 0;
-    margin: auto;
     .inputs{
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -59,11 +65,12 @@ main{
         align-content: center;
       }
     }
-    .btns{
-      margin-top: 1rem;
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-    }
+  }
+}
+.mat-dialog-actions{
+  border-top: 1px solid gray;
+  justify-content: center;
+  button{
+    margin: 0 0.5rem;
   }
 }

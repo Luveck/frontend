@@ -2,12 +2,6 @@ main{
   width: 90%;
   padding-top: 6rem;
   margin: 0 auto;
-
-  .example-rate-limit-reached {
-    max-width: 360px;
-    text-align: center;
-  }
-
   header{
     display: flex;
     align-items: flex-end;
@@ -22,11 +16,9 @@ main{
       margin-bottom: 1rem;
     }
   }
-
   table {
     width: 100%;
   }
-
   th{
     color: var(--dark-text);
     font-weight: 900;

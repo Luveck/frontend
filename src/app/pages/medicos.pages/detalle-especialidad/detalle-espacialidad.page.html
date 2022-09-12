@@ -1,0 +1,40 @@
+<h2 mat-dialog-title>{{data.title}}</h2>
+<main mat-dialog-content>
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+
+  <div class="fm_header" *ngIf="data.especial">
+    <section class="avatar">
+      <div class="datos">
+        <p>{{currentEspecialidad?.name}}</p>
+        <div class="bots">
+          <span class="chip"
+            [ngClass]="{'inactive': currentEspecialidad?.isDeleted == true, 'active': currentEspecialidad?.isDeleted == false}">{{currentEspecialidad?.isDeleted ?'Inctiva' :'Activa'}}</span>
+        </div>
+      </div>
+    </section>
+    <section class="resumen">
+      <ul>
+        <li><mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentEspecialidad?.createBy!}}</li>
+        <li><mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación:{{currentEspecialidad?.creationDate! |date: 'd/M/yy, h:mm a'}}</li>
+        <li><mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentEspecialidad?.updateBy!}}</li>
+        <li><mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación:{{currentEspecialidad?.updateDate! |date: 'd/M/yy, h:mm a'}}</li>
+      </ul>
+    </section>
+  </div>
+
+  <div class="wrapForm">
+    <div class="inputs">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="name" placeholder="Nombre" autocomplete="off">
+    </mat-form-field>
+    </div>
+  </div>
+</main>
+<div mat-dialog-actions>
+  <div class="btns">
+    <button mat-flat-button color="primary" [disabled]="!name" (click)="save()">Guardar datos</button>
+  </div>
+</div>

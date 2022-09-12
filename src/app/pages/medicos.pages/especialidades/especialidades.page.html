@@ -4,7 +4,7 @@
   <header>
     <button mat-raised-button color="primary" (click)="on()">
       <mat-icon>add</mat-icon>
-      Agregar Categoría
+      Agregar Especualidad
     </button>
   </header>
 
@@ -13,20 +13,20 @@
   </div>
 
   <div class="catesCont">
-    <mat-card class="cat mat-elevation-z8" *ngFor="let cat of inveServ.categorias">
+    <mat-card class="cat mat-elevation-z8" *ngFor="let especial of medicServ.especialidades">
       <div class="cat_header">
-        <span>{{cat.name}}</span>
-        <span class="chip" [ngClass]="{'inactive': cat.isDeleted == true, 'active': cat.isDeleted == false}">{{cat.isDeleted ?'Inactiva' :'Activa'}}</span>
+        <span>{{especial.name}}</span>
+        <span class="chip" [ngClass]="{'inactive': especial.isDeleted == true, 'active': especial.isDeleted == false}">{{especial.isDeleted ?'Inactiva' :'Activa'}}</span>
       </div>
       <div class="cat_body">
-        <p><span>Fecha de creación: </span>{{cat.creationDate |date:'M/d/yy'}}</p>
+        <p><span>Fecha de creación: </span>{{especial.creationDate |date:'M/d/yy'}}</p>
       </div>
       <div class="cat_actions">
-        <button mat-flat-button color="warn" (click)="delete(cat)">
+        <button mat-flat-button color="warn" (click)="delete(especial)">
           Cambiar estado
           <mat-icon>published_with_changes</mat-icon>
         </button>
-        <button mat-raised-button color="primary" (click)="on(cat.id)">
+        <button mat-raised-button color="primary" (click)="on(especial.id)">
           Editar
           <mat-icon>edit_square</mat-icon>
         </button>

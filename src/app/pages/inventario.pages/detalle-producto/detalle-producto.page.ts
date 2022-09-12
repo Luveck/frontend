@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { ActivatedRoute } from '@angular/router'
-import { Producto } from 'src/app/interfaces/models'
+
+import { Categoria, Producto } from 'src/app/interfaces/models'
 import { DataService } from 'src/app/services/data.service'
-import { ProductosService } from 'src/app/services/productos.service'
+import { InventarioService } from 'src/app/services/inventario.service'
 
 @Component({
   selector: 'app-detalle-producto',
@@ -13,7 +14,10 @@ import { ProductosService } from 'src/app/services/productos.service'
 
 export class DetalleProductoPage implements OnInit {
   public prodId!: string
-  currentProd!: Producto
+  currentProd!: Producto | undefined
+  cats!: Categoria[]
+  categoriaTemp!: Categoria
+  isLoadingResults?:boolean
 
   public prodForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -46,36 +50,37 @@ export class DetalleProductoPage implements OnInit {
 
   constructor(
     private _route: ActivatedRoute,
-    private _prodServ: ProductosService,
-    private _dataServ: DataService,
+    private _dataServ:DataService,
+    private _inveServ: InventarioService,
   ){}
 
   ngOnInit(): void {
     this.prodId = this._route.snapshot.params['id']
+    this.cats = this._inveServ.categorias
     this.prodId != 'new'
-      ?this.getPaisById()
+      ?this.getProdById()
       :null
   }
 
-  getPaisById(){
-    this.currentProd = this._prodServ.productos[this.prodId]
-    this.initValores()
-/*     let res = this._prodServ.getCategoriaById(this.prodId)
+  getProdById(){
+    this.isLoadingResults = true
+    let res = this._inveServ.getProductoById(this.prodId)
     res.subscribe(data => {
       this.currentProd = data
+      this.isLoadingResults = false
       this.initValores()
-    }, (err => console.log(err))) */
+    }, (err => console.log(err)))
   }
 
   initValores(){
     this.prodForm.patchValue({
-      name: this.currentProd.name,
-      description: this.currentProd.description,
-      presentation: this.currentProd.presentation,
-      quantity: this.currentProd.quantity,
-      typeSell: this.currentProd.typeSell,
-      cost: this.currentProd.cost,
-      nameCategory: this.currentProd.name
+      name: this.currentProd!.name,
+      description: this.currentProd!.description,
+      presentation: this.currentProd!.presentation,
+      quantity: this.currentProd!.quantity,
+      typeSell: this.currentProd!.typeSell,
+      cost: this.currentProd!.cost,
+      nameCategory: this.currentProd!.name
     })
   }
 
@@ -84,34 +89,20 @@ export class DetalleProductoPage implements OnInit {
   }
 
   save(){
+    let catSelect = parseInt(this.prodForm.get('nameCategory')?.value!)
+    this.categoriaTemp = this.cats[catSelect]
     if(this.prodId === 'new'){
-      let data = {
-        ...this.prodForm.value,
-        "status": true,
-        "createBy": "Elvin",
-        "creationDate": new Date().toISOString(),
-        "updateBy": "elvin",
-        "updateDate": new Date().toISOString()
-      }
-      let peticion = this._prodServ.updateProd(data)
-  /*     peticion.subscribe(res => {
-        this._dataServ.fir('Registro agregado', 'success')
+      let peticion = this._inveServ.addProducto(this.prodForm.value, this.categoriaTemp)
+      peticion.subscribe(res => {
+        this._inveServ.notify('Producto registrado', 'success')
         this._dataServ.goBack()
-      }, err => console.log(err)) */
+      }, err => console.log(err))
     }else{
-      let data = {
-        "id": parseInt(this.prodId),
-        ...this.prodForm.value,
-        "createBy": this.currentProd.createBy,
-        "creationDate": this.currentProd.creationDate,
-        "updateBy": "elvin",
-        "updateDate": new Date().toISOString()
-      }
-      let peticion = this._prodServ.addProducto(data)
-/*       peticion.subscribe(res => {
-        this._dataServ.fir('Registro actualizado', 'success')
+      let peticion = this._inveServ.updateProd(this.prodForm.value, this.categoriaTemp, parseInt(this.prodId))
+      peticion.subscribe(res => {
+        this._inveServ.notify('Registro actualizado', 'success')
         this._dataServ.goBack()
-      }, err => console.log(err)) */
+      }, err => console.log(err))
     }
   }
 }

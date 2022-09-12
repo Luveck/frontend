@@ -6,26 +6,25 @@ import { RouterModule, Routes } from '@angular/router';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomMatPaginatorIntl } from '../paginator-es';
 import { MaterialModule } from 'src/app/material.module';
-import { DetalleCategoriaPage } from './detalle-categoria/detalle-categoria.page';
+import { DetalleEspacialidadPage } from './detalle-especialidad/detalle-espacialidad.page';
+import { DetalleMedicoPage } from './detalle-medico/detalle-medico.page';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 const routes: Routes = [
   {
-    path: 'categorias',
-    loadChildren: () => import('./categorias/categorias.module').then( m => m.CategoriasPageModule)
+    path: 'especialidades',
+    loadChildren: () => import('./especialidades/especialidades.module').then( m => m.EspecialidadesPageModule)
   },
   {
-    path: 'productos',
-    loadChildren: () => import('./productos/productos.module').then( m => m.productosPageModule)
-  },
-  {
-    path: 'detalle-producto/:id',
-    loadChildren: () => import('./detalle-producto/detalle-producto.module').then( m => m.DetalleProductoPageModule)
+    path: 'medicos',
+    loadChildren: () => import('./medicos/medicos.module').then( m => m.MedicosPageModule)
   }
 ];
 
 @NgModule({
   declarations:[
-    DetalleCategoriaPage
+    DetalleEspacialidadPage,
+    DetalleMedicoPage
   ],
   imports: [
     CommonModule,
@@ -42,4 +41,4 @@ const routes: Routes = [
   ]
 })
 
-export class InventarioModule {}
+export class MedicosModule {}

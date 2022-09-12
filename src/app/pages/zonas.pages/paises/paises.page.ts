@@ -4,11 +4,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { Pais } from 'src/app/interfaces/models';
-
-import { DataService } from 'src/app/services/data.service';
 import { ZonasService } from 'src/app/services/zonas.service';
+import { DetallePaisPage } from '../detalle-pais/detalle-pais.page';
 
 @Component({
   selector: 'app-paises',
@@ -37,14 +37,12 @@ export class PaisesPage implements AfterViewInit {
   displayedColumns: string[] = ['name', 'currency', 'phoneCode', 'status', 'creationDate', 'acctions'];
   dataSource = new MatTableDataSource<Pais>(this.ELEMENT_DATA);
 
-  resultsLength = 0;
   isLoadingResults:boolean = true;
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
     private _dialog: MatDialog,
-    private _zonasServ:ZonasService,
-    private _dataServ:DataService
+    private _zonasServ:ZonasService
   ){}
 
   ngAfterViewInit(): void {
@@ -79,8 +77,21 @@ export class PaisesPage implements AfterViewInit {
     }
   }
 
-  on(id:string){
-    this._dataServ.goTo('admin/zonas/detalle-pais', id)
+  on(id?:string){
+    const config = {
+      data: {
+        title: id ?'Editar País' :'Agregar País',
+        paisId: id
+      }
+    }
+    this._dialog.open(DetallePaisPage, config)
+    .afterClosed()
+    .subscribe((confirmado:boolean) => {
+      if(confirmado){
+        this.isLoadingResults = true
+        this.getAllCountries()
+      }
+    })
   }
 
   dialog(id: number, estado: boolean) {
@@ -96,7 +107,8 @@ export class PaisesPage implements AfterViewInit {
           paisEnCuestion[0].status = !paisEnCuestion[0].status
           let respuesta = this._zonasServ.addOrUpdatePais(paisEnCuestion[0])
           respuesta.subscribe(() => {
-            this._dataServ.fir('Registro actualizado', 'success')
+            this._zonasServ.notify('Registro actualizado', 'success')
+            this.getAllCountries()
           })
         }
       })

@@ -6,7 +6,7 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
-import { ProductosService } from 'src/app/services/productos.service';
+import { InventarioService } from 'src/app/services/inventario.service';
 import { Producto } from 'src/app/interfaces/models';
 import { DataService } from 'src/app/services/data.service';
 
@@ -43,7 +43,7 @@ export class productosPage implements OnInit {
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
     private _dialog:MatDialog,
-    public _prodServ:ProductosService,
+    public _inveServ:InventarioService,
     private _dataServ:DataService
   ){}
 
@@ -54,13 +54,13 @@ export class productosPage implements OnInit {
   }
 
   cargarAll(){
-    this.dataSource.data = this._prodServ.productos
-/*     let resp = this._prodServ.getAllProductos()
+    //this.dataSource.data = this._inveServ.productos
+    let resp = this._inveServ.getAllProductos()
     resp.subscribe(productos => {
       this.dataSource.data = productos as Producto[]
       this.isLoadingResults = false
       console.log(this.dataSource.data)
-    }, (err => console.log(err))) */
+    }, (err => console.log(err)))
   }
 
   applyFilter(event: Event) {
@@ -91,7 +91,7 @@ export class productosPage implements OnInit {
       .afterClosed()
       .subscribe((confirmado: Boolean) => {
         if (confirmado) {
-          let respuesta = this._prodServ.deleteProd(id)
+          let respuesta = this._inveServ.deleteProd(id)
           respuesta.subscribe(() => {
             this._dataServ.fir('Producto eliminado', 'success')
           })

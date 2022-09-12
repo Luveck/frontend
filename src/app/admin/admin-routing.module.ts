@@ -28,6 +28,10 @@ const routes: Routes = [
         loadChildren: () => import('../pages/inventario.pages/inventario.module').then( m => m.InventarioModule),
       },
       {
+        path: 'medicos',
+        loadChildren: () => import('../pages/medicos.pages/medicos.module').then( m => m.MedicosModule),
+      },
+      {
         path: '',
         redirectTo: '/admin/home',
         pathMatch: 'full'

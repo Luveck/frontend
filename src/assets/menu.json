@@ -6,9 +6,9 @@
     "routerLink": "home"
   },
   {
-    "text": "Paises",
+    "text": "Farmacias",
     "subText": "Gestión de paises",
-    "icon": "public",
+    "icon": "store",
     "children": [
       {
         "text": "Paises",
@@ -19,6 +19,11 @@
         "text": "Ciudades",
         "icon": "apartment",
         "routerLink": "zonas/ciudades"
+      },
+      {
+        "text": "Farmacias",
+        "icon": "add_business",
+        "routerLink": "zonas/farmacias"
       }
     ]
   },
@@ -53,6 +58,22 @@
         "text": "Productos",
         "icon": "shopping_basket",
         "routerLink": "inventario/productos"
+      }
+    ]
+  },{
+    "text": "Medicos",
+    "subText": "Gestión de medicos",
+    "icon": "medical_information",
+    "children": [
+      {
+        "text": "Especialidad",
+        "icon": "workspace_premium",
+        "routerLink": "medicos/especialidades"
+      },
+      {
+        "text": "Medicos",
+        "icon": "group_add",
+        "routerLink": "medicos/medicos"
       }
     ]
   }

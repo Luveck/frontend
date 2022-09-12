@@ -1,8 +1,7 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { ActivatedRoute } from '@angular/router'
-import { Ciudad } from 'src/app/interfaces/models'
-import { DataService } from 'src/app/services/data.service'
+import { Ciudad, Pais } from 'src/app/interfaces/models'
 import { ZonasService } from 'src/app/services/zonas.service'
 
 @Component({
@@ -12,64 +11,46 @@ import { ZonasService } from 'src/app/services/zonas.service'
 })
 
 export class DetalleCiudadPage implements OnInit {
-  public ciudadId !: string
-  currentCiudad !: Ciudad
-  isLoadingResults:boolean = true
+  currentCiudad !: Ciudad | undefined
+  isLoadingResults?:boolean
+  paises!: Pais[]
+  paisTemp?: Pais
+  departamentos: any
 
   public newCiudadForm = new FormGroup({
     name: new FormControl('', Validators.required),
-    stateId: new FormControl('', Validators.required),
-    stateCode: new FormControl('', Validators.required),
-    stateName: new FormControl('', Validators.required),
-    countryId: new FormControl('', Validators.required),
     countryName: new FormControl('', Validators.required),
+    stateName: new FormControl('', Validators.required),
   })
 
-  public breadcrumb = {
-    links: [
-      {
-        name: 'Inicio',
-        isLink: true,
-        link: '/'
-      },
-      {
-        name: 'Gestión de ciudades',
-        isLink: true,
-        link: '/admin/zonas/ciudades'
-      },
-      {
-        name: 'Detalle ciudad',
-        isLink: false
-      }
-    ]
-  }
-
   constructor(
-    private _zonasServ:ZonasService,
-    private _route: ActivatedRoute,
-    private _dataServ: DataService,
+    public zonasServ:ZonasService,
+    public dialogo: MatDialogRef<DetalleCiudadPage>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ){}
 
   ngOnInit(): void {
-    this.ciudadId = this._route.snapshot.params['id']
-    this.ciudadId != 'new'
-      ?this.getPaisById()
-      :null
+    this.paises = this.zonasServ.listPaises
+    if(this.data.ciudadId){
+      this.isLoadingResults = true
+      const ciudad = this.zonasServ.getCiudadById(this.data.ciudadId)
+      ciudad.subscribe(res => {
+        this.currentCiudad = res
+        this.isLoadingResults = false
+        this.initValores()
+      }, (err => console.log(err)))
+    }
   }
 
-  getPaisById(){
-    let res = this._zonasServ.getCiudadById(this.ciudadId)
-    res.subscribe(data => {
-      this.currentCiudad = data
-      this.isLoadingResults = false
-      this.initValores()
-    }, (err => console.log(err)))
+  selectPais(event:any){
+    this.paisTemp = this.paises[event.value]
+    this.zonasServ.getDepartamentosByPais(this.paisTemp.name).subscribe(res => this.departamentos = res)
   }
 
   initValores(){
     this.newCiudadForm.patchValue({
-      name: this.currentCiudad.name,
-      stateCode: this.currentCiudad.stateCode,
+      name: this.currentCiudad!.name,
+
 //      stateId: this.currentCiudad.stateId.toString()
     })
   }
@@ -79,32 +60,17 @@ export class DetalleCiudadPage implements OnInit {
   }
 
   addEditCiudad(){
-    if(this.ciudadId === 'new'){
-      let data = {
-        ...this.newCiudadForm.value,
-        "createBy": "elvin",
-        "creationDate": new Date().toISOString(),
-        "updateBy": "elvin",
-        "updateDate": new Date().toISOString()
-      }
-      let peticion = this._zonasServ.addOrUpdateCiudad(data)
+    if(!this.data.ciudadId){
+      let peticion = this.zonasServ.addOrUpdateCiudad(this.newCiudadForm.value)
       peticion.subscribe(() => {
-        this._dataServ.fir('Registro agregado', 'success')
-        this._dataServ.goBack()
+        this.zonasServ.notify('Ciudad registrada', 'success')
+        this.dialogo.close(true);
       }, err => console.log(err))
     }else{
-      let data = {
-        "id": parseInt(this.ciudadId),
-        ...this.newCiudadForm.value,
-        "createBy": this.currentCiudad.createBy,
-        "creationDate": this.currentCiudad.creationDate,
-        "updateBy": "elvin",
-        "updateDate": new Date().toISOString()
-      }
-      let peticion = this._zonasServ.addOrUpdateCiudad(data)
+      let peticion = this.zonasServ.addOrUpdateCiudad(this.newCiudadForm.value, parseInt(this.data.ciudadId))
       peticion.subscribe(() => {
-        this._dataServ.fir('Registro actualizado', 'success')
-        this._dataServ.goBack()
+        this.zonasServ.notify('Registro actualizado', 'success')
+        this.dialogo.close(true);
       }, err => console.log(err))
     }
   }

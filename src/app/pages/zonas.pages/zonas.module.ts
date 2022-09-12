@@ -4,7 +4,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { RouterModule, Routes } from '@angular/router';
 import { MatPaginatorIntl } from '@angular/material/paginator';
+
 import { CustomMatPaginatorIntl } from '../paginator-es';
+import { DetallePaisPage } from './detalle-pais/detalle-pais.page';
+import { DetalleCiudadPage } from './detalle-ciudad/detalle-ciudad.page';
+import { DetalleFarmaciaPage } from './detalle-farmacia/detalle-farmacia.page';
+import { MaterialModule } from 'src/app/material.module';
 
 const routes: Routes = [
   {
@@ -12,28 +17,26 @@ const routes: Routes = [
     loadChildren: () => import('./paises/paises.module').then( m => m.PaisesPageModule)
   },
   {
-    path: 'detalle-pais/:id',
-    loadChildren: () => import('./detalle-pais/detalle-pais.module').then( m => m.DetallePaisPageModule)
-  },
-  {
     path: 'ciudades',
     loadChildren: () => import('./ciudades/ciudades.module').then( m => m.CiudadesPageModule)
   },
   {
-    path: 'detalle-ciudad/:id',
-    loadChildren: () => import('./detalle-ciudad/detalle-ciudad.module').then( m => m.DetalleCiudadPageModule)
-  },
-  {
-    path: 'departamentos',
-    loadChildren: () => import('./departamentos/departamentos.module').then( m => m.DepartamentosPageModule)
+    path: 'farmacias',
+    loadChildren: () => import('./farmacias/farmacias.module').then( m => m.FarmaciasPageModule)
   },
 ];
 
 @NgModule({
+  declarations:[
+    DetallePaisPage,
+    DetalleCiudadPage,
+    DetalleFarmaciaPage
+  ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    MaterialModule,
     RouterModule.forChild(routes)
   ],
   providers: [

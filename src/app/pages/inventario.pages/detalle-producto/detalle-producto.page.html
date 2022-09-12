@@ -4,7 +4,7 @@
   <div class="fm_header" *ngIf="prodId != 'new'">
     <section class="avatar">
       <div class="datos">
-        <p>{{currentProd.name}}</p>
+        <p>{{currentProd?.name!}}</p>
         <div class="bots">
 
         </div>
@@ -12,10 +12,10 @@
     </section>
     <section class="resumen">
       <ul>
-        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentProd.createBy}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentProd.creationDate |date:'M/d/yy'}}</li>
-        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentProd.updateBy}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentProd.updateDate |date:'M/d/yy'}}</li>
+        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentProd?.createBy!}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentProd?.creationDate! |date: 'd/M/yy, h:mm a'}}</li>
+        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentProd?.updateBy!}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentProd?.updateDate! |date: 'd/M/yy, h:mm a'}}</li>
       </ul>
     </section>
   </div>
@@ -27,16 +27,12 @@
         <input matInput placeholder="Nombre" formControlName="name">
       </mat-form-field>
       <mat-form-field appearance="fill">
-        <mat-label>Descripción</mat-label>
-        <input matInput placeholder="Descripción" formControlName="description">
-      </mat-form-field>
-      <mat-form-field appearance="fill">
         <mat-label>Presentación</mat-label>
         <input matInput placeholder="Presentación" formControlName="presentation">
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Cantidad</mat-label>
-        <input matInput type="number" formControlName="quantity">
+        <input matInput formControlName="quantity">
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Tipo de venta</mat-label>
@@ -48,7 +44,17 @@
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Categoría</mat-label>
-        <input matInput formControlName="nameCategory">
+        <mat-select formControlName="nameCategory">
+          <div *ngFor="let cat of cats; index as i">
+            <mat-option *ngIf="!cat.isDeleted" [value]="i">
+              {{cat.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="area">
+        <mat-label>Descripción del producto</mat-label>
+        <textarea matInput placeholder="Descripción del producto" formControlName="description" rows="10"></textarea>
       </mat-form-field>
     </div>
 

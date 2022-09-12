@@ -1,26 +1,25 @@
-<main>
-  <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
-
-  <div class="loading-shade" *ngIf="isLoadingResults && paisId != 'new'">
+<h2 mat-dialog-title>{{data.title}}</h2>
+<main mat-dialog-content>
+  <div class="loading-shade" *ngIf="isLoadingResults">
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
   </div>
 
-  <div class="fm_header" *ngIf="paisId != 'new'">
+  <div class="fm_header" *ngIf="data.paisId">
     <section class="avatar">
-      <img src="https://flagcdn.com/{{currentPais.iso3.toLowerCase()}}.svg" alt="">
+      <img src="https://flagcdn.com/{{currentPais?.iso3! | lowercase}}.svg" alt="">
       <div class="datos">
-        <p>{{currentPais.name}}</p>
+        <p>{{currentPais?.name!}}</p>
         <div class="bots">
-          <span class="chip" [ngClass]="{'active': currentPais.status == true, 'inactive': currentPais.status == false}">{{currentPais.status ?'Activo' :'Inactivo'}}</span>
+          <span class="chip" [ngClass]="{'active': currentPais?.status! == true, 'inactive': currentPais?.status! == false}">{{currentPais?.status! ?'Activo' :'Inactivo'}}</span>
         </div>
       </div>
     </section>
     <section class="resumen">
       <ul>
-        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentPais.createBy}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentPais.creationDate |date:'M/d/yy'}}</li>
-        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentPais.updateBy}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentPais.updateDate |date:'M/d/yy'}}</li>
+        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentPais?.createBy!}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentPais?.creationDate! |date: 'd/M/yy, h:mm a'}}</li>
+        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentPais?.updateBy!}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentPais?.updateDate! |date: 'd/M/yy, h:mm a'}}</li>
       </ul>
     </section>
   </div>
@@ -52,10 +51,11 @@
         <input matInput placeholder=" L" formControlName="currencySymbol">
       </mat-form-field>
     </div>
-
-    <div class="btns">
-      <button mat-raised-button color="primary" [disabled]="newPaisForm.invalid" (click)="addPais()">Guardar <mat-icon>save</mat-icon></button>
-      <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
-    </div>
   </form>
 </main>
+<div mat-dialog-actions>
+  <div class="btns">
+    <button mat-raised-button color="primary" [disabled]="newPaisForm.invalid" (click)="addEditPais()">Guardar <mat-icon>save</mat-icon></button>
+    <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
+  </div>
+</div>

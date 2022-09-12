@@ -1,41 +1,48 @@
-main{
-  width: 90%;
-  padding-top: 6rem;
-  margin: 0 auto;
-  .fm_header{
+mat-dialog-container{
+  height: 463px;
+}
+.mat-dialog-title{
+  text-align: center;
+  margin: 0;
+}
+.mat-dialog-content{
+  height: auto;
+}
+main {
+  .fm_header {
     width: 100%;
     display: flex;
     justify-content: center;
-    section.avatar{
+    section.avatar {
+      width: 40%;
       padding: .5rem;
       display: flex;
       align-items: center;
-      img{
-        width: 130px;
-        height: 130px;
-      }
-      .datos{
+      .datos {
+        width: 250px;
+        text-align: center;
         margin: 0.5rem;
-        p{
-          font-size: 2em;
+        p {
+          font-size: 2rem;
         }
-        .bots{
+        .bots {
           margin-top: 1rem;
           width: 100%;
           text-align: center;
-          button{
+          button {
             margin: 0 0.5rem 0 0;
           }
         }
       }
     }
-    section.resumen{
+    section.resumen {
+      width: 60%;
       padding: 1rem;
-      ul{
+      ul {
         border-left: 1px solid gray;
         list-style: none;
         padding-left: 1rem;
-        li{
+        li {
           .example-tab-icon {
             margin-right: 8px;
           }
@@ -47,28 +54,20 @@ main{
     }
   }
   .wrapForm{
-    width: 90%;
+    width: 100%;
     padding: 10px 0;
-    margin: auto;
     .inputs{
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr;
       mat-form-field{
         width: 90%;
         margin: auto;
         align-content: center;
-        &.area{
-          resize: none;
-          grid-column: 3;
-          grid-row: 1 / span 3;
-        }
       }
     }
-    .btns{
-      margin-top: 1rem;
-      display: flex;
-      justify-content: center;
-      gap: 2rem;
-    }
   }
+}
+.mat-dialog-actions{
+  border-top: 1px solid gray;
+  justify-content: center;
 }

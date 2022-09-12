@@ -1,12 +1,13 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core'
+import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Ciudad } from 'src/app/interfaces/models';
 
-import { DataService } from 'src/app/services/data.service';
+import { Ciudad } from 'src/app/interfaces/models';
 import { ZonasService } from 'src/app/services/zonas.service';
+import { DetalleCiudadPage } from '../detalle-ciudad/detalle-ciudad.page';
 
 @Component({
   selector: 'app-ciudades',
@@ -35,13 +36,12 @@ export class CiudadesPage implements AfterViewInit {
   displayedColumns:string[] = ['name', 'stateName', 'countryName', 'creationDate', 'acctions'];
   dataSource = new MatTableDataSource<Ciudad>(this.ELEMENT_DATA);
 
-  resultsLength = 0;
   isLoadingResults:boolean = true;
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
+    private _dialog: MatDialog,
     private _zonasServ:ZonasService,
-    private _dataServ:DataService
   ){}
 
   ngAfterViewInit(): void {
@@ -52,8 +52,8 @@ export class CiudadesPage implements AfterViewInit {
 
   getAllCities() {
     let resp = this._zonasServ.getCiudades()
-    resp.subscribe(paises => {
-      this.dataSource.data = paises as Ciudad[]
+    resp.subscribe(cities => {
+      this.dataSource.data = cities as Ciudad[]
       this.isLoadingResults = false
       console.log(this.dataSource.data)
     }, (err => console.log(err)))
@@ -76,7 +76,20 @@ export class CiudadesPage implements AfterViewInit {
     }
   }
 
-  on(id:string){
-    this._dataServ.goTo('admin/zonas/detalle-ciudad', id)
+  on(id?:string){
+    const config = {
+      data: {
+        title: id ?'Editar Ciudad' :'Agregar Ciudad',
+        ciudadId: id
+      }
+    }
+    this._dialog.open(DetalleCiudadPage, config)
+    .afterClosed()
+    .subscribe((confirmado:boolean) => {
+      if(confirmado){
+        this.isLoadingResults = true
+        this.getAllCities()
+      }
+    })
   }
 }

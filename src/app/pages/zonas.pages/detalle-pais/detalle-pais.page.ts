@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { ActivatedRoute } from '@angular/router'
+
 import { Pais } from 'src/app/interfaces/models'
-import { DataService } from 'src/app/services/data.service'
 import { ZonasService } from 'src/app/services/zonas.service'
 
 @Component({
@@ -12,9 +12,8 @@ import { ZonasService } from 'src/app/services/zonas.service'
 })
 
 export class DetallePaisPage implements OnInit {
-  public paisId !: string
-  currentPais!: Pais
-  isLoadingResults:boolean = true
+  currentPais!: Pais | undefined
+  isLoadingResults?:boolean
 
   public newPaisForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -25,55 +24,32 @@ export class DetallePaisPage implements OnInit {
     currencySymbol: new FormControl('', Validators.required)
   })
 
-  public breadcrumb = {
-    links: [
-      {
-        name: 'Inicio',
-        isLink: true,
-        link: '/'
-      },
-      {
-        name: 'Gestión de paises',
-        isLink: true,
-        link: '/admin/zonas/paises'
-      },
-      {
-        name: 'Detalle país',
-        isLink: false
-      }
-    ]
-  }
-
   constructor(
     private _zonasServ:ZonasService,
-    private _route: ActivatedRoute,
-    private _dataServ: DataService,
+    public dialogo: MatDialogRef<DetallePaisPage>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ){}
 
   ngOnInit(): void {
-    this.paisId = this._route.snapshot.params['id']
-    this.paisId != 'new'
-      ?this.getPaisById()
-      :null
-  }
-
-  getPaisById(){
-    let res = this._zonasServ.getPaisById(this.paisId)
-    res.subscribe(data => {
-      this.currentPais = data
-      this.isLoadingResults = false
-      this.initValores()
-    }, (err => console.log(err)))
+    if(this.data.paisId){
+      this.isLoadingResults = true
+      const pais = this._zonasServ.getPaisById(this.data.paisId)
+      pais.subscribe(res => {
+        this.currentPais = res
+        this.isLoadingResults = false
+        this.initValores()
+      }, (err => console.log(err)))
+    }
   }
 
   initValores(){
     this.newPaisForm.patchValue({
-      name: this.currentPais.name,
-      iso3: this.currentPais.iso3,
-      phoneCode: this.currentPais.phoneCode,
-      currency: this.currentPais.currency,
-      currencyName: this.currentPais.currencyName,
-      currencySymbol: this.currentPais.currencySymbol
+      name: this.currentPais!.name,
+      iso3: this.currentPais!.iso3,
+      phoneCode: this.currentPais!.phoneCode,
+      currency: this.currentPais!.currency,
+      currencyName: this.currentPais!.currencyName,
+      currencySymbol: this.currentPais!.currencySymbol
     })
   }
 
@@ -81,35 +57,18 @@ export class DetallePaisPage implements OnInit {
     this.newPaisForm.reset()
   }
 
-  addPais(){
-    if(this.paisId === 'new'){
-      let data = {
-        ...this.newPaisForm.value,
-        "status": true,
-        "createBy": "Elvin",
-        "creationDate": new Date().toISOString(),
-        "updateBy": "elvin",
-        "updateDate": new Date().toISOString()
-      }
-      let peticion = this._zonasServ.addOrUpdatePais(data)
+  addEditPais(){
+    if(!this.data.paisId){
+      let peticion = this._zonasServ.addOrUpdatePais(this.newPaisForm.value)
       peticion.subscribe(res => {
-        this._dataServ.fir('Registro agregado', 'success')
-        this._dataServ.goBack()
+        this._zonasServ.notify('País registrado', 'success')
+        this.dialogo.close(true);
       }, err => console.log(err))
     }else{
-      let data = {
-        "id": parseInt(this.paisId),
-        ...this.newPaisForm.value,
-        "status": this.currentPais.status,
-        "createBy": this.currentPais.createBy,
-        "creationDate": this.currentPais.creationDate,
-        "updateBy": "elvin",
-        "updateDate": new Date().toISOString()
-      }
-      let peticion = this._zonasServ.addOrUpdatePais(data)
+      let peticion = this._zonasServ.addOrUpdatePais(this.newPaisForm.value, this.data.paisId, this.currentPais!.status)
       peticion.subscribe(res => {
-        this._dataServ.fir('Registro actualizado', 'success')
-        this._dataServ.goBack()
+        this._zonasServ.notify('Registro actualizado', 'success')
+        this.dialogo.close(true);
       }, err => console.log(err))
     }
   }

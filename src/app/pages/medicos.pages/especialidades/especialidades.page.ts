@@ -2,17 +2,18 @@ import { Component, OnInit } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog';
 
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
-import { Categoria } from 'src/app/interfaces/models';
-import { DetalleCategoriaPage } from 'src/app/pages/inventario.pages/detalle-categoria/detalle-categoria.page';
-import { InventarioService } from 'src/app/services/inventario.service';
+import { Especialidad } from 'src/app/interfaces/models';
+import { MedicosService } from 'src/app/services/medicos.service';
+import { DetalleEspacialidadPage } from '../detalle-especialidad/detalle-espacialidad.page';
+
 
 @Component({
-  selector: 'app-categorias',
-  templateUrl: './categorias.page.html',
-  styleUrls: ['./categorias.page.scss'],
+  selector: 'app-especialidades',
+  templateUrl: './especialidades.page.html',
+  styleUrls: ['./especialidades.page.scss'],
 })
 
-export class CategoriasPage implements OnInit {
+export class EspecialidadesPage implements OnInit {
   public breadcrumb = {
     links: [
       {
@@ -21,7 +22,7 @@ export class CategoriasPage implements OnInit {
         link: '/'
       },
       {
-        name: 'Gestión de categorías',
+        name: 'Gestión de especialidades',
         isLink: false,
       }
     ]
@@ -31,7 +32,7 @@ export class CategoriasPage implements OnInit {
 
   constructor(
     private _dialogo:MatDialog,
-    public inveServ:InventarioService
+    public medicServ:MedicosService
   ){}
 
   ngOnInit(): void {
@@ -39,22 +40,22 @@ export class CategoriasPage implements OnInit {
   }
 
   cargarAll(){
-    let catsAll = this.inveServ.getAllCategories()
+    let catsAll = this.medicServ.getAllEspecialidades()
     catsAll.subscribe(res => {
       this.isLoadingResults = false
-      this.inveServ.categorias = res
-      console.log(this.inveServ.categorias)
+      this.medicServ.especialidades = res
+      console.log(this.medicServ.especialidades)
     }, (err => console.log(err)))
   }
 
   on(id?:string){
     const config = {
       data: {
-        title: id ?'Editar Categoría' :'Agregar Categoría',
-        cat: id
+        title: id ?'Editar especialidad' :'Agregar especialidad',
+        especial: id
       }
     }
-    this._dialogo.open(DetalleCategoriaPage, config)
+    this._dialogo.open(DetalleEspacialidadPage, config)
     .afterClosed()
     .subscribe((confirmado:boolean) => {
       if(confirmado){
@@ -64,44 +65,44 @@ export class CategoriasPage implements OnInit {
     })
   }
 
-  delete(cat:Categoria){
-    if(!cat.isDeleted){
+  delete(especial:Especialidad){
+    if(!especial.isDeleted){
       this._dialogo.open(DialogConfComponent, {
-        data: `¿Seguro de querer inhabilitar esta categoría?`
+        data: `¿Seguro de querer inhabilitar esta especialidad?`
       })
       .afterClosed()
       .subscribe((confirmado: Boolean) => {
         if (confirmado) {
-          const res = this.inveServ.deleteCat(cat.id!)
+          const res = this.medicServ.deleteEspecialidad(especial.id!)
           res.subscribe(res => {
             if(res){
-              this.inveServ.notify('Categoría eliminada', 'success')
+              this.medicServ.notify('especialidad eliminada', 'success')
               this.isLoadingResults = true
               this.cargarAll()
             }
           }, (err => {
             console.log(err)
-            this.inveServ.notify('Ocurrio un error', 'error')
+            this.medicServ.notify('Ocurrio un error', 'error')
           }))
         }
       })
     }else{
       this._dialogo.open(DialogConfComponent, {
-        data: `¿Seguro de querer habilitar esta categoría?`
+        data: `¿Seguro de querer habilitar esta especialidad?`
       })
       .afterClosed()
       .subscribe((confirmado: Boolean) => {
         if (confirmado) {
-          const res = this.inveServ.changeStateCategoria(false, cat)
+          const res = this.medicServ.changeStateEspecialidad(false, especial)
           res.subscribe(res => {
             if(res){
-              this.inveServ.notify('Categoría restaurada', 'success')
+              this.medicServ.notify('especialidad restaurada', 'success')
               this.isLoadingResults = true
               this.cargarAll()
             }
           }, (err => {
             console.log(err)
-            this.inveServ.notify('Ocurrio un error', 'error')
+            this.medicServ.notify('Ocurrio un error', 'error')
           }))
         }
       })

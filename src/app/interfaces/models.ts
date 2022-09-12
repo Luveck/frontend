@@ -33,17 +33,30 @@ export interface Departamento{
 }
 
 export interface Ciudad{
-  id: number,
+  id?: number,
   name: string,
-  stateId: number,
+  stateId: string,
   stateCode: string,
   stateName: string,
-  countryId: number,
+  countryId: string,
   countryName: string,
   createBy: string,
   creationDate: string,
   updateBy: string,
   updateDate: string
+}
+
+export interface Farmacia{
+  id?: number,
+  name: string,
+  adress: string,
+  isDeleted: boolean,
+  cityId: number,
+  cityName: string
+  createBy: string,
+  creationDate: string,
+  updateBy: string,
+  updateDate: string,
 }
 
 /* modulo inventario */
@@ -65,10 +78,34 @@ export interface Producto{
   quantity: number | any
   typeSell: string
   cost: number | any
+  idCategory: number
+  nameCategory: string
   createBy: string
   creationDate: string
   updateBy: string
   updateDate: string
-  idCategory: number
-  nameCategory: string
+}
+
+/* Modulo de medicos */
+export interface Especialidad{
+  id?: number
+  name: string
+  isDeleted: boolean
+  createBy: string
+  creationDate: string
+  updateBy: string
+  updateDate: string
+}
+
+export interface Medico{
+  id: number
+  name: string
+  register: string
+  isDeleted: boolean
+  patologyId: number
+  patologyName: string
+  createBy: string
+  creationDate: string
+  updateBy: string
+  updateDate: string
 }
