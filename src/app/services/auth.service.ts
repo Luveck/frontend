@@ -15,10 +15,9 @@ export class AuthService {
   }
 
   getCurrentUser(){
-    const currentUser = localStorage.getItem('LuveckUserData')
-    if (currentUser){
-      this.userData = JSON.parse(currentUser)
-      this.userToken = this.userData.token
+    const tokentUser = localStorage.getItem('LuveckUserToken')
+    if (tokentUser){
+      this.userToken = tokentUser
       this.decodeToken(this.userToken)
     }
   }
@@ -29,23 +28,17 @@ export class AuthService {
       "password": formData.password
     }
     try {
-      const result$ = this._http.post('https://luveckservicesecurity.azurewebsites.net/api/Security/Login', info)
+      const result$ = this._http.post('https://apisecurityluveck.azurewebsites.net/api/Security/Login', info)
       let data:any = await lastValueFrom(result$)
       console.log(data)
-      this.userToken = data.token
-      this.userData = {
-        name: data.name,
-        lastName: data.lastName,
-        role: data.role.name,
-        token: this.userToken
-      }
+      this.userToken = data.result.token
       if(formData.remember){
-        localStorage.setItem('LuveckUserData', JSON.stringify(this.userData));
+        localStorage.setItem('LuveckUserToken', this.userToken)
       }
       this.decodeToken(this.userToken)
     } catch (error:any) {
       console.log(error)
-      let msgError = error.error
+      let msgError = error.error.messages
       this._dataServ.fir(`${msgError}`, 'error')
     }
   }
@@ -53,20 +46,11 @@ export class AuthService {
   public async register(formData:any){
     console.log(formData)
     try {
-      const result$ = this._http.post('https://luveckservicesecurity.azurewebsites.net/api/Security/Register', formData)
+      const result$ = this._http.post('https://apisecurityluveck.azurewebsites.net/api/Security/Register', formData)
       let resData:any = await lastValueFrom(result$)
       console.log(resData)
-      this.userToken = resData.token
-      this.userData = {
-        dni: formData.dni,
-        email: formData.email,
-        name: formData.name,
-        lastName: formData.lastName,
-        phone: formData.phone,
-        role: resData.role.name,
-        token: this.userToken
-      }
-      localStorage.setItem('LuveckUserData', JSON.stringify(this.userData))
+      this.userToken = resData.result.token
+      localStorage.setItem('LuveckUserToken', this.userToken)
       this.decodeToken(this.userToken)
     } catch (error:any) {
       console.log(error)
@@ -82,6 +66,13 @@ export class AuthService {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
     let tokenData = JSON.parse(jsonPayload)
+    this.userData = {
+      UserId: tokenData.UserId,
+      UserName: tokenData.UserName,
+      LastName: tokenData.LastName,
+      Role: tokenData.Role,
+      Email: tokenData.Email
+    }
     if(this.checkTokenDate(tokenData.exp)){
       this._dataServ.goTo('/admin/home')
     }else{
@@ -103,7 +94,7 @@ export class AuthService {
   public logOut(){
     this.userToken = null
     this.userData = null
-    localStorage.removeItem('LuveckUserData');
+    localStorage.removeItem('LuveckUserToken');
     this._dataServ.goTo('/authentication/login')
   }
 }

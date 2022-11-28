@@ -21,12 +21,11 @@ import { DataService } from '../services/data.service';
 
 export class AdminPage implements OnInit {
   img:String = 'assets/user.png'
-  displayName:string = ''
-  rol:string = 'Adminstrador'
   menuList:Observable<any[]> | undefined
+  localTheme:boolean = true
+  darkClassName:string = 'theme-dark';
 
   @HostBinding('class') className = '';
-  toggleControl = new FormControl();
 
   constructor(
     private _http: HttpClient,
@@ -35,19 +34,18 @@ export class AdminPage implements OnInit {
     private _dataServ: DataService,
     public authServ:AuthService,
   ){
-    const darkClassName = 'theme-dark';
-    this.toggleControl.valueChanges.subscribe(themeState => {
-      this.className = themeState
-        ?darkClassName
-        : ''
-      if(themeState){
-        this._dataServ.setTheme('dark')
-        this._overlay.getContainerElement().classList.add(darkClassName);
-      }else{
-        this._dataServ.setTheme('light')
-        this._overlay.getContainerElement().classList.remove(darkClassName);
-      }
-    });
+    let theme = this._dataServ.getTheme()
+    if(theme === 'dark'){
+      this.localTheme = false
+      this.className = this.darkClassName
+      this._dataServ.setTheme('dark')
+      this._overlay.getContainerElement().classList.add(this.darkClassName);
+    }else{
+      this.localTheme = true
+      this.className = ''
+      this._dataServ.setTheme('light')
+      this._overlay.getContainerElement().classList.remove(this.darkClassName);
+    }
   }
 
   fadeIn(outlet:RouterOutlet) {
@@ -58,10 +56,6 @@ export class AdminPage implements OnInit {
 
   ngOnInit(): void {
     this.menuList = this._http.get<[]>("/assets/menu.json")
-    let theme = this._dataServ.getTheme()
-    theme === 'dark'
-      ?this.toggleControl.setValue(true)
-      :this.toggleControl.setValue(false)
   }
 
   onLogout(){
@@ -74,5 +68,20 @@ export class AdminPage implements OnInit {
         this.authServ.logOut()
       }
     })
+  }
+
+  setTheme(){
+    this.localTheme = !this.localTheme
+    if(!this.localTheme){
+      this.localTheme = false
+      this.className = this.darkClassName
+      this._dataServ.setTheme('dark')
+      this._overlay.getContainerElement().classList.add(this.darkClassName);
+    }else{
+      this.localTheme = true
+      this.className = ''
+      this._dataServ.setTheme('light')
+      this._overlay.getContainerElement().classList.remove(this.darkClassName);
+    }
   }
 }

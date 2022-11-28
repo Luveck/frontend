@@ -31,6 +31,7 @@
 
       <button mat-raised-button color="primary" [disabled]="!loginForm.valid"
         (click)="onLogin(loginForm.value)">Iniciar Sesión
+        <mat-icon class="lod" *ngIf="dataServ.progress">cached</mat-icon>
       </button>
 
       <p>¿Nuevo en la plataforma?  <span [routerLink]="['/authentication/register']">Crea una cuenta</span></p>

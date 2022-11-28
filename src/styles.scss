@@ -58,6 +58,20 @@ span.chip{
   }
 }
 
+/* loding */
+.lod {
+  animation: rot 1.5s infinite linear;
+}
+
+@keyframes rot {
+  from{
+    transform: rotate(360deg);
+  }
+  to{
+    transform: rotate(0deg);
+  }
+}
+
 
 
 

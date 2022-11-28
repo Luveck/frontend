@@ -43,29 +43,25 @@
         Luveck - Pasión por vivir
         <span class="example-spacer"></span>
 
-        <button mat-button [matMenuTriggerFor]="menu">
+        <button style="color: #ffc409;" mat-icon-button matTooltip="Cambiar tema" (click)="setTheme()">
+          <mat-icon>{{localTheme ?'light_mode' :'brightness_3'}}</mat-icon>
+        </button>
+
+        <button mat-button>
           <div class="nameDate">
-            <div class="nam">
-              <span>{{authServ.userData.name}} {{authServ.userData.lastName}}</span>
-              <!-- <span>{{authServ.userData.role}}</span> -->
-              <span>{{rol}}</span>
+            <div class="imgCont">
+              <img appNotImage [src]="img">
             </div>
-            <img appNotImage [src]="img">
+            <div class="nam">
+              <span>{{authServ.userData.UserName}} {{authServ.userData.LastName}}</span>
+              <span>{{authServ.userData.Role}}</span>
+            </div>
           </div>
         </button>
-        <mat-menu #menu="matMenu">
-          <div class="togleTheme">
-            🌞<mat-slide-toggle [formControl]="toggleControl"></mat-slide-toggle>🌙
-          </div>
-          <button mat-menu-item (click)="onLogout()">
-            <mat-icon>manage_accounts</mat-icon>
-            <span>Cuenta</span>
-          </button>
-          <button mat-menu-item (click)="onLogout()">
-            <mat-icon>logout</mat-icon>
-            <span>Cerrar sesión</span>
-          </button>
-        </mat-menu>
+
+        <button mat-icon-button matTooltip="Cerrar sesión" (click)="onLogout()">
+          <mat-icon>logout</mat-icon>
+        </button>
       </mat-toolbar>
 
       <router-outlet #outlet="outlet"></router-outlet>

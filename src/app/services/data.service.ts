@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 })
 export class DataService {
   baseURL:string = 'https://luveckapi.azurewebsites.net/api'
+  progress:boolean = false
 
   constructor(
     private _router:Router,
