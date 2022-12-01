@@ -42,7 +42,11 @@ export class ZonasService{
   }
   /* Endpoints de Paies */
   getPaises() {
-    return this._http.get<Pais[]>(`${this._dataServ.baseURL}/Administration/GetCountries`)
+    return this._http.get<Pais[]>(`${this._dataServ.baseURL}/Administration/GetCountries`,
+    {headers: {
+      'Authorization': `Bearer ${this._authServ.userToken}`,
+      'Accept': 'application/json'
+    }})
   }
 
   getPaisById(id:string){

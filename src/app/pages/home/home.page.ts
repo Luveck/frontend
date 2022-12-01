@@ -31,7 +31,7 @@ export class HomePage implements OnInit {
       this.counterPaises = res.length
       this._zonasServ.listPaises = res
     })
-    this._zonasServ.getCiudades().subscribe(res =>  {
+/*     this._zonasServ.getCiudades().subscribe(res =>  {
       this.counterCiudades = res.length
       this._zonasServ.listCiudades = res
     })
@@ -41,6 +41,6 @@ export class HomePage implements OnInit {
     })
     this._inveServ.getAllProductos().subscribe(res => this.counterProductos = res.length)
     this._farmaServ.getAllPharmacies().subscribe(res => this.counterFarmacias = res.length)
-    this._MedicServ.getAllMedicos().subscribe(res => this.counterMedicos = res.length)
+    this._MedicServ.getAllMedicos().subscribe(res => this.counterMedicos = res.length) */
   }
 }

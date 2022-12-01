@@ -44,6 +44,21 @@
           width: 150px;
         }
       }
+      footer{
+        border-top: 1px solid gray;
+        position: absolute;
+        bottom: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        p{
+          margin: 0;
+        }
+        img{
+          width: 50%;
+          margin-left: .5rem;
+        }
+      }
     }
   }
 
