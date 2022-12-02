@@ -10,12 +10,15 @@ import { Especialidad, Medico } from '../interfaces/models';
 })
 export class MedicosService {
   especialidades:Especialidad[] |any
+  headers:any
 
   constructor(
     private _http:HttpClient,
     private _authServ:AuthService,
     private _dataServ:DataService
-  ) { }
+  ) {
+    this.headers = {'Authorization':`Bearer ${this._authServ.userToken}`}
+  }
 
   notify(msg:string, icon:any){
     this._dataServ.fir(msg, icon)
@@ -76,7 +79,9 @@ export class MedicosService {
 
   /* ******endpoints de Medicos****** */
   public getAllMedicos(){
-    return this._http.get<Medico[]>(`${this._dataServ.baseURL}/Medical/GetMedicals`)
+    return this._http.get<any>(`${this._dataServ.baseURL}/Medical/GetMedicals`,
+      {headers: this.headers}
+    )
   }
 
   public getMedicoByName(name:string){

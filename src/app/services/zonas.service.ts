@@ -11,12 +11,15 @@ export class ZonasService{
   listPaises!:Pais[]
   listCiudades!:Ciudad[]
   apiToken!:string
+  headers:any
 
   constructor(
     private _http:HttpClient,
     private _authServ:AuthService,
     private _dataServ:DataService,
-  ) {}
+  ) {
+    this.headers = {'Authorization':`Bearer ${this._authServ.userToken}`}
+  }
 
   /* api de paises */
   getApiToken(){
@@ -42,17 +45,27 @@ export class ZonasService{
   }
   /* Endpoints de Paies */
   getPaises() {
-    return this._http.get<Pais[]>(`${this._dataServ.baseURL}/Administration/GetCountries`,
-    {headers: {
-      'Authorization': `Bearer ${this._authServ.userToken}`,
-      'Accept': 'application/json'
-    }})
+    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCountries`,
+      {headers: this.headers}
+    )
   }
 
   getPaisById(id:string){
-    return this._http.get<Pais>(`${this._dataServ.baseURL}/Administration/GetCountryById?Id=${id}`)
+    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCountryById?Id=${id}`,
+      {headers: this.headers}
+    )
   }
 
+  addPais(formData:any){
+    let dataPais:Pais
+    dataPais = {
+      ...formData,
+      "status": true
+    }
+    return this._http.post(`${this._dataServ.baseURL}/Administration/CreateCountry`, dataPais, {
+      headers: this.headers
+    })
+  }
   addOrUpdatePais(formData:any, idPais?:number, status?:boolean){
     let dataPais:Pais
     if(idPais){
@@ -90,7 +103,9 @@ export class ZonasService{
 
   /* Endpoints de Ciudades */
   getCiudades(){
-    return this._http.get<Ciudad[]>(`${this._dataServ.baseURL}/Administration/GetCities`)
+    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCities`,
+      {headers: this.headers}
+    )
   }
 
   getCiudadById(id:string){
@@ -132,7 +147,9 @@ export class ZonasService{
 
   /* Endpoints de farmacias */
   getFarmacias(){
-    return this._http.get<Farmacia[]>(`${this._dataServ.baseURL}/Pharmacy/GetPharmacies`)
+    return this._http.get<any>(`${this._dataServ.baseURL}/Pharmacy/GetPharmacies`,
+      {headers: this.headers}
+    )
   }
 
   public getFarmaciaByName(name:string){

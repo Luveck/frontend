@@ -28,19 +28,19 @@ export class HomePage implements OnInit {
   ngOnInit(): void {
     this._zonasServ.getApiToken()
     this._zonasServ.getPaises().subscribe(res =>  {
-      this.counterPaises = res.length
-      this._zonasServ.listPaises = res
+      this.counterPaises = res.result.length
+      this._zonasServ.listPaises = res.result
     })
-/*     this._zonasServ.getCiudades().subscribe(res =>  {
-      this.counterCiudades = res.length
-      this._zonasServ.listCiudades = res
+    this._zonasServ.getCiudades().subscribe(res =>  {
+      this.counterCiudades = res.result.length
+      this._zonasServ.listCiudades = res.result
     })
     this._inveServ.getAllCategories().subscribe(res =>  {
-      this._inveServ.categorias = res
-      this.counterCategorias = res.length
+      this._inveServ.categorias = res.result
+      this.counterCategorias = res.result.length
     })
-    this._inveServ.getAllProductos().subscribe(res => this.counterProductos = res.length)
+    this._inveServ.getAllProductos().subscribe(res => this.counterProductos = res.result.length)
     this._farmaServ.getAllPharmacies().subscribe(res => this.counterFarmacias = res.length)
-    this._MedicServ.getAllMedicos().subscribe(res => this.counterMedicos = res.length) */
+    this._MedicServ.getAllMedicos().subscribe(res => this.counterMedicos = res.result.length)
   }
 }

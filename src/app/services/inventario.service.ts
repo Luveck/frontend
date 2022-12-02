@@ -10,12 +10,15 @@ import { AuthService } from './auth.service';
 })
 export class InventarioService {
   categorias:Categoria[] |any
+  headers
 
   constructor(
     private _authServ:AuthService,
     private _dataServ:DataService,
     private _http:HttpClient
-  ) { }
+  ) {
+    this.headers = {'Authorization':`Bearer ${this._authServ.userToken}`}
+  }
 
   notify(msg:string, icon:any){
     this._dataServ.fir(msg, icon)
@@ -23,7 +26,9 @@ export class InventarioService {
 
   /* ******endpoints de Categorias****** */
   public getAllCategories(){
-    return this._http.get<Categoria[]>(`${this._dataServ.baseURL}/Administration/GetCategories`)
+    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCategories`,
+      {headers: this.headers}
+    )
   }
 
   public getCategoriaById(id:string){
@@ -77,7 +82,9 @@ export class InventarioService {
 
   /* ******endpoints de Productos****** */
   public getAllProductos(){
-    return this._http.get<Producto[]>(`${this._dataServ.baseURL}/Administration/GetProducts`)
+    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetProducts`,
+      {headers: this.headers}
+    )
   }
 
   public getProductoById(id:string){

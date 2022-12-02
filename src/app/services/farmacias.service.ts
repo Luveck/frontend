@@ -1,18 +1,25 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { AuthService } from './auth.service';
 import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FarmaciasService {
+  headers:any
 
   constructor(
     private _http:HttpClient,
-    private _dataServ:DataService
-  ) { }
+    private _dataServ:DataService,
+    private _authServ:AuthService
+  ) {
+    this.headers = {'Authorization':`Bearer ${this._authServ.userToken}`}
+  }
 
   getAllPharmacies(){
-    return this._http.get<any[]>(`${this._dataServ.baseURL}/Pharmacy/GetPharmacies`)
+    return this._http.get<any[]>(`${this._dataServ.baseURL}/Pharmacy/GetPharmacies`,
+      {headers: this.headers}
+    )
   }
 }

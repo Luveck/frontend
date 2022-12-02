@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
   providedIn: 'root'
 })
 export class DataService {
-  baseURL:string = 'https://luveckapi.azurewebsites.net/api'
+  baseURL:string = 'https://apiadminluveck.azurewebsites.net/api'
   progress:boolean = false
 
   constructor(

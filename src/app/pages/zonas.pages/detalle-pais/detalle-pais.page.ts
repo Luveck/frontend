@@ -59,7 +59,7 @@ export class DetallePaisPage implements OnInit {
 
   addEditPais(){
     if(!this.data.paisId){
-      let peticion = this._zonasServ.addOrUpdatePais(this.newPaisForm.value)
+      let peticion = this._zonasServ.addPais(this.newPaisForm.value)
       peticion.subscribe(res => {
         this._zonasServ.notify('País registrado', 'success')
         this.dialogo.close(true);
