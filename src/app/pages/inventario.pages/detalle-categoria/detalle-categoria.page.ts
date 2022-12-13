@@ -11,8 +11,8 @@ import { InventarioService } from 'src/app/services/inventario.service';
   styleUrls: ['./detalle-categoria.page.scss']
 })
 export class DetalleCategoriaPage implements OnInit {
-  currentCategoria!: Categoria | undefined;
-  name!: string
+  currentCategoria!: Categoria;
+  name: string = ''
   state: boolean = true
   isLoadingResults?:boolean
 
@@ -28,7 +28,7 @@ export class DetalleCategoriaPage implements OnInit {
       const cat = this._inveServ.getCategoriaById(this.data.cat)
       cat.subscribe(res => {
         console.log(res)
-        this.currentCategoria = res
+        this.currentCategoria = res.result
         this.isLoadingResults = false
         this.name = this.currentCategoria.name
         this.state = this.currentCategoria.isDeleted

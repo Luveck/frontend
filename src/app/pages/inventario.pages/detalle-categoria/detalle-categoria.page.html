@@ -7,19 +7,19 @@
   <div class="fm_header" *ngIf="data.cat">
     <section class="avatar">
       <div class="datos">
-        <p>{{currentCategoria?.name}}</p>
+        <p>{{currentCategoria.name!}}</p>
         <div class="bots">
           <span class="chip"
-            [ngClass]="{'inactive': currentCategoria?.isDeleted == true, 'active': currentCategoria?.isDeleted == false}">{{currentCategoria?.isDeleted ?'Inctiva' :'Activa'}}</span>
+            [ngClass]="{'inactive': currentCategoria.isDeleted! == true, 'active': currentCategoria.isDeleted == false}">{{currentCategoria.isDeleted! ?'Inctiva' :'Activa'}}</span>
         </div>
       </div>
     </section>
     <section class="resumen">
       <ul>
-        <li><mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentCategoria?.createBy!}}</li>
-        <li><mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación:{{currentCategoria?.creationDate! |date: 'd/M/yy, h:mm a'}}</li>
-        <li><mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentCategoria?.updateBy!}}</li>
-        <li><mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación:{{currentCategoria?.updateDate! |date: 'd/M/yy, h:mm a'}}</li>
+        <li><mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentCategoria.createBy!}}</li>
+        <li><mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación:{{currentCategoria.creationDate! |date: 'd/M/yy, h:mm a'}}</li>
+        <li><mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentCategoria.updateBy!}}</li>
+        <li><mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación:{{currentCategoria.updateDate! |date: 'd/M/yy, h:mm a'}}</li>
       </ul>
     </section>
   </div>

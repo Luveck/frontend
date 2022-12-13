@@ -26,27 +26,23 @@ export class MedicosService {
 
   /* ******endpoints de Especialidades****** */
   public getAllEspecialidades(){
-    return this._http.get<Especialidad[]>(`${this._dataServ.baseURL}/Administration/GetPatologies`)
+    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetPatologies`, {headers: this.headers})
   }
 
   public getEspecialidadById(id:string){
-    return this._http.get<Especialidad>(`${this._dataServ.baseURL}/Administration/GetPatologyById?Id=${id}`)
+    return this._http.get<Especialidad>(`${this._dataServ.baseURL}/Administration/GetPatologyById?Id=${id}`, {headers: this.headers})
   }
 
   public addEspecialidad(name:string){
     let dataEspecial:Especialidad = {
       "name": name,
       "isDeleted": false,
-      "createBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "creationDate": new Date().toISOString(),
-      "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "updateDate": new Date().toISOString()
     }
-    return this._http.post(`${this._dataServ.baseURL}/Administration/CreatePatology`, dataEspecial)
+    return this._http.post(`${this._dataServ.baseURL}/Administration/CreatePatology`, dataEspecial, {headers: this.headers})
   }
 
   public deleteEspecialidad(id:number){
-    return this._http.delete(`${this._dataServ.baseURL}/Administration/DeletePatology?Id=${id}&user=${this._authServ.userData.name}`)
+    return this._http.delete(`${this._dataServ.baseURL}/Administration/DeletePatology?Id=${id}`, {headers: this.headers})
   }
 
   public updateEspecial(name:string, state:boolean, especial:Especialidad | any){
@@ -54,13 +50,9 @@ export class MedicosService {
       "id": especial?.id,
       "name": name,
       "isDeleted": state,
-      "createBy": especial?.createBy,
-      "creationDate": especial?.creationDate,
-      "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "updateDate": new Date().toISOString()
     }
     console.log(especialToUpdate)
-    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdatePatology`, especialToUpdate)
+    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdatePatology`, especialToUpdate, {headers: this.headers})
   }
 
   public changeStateEspecialidad(state:boolean, especial:Especialidad | any){
@@ -68,13 +60,9 @@ export class MedicosService {
       "id": especial?.id,
       "name": especial?.name,
       "isDeleted": state,
-      "createBy": especial?.createBy,
-      "creationDate": especial?.creationDate,
-      "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "updateDate": new Date().toISOString()
     }
     console.log(especialToUpdate)
-    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdatePatology`, especialToUpdate)
+    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdatePatology`, especialToUpdate, {headers: this.headers})
   }
 
   /* ******endpoints de Medicos****** */
@@ -85,11 +73,11 @@ export class MedicosService {
   }
 
   public getMedicoByName(name:string){
-    return this._http.get<Medico>(`${this._dataServ.baseURL}/Medical/GetMedicalByName?nameMedical=${name}`)
+    return this._http.get<Medico>(`${this._dataServ.baseURL}/Medical/GetMedicalByName?nameMedical=${name}`, {headers: this.headers})
   }
 
   public getMedicoById(id:string){
-    return this._http.get<Medico>(`${this._dataServ.baseURL}/Medical/GetMedical?id=${id}`)
+    return this._http.get<Medico>(`${this._dataServ.baseURL}/Medical/GetMedical?id=${id}`, {headers: this.headers})
   }
 
   public addMedico(formData:any, especialidad:Especialidad){
@@ -97,17 +85,13 @@ export class MedicosService {
       ...formData,
       "patologyId": especialidad.id,
       "patologyName": especialidad.name,
-      "createBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "creationDate": new Date().toISOString(),
-      "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "updateDate": new Date().toISOString()
     }
     console.log(dataMedico)
     return this._http.post(`${this._dataServ.baseURL}/Medical/CreateMedical`, dataMedico)
   }
 
   public deleteMedico(id:number){
-    return this._http.delete(`${this._dataServ.baseURL}/Medical/DeleteMedical?Id=${id}&user=${this._authServ.userData.name}`)
+    return this._http.delete(`${this._dataServ.baseURL}/Medical/DeleteMedical?Id=${id}`, {headers: this.headers})
   }
 
   public updateMedico(formData:any, currentStatus?:boolean, especialidad?:Especialidad, medicoId?:number){
@@ -116,14 +100,10 @@ export class MedicosService {
       ...formData,
       "isDeleted": currentStatus,
       "patologyId": especialidad?.id,
-      "patologyName": especialidad?.name,
-      "createBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "creationDate": new Date().toISOString(),
-      "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "updateDate": new Date().toISOString()
+      "patologyName": especialidad?.name
     }
     console.log(dataMedico)
-    return this._http.put(`${this._dataServ.baseURL}/Medical/UpdateMedical`, dataMedico)
+    return this._http.put(`${this._dataServ.baseURL}/Medical/UpdateMedical`, dataMedico, {headers: this.headers})
   }
 
 
@@ -134,13 +114,9 @@ export class MedicosService {
       "register": medico.register,
       "patologyId": medico.patologyId,
       "patologyName": medico.patologyName,
-      "isDeleted": state,
-      "createBy": medico.createBy,
-      "creationDate": medico.creationDate,
-      "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "updateDate": new Date().toISOString()
+      "isDeleted": state
     }
     console.log(medicoToUpdate)
-    return this._http.put(`${this._dataServ.baseURL}/Medical/UpdateMedical`, medicoToUpdate)
+    return this._http.put(`${this._dataServ.baseURL}/Medical/UpdateMedical`, medicoToUpdate, {headers: this.headers})
   }
 }

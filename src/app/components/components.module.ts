@@ -6,11 +6,13 @@ import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../material.module';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { DialogConfComponent } from './dialog-conf/dialog-conf.component';
+import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
 
 @NgModule({
   declarations: [
     BreadcrumbComponent,
-    DialogConfComponent
+    DialogConfComponent,
+    ScrollToTopComponent
   ],
   imports: [
     RouterModule,
@@ -21,7 +23,8 @@ import { DialogConfComponent } from './dialog-conf/dialog-conf.component';
   ],
   exports: [
     BreadcrumbComponent,
-    DialogConfComponent
+    DialogConfComponent,
+    ScrollToTopComponent
   ]
 })
 

@@ -1,0 +1,158 @@
+main{
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  width: 100vw;
+  height: 100vh;
+  box-sizing: content-box;
+  &.dark{
+    background: #161d31;
+    color: #fefefe;
+  }
+  &.light{
+    background: #f8f8f8;
+    color: #333;
+  }
+  .navi{
+    width: 90%;
+    padding: .5rem;
+    margin: 1rem auto;
+    display: flex;
+    align-items: center;
+    &.dark{
+      background: #232e4d;
+      color: #fefefe;
+    }
+    &.light{
+      background: #f8f8f8;
+      color: #333;
+    }
+    .menu{
+      display: none;
+      color: inherit;
+    }
+    .nav_logo{
+      width: 150px;
+      height: 100%;
+    }
+    .nav_list{
+      color: inherit;
+      padding: 0;
+      list-style: none;
+      margin: 0 auto;
+      display: flex;
+      gap: 2.5rem;
+      .nav_link{
+        color: inherit;
+        font-size: 1.2em;
+        background: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+      }
+    }
+    .nav_link{
+      color: inherit;
+      display: flex;
+      font-size: 1.2em;
+      background: transparent;
+      border: none;
+      outline: none;
+      cursor: pointer;
+    }
+  }
+
+  section#somos{
+    width: 50%;
+    padding: 1rem;
+    margin: 1rem auto;
+    text-align: center;
+    mat-card{
+      width: 90%;
+      margin: 0 auto;
+      border-radius: 10px;
+      box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    }
+  }
+
+  section#productos{
+    width: 90%;
+    margin: 1rem auto;
+    text-align: center;
+    .mat-form-field {
+      width: 60%;
+    }
+    .prod_content{
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      mat-card{
+        width: 250px;
+        height: 250px;
+        border-radius: 10px;
+        img{
+          width: 100%;
+        }
+        span{
+          cursor: pointer;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
+  section#politicas{
+    width: 80%;
+    padding: 1rem;
+    margin: 1rem auto;
+    text-align: center;
+    .items_conentent{
+      padding: 1rem;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      mat-card{
+        width: 250px;
+        height: 200px;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        mat-icon{
+          font-size: 5rem;
+          width: 100px;
+          height: 100px;
+        }
+      }
+    }
+  }
+}
+
+
+@media (max-width: 560px){
+  main{
+    .navi{
+      width: 100%;
+      margin: 0;
+      padding: 0.5rem;
+      justify-content: space-around;
+      .menu{
+        display: block;
+      }
+      .nav_list{
+        display: none;
+      }
+    }
+    section#somos, section#productos, section#politicas{
+      width: 90%;
+    }
+    section#productos .mat-form-field {
+      width: 100%;
+    }
+  }
+}

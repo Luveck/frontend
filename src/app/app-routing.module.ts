@@ -5,8 +5,12 @@ import { AuthGuard } from './guards/login.guard';
 const routes: Routes = [
   {
     path: '',
-    redirectTo: '/admin/home',
+    redirectTo: '/inicio',
     pathMatch: 'full'
+  },
+  {
+    path: 'inicio',
+    loadChildren: () => import('./pages/inicio/inicio.module').then(m => m.InicioPageModule)
   },
   {
     path: 'admin',

@@ -1,7 +1,6 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { HttpClient } from '@angular/common/http';
 import { Component, HostBinding, OnInit} from '@angular/core'
-import { FormControl } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterOutlet } from '@angular/router';
 import { Observable } from 'rxjs';

@@ -32,23 +32,25 @@ export class InventarioService {
   }
 
   public getCategoriaById(id:string){
-    return this._http.get<Categoria>(`${this._dataServ.baseURL}/Administration/GetCategoryById?Id=${id}`)
+    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCategoryById?Id=${id}`,
+      {headers: this.headers}
+    )
   }
 
   public addCategoria(name:string){
     let dataCat:Categoria = {
       "name": name,
       "isDeleted": false,
-      "createBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "creationDate": new Date().toISOString(),
-      "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "updateDate": new Date().toISOString()
     }
-    return this._http.post(`${this._dataServ.baseURL}/Administration/CreateCategory?user=${this._authServ.userData.name}`, dataCat)
+    return this._http.post(`${this._dataServ.baseURL}/Administration/CreateCategory`, dataCat,
+      {headers: this.headers}
+    )
   }
 
   public deleteCat(id:number){
-    return this._http.delete(`${this._dataServ.baseURL}/Administration/DeleteCategory?Id=${id}`)
+    return this._http.delete(`${this._dataServ.baseURL}/Administration/DeleteCategory?Id=${id}`,
+      {headers: this.headers}
+    )
   }
 
   public updateCat(name:string, state:boolean, cat:Categoria | any){
@@ -56,13 +58,11 @@ export class InventarioService {
       "id": cat?.id,
       "name": name,
       "isDeleted": state,
-      "createBy": cat?.createBy,
-      "creationDate": cat?.creationDate,
-      "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "updateDate": new Date().toISOString()
     }
     console.log(catToUpdate)
-    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdateCategory?user=${this._authServ.userData.name}`, catToUpdate)
+    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdateCategory`, catToUpdate,
+      {headers: this.headers}
+    )
   }
 
   public changeStateCategoria(state:boolean, cat:Categoria | any){
@@ -70,13 +70,11 @@ export class InventarioService {
       "id": cat?.id,
       "name": cat?.name,
       "isDeleted": state,
-      "createBy": cat?.createBy,
-      "creationDate": cat?.creationDate,
-      "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "updateDate": new Date().toISOString()
     }
     console.log(catToUpdate)
-    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdateCategory?user=${this._authServ.userData.name}`, catToUpdate)
+    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdateCategory`, catToUpdate,
+      {headers: this.headers}
+    )
   }
 
 
@@ -88,21 +86,17 @@ export class InventarioService {
   }
 
   public getProductoById(id:string){
-    return this._http.get<Producto>(`${this._dataServ.baseURL}/Administration/GetProductsById?Id=${id}`)
+    return this._http.get<Producto>(`${this._dataServ.baseURL}/Administration/GetProductsById?Id=${id}`, {headers: this.headers})
   }
 
   public addProducto(formData:any, categoria:Categoria){
     let dataProd:Producto = {
       ...formData,
       "idCategory": categoria.id,
-      "nameCategory": categoria.name,
-      "createBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "creationDate": new Date().toISOString(),
-      "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "updateDate": new Date().toISOString()
+      "nameCategory": categoria.name
     }
     console.log(dataProd)
-    return this._http.post(`${this._dataServ.baseURL}/Administration/CreateProduct?user=${this._authServ.userData.name}`, dataProd)
+    return this._http.post(`${this._dataServ.baseURL}/Administration/CreateProduct`, dataProd, {headers: this.headers})
   }
 
   public updateProd(formData:any, categoria:Categoria, prodId:number){
@@ -111,16 +105,12 @@ export class InventarioService {
       ...formData,
       "idCategory": categoria.id,
       "nameCategory": categoria.name,
-      "createBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "creationDate": new Date().toISOString(),
-      "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "updateDate": new Date().toISOString()
     }
     console.log(dataProd)
-    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdateProduct?user=${this._authServ.userData.name}`, dataProd)
+    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdateProduct`, dataProd, {headers: this.headers})
   }
 
   public deleteProd(id:number){
-    return this._http.delete(`${this._dataServ.baseURL}/Administration/DeleteProduct?Id=${id}`)
+    return this._http.delete(`${this._dataServ.baseURL}/Administration/DeleteProduct?Id=${id}`, {headers: this.headers})
   }
 }

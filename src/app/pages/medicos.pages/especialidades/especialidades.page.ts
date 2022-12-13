@@ -43,7 +43,7 @@ export class EspecialidadesPage implements OnInit {
     let catsAll = this.medicServ.getAllEspecialidades()
     catsAll.subscribe(res => {
       this.isLoadingResults = false
-      this.medicServ.especialidades = res
+      this.medicServ.especialidades = res.result
       console.log(this.medicServ.especialidades)
     }, (err => console.log(err)))
   }

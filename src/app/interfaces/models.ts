@@ -17,10 +17,10 @@ export interface Pais{
   currencyName: string,
   currencySymbol: string,
   status: boolean,
-  createBy: string,
-  creationDate: string,
-  updateBy: string,
-  updateDate: string
+  createBy?: string
+  creationDate?: string
+  updateBy?: string
+  updateDate?: string
 }
 
 export interface Departamento{
@@ -40,10 +40,10 @@ export interface Ciudad{
   stateName: string,
   countryId: string,
   countryName: string,
-  createBy: string,
-  creationDate: string,
-  updateBy: string,
-  updateDate: string
+  createBy?: string
+  creationDate?: string
+  updateBy?: string
+  updateDate?: string
 }
 
 export interface Farmacia{
@@ -53,10 +53,10 @@ export interface Farmacia{
   isDeleted: boolean,
   cityId: number,
   cityName: string
-  createBy: string,
-  creationDate: string,
-  updateBy: string,
-  updateDate: string,
+  createBy?: string
+  creationDate?: string
+  updateBy?: string
+  updateDate?: string
 }
 
 /* modulo inventario */
@@ -64,8 +64,8 @@ export interface Categoria{
   id?: number
   name: string
   isDeleted: boolean
-  createBy: string
-  creationDate: string
+  createBy?: string
+  creationDate?: string
   updateBy?: string
   updateDate?: string
 }
@@ -80,10 +80,10 @@ export interface Producto{
   cost: number | any
   idCategory: number
   nameCategory: string
-  createBy: string
-  creationDate: string
-  updateBy: string
-  updateDate: string
+  createBy?: string
+  creationDate?: string
+  updateBy?: string
+  updateDate?: string
 }
 
 /* Modulo de medicos */
@@ -91,10 +91,10 @@ export interface Especialidad{
   id?: number
   name: string
   isDeleted: boolean
-  createBy: string
-  creationDate: string
-  updateBy: string
-  updateDate: string
+  createBy?: string
+  creationDate?: string
+  updateBy?: string
+  updateDate?: string
 }
 
 export interface Medico{
@@ -104,8 +104,8 @@ export interface Medico{
   isDeleted: boolean
   patologyId: number
   patologyName: string
-  createBy: string
-  creationDate: string
-  updateBy: string
-  updateDate: string
+  createBy?: string
+  creationDate?: string
+  updateBy?: string
+  updateDate?: string
 }

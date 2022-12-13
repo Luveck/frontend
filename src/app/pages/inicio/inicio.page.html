@@ -1,0 +1,103 @@
+<main [ngClass]="{'light': localTheme, 'dark': !localTheme}">
+  <div class="navi mat-elevation-z8" [ngClass]="{'light': localTheme, 'dark': !localTheme}">
+    <div style="display: flex; align-items: center;">
+      <button mat-icon-button class="menu" (click)="ingresar()">
+        <mat-icon >menu</mat-icon>
+      </button>
+
+      <img class="nav_logo" src="assets/luveck_logo.png">
+    </div>
+
+    <ul class="nav_list">
+      <li class="nav_item">
+        <button class="nav_link" href="#somos">Quienes Somos</button>
+      </li>
+      <li class="nav_item">
+        <button class="nav_link" href="#productos">Productos</button>
+      </li>
+      <li class="nav_item">
+        <button class="nav_link" href="#politicas">Políticas de calidad</button>
+      </li>
+    </ul>
+
+    <div style="display: flex; align-items: center;">
+      <button style="color: #ffc409;" mat-icon-button matTooltip="Cambiar tema" (click)="setTheme()">
+        <mat-icon>{{localTheme ?'light_mode' :'brightness_3'}}</mat-icon>
+      </button>
+
+      <button class="nav_link" (click)="ingresar()">
+        <mat-icon style="margin-right: 8px;">login</mat-icon> Ingresar
+      </button>
+    </div>
+  </div>
+
+  <section id="somos">
+    <h1>¿Quiénes somos?</h1>
+    <p>
+      Somos una empresa cuya finalidad es brindar una amplia gama de productos de calidad mundial para la salud. Nuestra motivación es ofrecer soluciones terapéuticas de excelencia para mejorar la calidad de vida de las personas.
+    </p>
+
+    <mat-card>
+      <mat-card-title>
+         Misión y Visión
+      </mat-card-title>
+      <mat-card-content>
+        <p>Nuestra misión es poner al alcance del consumidor productos farmacéuticos diferenciadores con estándares de calidad internacional que satisfagan las necesidades terapéuticas de la región, bajo un marco profesional de integridad, ética y de responsabilidad social.</p>
+
+        <p>Nuestra visión es ser una de las empresas farmacéuticas más reconocidas en Latinoamérica.</p>
+      </mat-card-content>
+    </mat-card>
+  </section>
+
+  <section id="productos">
+    <h1>Productos disponibles</h1>
+    <p>Encuentra los productos que necesitas</p>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Buscar por nombre / categoria / marca</mat-label>
+      <input matInput  #input>
+    </mat-form-field>
+
+    <div class="prod_content">
+      <mat-card class="mat-elevation-z8" *ngFor="let prod of [1,11,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]">
+        <img src="assets/default-thumbnail.jpg">
+        Nombre producto <br>
+        <span>Leer mas</span>
+      </mat-card>
+    </div>
+  </section>
+
+  <section id="politicas">
+    <h1>Política de calidad</h1>
+    <p>En Luveck estamos comprometidos con asegurar la mejor calidad para cada uno de nuestros productos. Esta calidad se fundamenta en el correcto cumplimiento de estándares internacionales de fabricación farmacéutica, además de la adecuada implementación de Normas BPM (Buenas Prácticas de Manufactura).</p>
+
+    <span style="font-weight: 600;">
+      Es importante para nosotros cumplir con los siguientes objetivos de calidad:
+    </span>
+
+    <div class="items_conentent">
+      <mat-card>
+        <mat-icon >inventory</mat-icon>
+        Estricto control de calidad en la fabricación de nuestros productos.
+      </mat-card>
+      <mat-card>
+        <mat-icon >published_with_changes</mat-icon>
+        Mejoramiento continuo de prácticas y procedimientos de manufactura, despacho y almacenaje.
+      </mat-card>
+      <mat-card>
+        <mat-icon >content_paste_search</mat-icon>
+        Certificación WHO GMP (Good Manufacturing Practices) en todas nuestras planas de fabricación.
+      </mat-card>
+      <mat-card>
+        <mat-icon >work_history</mat-icon>
+        Constante auditoria, seguimiento y monitoreo del uso del producto terminado (farmacovigilancia).
+      </mat-card>
+      <mat-card>
+        <mat-icon >recycling</mat-icon>
+        Manejo responsable de recursos con el uso correcto de procedimientos de eliminación o reciclaje de productos, contribuyendo así con el cuidado del medio ambiente.
+      </mat-card>
+    </div>
+  </section>
+
+  <app-scroll-to-top></app-scroll-to-top>
+</main>
