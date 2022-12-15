@@ -1,0 +1,35 @@
+mat-dialog-container{
+  height: 463px;
+}
+.mat-dialog-content{
+  height: auto;
+}
+main{
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  img{
+    width: 40%;
+  }
+  .infoProd{
+    width: 50%;
+    margin: 1rem 0;
+    h1{
+      text-align: center;
+      font-size: 2rem;
+    }
+    li span{
+      font-weight: 600;
+    }
+  }
+}
+
+@media (max-width: 560px){
+  main img, main .infoProd{
+    width: 100%;
+  }
+  main .infoProd ul{
+    padding: 0 1rem;
+  }
+}

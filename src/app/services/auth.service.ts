@@ -51,12 +51,15 @@ export class AuthService {
       const result$ = this._http.post('https://apisecurityluveck.azurewebsites.net/api/Security/Register', formData)
       let resData:any = await lastValueFrom(result$)
       console.log(resData)
+      this._dataServ.progress = false
       this.userToken = resData.result.token
       localStorage.setItem('LuveckUserToken', this.userToken)
       this.decodeToken(this.userToken)
     } catch (error:any) {
       console.log(error)
-      let msgError = error.error
+      this._dataServ.progress = false
+      console.log(error)
+      let msgError = error.error.messages
       this._dataServ.fir(`${msgError}`, 'error')
     }
   }

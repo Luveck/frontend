@@ -1,8 +1,8 @@
 <main [ngClass]="{'light': localTheme, 'dark': !localTheme}">
-  <div class="navi mat-elevation-z8" [ngClass]="{'light': localTheme, 'dark': !localTheme}">
+  <div class="navi" [ngClass]="{'light': localTheme, 'dark': !localTheme}">
     <div style="display: flex; align-items: center;">
       <button mat-icon-button class="menu" (click)="ingresar()">
-        <mat-icon >menu</mat-icon>
+        <mat-icon>menu</mat-icon>
       </button>
 
       <img class="nav_logo" src="assets/luveck_logo.png">
@@ -10,13 +10,16 @@
 
     <ul class="nav_list">
       <li class="nav_item">
-        <button class="nav_link" href="#somos">Quienes Somos</button>
+        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'inicio'}" (click)="SectionSelect = 'inicio'">Inicio</button>
       </li>
       <li class="nav_item">
-        <button class="nav_link" href="#productos">Productos</button>
+        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'somos'}" (click)="SectionSelect = 'somos'">Quienes Somos</button>
       </li>
       <li class="nav_item">
-        <button class="nav_link" href="#politicas">Políticas de calidad</button>
+        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'productos'}" (click)="SectionSelect = 'productos'">Productos</button>
+      </li>
+      <li class="nav_item">
+        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'registro'}" (click)="SectionSelect = 'registro'">Obtener Canjes</button>
       </li>
     </ul>
 
@@ -31,27 +34,69 @@
     </div>
   </div>
 
-  <section id="somos">
+  <section id="inicio" *ngIf="SectionSelect == 'inicio'" class="animated fadeIn">
+    <div class="iniInfo">
+      <h1>Luveck - Pasión por Vivir</h1>
+      <div>
+        <p>
+          El proyecto <b>Pasión por Vivir</b> consiste en ayudar a aquellas personas que están bajo un tratamiento médico parcial o permanente a obtener medicación gratuita mediante la acumulacion de compras en farmacias.
+        </p>
+        <br>
+        <p>
+          Los canjes como se les llama, consisten en que si un paciente compra hoy un medicamento llamado Amlodipina en una presentación de 28 cápsulas con indicaciones de tomar 1 cápsula diaria, la próxima compra del medicamento 31/03 ó 01/04 del presente año, el paciente al efectuar la compra correspondiente, éste recibirá una caja totalmente gratis.
+        </p>
+      </div>
+    </div>
+    <div class="iniImage"><img src="assets/luveck_inicio.png"></div>
+  </section>
+
+
+  <section id="somos" *ngIf="SectionSelect == 'somos'" class="animated fadeIn">
     <h1>¿Quiénes somos?</h1>
     <p>
       Somos una empresa cuya finalidad es brindar una amplia gama de productos de calidad mundial para la salud. Nuestra motivación es ofrecer soluciones terapéuticas de excelencia para mejorar la calidad de vida de las personas.
     </p>
 
     <mat-card>
-      <mat-card-title>
-         Misión y Visión
-      </mat-card-title>
       <mat-card-content>
-        <p>Nuestra misión es poner al alcance del consumidor productos farmacéuticos diferenciadores con estándares de calidad internacional que satisfagan las necesidades terapéuticas de la región, bajo un marco profesional de integridad, ética y de responsabilidad social.</p>
-
-        <p>Nuestra visión es ser una de las empresas farmacéuticas más reconocidas en Latinoamérica.</p>
+        <div class="somosText">
+          <h1><mat-icon color="accent">bookmark</mat-icon> Misión y Visión</h1>
+          <p>Nuestra misión es poner al alcance del consumidor productos farmacéuticos diferenciadores con estándares de calidad internacional que satisfagan las necesidades terapéuticas de la región, bajo un marco profesional de integridad, ética y de responsabilidad social.</p>
+          <br>
+          <p>Nuestra visión es ser una de las empresas farmacéuticas más reconocidas en Latinoamérica.</p>
+        </div>
+        <img src="https://luveck.com/wp-content/uploads/2022/03/764-x-758-1-764x758.jpg">
       </mat-card-content>
     </mat-card>
+
+    <h2>Nuestros valores</h2>
+    <div class="valores_content">
+      <mat-card>
+        <mat-icon color="accent">military_tech</mat-icon>
+        <h2>Excelencia</h2>
+        En búsqueda de la excelencia farmacéutica y desarrollo de la empresa, somos constantes con nuestro trabajo para superar las metas.
+      </mat-card>
+      <mat-card>
+        <mat-icon color="accent">favorite</mat-icon>
+        <h2>Integridad</h2>
+        Nuestro pensar y actuar son congruentes, honestos, éticos y veraces, cumpliendo las políticas y regulaciones de la región.
+      </mat-card>
+      <mat-card>
+        <mat-icon color="accent">groups</mat-icon>
+        <h2>Responsabilidad Social</h2>
+        Nuestra pasión es brindar productos y servicios para mejorar la calidad de vida de las personas. Contribuimos de manera activa, sistemática y voluntaria con el mejoramiento de nuestra Sociedad y del medio ambiente.
+      </mat-card>
+      <mat-card>
+        <mat-icon color="accent">volunteer_activism</mat-icon>
+        <h2>Trabajo en Equipo</h2>
+        Creemos en las cualidades y aportes de cada uno de nuestros colaboradores. Trabajando juntos contribuyen al propósito principal de la compañía.
+      </mat-card>
+    </div>
   </section>
 
-  <section id="productos">
+  <section id="productos" *ngIf="SectionSelect == 'productos'" class="animated fadeIn">
     <h1>Productos disponibles</h1>
-    <p>Encuentra los productos que necesitas</p>
+    <p>onemos al alcance de nuestros consumidores productos farmacéuticos diferenciadores con estándares de calidad mundial.</p>
 
     <mat-form-field appearance="outline">
       <mat-label>Buscar por nombre / categoria / marca</mat-label>
@@ -59,45 +104,96 @@
     </mat-form-field>
 
     <div class="prod_content">
-      <mat-card class="mat-elevation-z8" *ngFor="let prod of [1,11,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]">
+      <mat-card class="mat-elevation-z8" *ngFor="let prod of [1,1,1,1,1,1,1,1,1,1,1,1]">
         <img src="assets/default-thumbnail.jpg">
-        Nombre producto <br>
-        <span>Leer mas</span>
+        <h2>Nombre producto</h2>
+        <span (click)="openModalProd()">Leer mas</span>
       </mat-card>
     </div>
   </section>
 
-  <section id="politicas">
-    <h1>Política de calidad</h1>
-    <p>En Luveck estamos comprometidos con asegurar la mejor calidad para cada uno de nuestros productos. Esta calidad se fundamenta en el correcto cumplimiento de estándares internacionales de fabricación farmacéutica, además de la adecuada implementación de Normas BPM (Buenas Prácticas de Manufactura).</p>
+  <section id="registro" *ngIf="SectionSelect == 'registro'" class="animated fadeIn">
+    <h1>Registrarme para obtener canjes</h1>
+    <p>En Luveck estamos comprometidos con asegurar la mejor calidad para cada uno de nuestros productos.</p>
 
-    <span style="font-weight: 600;">
-      Es importante para nosotros cumplir con los siguientes objetivos de calidad:
-    </span>
+    <div class="regis_content">
+      <img src="assets/luveck_registro.png">
+      <div class="regForm">
+        <form [formGroup]="registerForm" autocomplete="off">
+          <mat-form-field appearance="outline">
+            <mat-label>DNI</mat-label>
+            <input matInput placeholder="DNI de usuario" formControlName="dni">
+            <mat-error
+              *ngIf="registerForm.get('dni')?.invalid && (registerForm.get('dni')?.dirty || registerForm.get('dni')?.touched) && registerForm.get('dni')?.errors?.['required']">
+              DNI requerido
+            </mat-error>
+          </mat-form-field>
 
-    <div class="items_conentent">
-      <mat-card>
-        <mat-icon >inventory</mat-icon>
-        Estricto control de calidad en la fabricación de nuestros productos.
-      </mat-card>
-      <mat-card>
-        <mat-icon >published_with_changes</mat-icon>
-        Mejoramiento continuo de prácticas y procedimientos de manufactura, despacho y almacenaje.
-      </mat-card>
-      <mat-card>
-        <mat-icon >content_paste_search</mat-icon>
-        Certificación WHO GMP (Good Manufacturing Practices) en todas nuestras planas de fabricación.
-      </mat-card>
-      <mat-card>
-        <mat-icon >work_history</mat-icon>
-        Constante auditoria, seguimiento y monitoreo del uso del producto terminado (farmacovigilancia).
-      </mat-card>
-      <mat-card>
-        <mat-icon >recycling</mat-icon>
-        Manejo responsable de recursos con el uso correcto de procedimientos de eliminación o reciclaje de productos, contribuyendo así con el cuidado del medio ambiente.
-      </mat-card>
+          <mat-form-field appearance="outline">
+            <mat-label>email</mat-label>
+            <input matInput placeholder="Correo" formControlName="email">
+            <mat-error *ngIf="!registerForm.get('email')?.errors?.['required'] && (registerForm.get('email')?.errors?.['pattern'])">
+              Correo invalido
+            </mat-error>
+            <mat-error
+              *ngIf="registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched) && registerForm.get('email')?.errors?.['required']">
+              Correo requerido
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Nombre</mat-label>
+            <input matInput placeholder="Nombre de usuario" formControlName="name" required>
+            <mat-error
+              *ngIf="registerForm.get('name')?.invalid && (registerForm.get('name')?.dirty || registerForm.get('name')?.touched) && registerForm.get('name')?.errors?.['required']">
+              Nombre requerido
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Apellido</mat-label>
+            <input matInput placeholder="Apellido de usuario" formControlName="lastName" required>
+            <mat-error
+              *ngIf="registerForm.get('lastName')?.invalid && (registerForm.get('lastName')?.dirty || registerForm.get('lastName')?.touched) && registerForm.get('lastName')?.errors?.['required']">
+              Apellido requerido
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Teléfono</mat-label>
+            <input matInput placeholder="Teléfono" formControlName="phone" required>
+            <mat-error *ngIf="!registerForm.get('phone')?.errors?.['required'] && (registerForm.get('phone')?.errors?.['pattern'])">
+              Teléfono invalido
+            </mat-error>
+            <mat-error
+              *ngIf="registerForm.get('phone')?.invalid && (registerForm.get('phone')?.dirty || registerForm.get('phone')?.touched) && registerForm.get('phone')?.errors?.['required']">
+              Teléfono requerido
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input matInput [type]="hidePassword ?'password' :'text'" formControlName="password" placeholder="Contraseña" [NgPasswordValidator]="options">
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+              <mat-icon>{{hidePassword ?'visibility_off' :'visibility'}}</mat-icon>
+            </button>
+            <mat-error *ngIf="!registerForm.get('password')?.errors?.['required'] && (registerForm.get('password')?.errors?.['pattern'])">
+              Contraseña insegura
+            </mat-error>
+            <mat-error
+              *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched) && registerForm.get('password')?.errors?.['required']">
+              Contraseña requerida
+            </mat-error>
+          </mat-form-field>
+
+          <button class="btnReg" mat-flat-button color="primary" [disabled]="registerForm.invalid"
+            (click)="onRegister(registerForm.value)">
+            Registro
+            <mat-icon class="lod" *ngIf="dataServ.progress">cached</mat-icon>
+          </button>
+        </form>
+      </div>
     </div>
   </section>
-
-  <app-scroll-to-top></app-scroll-to-top>
 </main>
+<app-scroll-to-top></app-scroll-to-top>
