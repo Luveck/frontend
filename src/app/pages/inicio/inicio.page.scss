@@ -1,7 +1,6 @@
 @import '~swiper/scss';
 @import "~swiper/css/effect-fade";
 @import '~swiper/scss/navigation';
-
 main{
   width: 100%;
   height: 100%;
@@ -91,7 +90,6 @@ main{
       }
     }
   }
-
   .masInfo{
     margin: 5rem auto;
     width: 70%;
@@ -102,7 +100,7 @@ main{
     ol{
       counter-reset: li;
       list-style: none;
-      *list-style: decimal;
+      list-style: decimal;
       padding: 0;
       margin-bottom: 4em;
       text-shadow: 0 1px 0 rgba(255,255,255,.5);
@@ -147,7 +145,6 @@ main{
       }
     }
   }
-
   .registro{
     width: 100%;
     height: 90vh;
@@ -193,8 +190,6 @@ main{
     }
   }
 }
-
-
 @media (max-width: 560px){
   main{
     padding: 0;
@@ -228,11 +223,9 @@ main{
         }
       }
     }
-
     .masInfo{
       width: 86%;
     }
-
     .registro{
       h1, p{
         width: 90%;
