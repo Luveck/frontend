@@ -33,6 +33,9 @@ main{
     }
   }
   .swiper{
+    --swiper-navigation-color: #b9ccda;
+    --swiper-navigation-size: 50px;
+
     width: 100%;
     height: 50%;
     &.dark{
@@ -88,6 +91,18 @@ main{
           object-fit: contain;
         }
       }
+    }
+  }
+  .itemScroll{
+    margin: 5rem 0;
+    width: 100%;
+    text-align: center;
+    mat-icon{
+      cursor: pointer;
+      color: darken($color: #b9ccda, $amount: 10);
+      width: 5rem;
+      height: 5rem;
+      font-size: 5rem;
     }
   }
   .masInfo{
