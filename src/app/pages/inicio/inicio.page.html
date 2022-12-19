@@ -1,4 +1,86 @@
 <main [ngClass]="{'light': localTheme, 'dark': !localTheme}">
+  <button class="btnTheme" style="color: #ffc409;" mat-icon-button matTooltip="Cambiar tema" (click)="setTheme()">
+    <mat-icon>{{localTheme ?'light_mode' :'brightness_3'}}</mat-icon>
+  </button>
+  <div class="main_logo">
+    <img class="nav_logo" src="assets/luveck_logo.png">
+    <h1>Bienvenido al programa Pasión por Vivir</h1>
+  </div>
+
+  <swiper [config]="swipperConfig" [ngClass]="{'light': localTheme, 'dark': !localTheme}">
+    <ng-template swiperSlide>
+      <div class="sItem">
+        <div class="textoSlide">
+          <p>
+            El proyecto <span>Pasión por Vivir</span> consiste en ayudar a aquellas personas que están bajo un tratamiento médico parcial o permanente a obtener medicación gratuita mediante la acumulación de compras en farmacias.
+          </p>
+          <span class="linkRegis" routerLink="authentication/login">
+            Registrarme en el programa
+          </span>
+        </div>
+        <div class="iniImage"><img src="assets/luveck_inicio_1.png"></div>
+      </div>
+    </ng-template>
+    <ng-template swiperSlide>
+      <div class="sItem">
+        <div class="iniImage"><img src="assets/luveck_inicio_2.png"></div>
+        <div class="textoSlide">
+          <p>
+            Luveck proporciona, el beneficio del canje que puede ser adquirido de dos maneras:
+          </p>
+          <ul>
+            <li>Solicitando en la formación a través de los dependientes que cree su acceso a la plataforma.</li>
+            <li>Realizando su inscripción usted mismo a través de la plataforma al llenar los datos requeridos.</li>
+          </ul>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template swiperSlide>
+      <div class="sItem">
+        <div class="textoSlide">
+          <p>
+            Al pertenecer al proyecto <span>Pasión por vivir</span> puede optar por grandes “veneficios de canjes” en varios medicamentos, como:
+          </p>
+          <ul>
+            <li>Prescripción médica</li>
+            <li>Sin prescripción médica</li>
+            <li>Genérica</li>
+          </ul>
+          <p>
+            Para conocer mas de estos beneficios puede consultar en sus farmacia de preferencia.
+          </p>
+        </div>
+        <div class="iniImage"><img src="assets/luveck_inicio_3.png"></div>
+      </div>
+    </ng-template>
+  </swiper>
+
+  <div class="itemScroll">
+    <div class="down"></div>
+  </div>
+
+  <section class="masInfo">
+    <h1>¿Cómo ser parte del Programa?</h1>
+    <ol>
+      <li [ngClass]="{'light': localTheme, 'dark': !localTheme}">
+        <span>Acuda a su médico o farmacia de confianza: </span>
+        <p>Se le asesorará sobre los beneficios del Programa y como Inscribirse.</p>
+      </li>
+      <li [ngClass]="{'light': localTheme, 'dark': !localTheme}">
+        <span>Registro y acumulación de compras: </span>
+        <p>Compre el producto indicado por su médico en cualquiera de las farmacias afiliadas al Programa y solicite al dependiente de la farmacia el registro de sus facturas.</p>
+      </li>
+      <li [ngClass]="{'light': localTheme, 'dark': !localTheme}">
+        <span>Reciba su beneficio: </span>
+        <p>Al acumular cierta cantidad de compras del mismo producto y presentación recibirá una caja con las mismas características sin costo.</p>
+      </li>
+    </ol>
+  </section>
+</main>
+
+
+
+<!-- <main [ngClass]="{'light': localTheme, 'dark': !localTheme}">
   <div class="navi" [ngClass]="{'light': localTheme, 'dark': !localTheme}">
     <div style="display: flex; align-items: center;">
       <button mat-icon-button class="menu" (click)="ingresar()">
@@ -197,3 +279,4 @@
   </section>
 </main>
 <app-scroll-to-top></app-scroll-to-top>
+ -->

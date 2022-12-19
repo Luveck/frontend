@@ -100,6 +100,6 @@ export class AuthService {
     this.userToken = null
     this.userData = null
     localStorage.removeItem('LuveckUserToken');
-    this._dataServ.goTo('/authentication/login')
+    this._dataServ.goTo('/inicio')
   }
 }

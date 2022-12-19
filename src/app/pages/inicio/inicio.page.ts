@@ -1,8 +1,10 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, HostBinding } from '@angular/core'
+import { Component, HostBinding, ViewEncapsulation } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { NgPasswordValidatorOptions } from 'ng-password-validator';
+import SwiperCore, { Autoplay, SwiperOptions, Navigation } from 'swiper';
+SwiperCore.use([ Autoplay, Navigation])
 
 import { ModalProdIniComponent } from 'src/app/components/modal-prod-ini/modal-prod-ini.component';
 import { DataService } from 'src/app/services/data.service';
@@ -12,9 +14,22 @@ import { AuthService } from 'src/app/services/auth.service';
   selector: 'app-inicio',
   templateUrl: './inicio.page.html',
   styleUrls: ['./inicio.page.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 
 export class InicioPage {
+  swipperConfig: SwiperOptions = {
+    effect: 'fade',
+    loop: true,
+    slidesPerView: 1,
+    navigation: true,
+    autoplay: {
+      delay: 8000,
+      pauseOnMouseEnter: true,
+      disableOnInteraction: false
+    }
+  };
+
   localTheme:boolean = true
   darkClassName:string = 'theme-dark';
   SectionSelect:string = 'inicio'
