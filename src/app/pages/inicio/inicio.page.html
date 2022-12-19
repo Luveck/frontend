@@ -55,10 +55,6 @@
     </ng-template>
   </swiper>
 
-  <div class="itemScroll">
-    <div class="down"></div>
-  </div>
-
   <section class="masInfo">
     <h1>¿Cómo ser parte del Programa?</h1>
     <ol>
@@ -76,127 +72,10 @@
       </li>
     </ol>
   </section>
-</main>
 
-
-
-<!-- <main [ngClass]="{'light': localTheme, 'dark': !localTheme}">
-  <div class="navi" [ngClass]="{'light': localTheme, 'dark': !localTheme}">
-    <div style="display: flex; align-items: center;">
-      <button mat-icon-button class="menu" (click)="ingresar()">
-        <mat-icon>menu</mat-icon>
-      </button>
-
-      <img class="nav_logo" src="assets/luveck_logo.png">
-    </div>
-
-    <ul class="nav_list">
-      <li class="nav_item">
-        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'inicio'}" (click)="SectionSelect = 'inicio'">Inicio</button>
-      </li>
-      <li class="nav_item">
-        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'somos'}" (click)="SectionSelect = 'somos'">Quienes Somos</button>
-      </li>
-      <li class="nav_item">
-        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'productos'}" (click)="SectionSelect = 'productos'">Productos</button>
-      </li>
-      <li class="nav_item">
-        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'registro'}" (click)="SectionSelect = 'registro'">Obtener Canjes</button>
-      </li>
-    </ul>
-
-    <div style="display: flex; align-items: center;">
-      <button style="color: #ffc409;" mat-icon-button matTooltip="Cambiar tema" (click)="setTheme()">
-        <mat-icon>{{localTheme ?'light_mode' :'brightness_3'}}</mat-icon>
-      </button>
-
-      <button class="nav_link" (click)="ingresar()">
-        <mat-icon style="margin-right: 8px;">login</mat-icon> Ingresar
-      </button>
-    </div>
-  </div>
-
-  <section id="inicio" *ngIf="SectionSelect == 'inicio'" class="animated fadeIn">
-    <div class="iniInfo">
-      <h1>Luveck - Pasión por Vivir</h1>
-      <div>
-        <p>
-          El proyecto <b>Pasión por Vivir</b> consiste en ayudar a aquellas personas que están bajo un tratamiento médico parcial o permanente a obtener medicación gratuita mediante la acumulacion de compras en farmacias.
-        </p>
-        <br>
-        <p>
-          Los canjes como se les llama, consisten en que si un paciente compra hoy un medicamento llamado Amlodipina en una presentación de 28 cápsulas con indicaciones de tomar 1 cápsula diaria, la próxima compra del medicamento 31/03 ó 01/04 del presente año, el paciente al efectuar la compra correspondiente, éste recibirá una caja totalmente gratis.
-        </p>
-      </div>
-    </div>
-    <div class="iniImage"><img src="assets/luveck_inicio.png"></div>
-  </section>
-
-
-  <section id="somos" *ngIf="SectionSelect == 'somos'" class="animated fadeIn">
-    <h1>¿Quiénes somos?</h1>
-    <p>
-      Somos una empresa cuya finalidad es brindar una amplia gama de productos de calidad mundial para la salud. Nuestra motivación es ofrecer soluciones terapéuticas de excelencia para mejorar la calidad de vida de las personas.
-    </p>
-
-    <mat-card>
-      <mat-card-content>
-        <div class="somosText">
-          <h1><mat-icon color="accent">bookmark</mat-icon> Misión y Visión</h1>
-          <p>Nuestra misión es poner al alcance del consumidor productos farmacéuticos diferenciadores con estándares de calidad internacional que satisfagan las necesidades terapéuticas de la región, bajo un marco profesional de integridad, ética y de responsabilidad social.</p>
-          <br>
-          <p>Nuestra visión es ser una de las empresas farmacéuticas más reconocidas en Latinoamérica.</p>
-        </div>
-        <img src="https://luveck.com/wp-content/uploads/2022/03/764-x-758-1-764x758.jpg">
-      </mat-card-content>
-    </mat-card>
-
-    <h2>Nuestros valores</h2>
-    <div class="valores_content">
-      <mat-card>
-        <mat-icon color="accent">military_tech</mat-icon>
-        <h2>Excelencia</h2>
-        En búsqueda de la excelencia farmacéutica y desarrollo de la empresa, somos constantes con nuestro trabajo para superar las metas.
-      </mat-card>
-      <mat-card>
-        <mat-icon color="accent">favorite</mat-icon>
-        <h2>Integridad</h2>
-        Nuestro pensar y actuar son congruentes, honestos, éticos y veraces, cumpliendo las políticas y regulaciones de la región.
-      </mat-card>
-      <mat-card>
-        <mat-icon color="accent">groups</mat-icon>
-        <h2>Responsabilidad Social</h2>
-        Nuestra pasión es brindar productos y servicios para mejorar la calidad de vida de las personas. Contribuimos de manera activa, sistemática y voluntaria con el mejoramiento de nuestra Sociedad y del medio ambiente.
-      </mat-card>
-      <mat-card>
-        <mat-icon color="accent">volunteer_activism</mat-icon>
-        <h2>Trabajo en Equipo</h2>
-        Creemos en las cualidades y aportes de cada uno de nuestros colaboradores. Trabajando juntos contribuyen al propósito principal de la compañía.
-      </mat-card>
-    </div>
-  </section>
-
-  <section id="productos" *ngIf="SectionSelect == 'productos'" class="animated fadeIn">
-    <h1>Productos disponibles</h1>
-    <p>onemos al alcance de nuestros consumidores productos farmacéuticos diferenciadores con estándares de calidad mundial.</p>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Buscar por nombre / categoria / marca</mat-label>
-      <input matInput  #input>
-    </mat-form-field>
-
-    <div class="prod_content">
-      <mat-card class="mat-elevation-z8" *ngFor="let prod of [1,1,1,1,1,1,1,1,1,1,1,1]">
-        <img src="assets/default-thumbnail.jpg">
-        <h2>Nombre producto</h2>
-        <span (click)="openModalProd()">Leer mas</span>
-      </mat-card>
-    </div>
-  </section>
-
-  <section id="registro" *ngIf="SectionSelect == 'registro'" class="animated fadeIn">
+  <section class="registro">
     <h1>Registrarme para obtener canjes</h1>
-    <p>En Luveck estamos comprometidos con asegurar la mejor calidad para cada uno de nuestros productos.</p>
+    <p>Inscríbete a través de este formulario para ser parte del proyecto "Pasión por vivir".</p>
 
     <div class="regis_content">
       <img src="assets/luveck_registro.png">
@@ -278,5 +157,3 @@
     </div>
   </section>
 </main>
-<app-scroll-to-top></app-scroll-to-top>
- -->
