@@ -1,90 +1,177 @@
 <main [ngClass]="{'light': localTheme, 'dark': !localTheme}">
+  <button class="btnMenu" mat-icon-button (click)="showMenu = !showMenu">
+    <mat-icon>menu</mat-icon>
+  </button>
   <button class="btnTheme" style="color: #ffc409;" mat-icon-button matTooltip="Cambiar tema" (click)="setTheme()">
     <mat-icon>{{localTheme ?'light_mode' :'brightness_3'}}</mat-icon>
   </button>
   <div class="main_logo">
     <img class="nav_logo" src="assets/luveck_logo.png">
+    <ul class="nav_list" [ngClass]="{'showMenu': showMenu}">
+      <li class="nav_item">
+        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'inicio'}" (click)="selectSection('inicio')">Inicio</button>
+      </li>
+      <li class="nav_item">
+        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'info'}" (click)="selectSection('info')">Beneficios del programa</button>
+      </li>
+      <li class="nav_item">
+        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'productos'}" (click)="selectSection('productos')">Productos</button>
+      </li>
+      <li class="nav_item">
+        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'registro'}" (click)="selectSection('registro')">Registro de Canjes</button>
+      </li>
+    </ul>
+  </div>
+
+  <div *ngIf="SectionSelect == 'inicio'" class="inicio animated fadeIn">
     <h1>Bienvenido al programa Pasión por Vivir</h1>
+    <swiper [config]="swipperConfig" [ngClass]="{'light': localTheme, 'dark': !localTheme}">
+      <ng-template swiperSlide>
+        <div class="sItem reverse">
+          <div class="textoSlide">
+            <p>
+              El proyecto <span>Pasión por Vivir</span> consiste en ayudar a aquellas personas que están bajo un tratamiento médico parcial o permanente a obtener medicación gratuita mediante la acumulación de compras en farmacias.
+            </p>
+            <span class="linkRegis" (click)="SectionSelect = 'registro'">
+              Registrarme en el programa
+            </span>
+          </div>
+          <div class="iniImage"><img src="assets/luveck_inicio_1.png"></div>
+        </div>
+      </ng-template>
+      <ng-template swiperSlide>
+        <div class="sItem">
+          <div class="iniImage"><img src="assets/luveck_inicio_2.png"></div>
+          <div class="textoSlide">
+            <p>
+              Luveck proporciona, el beneficio del canje que puede ser adquirido de dos maneras:
+            </p>
+            <ul>
+              <li>Proporcionando su iformación a los dependientes de su farmacia de confianza quien creará su acceso a la plataforma.</li>
+              <li>Realizando su inscripción usted mismo a través de la plataforma al llenar los datos requeridos.</li>
+            </ul>
+            <span class="linkRegis" (click)="SectionSelect = 'info'">
+              Ver más.
+            </span>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template swiperSlide>
+        <div class="sItem reverse">
+          <div class="textoSlide">
+            <p>
+              Al pertenecer al proyecto <span>Pasión por Vivir</span> puede optar por grandes “beneficios de canjes” en varios medicamentos, como:
+            </p>
+            <ul>
+              <li>Prescripción médica.</li>
+              <li>Sin prescripción médica.</li>
+              <li>Línea genérica.</li>
+            </ul>
+            <p>
+              Para conocer más de estos beneficios puede consultar en su farmacia de preferencia.
+            </p>
+            <span class="linkRegis" (click)="SectionSelect = 'productos'">
+              Ver más.
+            </span>
+          </div>
+          <div class="iniImage"><img src="assets/luveck_inicio_3.png"></div>
+        </div>
+      </ng-template>
+    </swiper>
   </div>
 
-  <swiper [config]="swipperConfig" [ngClass]="{'light': localTheme, 'dark': !localTheme}">
-    <ng-template swiperSlide>
-      <div class="sItem">
-        <div class="textoSlide">
-          <p>
-            El proyecto <span>Pasión por Vivir</span> consiste en ayudar a aquellas personas que están bajo un tratamiento médico parcial o permanente a obtener medicación gratuita mediante la acumulación de compras en farmacias.
-          </p>
-          <span class="linkRegis" routerLink="authentication/login">
-            Registrarme en el programa
-          </span>
-        </div>
-        <div class="iniImage"><img src="assets/luveck_inicio_1.png"></div>
-      </div>
-    </ng-template>
-    <ng-template swiperSlide>
-      <div class="sItem">
-        <div class="iniImage"><img src="assets/luveck_inicio_2.png"></div>
-        <div class="textoSlide">
-          <p>
-            Luveck proporciona, el beneficio del canje que puede ser adquirido de dos maneras:
-          </p>
-          <ul>
-            <li>Solicitando en la formación a través de los dependientes que cree su acceso a la plataforma.</li>
-            <li>Realizando su inscripción usted mismo a través de la plataforma al llenar los datos requeridos.</li>
-          </ul>
-        </div>
-      </div>
-    </ng-template>
-    <ng-template swiperSlide>
-      <div class="sItem">
-        <div class="textoSlide">
-          <p>
-            Al pertenecer al proyecto <span>Pasión por vivir</span> puede optar por grandes “veneficios de canjes” en varios medicamentos, como:
-          </p>
-          <ul>
-            <li>Prescripción médica</li>
-            <li>Sin prescripción médica</li>
-            <li>Genérica</li>
-          </ul>
-          <p>
-            Para conocer mas de estos beneficios puede consultar en sus farmacia de preferencia.
-          </p>
-        </div>
-        <div class="iniImage"><img src="assets/luveck_inicio_3.png"></div>
-      </div>
-    </ng-template>
-  </swiper>
-
-  <div class="itemScroll">
-    <mat-icon>arrow_circle_down</mat-icon>
-  </div>
-
-  <section class="masInfo">
+  <section *ngIf="SectionSelect == 'info'" class="masInfo animated fadeIn">
     <h1>¿Cómo ser parte del Programa?</h1>
-    <ol>
-      <li [ngClass]="{'light': localTheme, 'dark': !localTheme}">
+    <div class="infoItem">
+      <div class="text">
+        <div class="badg">1</div>
         <span>Acuda a su médico o farmacia de confianza: </span>
         <p>Se le asesorará sobre los beneficios del Programa y como Inscribirse.</p>
-      </li>
-      <li [ngClass]="{'light': localTheme, 'dark': !localTheme}">
+      </div>
+      <img src="assets/beneficio_1.png">
+    </div>
+    <div class="infoItem item2">
+      <img src="assets/beneficio_2.png">
+      <div class="text">
+        <div class="badg">2</div>
         <span>Registro y acumulación de compras: </span>
         <p>Compre el producto indicado por su médico en cualquiera de las farmacias afiliadas al Programa y solicite al dependiente de la farmacia el registro de sus facturas.</p>
-      </li>
-      <li [ngClass]="{'light': localTheme, 'dark': !localTheme}">
+      </div>
+    </div>
+    <div class="infoItem">
+      <div class="text">
+        <div class="badg">3</div>
         <span>Reciba su beneficio: </span>
         <p>Al acumular cierta cantidad de compras del mismo producto y presentación recibirá una caja con las mismas características sin costo.</p>
-      </li>
-    </ol>
+      </div>
+      <img src="assets/beneficio_3.png">
+    </div>
+    <div class="linkRegis">
+      <span (click)="SectionSelect = 'registro'">
+        Registrarme en el programa
+      </span>
+    </div>
   </section>
 
-  <section class="registro">
+  <section *ngIf="SectionSelect == 'productos'" class="productos animated fadeIn">
+    <h1>Productos disponibles</h1>
+    <p>Ponemos al alcance de nuestros consumidores productos farmacéuticos diferenciadores con estándares de calidad mundial.</p>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Buscar producto</mat-label>
+      <input matInput  #input>
+    </mat-form-field>
+
+    <div class="prod_content">
+      <mat-card class="mat-elevation-z8" *ngFor="let prod of [1,2,3,4,5,6]">
+        <img src="assets/default-thumbnail.jpg">
+        <h2>Nombre producto</h2>
+        <span (click)="openModalProd()">Leer mas</span>
+      </mat-card>
+    </div>
+  </section>
+
+  <section *ngIf="SectionSelect == 'registro'" class="registro animated fadeIn">
     <h1>Registrarme para obtener canjes</h1>
-    <p>Inscríbete a través de este formulario para ser parte del proyecto "Pasión por vivir".</p>
+    <p>Inscríbete a través de este formulario para ser parte del proyecto "Pasión por Vivir".</p>
 
     <div class="regis_content">
       <img src="assets/luveck_registro.png">
       <div class="regForm">
-        <form [formGroup]="registerForm" autocomplete="off">
+        <form [formGroup]="loginForm" autocomplete="off" *ngIf="typeForm == 'login'">
+          <mat-form-field appearance="outline">
+            <mat-label>DNI</mat-label>
+            <input matInput placeholder="DNI de usuario" formControlName="dni">
+            <mat-icon matPrefix>person</mat-icon>
+            <mat-error>
+              DNI requerido
+            </mat-error>
+          </mat-form-field>
+
+          <p style="text-align: end;"><span [routerLink]="['/authentication/forgotpassword']">Olvide mi contraseña</span></p>
+          <mat-form-field appearance="outline">
+            <mat-label>Contraseña</mat-label>
+            <input matInput [type]="hidePassword ?'password' :'text'" placeholder="Contraseña" formControlName="password" required>
+            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+              <mat-icon>{{hidePassword ?'visibility_off' :'visibility'}}</mat-icon>
+            </button>
+            <mat-error>
+              Contraseña requerida
+            </mat-error>
+          </mat-form-field>
+
+          <mat-checkbox formControlName="remember">Recordar usuario</mat-checkbox>
+          <br>
+
+          <button mat-raised-button color="primary" [disabled]="!loginForm.valid"
+            (click)="onLogin(loginForm.value)">Iniciar Sesión
+            <mat-icon class="lod" *ngIf="dataServ.progress">cached</mat-icon>
+          </button>
+
+          <p>¿Nuevo en la plataforma?  <span (click)="typeForm = 'register'">Crea una cuenta</span></p>
+        </form>
+
+        <form [formGroup]="registerForm" autocomplete="off" *ngIf="typeForm == 'register'">
           <mat-form-field appearance="outline">
             <mat-label>DNI</mat-label>
             <input matInput placeholder="DNI de usuario" formControlName="dni">
@@ -156,6 +243,8 @@
             Registro
             <mat-icon class="lod" *ngIf="dataServ.progress">cached</mat-icon>
           </button>
+
+          <p>¿Ya tienes una cuenta? <span (click)="typeForm = 'login'">Inicia sesión</span></p>
         </form>
       </div>
     </div>

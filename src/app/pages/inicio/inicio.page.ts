@@ -33,8 +33,16 @@ export class InicioPage {
   localTheme:boolean = true
   darkClassName:string = 'theme-dark';
   SectionSelect:string = 'inicio'
+  showMenu:boolean = false
+  typeForm:string = 'register'
 
   @HostBinding('class') className = '';
+
+  public loginForm = new FormGroup({
+    dni : new FormControl('', [Validators.required]),
+    password : new FormControl('', [Validators.required]),
+    remember: new FormControl(false, [Validators.required])
+  })
 
   public registerForm = new FormGroup({
     dni : new FormControl('', [Validators.required]),
@@ -101,8 +109,9 @@ export class InicioPage {
     }
   }
 
-  ingresar(){
-    this.dataServ.goTo('authentication/login')
+  selectSection(sec:string){
+    this.SectionSelect = sec
+    this.showMenu = false
   }
 
   openModalProd(){
@@ -112,6 +121,13 @@ export class InicioPage {
       }
     }
     this._dialog.open(ModalProdIniComponent, config)
+  }
+
+  onLogin(formData:any){
+    if(!this.dataServ.progress){
+      this.dataServ.progress = true
+      this._authServ.login(formData)
+    }
   }
 
   onRegister(formData:any){

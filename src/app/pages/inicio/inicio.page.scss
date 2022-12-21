@@ -1,6 +1,6 @@
 @import '~swiper/scss';
-@import "~swiper/css/effect-fade";
 @import '~swiper/scss/navigation';
+
 main{
   width: 100%;
   height: 100%;
@@ -20,150 +20,216 @@ main{
     top: 20px;
     right: 50px;
   }
+  .btnMenu{
+    position: absolute;
+    top: 20px;
+    left: 10px;
+    display: none;
+  }
   .main_logo{
     width: 80%;
     padding: 2.5rem 1rem 1rem 1rem;
     margin: 0 auto;
     text-align: center;
     .nav_logo{
-      width: 300px;
+      width: 250px;
     }
-    h1{
-      font-size: 2rem;
-    }
-  }
-  .swiper{
-    --swiper-navigation-color: #b9ccda;
-    --swiper-navigation-size: 50px;
-
-    width: 100%;
-    height: 50%;
-    &.dark{
-      background: #161d31;
-      color: #fefefe;
-    }
-    &.light{
-      background: #f8f8f8;
-      color: #333;
-    }
-    .swiper-slide{
-      .sItem{
-        width: 90%;
-        height: 100%;
-        margin: 1rem auto;
-        display: flex;
-        flex-direction: row;
-        gap: 5px;
-        align-items: center;
-        justify-content: center;
-        .textoSlide{
-          padding: 0 5rem;
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          align-items: flex-start;
-          justify-content: center;
-          p, li{
-            font-size: 1.2rem;
-            line-height: 1.5;
-            span{
-              font-weight: 600;
-              color: #145483;
-            }
-          }
-          .linkRegis{
-            border: 1px solid #145483;
-            border-radius: 20px;
-            padding: 1.2rem;
-            font-size: 1.2rem;
-            cursor: pointer;
-            transition: background .5s;
-            &:hover{
-              background: #145483;
-              color: #fff;
-              font-weight: 600;
-            }
-          }
-        }
-        img{
-          height: 100%;
-          object-fit: contain;
+    .nav_list{
+      color: inherit;
+      padding: 1rem 0;
+      list-style: none;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      gap: 2.5rem;
+      .nav_link{
+        color: inherit;
+        font-size: 1.2em;
+        background: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        &.active{
+          border-bottom: 2px solid #2f71ff;
         }
       }
     }
   }
-  .itemScroll{
-    margin: 5rem 0;
+
+  .inicio{
     width: 100%;
-    text-align: center;
-    mat-icon{
-      cursor: pointer;
-      color: darken($color: #b9ccda, $amount: 10);
-      width: 5rem;
-      height: 5rem;
-      font-size: 5rem;
+    margin-top: 1.5rem;
+    h1{
+      font-size: 2rem;
+      text-align: center;
+      padding: 0;
+    }
+    .swiper{
+      --swiper-navigation-color: #b9ccda;
+      --swiper-navigation-size: 50px;
+
+      width: 100%;
+      height: 60%;
+      &.dark{
+        background: #161d31;
+        color: #fefefe;
+      }
+      &.light{
+        background: #f8f8f8;
+        color: #333;
+      }
+      .swiper-slide{
+        .sItem{
+          width: 90%;
+          height: 100%;
+          margin: 1rem auto;
+          display: flex;
+          flex-direction: row;
+          gap: 5px;
+          align-items: center;
+          justify-content: center;
+          .textoSlide{
+            padding: 0 5rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: flex-start;
+            justify-content: center;
+            p, li{
+              font-size: 1.2rem;
+              line-height: 1.5;
+              span{
+                font-weight: 600;
+                color: #2f71ff;
+              }
+            }
+            .linkRegis{
+              border: 1px solid #145483;
+              border-radius: 10px;
+              padding: .8rem 2rem;
+              font-size: 1.2rem;
+              cursor: pointer;
+              transition: background .5s;
+              &:hover{
+                background: #145483;
+                color: #fff;
+              }
+            }
+          }
+          img{
+            height: 100%;
+            object-fit: contain;
+          }
+        }
+      }
     }
   }
+
   .masInfo{
-    margin: 5rem auto;
-    width: 70%;
+    margin: 1rem auto;
+    width: 90%;
     h1{
       font-size: 2rem;
       text-align: center;
     }
-    ol{
-      counter-reset: li;
-      list-style: none;
-      list-style: decimal;
-      padding: 0;
-      margin-bottom: 4em;
-      text-shadow: 0 1px 0 rgba(255,255,255,.5);
-      li{
-        font-size: 1.2rem;
-        position: relative;
-        display: block;
-        padding: .4em .4em .4em 2em;
-        margin: 1rem 0;
-        background: #ddd;
-        text-decoration: none;
-        border-radius: .3em;
-        &.dark{
-          background: #2b375a;
-          color: #fefefe;
-        }
-        &.light{
-          background: #e4e4e4;
-          color: #333;
-        }
-        &::before{
-          content: counter(li);
-          counter-increment: li;
-          position: absolute;
-          left: -1.3em;
-          top: 50%;
-          margin-top: -1.3em;
-          background: #145483;
-          color: #fff;
-          height: 2em;
-          width: 2em;
-          line-height: 2em;
-          border: .3em solid darken($color: #b9ccda, $amount: 10);
-          text-align: center;
-          font-weight: 600;
-          border-radius: 2em;
-        }
+    .infoItem{
+      width: 80%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      .text{
+        text-align: center;
         span{
           font-weight: 600;
           color: #ed6c05;
+          font-size: 1.5rem;
+          margin-bottom: 20px;
+        }
+        .badg{
+          width: 80px;
+          height: 80px;
+          margin: 2rem auto;
+          background: #145483;
+          border: 3px solid darken($color: #b9ccda, $amount: 10);
+          border-radius: 50%;
+          color: #fff;
+          font-size: 4rem;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+      img{
+        width: 450px;
+      }
+    }
+    .linkRegis{
+      padding: 4rem 0;
+      width: 100%;
+      text-align: center;
+      span{
+        border: 1px solid #145483;
+        border-radius: 10px;
+        padding: .8rem 2rem;
+        margin: 2rem auto;
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: background .5s;
+        &:hover{
+          background: #145483;
+          color: #fff;
+          font-weight: 600;
         }
       }
     }
   }
+
+  .productos{
+    width: 90%;
+    padding: 0 1rem;
+    margin: 1.5rem auto;
+    text-align: center;
+    h1 {
+      margin-top: 1.5rem;
+      width: 100%;
+      font-size: 2.2rem;
+      text-align: center;
+    }
+    .mat-form-field {
+      margin: 2rem 0;
+      width: 40%;
+    }
+    .prod_content{
+      margin-bottom: 3rem;
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+      mat-card{
+        width: 300px;
+        height: 300px;
+        border-radius: 10px;
+        img{
+          width: 100%;
+        }
+        span{
+          cursor: pointer;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+
   .registro{
     width: 100%;
-    height: 90vh;
-    margin-top: 2rem;
+    margin: 2rem 0;
     h1 {
       margin: 1rem 0;
       width: 100%;
@@ -185,7 +251,6 @@ main{
       }
       .regForm{
         text-align: center;
-        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
         margin: 1rem 0;
         padding: 1.5rem;
         width: 40%;
@@ -198,8 +263,21 @@ main{
             border: none;
           }
         }
+        .mat-checkbox{
+          width: 100%;
+          text-align: start;
+        }
         .btnReg{
           width: 60%;
+        }
+        p{
+          margin-top: 1rem;
+          text-align: center;
+          span{
+            cursor: pointer;
+            color: #2f71ff;
+            font-weight: 600;
+          }
         }
       }
     }
@@ -209,39 +287,89 @@ main{
   main{
     padding: 0;
     height: auto;
+    .main_logo{
+      .nav_list{
+        opacity: 0;
+        background: #145583e1;
+        position: absolute;
+        top: 15%;
+        left: 0;
+        width: 100%;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 1rem;
+        transition: opacity 1s ease;
+        .nav_item{
+          text-align: start;
+          .nav_link{
+            color: #fefefe;
+            font-weight: 600;
+          }
+        }
+        &.showMenu{
+          opacity: 1;
+        }
+      }
+    }
+    .btnMenu{
+      display: block;
+    }
     .btnTheme{
       right: 10px;
     }
-    .main_logo{
+    .inicio{
       h1{
         font-size: 1.5rem;
+        width: 90%;
+        margin: 0 auto;
       }
-    }
-    .swiper{
-      height: 80%;
-      .swiper-slide .sItem{
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        .textoSlide{
-          padding: 0 1rem;
-          width: 90%;
+      .swiper{
+        height: 80%;
+        .swiper-slide .sItem{
+          flex-direction: column;
           align-items: center;
           justify-content: center;
-          .linkRegis{
-            font-size: 1rem;
+          &.reverse{
+            flex-direction: column-reverse;
           }
-        }
-        img{
-          width: 100%;
-          height: 200px;
+          .textoSlide{
+            padding: 0 1rem;
+            width: 90%;
+            align-items: center;
+            justify-content: center;
+            .linkRegis{
+              font-size: 1rem;
+            }
+          }
+          img{
+            width: 100%;
+            height: 200px;
+          }
         }
       }
     }
     .masInfo{
-      width: 86%;
+      .infoItem{
+        width: 100%;
+        flex-direction: column;
+        gap: .5rem;
+        img{
+          width: 90%;
+          object-fit: contain;
+        }
+        &.item2{
+          flex-direction: column-reverse;
+        }
+      }
+    }
+    .productos .mat-form-field {
+      width: 100%;
     }
     .registro{
+      margin-bottom: 4rem;
       h1, p{
         width: 90%;
         margin: 0 auto;
