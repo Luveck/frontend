@@ -66,7 +66,7 @@ export class DetalleProductoPage implements OnInit {
     this.isLoadingResults = true
     let res = this._inveServ.getProductoById(this.prodId)
     res.subscribe(data => {
-      this.currentProd = data
+      this.currentProd = data.result
       this.isLoadingResults = false
       this.initValores()
     }, (err => console.log(err)))

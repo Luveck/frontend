@@ -54,7 +54,7 @@ export class PaisesPage implements AfterViewInit {
   getAllCountries() {
     let resp = this._zonasServ.getPaises()
     resp.subscribe(paises => {
-      this.dataSource.data = paises as Pais[]
+      this.dataSource.data = paises.result as Pais[]
       this.isLoadingResults = false
       console.log(this.dataSource.data)
     }, (err => console.log(err)))
@@ -105,7 +105,7 @@ export class PaisesPage implements AfterViewInit {
       .subscribe((confirmado: Boolean) => {
         if (confirmado) {
           paisEnCuestion[0].status = !paisEnCuestion[0].status
-          let respuesta = this._zonasServ.addOrUpdatePais(paisEnCuestion[0])
+          let respuesta = this._zonasServ.updatePais(paisEnCuestion[0])
           respuesta.subscribe(() => {
             this._zonasServ.notify('Registro actualizado', 'success')
             this.getAllCountries()

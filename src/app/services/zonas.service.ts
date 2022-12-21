@@ -66,29 +66,15 @@ export class ZonasService{
       headers: this.headers
     })
   }
-  addOrUpdatePais(formData:any, idPais?:number, status?:boolean){
+
+  updatePais(formData:any, idPais?:number, status?:boolean){
     let dataPais:Pais
-    if(idPais){
-      dataPais = {
-        "id": idPais,
-        ...formData,
-        "status": status,
-        "createBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-        "creationDate": new Date().toISOString(),
-        "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-        "updateDate": new Date().toISOString()
-      }
-    }else{
-      dataPais = {
-        ...formData,
-        "status": true,
-        "createBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-        "creationDate": new Date().toISOString(),
-        "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-        "updateDate": new Date().toISOString()
-      }
+    dataPais = {
+      "id": idPais,
+      ...formData,
+      "status": status
     }
-    return this._http.post(`${this._dataServ.baseURL}/Administration/CreateUpdateCountry?user=${this._authServ.userData.name}`, dataPais)
+    return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCountry`, dataPais)
   }
 
   /* Endpoints de Departamentos */
@@ -112,7 +98,18 @@ export class ZonasService{
     return this._http.get<Ciudad>(`${this._dataServ.baseURL}/Administration/GetCityById?Id=${id}`)
   }
 
-  addOrUpdateCiudad(formData:any, idCity?:number){
+  addCiudad(formData:any){
+    let dataCiudad:Ciudad
+    dataCiudad = {
+      ...formData,
+      "status": true
+    }
+    return this._http.post(`${this._dataServ.baseURL}/Administration/CreateCity`, dataCiudad, {
+      headers: this.headers
+    })
+  }
+
+  updateCiudad(formData:any, idCity?:number){
     let dataCiudad:Ciudad
     if(idCity){
       dataCiudad = {
@@ -121,25 +118,13 @@ export class ZonasService{
         "stateId": '1',
         "stateCode": 'FM',
         "stateName": formData.stateName,
-        "countryId": this.listPaises[formData.countryName].id.toString(),
-        "countryName": this.listPaises[formData.countryName].currencyName,
-        "createBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-        "creationDate": new Date().toISOString(),
-        "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-        "updateDate": new Date().toISOString()
       }
     }else{
       dataCiudad = {
         "name": formData.name,
         "stateId": '1',
         "stateCode": 'FM',
-        "stateName": formData.stateName,
-        "countryId": this.listPaises[formData.countryName].id.toString(),
-        "countryName": this.listPaises[formData.countryName].name,
-        "createBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-        "creationDate": new Date().toISOString(),
-        "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-        "updateDate": new Date().toISOString()
+        "stateName": formData.stateName
       }
     }
     return this._http.post(`${this._dataServ.baseURL}/Administration/CreateUpdateCity?user=${this._authServ.userData.name}`, dataCiudad)

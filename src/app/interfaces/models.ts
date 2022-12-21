@@ -38,8 +38,8 @@ export interface Ciudad{
   stateId: string,
   stateCode: string,
   stateName: string,
-  countryId: string,
-  countryName: string,
+  countryId?: string,
+  countryName?: string,
   createBy?: string
   creationDate?: string
   updateBy?: string

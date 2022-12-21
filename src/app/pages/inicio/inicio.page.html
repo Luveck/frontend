@@ -85,7 +85,7 @@
     <div class="infoItem">
       <div class="text">
         <div class="badg">1</div>
-        <span>Acuda a su médico o farmacia de confianza: </span>
+        <span>Acuda a su médico o farmacia de confianza</span>
         <p>Se le asesorará sobre los beneficios del Programa y como Inscribirse.</p>
       </div>
       <img src="assets/beneficio_1.png">
@@ -94,14 +94,14 @@
       <img src="assets/beneficio_2.png">
       <div class="text">
         <div class="badg">2</div>
-        <span>Registro y acumulación de compras: </span>
+        <span>Registro y acumulación de compras</span>
         <p>Compre el producto indicado por su médico en cualquiera de las farmacias afiliadas al Programa y solicite al dependiente de la farmacia el registro de sus facturas.</p>
       </div>
     </div>
     <div class="infoItem">
       <div class="text">
         <div class="badg">3</div>
-        <span>Reciba su beneficio: </span>
+        <span>Reciba su beneficio</span>
         <p>Al acumular cierta cantidad de compras del mismo producto y presentación recibirá una caja con las mismas características sin costo.</p>
       </div>
       <img src="assets/beneficio_3.png">
@@ -123,10 +123,10 @@
     </mat-form-field>
 
     <div class="prod_content">
-      <mat-card class="mat-elevation-z8" *ngFor="let prod of [1,2,3,4,5,6]">
-        <img src="assets/default-thumbnail.jpg">
+      <mat-card class="mat-elevation-z8" *ngFor="let prod of [1,2,3,4,5,6]" (click)="openModalProd()">
+        <img src="https://luveck.com/wp-content/uploads/2021/11/amoveck.png">
         <h2>Nombre producto</h2>
-        <span (click)="openModalProd()">Leer mas</span>
+        <span>Leer mas</span>
       </mat-card>
     </div>
   </section>
@@ -249,4 +249,11 @@
       </div>
     </div>
   </section>
+
+  <footer>
+    <p>&copy; 2022</p> &nbsp;
+    <p>Powered by</p>
+    <img src="assets/logo-appland.png">
+  </footer>
 </main>
+

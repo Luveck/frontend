@@ -86,7 +86,7 @@ export class InventarioService {
   }
 
   public getProductoById(id:string){
-    return this._http.get<Producto>(`${this._dataServ.baseURL}/Administration/GetProductsById?Id=${id}`, {headers: this.headers})
+    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetProductById?Id=${id}`, {headers: this.headers})
   }
 
   public addProducto(formData:any, categoria:Categoria){

@@ -57,7 +57,7 @@ export class productosPage implements OnInit {
     //this.dataSource.data = this._inveServ.productos
     let resp = this._inveServ.getAllProductos()
     resp.subscribe(productos => {
-      this.dataSource.data = productos as Producto[]
+      this.dataSource.data = productos.result as Producto[]
       this.isLoadingResults = false
       console.log(this.dataSource.data)
     }, (err => console.log(err)))

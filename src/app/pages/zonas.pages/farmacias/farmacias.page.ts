@@ -57,7 +57,10 @@ export class FarmaciasPage implements AfterViewInit {
       console.log(farmas)
       this.dataSource.data = farmas as Farmacia[]
       this.isLoadingResults = false
-    }, (err => console.log(err)))
+    }, (err => {
+      this.isLoadingResults = false
+      console.log(err)
+    }))
   }
 
   applyFilter(event: Event) {

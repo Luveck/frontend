@@ -61,13 +61,13 @@ export class DetalleCiudadPage implements OnInit {
 
   addEditCiudad(){
     if(!this.data.ciudadId){
-      let peticion = this.zonasServ.addOrUpdateCiudad(this.newCiudadForm.value)
+      let peticion = this.zonasServ.updateCiudad(this.newCiudadForm.value)
       peticion.subscribe(() => {
         this.zonasServ.notify('Ciudad registrada', 'success')
         this.dialogo.close(true);
       }, err => console.log(err))
     }else{
-      let peticion = this.zonasServ.addOrUpdateCiudad(this.newCiudadForm.value, parseInt(this.data.ciudadId))
+      let peticion = this.zonasServ.updateCiudad(this.newCiudadForm.value, parseInt(this.data.ciudadId))
       peticion.subscribe(() => {
         this.zonasServ.notify('Registro actualizado', 'success')
         this.dialogo.close(true);

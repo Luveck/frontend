@@ -35,10 +35,13 @@ export class DetallePaisPage implements OnInit {
       this.isLoadingResults = true
       const pais = this._zonasServ.getPaisById(this.data.paisId)
       pais.subscribe(res => {
-        this.currentPais = res
+        this.currentPais = res.result
         this.isLoadingResults = false
         this.initValores()
-      }, (err => console.log(err)))
+      }, (err => {
+        this.isLoadingResults = false
+        console.log(err)
+      }))
     }
   }
 
@@ -65,7 +68,7 @@ export class DetallePaisPage implements OnInit {
         this.dialogo.close(true);
       }, err => console.log(err))
     }else{
-      let peticion = this._zonasServ.addOrUpdatePais(this.newPaisForm.value, this.data.paisId, this.currentPais!.status)
+      let peticion = this._zonasServ.updatePais(this.newPaisForm.value, this.data.paisId, this.currentPais!.status)
       peticion.subscribe(res => {
         this._zonasServ.notify('Registro actualizado', 'success')
         this.dialogo.close(true);
