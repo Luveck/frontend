@@ -1,3 +1,33 @@
-<main>
-  main page roles
+<h2 mat-dialog-title>Gestión de Roles</h2>
+<main mat-dialog-content>
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+  <div class="contensRoles">
+    <div class="itemRol" *ngFor="let rol of usuariosServ.localRoles; index as i">
+      <span>{{rol.name}}</span>
+      <div class="actions">
+        <button mat-icon-button color="accent" (click)="on(rol.name)" matTooltip="Editar Rol">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-icon-button color="warn" (click)="dialog(i)" matTooltip="Eliminar Rol">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrapForm">
+    <div class="inputs">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="name" placeholder="Nombre" autocomplete="off">
+    </mat-form-field>
+    </div>
+  </div>
 </main>
+<div mat-dialog-actions>
+  <div class="btns">
+    <button mat-flat-button color="primary" [disabled]="!name" (click)="save()">Guardar datos</button>
+  </div>
+</div>

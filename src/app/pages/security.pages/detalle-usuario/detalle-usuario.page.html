@@ -1,0 +1,48 @@
+<h2 mat-dialog-title>{{data.title}}</h2>
+<main mat-dialog-content>
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+
+  <form class="wrapForm" [formGroup]="newUserForm" autocomplete="off">
+    <div class="inputs">
+      <mat-form-field appearance="fill">
+        <mat-label>DNI</mat-label>
+        <input matInput placeholder="Nombre" formControlName="dni">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Nombre" formControlName="name">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Apellido</mat-label>
+        <input matInput placeholder="Apellido" formControlName="lastName">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Rol</mat-label>
+        <mat-select formControlName="role">
+          <div *ngFor="let rol of _usersServ.localRoles; index as i">
+            <mat-option [value]="i">
+              {{rol.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="Email" formControlName="email">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Teléfono</mat-label>
+        <input matInput placeholder="Teléfono" formControlName="phone">
+      </mat-form-field>
+    </div>
+  </form>
+</main>
+<div mat-dialog-actions>
+  <div class="btns">
+    <button mat-raised-button color="primary" [disabled]="newUserForm.invalid" (click)="addEditUser()">Guardar <mat-icon>save</mat-icon></button>
+    <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
+  </div>
+</div>

@@ -21,7 +21,7 @@ export class CiudadesPage implements AfterViewInit {
       {
         name: 'Inicio',
         isLink: true,
-        link: '/'
+        link: '/admin/home'
       },
       {
         name: 'Gestión de ciudades',

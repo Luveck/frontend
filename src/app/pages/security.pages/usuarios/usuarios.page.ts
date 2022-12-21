@@ -1,5 +1,14 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort, Sort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
+
+import { UsuariosService } from 'src/app/services/usuarios.service';
+import { DetalleUsuarioPage } from '../detalle-usuario/detalle-usuario.page';
+import { RolesPage } from '../roles/roles.page';
 
 @Component({
   selector: 'app-usuarios',
@@ -7,13 +16,107 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./usuarios.page.scss'],
 })
 
-export class UsuariosPage implements OnInit {
+export class UsuariosPage implements AfterViewInit {
+  public breadcrumb = {
+    links: [
+      {
+        name: 'Inicio',
+        isLink: true,
+        link: '/admin/home'
+      },
+      {
+        name: 'Gestión de usuarios',
+        isLink: false,
+      }
+    ]
+  }
+
+  @Input('ELEMENT_DATA')  ELEMENT_DATA!:any[];
+  @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
+  @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
+  displayedColumns: string[] = ['dni', 'name', 'role', 'ctaStatus', 'acctions'];
+  dataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
+
+  isLoadingResults:boolean = false;
 
   constructor(
-    private _dialogo:MatDialog
+    private _liveAnnouncer: LiveAnnouncer,
+    private _dialog: MatDialog,
+    private _usuariosServ:UsuariosService
   ){}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator
+    this.dataSource.sort = this.sort;
+    this.getAllUsers()
+  }
 
+  getAllUsers(){
+    let resp = this._usuariosServ.getAllUsers()
+    this.dataSource.data = resp as any[]
+    this.isLoadingResults = false
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  announceSortChange(sortState: Sort) {
+    if (sortState.direction) {
+      this._liveAnnouncer.announce(`Sorted ${sortState.direction}ending`);
+    } else {
+      this._liveAnnouncer.announce('Sorting cleared');
+    }
+  }
+
+  on(id?:string){
+    const config = {
+      data: {
+        title: id ?'Editar Usuario' :'Agregar Usuario',
+        userId: id
+      }
+    }
+    this._dialog.open(DetalleUsuarioPage, config)
+    .afterClosed()
+    .subscribe((confirmado:boolean) => {
+      if(confirmado){
+        this.isLoadingResults = true
+        this.getAllUsers()
+      }
+    })
+  }
+
+  dialog(id: string, estado: boolean) {
+    let userEnCuestion = this.dataSource.data.filter(user => user.dni === id)
+    let msg = estado ? '¿Seguro de querer inhabilitar esta cuenta?' : '¿Seguro de querer habilitar esta cuenta?'
+
+    this._dialog.open(DialogConfComponent, {
+      data: `${msg}`
+    })
+      .afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          userEnCuestion[0].ctaStatus = !userEnCuestion[0].ctaStatus
+          let respuesta = this._usuariosServ.UpdateUsuario(userEnCuestion[0], id)
+          this._usuariosServ.notify('Registro actualizado', 'success')
+          this.getAllUsers()
+        }
+      })
+  }
+
+  onModalRoles(){
+    this._dialog.open(RolesPage)
+    .afterClosed()
+    .subscribe((confirmado:boolean) => {
+      if(confirmado){
+        this.isLoadingResults = true
+        this.getAllUsers()
+      }
+    })
   }
 }

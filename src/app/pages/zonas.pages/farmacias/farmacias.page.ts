@@ -22,7 +22,7 @@ export class FarmaciasPage implements AfterViewInit {
       {
         name: 'Inicio',
         isLink: true,
-        link: '/'
+        link: '/admin/home'
       },
       {
         name: 'Gestión de Farmacias',

@@ -1,0 +1,76 @@
+mat-dialog-container{
+  height: 463px;
+}
+.mat-dialog-title{
+  text-align: center;
+  margin: 0;
+}
+.mat-dialog-content{
+  height: auto;
+}
+main{
+  .fm_header{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    section.avatar{
+      padding: .5rem;
+      display: flex;
+      align-items: center;
+      img{
+        width: 130px;
+        max-height: 100px;
+      }
+      .datos{
+        margin: 0.5rem;
+        p{
+          font-size: 2rem;
+        }
+        .bots{
+          margin-top: 1rem;
+          width: 100%;
+          text-align: center;
+          button{
+            margin: 0 0.5rem 0 0;
+          }
+        }
+      }
+    }
+    section.resumen{
+      padding: 1rem;
+      ul{
+        border-left: 1px solid gray;
+        list-style: none;
+        padding-left: 1rem;
+        li{
+          .example-tab-icon {
+            margin-right: 8px;
+          }
+          margin: 0.3rem 0;
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+  }
+  .wrapForm{
+    width: 100%;
+    padding: 10px 0;
+    .inputs{
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      mat-form-field{
+        width: 90%;
+        margin: auto;
+        align-content: center;
+      }
+    }
+  }
+}
+.mat-dialog-actions{
+  border-top: 1px solid gray;
+  justify-content: center;
+  button{
+    margin: 0 0.5rem;
+  }
+}

@@ -34,7 +34,7 @@ export class DetalleProductoPage implements OnInit {
       {
         name: 'Inicio',
         isLink: true,
-        link: '/'
+        link: '/admin/home'
       },
       {
         name: 'Gestión de productos',

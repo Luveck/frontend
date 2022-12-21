@@ -36,11 +36,6 @@
         "text": "Usuarios",
         "icon": "group",
         "routerLink": "security/usuarios"
-      },
-      {
-        "text": "Roles",
-        "icon": "contacts",
-        "routerLink": "security/roles"
       }
     ]
   },

@@ -22,7 +22,7 @@ export class PaisesPage implements AfterViewInit {
       {
         name: 'Inicio',
         isLink: true,
-        link: '/'
+        link: '/admin/home'
       },
       {
         name: 'Gestión de paises',
