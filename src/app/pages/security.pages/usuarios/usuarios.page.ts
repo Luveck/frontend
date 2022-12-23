@@ -92,7 +92,6 @@ export class UsuariosPage implements AfterViewInit {
   }
 
   dialog(id: string, estado: boolean) {
-    let userEnCuestion = this.dataSource.data.filter(user => user.dni === id)
     let msg = estado ? '¿Seguro de querer inhabilitar esta cuenta?' : '¿Seguro de querer habilitar esta cuenta?'
 
     this._dialog.open(DialogConfComponent, {
@@ -101,8 +100,7 @@ export class UsuariosPage implements AfterViewInit {
       .afterClosed()
       .subscribe((confirmado: Boolean) => {
         if (confirmado) {
-          userEnCuestion[0].ctaStatus = !userEnCuestion[0].ctaStatus
-          let respuesta = this._usuariosServ.UpdateUsuario(userEnCuestion[0], id)
+          let respuesta = this._usuariosServ.UpdateUsuario(null, id, estado)
           this._usuariosServ.notify('Registro actualizado', 'success')
           this.getAllUsers()
         }

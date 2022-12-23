@@ -6,7 +6,7 @@
     <mat-icon>{{localTheme ?'light_mode' :'brightness_3'}}</mat-icon>
   </button>
   <div class="main_logo">
-    <img class="nav_logo" src="assets/luveck_logo.png">
+    <img class="nav_logo" [src]="localTheme ?'assets/logo_light.png' :'assets/logo_dark.png'">
     <ul class="nav_list" [ngClass]="{'showMenu': showMenu}">
       <li class="nav_item">
         <button class="nav_link" [ngClass]="{'active': SectionSelect === 'inicio'}" (click)="selectSection('inicio')">Inicio</button>
@@ -64,7 +64,6 @@
             </p>
             <ul>
               <li>Prescripción médica.</li>
-              <li>Sin prescripción médica.</li>
               <li>Línea genérica.</li>
             </ul>
             <p>
@@ -85,7 +84,7 @@
     <div class="infoItem">
       <div class="text">
         <div class="badg">1</div>
-        <span>Acuda a su médico o farmacia de confianza</span>
+        <span>Acuda a su farmacia de confianza</span>
         <p>Se le asesorará sobre los beneficios del Programa y como Inscribirse.</p>
       </div>
       <img src="assets/beneficio_1.png">

@@ -115,17 +115,25 @@ export class UsuariosService {
   }
 
   UpdateUsuario(formData:any, dni:string, status?:boolean){
-    let dataUser:any
-    dataUser = {
-      "dni": dni,
-      ...formData,
-      "ctaStatus": status
-    }
-    //return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCountry`, dataUser)
-    this.localUsers.forEach((user, index) => {
-      if(user.dni === dni){
-        this.localUsers[index] = dataUser
+    if(formData){
+      let dataUser:any
+      dataUser = {
+        "dni": dni,
+        ...formData,
+        "ctaStatus": status
       }
-    })
+      //return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCountry`, dataUser)
+      this.localUsers.forEach((user, index) => {
+        if(user.dni === dni){
+          this.localUsers[index] = dataUser
+        }
+      })
+    }else{
+      this.localUsers.forEach((user, index) => {
+        if(user.dni === dni){
+          this.localUsers[index].ctaStatus = !status
+        }
+      })
+    }
   }
 }
