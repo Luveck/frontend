@@ -1,13 +1,25 @@
 <main [ngClass]="{'light': localTheme, 'dark': !localTheme}">
-  <button class="btnMenu" mat-icon-button (click)="showMenu = !showMenu">
-    <mat-icon>menu</mat-icon>
-  </button>
-  <button class="btnTheme" style="color: #ffc409;" mat-icon-button matTooltip="Cambiar tema" (click)="setTheme()">
-    <mat-icon>{{localTheme ?'light_mode' :'brightness_3'}}</mat-icon>
-  </button>
+  <header>
+    <div class="btnsHeader logo">
+      <button class="btnMenu" mat-icon-button (click)="showMenu = !showMenu">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <img class="nav_logo" [src]="localTheme ?'assets/logo_light.png' :'assets/logo_dark.png'">
+    </div>
+    <div class="btnsHeader">
+      <button mat-icon-button matTootip="Notificaciones">
+        <mat-icon>notifications</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Mi Perfil">
+        <mat-icon>manage_accounts</mat-icon>
+      </button>
+      <button style="color: #ffc409;" mat-icon-button matTooltip="Cambiar tema" (click)="setTheme()">
+        <mat-icon>{{localTheme ?'light_mode' :'brightness_3'}}</mat-icon>
+      </button>
+    </div>
+  </header>
   <div class="main_logo">
-    <img class="nav_logo" [src]="localTheme ?'assets/logo_light.png' :'assets/logo_dark.png'">
-    <ul class="nav_list" [ngClass]="{'showMenu': showMenu}">
+    <ul class="nav_list animated fadeIn" *ngIf="showMenu">
       <li class="nav_item">
         <button class="nav_link" [ngClass]="{'active': SectionSelect === 'inicio'}" (click)="selectSection('inicio')">Inicio</button>
       </li>
@@ -17,6 +29,9 @@
       <li class="nav_item">
         <button class="nav_link" [ngClass]="{'active': SectionSelect === 'productos'}" (click)="selectSection('productos')">Productos</button>
       </li>
+      <!-- <li class="nav_item">
+        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'registro'}" (click)="selectSection('registro')">Registrarme en el Programa</button>
+      </li> -->
       <li class="nav_item">
         <button class="nav_link" [ngClass]="{'active': SectionSelect === 'registro'}" (click)="selectSection('registro')">Registro de Canjes</button>
       </li>

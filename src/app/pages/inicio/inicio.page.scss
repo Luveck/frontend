@@ -15,25 +15,32 @@ main{
     background: #f8f8f8;
     color: #333;
   }
-  .btnTheme{
-    position: absolute;
-    top: 20px;
-    right: 50px;
-  }
-  .btnMenu{
-    position: absolute;
-    top: 20px;
-    left: 10px;
-    display: none;
+  header{
+    width: 90%;
+    margin: 1rem auto;
+    display: flex;
+    align-items: center;
+    .btnsHeader{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      &.logo{
+        width: 100%;
+      }
+    }
+    .btnMenu{
+      display: none;
+    }
+    .nav_logo{
+      width: 300px;
+      margin-left: 10rem;
+    }
   }
   .main_logo{
     width: 80%;
-    padding: 2.5rem 1rem 1rem 1rem;
+    padding: 0 1rem;
     margin: 0 auto;
     text-align: center;
-    .nav_logo{
-      width: 250px;
-    }
     .nav_list{
       color: inherit;
       padding: 1rem 0;
@@ -71,7 +78,6 @@ main{
 
       width: 100%;
       height: 60%;
-      margin-bottom: 5rem;
       &.dark{
         background: #161d31;
         color: #fefefe;
@@ -287,7 +293,7 @@ main{
 
   footer{
     width: 90%;
-    margin: 1rem auto;
+    margin: 0 auto 1rem auto;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -304,12 +310,32 @@ main{
   main{
     padding: 0;
     height: auto;
+    header{
+      width: 100%;
+      height: 75px;
+      padding: 0;
+      margin: 0;
+      justify-content: space-around;
+      box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+      .btnsHeader{
+        width: auto;
+        &.logo{
+          width: auto;
+        }
+      }
+      .btnMenu{
+        display: block;
+      }
+      .nav_logo{
+        width: 150px;
+        margin-left: 0;
+      }
+    }
     .main_logo{
       .nav_list{
-        opacity: 0;
         background: #145583e1;
         position: absolute;
-        top: 16%;
+        top: 75px;
         left: 0;
         width: 100%;
         z-index: 1000;
@@ -318,7 +344,6 @@ main{
         justify-content: center;
         align-items: center;
         gap: 1rem;
-        transition: opacity 1s ease;
         .nav_item{
           text-align: start;
           .nav_link{
@@ -330,18 +355,10 @@ main{
             }
           }
         }
-        &.showMenu{
-          opacity: 1;
-        }
       }
     }
-    .btnMenu{
-      display: block;
-    }
-    .btnTheme{
-      right: 10px;
-    }
     .inicio{
+      margin-top: 2rem;
       h1{
         font-size: 1.5rem;
         width: 90%;
@@ -373,6 +390,7 @@ main{
       }
     }
     .masInfo{
+      margin-top: 1.5rem;
       .infoItem{
         width: 100%;
         flex-direction: column;
@@ -386,11 +404,14 @@ main{
         }
       }
     }
-    .productos .mat-form-field {
-      width: 100%;
+    .productos{
+      margin-top: 1.5rem;
+      .mat-form-field {
+        width: 100%;
+      }
     }
     .registro{
-      margin-bottom: 4rem;
+      margin-top: 1.5rem;
       h1, p{
         width: 90%;
         margin: 0 auto;

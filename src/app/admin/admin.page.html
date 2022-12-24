@@ -3,7 +3,7 @@
     <mat-sidenav #sidenav class="sidenav-body mat-elevation-z8" mode="side" opened
        [fixedTopGap]="56" [fixedBottomGap]="1">
       <header>
-        <img src="assets/luveck_logo.png">
+        <img [src]="localTheme ?'assets/logo_light.png' :'assets/logo_dark.png'">
       </header>
 
       <mat-nav-list class="side-navnar">

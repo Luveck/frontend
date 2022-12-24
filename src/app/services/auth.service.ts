@@ -79,7 +79,9 @@ export class AuthService {
       Email: tokenData.Email
     }
     if(this.checkTokenDate(tokenData.exp)){
-      this._dataServ.goTo('/admin/home')
+      if(tokenData.Role != 'Cliente'){
+        this._dataServ.goTo('/admin/home')
+      }
     }else{
       this.logOut()
       this._dataServ.fir('Credenciales vencidas', 'error')

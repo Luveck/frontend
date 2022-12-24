@@ -1,7 +1,7 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, HostBinding, ViewEncapsulation } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { NgPasswordValidatorOptions } from 'ng-password-validator';
 import SwiperCore, { Autoplay, SwiperOptions, Navigation } from 'swiper';
 SwiperCore.use([ Autoplay, Navigation])
@@ -78,7 +78,7 @@ export class InicioPage {
     private _overlay: OverlayContainer,
     private _dialog: MatDialog,
     public dataServ: DataService,
-    private _authServ:AuthService
+    public authServ:AuthService
   ){
     let theme = this.dataServ.getTheme()
     if(theme === 'dark'){
@@ -115,7 +115,7 @@ export class InicioPage {
   }
 
   openModalProd(){
-    const config = {
+    const config:MatDialogConfig = {
       data: {
         id: ''
       }
@@ -126,14 +126,14 @@ export class InicioPage {
   onLogin(formData:any){
     if(!this.dataServ.progress){
       this.dataServ.progress = true
-      this._authServ.login(formData)
+      this.authServ.login(formData)
     }
   }
 
   onRegister(formData:any){
     if(!this.dataServ.progress){
       this.dataServ.progress = true
-      this._authServ.register(formData)
+      this.authServ.register(formData)
     }
   }
 }
