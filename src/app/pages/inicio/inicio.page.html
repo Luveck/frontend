@@ -19,7 +19,7 @@
     </div>
   </header>
   <div class="main_logo">
-    <ul class="nav_list animated fadeIn" *ngIf="showMenu">
+    <ul class="nav_list animated fadeIn" [ngClass]="{'show': showMenu === true}">
       <li class="nav_item">
         <button class="nav_link" [ngClass]="{'active': SectionSelect === 'inicio'}" (click)="selectSection('inicio')">Inicio</button>
       </li>
