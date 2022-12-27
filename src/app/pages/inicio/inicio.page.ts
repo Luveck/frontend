@@ -55,6 +55,8 @@ export class InicioPage {
     password: new FormControl('', [Validators.required, Validators.pattern(
       '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$'
     )]),
+    bornDate: new FormControl('', [Validators.required]),
+    sex: new FormControl('', [Validators.required])
   })
   hidePassword:boolean = true;
 

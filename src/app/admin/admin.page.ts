@@ -8,7 +8,6 @@ import { Observable } from 'rxjs';
 import { fadeAnimation } from '../animations';
 import { DialogConfComponent } from '../components/dialog-conf/dialog-conf.component';
 import { AuthService } from '../services/auth.service';
-//import { AuthService } from '../services/auth.service';
 import { DataService } from '../services/data.service';
 
 @Component({
@@ -64,7 +63,7 @@ export class AdminPage implements OnInit {
     .afterClosed()
     .subscribe((confirmado: Boolean) => {
       if (confirmado) {
-        this.authServ.logOut()
+        this.authServ.logOut(this.authServ.userData.Role)
       }
     })
   }

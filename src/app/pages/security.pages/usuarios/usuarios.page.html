@@ -30,7 +30,7 @@
 
       <ng-container matColumnDef="dni">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> DNI </th>
-        <td mat-cell *matCellDef="let row"> {{row.dni}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.userName}} </td>
       </ng-container>
 
       <ng-container matColumnDef="name">
@@ -43,21 +43,21 @@
         <td mat-cell *matCellDef="let row"> {{row.role}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="ctaStatus">
+      <ng-container matColumnDef="state">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
         <td mat-cell *matCellDef="let row">
-          <span class="chip" [ngClass]="{'active': row.ctaStatus == true, 'inactive': row.ctaStatus == false}">{{row.ctaStatus ?'Activo' :'Inactivo'}}</span>
+          <span class="chip" [ngClass]="{'active': row.state == true, 'inactive': row.state == false}">{{row.state ?'Activo' :'Inactivo'}}</span>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="acctions">
         <th mat-header-cell *matHeaderCellDef> Acciones </th>
         <td mat-cell *matCellDef="let row">
-          <button mat-icon-button color="accent" (click)="on(row.dni)" matTooltip="Editar país">
+          <button mat-icon-button color="accent" (click)="on(row.email)" matTooltip="Editar Cuenta">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="dialog(row.id, row.ctaStatus)" matTooltip="{{row.ctaStatus ?'Deshabilitar Cuenta' :'Habilitar Cuenta'}}">
-            <mat-icon>{{row.ctaStatus ?'radio_button_checked' :'radio_button_unchecked'}}</mat-icon>
+          <button mat-icon-button color="warn" (click)="dialog(row.id, row.state)" matTooltip="{{row.state ?'Deshabilitar Cuenta' :'Habilitar Cuenta'}}">
+            <mat-icon>{{row.state ?'radio_button_checked' :'radio_button_unchecked'}}</mat-icon>
           </button>
         </td>
       </ng-container>

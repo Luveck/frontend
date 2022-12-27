@@ -31,7 +31,7 @@ export class DetalleUsuarioPage implements OnInit {
 
   ngOnInit(): void {
     if(this.data.userId){
-      this.currentUser = this._usersServ.getUserById(this.data.userId)
+      this.currentUser = this._usersServ.getUserInfo(this.data.Email)
       this.initValores()
     }
   }

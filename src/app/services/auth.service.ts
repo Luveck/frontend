@@ -81,9 +81,12 @@ export class AuthService {
     if(this.checkTokenDate(tokenData.exp)){
       if(tokenData.Role != 'Cliente'){
         this._dataServ.goTo('/admin/home')
+      }else{
+        this._dataServ.goTo('/inicio')
+        this._dataServ.fir('Bienvenido al programa Pasión por Vivir', 'success')
       }
     }else{
-      this.logOut()
+      this.logOut(this.userData.Role)
       this._dataServ.fir('Credenciales vencidas', 'error')
     }
   }
@@ -98,10 +101,12 @@ export class AuthService {
     }
   }
 
-  public logOut(){
+  public logOut(role:string){
     this.userToken = null
     this.userData = null
     localStorage.removeItem('LuveckUserToken');
-    this._dataServ.goTo('/authentication/login')
+    role === 'Admin'
+      ? this._dataServ.goTo('/authentication/login')
+      : this._dataServ.goTo('/inicio')
   }
 }

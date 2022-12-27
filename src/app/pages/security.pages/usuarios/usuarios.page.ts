@@ -34,7 +34,7 @@ export class UsuariosPage implements AfterViewInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:any[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['dni', 'name', 'role', 'ctaStatus', 'acctions'];
+  displayedColumns: string[] = ['dni', 'name', 'role', 'state', 'acctions'];
   dataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
 
   isLoadingResults:boolean = false;
@@ -52,9 +52,10 @@ export class UsuariosPage implements AfterViewInit {
   }
 
   getAllUsers(){
-    let resp = this._usuariosServ.getAllUsers()
-    this.dataSource.data = resp as any[]
-    this.isLoadingResults = false
+    this._usuariosServ.getAllUsers().subscribe((res:any) => {
+      this.dataSource.data = res.result as any[]
+      this.isLoadingResults = false
+    })
   }
 
   applyFilter(event: Event) {

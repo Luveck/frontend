@@ -33,7 +33,7 @@ main{
     }
     .nav_logo{
       width: 300px;
-      margin-left: 10rem;
+      margin-left: 8rem;
     }
   }
   .main_logo{
@@ -315,9 +315,23 @@ main{
     }
   }
 
+  .canjes{
+    width: 100%;
+    margin: 2rem 0;
+    h1 {
+      margin: 1rem 0;
+      width: 100%;
+      font-size: 2rem;
+      text-align: center;
+    }
+    p{
+      text-align: center;
+    }
+  }
+
   footer{
     width: 90%;
-    margin: 0 auto 1rem auto;
+    margin: 1rem auto;
     display: flex;
     align-items: center;
     justify-content: flex-end;

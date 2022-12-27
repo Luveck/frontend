@@ -1,106 +1,39 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { AuthService } from './auth.service';
 import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuariosService {
-  localUsers = [
-    {
-      'name': 'Elvin',
-      'lastName': 'Cáceres',
-      'role': 'Administrador',
-      'dni': '0306199800959',
-      'email': 'elvin@gmail.com',
-      'phone': '+50494701343',
-      'ctaStatus': true
-    },
-    {
-      'name': 'Pedro',
-      'lastName': 'Rojas',
-      'role': 'Dependiente',
-      'dni': '0306199800950',
-      'email': 'pedro@gmail.com',
-      'phone': '+50494701343',
-      'ctaStatus': true
-    },
-    {
-      'name': 'Linda',
-      'lastName': 'Cáceres',
-      'role': 'Cliente',
-      'dni': '0306199800951',
-      'email': 'linda@gmail.com',
-      'phone': '+50494701343',
-      'ctaStatus': true
-    },
-    {
-      'name': 'Bessy',
-      'lastName': 'Andino',
-      'role': 'Cliente',
-      'dni': '0306199800952',
-      'email': 'bessy@gmail.com',
-      'phone': '+50494701343',
-      'ctaStatus': true
-    },
-    {
-      'name': 'Paco',
-      'lastName': 'Martinez',
-      'role': 'Dependiente',
-      'dni': '0306199800953',
-      'email': 'paco@gmail.com',
-      'phone': '+50494701343',
-      'ctaStatus': false
-    },
-    {
-      'name': 'Astrid',
-      'lastName': 'Martinez',
-      'role': 'Cliente',
-      'dni': '0306199800953',
-      'email': 'aaa@gmail.com',
-      'phone': '+50494701343',
-      'ctaStatus': true
-    },
-    {
-      'name': 'Kayla',
-      'lastName': 'Peraza',
-      'role': 'Cliente',
-      'dni': '0306199800953',
-      'email': 'ka@gmail.com',
-      'phone': '+50494701343',
-      'ctaStatus': true
-    },
-  ]
+  localUsers:any[] = []
+  localRoles:any[] = []
+  headers: any
 
-  localRoles = [
-    {
-      'id': 1,
-      'name': 'Administrador'
-    },
-    {
-      'id': 2,
-      'name': 'Dependiente'
-    },
-    {
-      'id': 3,
-      'name': 'Cliente'
-    }
-  ]
   constructor(
+    private _http:HttpClient,
+    private _authServ:AuthService,
     private _dataServ:DataService,
-  ) { }
+  ) {
+    this.headers = {'Authorization':`Bearer ${this._authServ.userToken}`}
+  }
 
 
   notify(msg:string, icon:any){
     this._dataServ.fir(msg, icon)
   }
 
-  getAllUsers(){
-    return this.localUsers
+  public getAllUsers(){
+    return this._http.post(`https://apisecurityluveck.azurewebsites.net/api/Security/GetUsers`, {},
+      {headers: this.headers}
+    )
   }
 
-  getUserById(dni:string){
-    let userEnCuestion = this.localUsers.filter(user => user.dni === dni)
-    return userEnCuestion[0]
+  public getUserInfo(email:string){
+    return this._http.get(`https://apisecurityluveck.azurewebsites.net/api/Security/getUser?Email=${email}`,
+      {headers: this.headers}
+    )
   }
 
   addUsuario(formData:any, idUser?:number){
@@ -135,5 +68,19 @@ export class UsuariosService {
         }
       })
     }
+  }
+
+  /* Endpoints de Roles */
+
+  public getAllRoles(){
+    return this._http.get(`https://apisecurityluveck.azurewebsites.net/api/Roles/GetRoles`,
+      {headers: this.headers}
+    )
+  }
+
+  public createRole(nameRole:string){
+    return this._http.post(`https://apisecurityluveck.azurewebsites.net/api/Roles/CreateRole?role=${nameRole}`, {},
+      {headers: this.headers}
+    )
   }
 }

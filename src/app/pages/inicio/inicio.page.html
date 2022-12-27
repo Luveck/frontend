@@ -7,10 +7,7 @@
       <img class="nav_logo" [src]="localTheme ?'assets/logo_light.png' :'assets/logo_dark.png'">
     </div>
     <div class="btnsHeader">
-      <button mat-icon-button matTootip="Notificaciones">
-        <mat-icon>notifications</mat-icon>
-      </button>
-      <button mat-icon-button matTooltip="Mi Perfil">
+      <button mat-icon-button matTooltip="Mi Perfil" *ngIf="authServ.userToken">
         <mat-icon>manage_accounts</mat-icon>
       </button>
       <button style="color: #ffc409;" mat-icon-button matTooltip="Cambiar tema" (click)="setTheme()">
@@ -29,11 +26,11 @@
       <li class="nav_item">
         <button class="nav_link" [ngClass]="{'active': SectionSelect === 'productos'}" (click)="selectSection('productos')">Productos</button>
       </li>
-      <!-- <li class="nav_item">
+      <li class="nav_item" *ngIf="!authServ.userToken">
         <button class="nav_link" [ngClass]="{'active': SectionSelect === 'registro'}" (click)="selectSection('registro')">Registrarme en el Programa</button>
-      </li> -->
-      <li class="nav_item">
-        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'registro'}" (click)="selectSection('registro')">Registro de Canjes</button>
+      </li>
+      <li class="nav_item" *ngIf="authServ.userToken">
+        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'canjes'}" (click)="selectSection('canjes')">Registro de Canjes</button>
       </li>
     </ul>
   </div>
@@ -145,7 +142,7 @@
     </div>
   </section>
 
-  <section *ngIf="SectionSelect == 'registro'" class="registro animated fadeIn">
+  <section *ngIf="SectionSelect == 'registro' && !authServ.userToken" class="registro animated fadeIn">
     <h1>Registrarme para obtener canjes</h1>
     <p>Inscríbete a través de este formulario para ser parte del proyecto "Pasión por Vivir".</p>
 
@@ -155,7 +152,7 @@
         <form [formGroup]="loginForm" autocomplete="off" *ngIf="typeForm == 'login'">
           <mat-form-field appearance="outline">
             <mat-label>DNI</mat-label>
-            <input matInput placeholder="DNI de usuario" formControlName="dni">
+            <input matInput placeholder="DNI de usuario" formControlName="dni" maxlength="13">
             <mat-icon matPrefix>person</mat-icon>
             <mat-error>
               DNI requerido
@@ -188,7 +185,7 @@
         <form [formGroup]="registerForm" autocomplete="off" *ngIf="typeForm == 'register'">
           <mat-form-field appearance="outline">
             <mat-label>DNI</mat-label>
-            <input matInput placeholder="DNI de usuario" formControlName="dni">
+            <input matInput placeholder="DNI de usuario" formControlName="dni" maxlength="13">
             <mat-error
               *ngIf="registerForm.get('dni')?.invalid && (registerForm.get('dni')?.dirty || registerForm.get('dni')?.touched) && registerForm.get('dni')?.errors?.['required']">
               DNI requerido
@@ -238,6 +235,29 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline">
+            <mat-label>Fecha de caducidad</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="bornDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error
+              *ngIf="registerForm.get('bornDate')?.invalid && (registerForm.get('bornDate')?.dirty || registerForm.get('bornDate')?.touched) && registerForm.get('bornDate')?.errors?.['required']">
+              Fecha de nacimiento requerida
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Género</mat-label>
+            <mat-select formControlName="sex">
+              <mat-option value="hombre">Hombre</mat-option>
+              <mat-option value="mujer">Mujer</mat-option>
+            </mat-select>
+            <mat-error
+              *ngIf="registerForm.get('sex')?.invalid && (registerForm.get('sex')?.dirty || registerForm.get('sex')?.touched) && registerForm.get('sex')?.errors?.['required']">
+              Género requerido
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
             <mat-label>Contraseña</mat-label>
             <input matInput [type]="hidePassword ?'password' :'text'" formControlName="password" placeholder="Contraseña" [NgPasswordValidator]="options">
             <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
@@ -262,6 +282,11 @@
         </form>
       </div>
     </div>
+  </section>
+
+  <section *ngIf="SectionSelect == 'canjes' && authServ.userToken" class="canjes animated fadeIn">
+    <h1>Registro de canjes</h1>
+    <p>Llevamos un control del registro de canjes obtenidos en el proyecto "Pasión por Vivir".</p>
   </section>
 
   <footer>
