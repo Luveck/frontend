@@ -10,6 +10,7 @@ import { DetallePaisPage } from './detalle-pais/detalle-pais.page';
 import { DetalleCiudadPage } from './detalle-ciudad/detalle-ciudad.page';
 import { DetalleFarmaciaPage } from './detalle-farmacia/detalle-farmacia.page';
 import { MaterialModule } from 'src/app/material.module';
+import { DetalledepartamentoPage } from './detalle-departamento/detalle-departamento.page';
 
 const routes: Routes = [
   {
@@ -21,6 +22,10 @@ const routes: Routes = [
     loadChildren: () => import('./ciudades/ciudades.module').then( m => m.CiudadesPageModule)
   },
   {
+    path: 'departamentos',
+    loadChildren: () => import('./departamentos/departamentos.module').then( m => m.DepartamentosPageModule)
+  },
+  {
     path: 'farmacias',
     loadChildren: () => import('./farmacias/farmacias.module').then( m => m.FarmaciasPageModule)
   },
@@ -30,6 +35,7 @@ const routes: Routes = [
   declarations:[
     DetallePaisPage,
     DetalleCiudadPage,
+    DetalledepartamentoPage,
     DetalleFarmaciaPage
   ],
   imports: [

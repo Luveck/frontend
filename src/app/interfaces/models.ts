@@ -24,12 +24,16 @@ export interface Pais{
 }
 
 export interface Departamento{
-  id: number,
+  id: 0,
   name: string,
-  stateCode: string,
-  countryId: number,
+  countryId: 0,
   countryCode: string,
-  countryName: string
+  countryName: string,
+  status: boolean,
+  createBy?: string
+  creationDate?: string
+  updateBy?: string
+  updateDate?: string
 }
 
 export interface Ciudad{

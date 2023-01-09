@@ -1,33 +1,39 @@
-<h2 mat-dialog-title>{{data.title}}</h2>
+<button mat-icon-button class="close-button" [mat-dialog-close]="true">
+  <mat-icon class="close-icon">close</mat-icon>
+</button>
+<h2 mat-dialog-title>Mi Perfil</h2>
 <main mat-dialog-content>
   <div class="loading-shade" *ngIf="isLoadingResults">
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
   </div>
 
-  <div class="perfil_header" *ngIf="data.userEmail">
+  <div class="perfil_header">
     <section class="avatar">
       <div class="datos">
-        <p>{{currentUser?.userEntity.name}} {{currentUser?.userEntity.lastName}}</p>
+        <p>{{userData?.userEntity.name}} {{userData?.userEntity.lastName}}</p>
         <div class="bots">
-          <span class="chip" [ngClass]="{'active': currentUser?.userEntity.state == true, 'inactive': currentUser?.userEntity.state == false}">{{currentUser?.userEntity.state ?'Cuenta activa' :'Cuenta inactiva'}}</span>
+          <button mat-raised-button color="accent" (click)="onEdit()">
+            <mat-icon>edit</mat-icon>
+            Editar información
+          </button>
+          <button mat-raised-button color="warn" (click)="onLogout()">
+            <mat-icon>logout</mat-icon>
+            Cerrar Sesión
+          </button>
         </div>
       </div>
     </section>
     <section class="resumen">
       <ul>
-        <li> <mat-icon class="example-tab-icon">fingerprint</mat-icon> DNI: {{currentUser?.userEntity.userName}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de nacimiento: {{currentUser?.userEntity.bornDate |date: 'dd/MM/yyyy'}}</li>
-        <li> <mat-icon class="example-tab-icon">badge</mat-icon> Rol: {{currentUser?.role}}</li>
+        <li> <mat-icon class="example-tab-icon">fingerprint</mat-icon> DNI: {{userData?.userEntity.userName}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de nacimiento: {{userData?.userEntity.bornDate |date: 'dd/MM/yyyy'}}</li>
+        <li> <mat-icon class="example-tab-icon">badge</mat-icon> Rol: {{userData?.role}}</li>
       </ul>
     </section>
   </div>
 
-  <form class="wrapForm" [formGroup]="newUserForm" autocomplete="off">
+  <form class="wrapForm" [formGroup]="perfilForm" autocomplete="off">
     <div class="inputs">
-      <mat-form-field appearance="fill">
-        <mat-label>DNI</mat-label>
-        <input matInput placeholder="DNI" maxlength="13" formControlName="dni" [readonly]="data.userEmail">
-      </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Nombre</mat-label>
         <input matInput placeholder="Nombre" formControlName="name">
@@ -39,16 +45,6 @@
       <mat-form-field appearance="fill">
         <mat-label>Email</mat-label>
         <input matInput placeholder="Email" formControlName="email">
-      </mat-form-field>
-      <mat-form-field appearance="fill">
-        <mat-label>Rol</mat-label>
-        <mat-select formControlName="role">
-          <div *ngFor="let rol of usersServ.localRoles; index as i">
-            <mat-option [value]="rol.name">
-              {{rol.name}}
-            </mat-option>
-          </div>
-        </mat-select>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Fecha de nacimiento</mat-label>
@@ -70,9 +66,9 @@
     </div>
   </form>
 </main>
-<div mat-dialog-actions>
+<div mat-dialog-actions *ngIf="enabledEdit">
   <div class="btns">
-    <button mat-raised-button color="primary" [disabled]="newUserForm.invalid" (click)="addEditUser()">Guardar <mat-icon>save</mat-icon></button>
-    <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
+    <button mat-raised-button color="primary" [disabled]="perfilForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
+    <button mat-raised-button color="warn" (click)="cancelEdit()">Cancelar</button>
   </div>
 </div>

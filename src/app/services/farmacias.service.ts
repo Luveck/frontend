@@ -18,7 +18,7 @@ export class FarmaciasService {
   }
 
   getAllPharmacies(){
-    return this._http.get<any[]>(`${this._dataServ.baseURL}/Pharmacy/GetPharmacies`,
+    return this._http.get<any>(`${this._dataServ.baseURL}/Pharmacy/GetPharmacies`,
       {headers: this.headers}
     )
   }

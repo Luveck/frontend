@@ -34,10 +34,10 @@ export class UsuariosPage implements AfterViewInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:any[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['dni', 'name', 'role', 'state', 'acctions'];
+  displayedColumns: string[] = ['dni', 'name', 'state', 'acctions'];
   dataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
 
-  isLoadingResults:boolean = false;
+  isLoadingResults:boolean = true;
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
@@ -53,6 +53,7 @@ export class UsuariosPage implements AfterViewInit {
 
   getAllUsers(){
     this._usuariosServ.getAllUsers().subscribe((res:any) => {
+      console.log(res)
       this.dataSource.data = res.result as any[]
       this.isLoadingResults = false
     })
@@ -75,11 +76,11 @@ export class UsuariosPage implements AfterViewInit {
     }
   }
 
-  on(id?:string){
+  on(email?:string){
     const config = {
       data: {
-        title: id ?'Editar Usuario' :'Agregar Usuario',
-        userId: id
+        title: email ?'Editar Usuario' :'Agregar Usuario',
+        userEmail: email
       }
     }
     this._dialog.open(DetalleUsuarioPage, config)

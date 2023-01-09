@@ -9,6 +9,7 @@ SwiperCore.use([ Autoplay, Navigation])
 import { ModalProdIniComponent } from 'src/app/components/modal-prod-ini/modal-prod-ini.component';
 import { DataService } from 'src/app/services/data.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ClientProfileComponent } from 'src/app/components/client-profile/client-profile.component';
 
 @Component({
   selector: 'app-inicio',
@@ -76,6 +77,26 @@ export class InicioPage {
     }
   }
 
+  displayedColumns = [
+    'fecha',
+    'numProds',
+    'nomProds',
+    'farmacia'
+  ];
+
+  dataSource = [
+    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
+    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
+    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
+    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
+    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
+    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
+    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
+    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
+    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
+    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
+  ];
+
   constructor(
     private _overlay: OverlayContainer,
     private _dialog: MatDialog,
@@ -129,6 +150,22 @@ export class InicioPage {
     if(!this.dataServ.progress){
       this.dataServ.progress = true
       this.authServ.login(formData)
+        .then((res:any) => {
+          console.log(res)
+          this.dataServ.progress = false
+          this.authServ.userToken = res.result.token
+          if(formData.remember){
+            localStorage.setItem('LuveckUserToken', this.authServ.userToken)
+          }
+          this.authServ.decodeToken(this.authServ.userToken)
+          this.SectionSelect = 'inicio'
+        })
+        .catch ((error:any)=>{
+          this.dataServ.progress = false
+          console.log(error)
+          let msgError = error.error.messages
+          this.dataServ.fir(`${msgError}`, 'error')
+        })
     }
   }
 
@@ -136,6 +173,27 @@ export class InicioPage {
     if(!this.dataServ.progress){
       this.dataServ.progress = true
       this.authServ.register(formData)
+        .then((res:any) => {
+          console.log(res)
+          this.dataServ.progress = false
+          this.authServ.userToken = res.result.token
+          localStorage.setItem('LuveckUserToken', this.authServ.userToken)
+          this.authServ.decodeToken(this.authServ.userToken)
+          this.SectionSelect = 'inicio'
+        })
+        .catch ((error:any)=>{
+          this.dataServ.progress = false
+          console.log(error)
+          let msgError = error.error.messages
+          this.dataServ.fir(`${msgError}`, 'error')
+        })
     }
+  }
+
+  showProfile(){
+    const config:MatDialogConfig = {
+      data: this.authServ.userData.Email
+    }
+    this._dialog.open(ClientProfileComponent, config)
   }
 }

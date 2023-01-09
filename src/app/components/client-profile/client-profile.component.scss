@@ -1,3 +1,8 @@
+.close-button{
+  float: right;
+  top:-24px;
+  right:-24px;
+}
 mat-dialog-container{
   height: 463px;
 }
@@ -15,7 +20,7 @@ main{
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
     section.resumen{
       padding: 1rem;
       ul{
@@ -34,13 +39,13 @@ main{
       }
     }
     section.avatar{
-      padding: .5rem;
       display: flex;
       align-items: center;
       .datos{
         margin: 0.5rem;
         p{
           font-size: 2em;
+          text-align: center;
         }
         .bots{
           margin-top: 1rem;
@@ -72,5 +77,30 @@ main{
   justify-content: center;
   button{
     margin: 0 0.5rem;
+  }
+}
+
+
+@media (max-width: 560px){
+  main{
+    padding: 0;
+    margin: 0;
+    .perfil_header{
+      flex-direction: column;
+      section.resumen{
+        padding: 0;
+        ul{
+          border-left: none;
+        }
+      }
+      section.avatar .datos .bots{
+        button{
+          margin: 0.5rem 0;
+        }
+      }
+    }
+    .wrapForm .inputs{
+      grid-template-columns: 1fr;
+    }
   }
 }

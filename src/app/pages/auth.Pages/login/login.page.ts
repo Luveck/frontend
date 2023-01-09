@@ -27,6 +27,21 @@ export class LoginPage implements OnInit {
     if(!this.dataServ.progress){
       this.dataServ.progress = true
       this._authServ.login(formData)
+      .then((res:any) => {
+        console.log(res)
+        this.dataServ.progress = false
+        this._authServ.userToken = res.result.token
+        if(formData.remember){
+          localStorage.setItem('LuveckUserToken', this._authServ.userToken)
+        }
+        this._authServ.decodeToken(this._authServ.userToken)
+      })
+      .catch ((error:any)=>{
+        this.dataServ.progress = false
+        console.log(error)
+        let msgError = error.error.messages
+        this.dataServ.fir(`${msgError}`, 'error')
+      })
     }
   }
 }

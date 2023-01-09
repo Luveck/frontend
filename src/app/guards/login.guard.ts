@@ -11,6 +11,11 @@ export class AuthGuard implements CanActivate {
 
   canActivate() {
     if(this.authServ.userToken){
+      //this.authServ.userData.Role != 'Admin'
+      if(this.authServ.userData.Email != 'admin@luveck.com'){
+        this.router.navigate(['authentication/noauthorized']);
+        return false
+      }
       return true
     }
     this.router.navigate(['authentication/login']);

@@ -8,13 +8,15 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { DialogConfComponent } from './dialog-conf/dialog-conf.component';
 import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
 import { ModalProdIniComponent } from './modal-prod-ini/modal-prod-ini.component';
+import { ClientProfileComponent } from './client-profile/client-profile.component';
 
 @NgModule({
   declarations: [
     BreadcrumbComponent,
     DialogConfComponent,
     ScrollToTopComponent,
-    ModalProdIniComponent
+    ModalProdIniComponent,
+    ClientProfileComponent
   ],
   imports: [
     RouterModule,
@@ -26,7 +28,8 @@ import { ModalProdIniComponent } from './modal-prod-ini/modal-prod-ini.component
   exports: [
     BreadcrumbComponent,
     DialogConfComponent,
-    ScrollToTopComponent
+    ScrollToTopComponent,
+    ClientProfileComponent
   ]
 })
 

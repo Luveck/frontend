@@ -59,7 +59,8 @@
             </div>
             <div class="nam">
               <span>{{authServ.userData.UserName}} {{authServ.userData.LastName}}</span>
-              <span>{{authServ.userData.Role}}</span>
+              <!-- <span>{{authServ.userData.Role}}</span> -->
+              <span>{{authServ.userData.Email === 'admin@luveck.com' ?'Administrador' :'Cliente'}}</span>
             </div>
           </div>
         </button>

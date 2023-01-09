@@ -12,6 +12,7 @@ import { ZonasService } from 'src/app/services/zonas.service';
 
 export class HomePage implements OnInit {
   counterPaises?:number
+  counterDepartamentos?:number
   counterCiudades?:number
   counterCategorias?:number
   counterProductos?:number
@@ -31,6 +32,10 @@ export class HomePage implements OnInit {
       this.counterPaises = res.result.length
       this._zonasServ.listPaises = res.result
     })
+    this._zonasServ.getDepartamentos().subscribe(res =>  {
+      this.counterDepartamentos = res.result.length
+      this._zonasServ.listDepartamentos = res.result
+    })
     this._zonasServ.getCiudades().subscribe(res =>  {
       this.counterCiudades = res.result.length
       this._zonasServ.listCiudades = res.result
@@ -40,7 +45,7 @@ export class HomePage implements OnInit {
       this.counterCategorias = res.result.length
     })
     this._inveServ.getAllProductos().subscribe(res => this.counterProductos = res.result.length)
-    this._farmaServ.getAllPharmacies().subscribe(res => this.counterFarmacias = res.length)
+    this._farmaServ.getAllPharmacies().subscribe(res => this.counterFarmacias = res.result.length)
     this._MedicServ.getAllMedicos().subscribe(res => this.counterMedicos = res.result.length)
   }
 }

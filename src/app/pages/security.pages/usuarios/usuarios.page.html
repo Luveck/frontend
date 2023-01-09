@@ -17,7 +17,7 @@
     <mat-form-field appearance="standard">
       <mat-icon matPrefix>search</mat-icon>
       <mat-label>Buscar</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Buscar por nombre / divisa / codigo / etc" #input autocomplete="off">
+      <input matInput (keyup)="applyFilter($event)" placeholder="Buscar por nombre" #input autocomplete="off">
     </mat-form-field>
   </header>
 
@@ -38,10 +38,10 @@
         <td mat-cell *matCellDef="let row"> {{row.name}} {{row.lastName}}</td>
       </ng-container>
 
-      <ng-container matColumnDef="role">
+<!--       <ng-container matColumnDef="role">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Rol </th>
         <td mat-cell *matCellDef="let row"> {{row.role}} </td>
-      </ng-container>
+      </ng-container> -->
 
       <ng-container matColumnDef="state">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>

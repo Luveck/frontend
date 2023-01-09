@@ -27,44 +27,15 @@ export class AuthService {
       "dni": formData.dni,
       "password": formData.password
     }
-    try {
-      const result$ = this._http.post('https://apisecurityluveck.azurewebsites.net/api/Security/Login', info)
-      let data:any = await lastValueFrom(result$)
-      console.log(data)
-      this._dataServ.progress = false
-      this.userToken = data.result.token
-      if(formData.remember){
-        localStorage.setItem('LuveckUserToken', this.userToken)
-      }
-      this.decodeToken(this.userToken)
-    } catch (error:any) {
-      this._dataServ.progress = false
-      console.log(error)
-      let msgError = error.error.messages
-      this._dataServ.fir(`${msgError}`, 'error')
-    }
+    return this._http.post('https://apisecurityluveck.azurewebsites.net/api/Security/Login', info).toPromise()
   }
 
   public async register(formData:any){
     console.log(formData)
-    try {
-      const result$ = this._http.post('https://apisecurityluveck.azurewebsites.net/api/Security/Register', formData)
-      let resData:any = await lastValueFrom(result$)
-      console.log(resData)
-      this._dataServ.progress = false
-      this.userToken = resData.result.token
-      localStorage.setItem('LuveckUserToken', this.userToken)
-      this.decodeToken(this.userToken)
-    } catch (error:any) {
-      console.log(error)
-      this._dataServ.progress = false
-      console.log(error)
-      let msgError = error.error.messages
-      this._dataServ.fir(`${msgError}`, 'error')
-    }
+    return this._http.post('https://apisecurityluveck.azurewebsites.net/api/Security/Register', formData).toPromise()
   }
 
-  private decodeToken (token:any) {
+  public decodeToken (token:any) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
@@ -79,11 +50,10 @@ export class AuthService {
       Email: tokenData.Email
     }
     if(this.checkTokenDate(tokenData.exp)){
-      if(tokenData.Role != 'Cliente'){
+      if(tokenData.Role != 'Cliente' || tokenData.Email === 'admin@luveck.com'){
         this._dataServ.goTo('/admin/home')
       }else{
         this._dataServ.goTo('/inicio')
-        this._dataServ.fir('Bienvenido al programa Pasión por Vivir', 'success')
       }
     }else{
       this.logOut(this.userData.Role)

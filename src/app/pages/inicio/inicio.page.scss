@@ -316,8 +316,8 @@ main{
   }
 
   .canjes{
-    width: 100%;
-    margin: 2rem 0;
+    width: 90%;
+    margin: 2rem auto;
     h1 {
       margin: 1rem 0;
       width: 100%;
@@ -326,6 +326,33 @@ main{
     }
     p{
       text-align: center;
+    }
+    .contentRegistroCanje{
+      padding: 2rem 1rem;
+      text-align: center;
+      .demo_table {
+        width: 800px;
+        margin: 0 auto ;
+        th{
+          color: var(--dark-text);
+          font-weight: 900;
+        }
+        td, th {
+          width: auto;
+          text-align: center;
+        }
+        .mat-table-sticky-border-elem-left{
+          border-right: 1px solid currentColor;
+        }
+        .mat-row .mat-cell {
+          border-bottom: 1px solid transparent;
+          border-top: 1px solid transparent;
+          cursor: pointer;
+        }
+        .mat-row:hover .mat-cell {
+          border-color: currentColor;
+        }
+      }
     }
   }
 
@@ -347,7 +374,7 @@ main{
 @media (max-width: 560px){
   main{
     padding: 0;
-    height: auto;
+    height: 100vh;
     header{
       width: 100%;
       height: 75px;
@@ -440,6 +467,9 @@ main{
       .regis_content .regForm{
         width: 80%;
       }
+    }
+    .canjes{
+      height: 100%;
     }
   }
 }

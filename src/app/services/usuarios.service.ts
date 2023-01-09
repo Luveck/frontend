@@ -36,15 +36,15 @@ export class UsuariosService {
     )
   }
 
-  addUsuario(formData:any, idUser?:number){
+  addUsuario(formData:any){
+    console.log(formData)
     let dataUser:any
-    dataUser = {
+   /*  dataUser = {
       "id": idUser,
       ...formData,
       "ctaStatus": true
     }
-    //return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCountry`, dataUser)
-    this.localUsers.push(dataUser)
+    return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCountry`, dataUser) */
   }
 
   UpdateUsuario(formData:any, dni:string, status?:boolean){

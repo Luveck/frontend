@@ -8,7 +8,13 @@
   {
     "text": "Farmacias",
     "subText": "Gestión de paises",
-    "icon": "store",
+    "icon": "add_business",
+    "routerLink": "zonas/farmacias"
+  },
+  {
+    "text": "Seguridad",
+    "subText": "Gestión de seguridad",
+    "icon": "admin_panel_settings",
     "children": [
       {
         "text": "Paises",
@@ -16,22 +22,15 @@
         "routerLink": "zonas/paises"
       },
       {
+        "text": "Departamentos",
+        "icon": "signpost",
+        "routerLink": "zonas/departamentos"
+      },
+      {
         "text": "Ciudades",
         "icon": "apartment",
         "routerLink": "zonas/ciudades"
       },
-      {
-        "text": "Farmacias",
-        "icon": "add_business",
-        "routerLink": "zonas/farmacias"
-      }
-    ]
-  },
-  {
-    "text": "Seguridad",
-    "subText": "Gestión de seguridad",
-    "icon": "admin_panel_settings",
-    "children": [
       {
         "text": "Usuarios",
         "icon": "group",

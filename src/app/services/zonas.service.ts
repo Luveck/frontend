@@ -9,6 +9,7 @@ import { DataService } from './data.service';
 })
 export class ZonasService{
   listPaises!:Pais[]
+  listDepartamentos!:Departamento[]
   listCiudades!:Ciudad[]
   apiToken!:string
   headers:any
@@ -74,12 +75,12 @@ export class ZonasService{
       ...formData,
       "status": status
     }
-    return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCountry`, dataPais)
+    return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCountry`, dataPais, {headers: this.headers})
   }
 
   /* Endpoints de Departamentos */
   getDepartamentos(){
-    return this._http.get<Departamento[]>(`${this._dataServ.baseURL}/Department/GetDepartment`)
+    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetDepartments`, {headers: this.headers})
   }
 
   getDepartamentoById(id:string){
