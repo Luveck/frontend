@@ -97,6 +97,17 @@ export class InicioPage {
     {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
   ];
 
+  prodsCanje:any[] = [
+    {nombreProd: 'Olcarveck® 20mg', img: 'https://luveck.com/wp-content/uploads/2022/02/Olcarveck-20.png', regla: '2+1', maximoAnual: 4, categoria: 'Antihipertensivo' ,principioAc: 'Olmersartán Medoxomil y S (-) Amlodipina 20/2.5 mg, 40/2.5 mg, 40/5'},
+    {nombreProd: 'Olcarveck® 40mg', img: 'https://luveck.com/wp-content/uploads/2021/12/caja-olcarveck-40mg.png', regla: '2+1', maximoAnual: 4, categoria: 'Antihipertensivo' ,principioAc: 'Olmersartán Medoxomil y S (-) Amlodipina 20/2.5 mg, 40/2.5 mg, 40/5'},
+    {nombreProd: 'Olcarveck® A 40/5mg', img: 'https://luveck.com/wp-content/uploads/2021/12/caja-olcarveck-40mg.png', regla: '2+1', maximoAnual: 4, categoria: 'Antihipertensivo' ,principioAc: 'Olmersartán Medoxomil y S (-) Amlodipina 20/2.5 mg, 40/2.5 mg, 40/5'},
+    {nombreProd: 'Olcarveck® D 40/25mg', img: 'https://luveck.com/wp-content/uploads/2022/02/Olcarveck-20.png', regla: '2+1', maximoAnual: 4, categoria: 'Antihipertensivo' ,principioAc: 'Olmersartán Medoxomil y S (-) Amlodipina 20/2.5 mg, 40/2.5 mg, 40/5'},
+    {nombreProd: 'Olcarveck® A 40/2.5mg', img: 'https://luveck.com/wp-content/uploads/2022/02/Olcarveck-20.png', regla: '2+1', maximoAnual: 4, categoria: 'Antihipertensivo' ,principioAc: 'Olmersartán Medoxomil y S (-) Amlodipina 20/2.5 mg, 40/2.5 mg, 40/5'},
+    {nombreProd: 'Olcarveck® A 20/2.5mg', img: 'https://luveck.com/wp-content/uploads/2022/02/Olcarveck-20.png', regla: '2+1', maximoAnual: 4, categoria: 'Antihipertensivo' ,principioAc: 'Olmersartán Medoxomil y S (-) Amlodipina 20/2.5 mg, 40/2.5 mg, 40/5'},
+    {nombreProd: 'Olcarveck® A 40/12.5mg', img: 'https://luveck.com/wp-content/uploads/2022/02/Olcarveck-20.png', regla: '2+1', maximoAnual: 4, categoria: 'Antihipertensivo' ,principioAc: 'Olmersartán Medoxomil y S (-) Amlodipina 20/2.5 mg, 40/2.5 mg, 40/5'},
+    {nombreProd: 'Olcarveck® D 20/12.5mg', img: 'https://luveck.com/wp-content/uploads/2022/02/Olcarveck-20.png', regla: '2+1', maximoAnual: 4, categoria: 'Antihipertensivo' ,principioAc: 'Olmersartán Medoxomil y S (-) Amlodipina 20/2.5 mg, 40/2.5 mg, 40/5'},
+  ]
+
   constructor(
     private _overlay: OverlayContainer,
     private _dialog: MatDialog,
@@ -137,11 +148,9 @@ export class InicioPage {
     this.showMenu = false
   }
 
-  openModalProd(){
+  openModalProd(prod:any){
     const config:MatDialogConfig = {
-      data: {
-        id: ''
-      }
+      data: prod
     }
     this._dialog.open(ModalProdIniComponent, config)
   }

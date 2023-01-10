@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-modal-prod-ini',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ModalProdIniComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public dialogo: MatDialogRef<ModalProdIniComponent>,
+    @Inject(MAT_DIALOG_DATA) public prodData: any
+  ) { }
 
   ngOnInit(): void {
+
   }
 
 }

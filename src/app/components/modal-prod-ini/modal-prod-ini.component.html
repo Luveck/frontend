@@ -1,15 +1,15 @@
 <main mat-dialog-content>
-  <img src="https://luveck.com/wp-content/uploads/2021/11/amoveck.png">
+  <img [src]="prodData.img">
   <div class="infoProd">
-    <h1>Nombre Producto</h1>
+    <h1>{{prodData.nombreProd}}</h1>
     <ul>
       <li>
         <span>Principio activo: </span>
-        Loratadina 10 mg
+        {{prodData.principioAc}}
       </li>
       <li>
         <span>Categoría terapéutica: </span>
-        Antihistamínico.
+        {{prodData.categoria}}.
       </li>
       <li>
         <span>Indicaciones: </span>
@@ -17,11 +17,19 @@
       </li>
       <li>
         <span>Presentación: </span>
-        Caja de 10 tabletas.
+        Caja por 30 tabletas Recubiertas.
       </li>
       <li>
         <span>Dosis: </span>
         Consulte a su médico
+      </li>
+      <li>
+        <span>Regla de Canje: </span>
+        {{prodData.regla}}
+      </li>
+      <li>
+        <span>Canje máximo anual: </span>
+        {{prodData.maximoAnual}}
       </li>
     </ul>
   </div>
