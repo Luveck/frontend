@@ -5,9 +5,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { Ciudad } from 'src/app/interfaces/models';
+import { Departamento } from 'src/app/interfaces/models';
 import { ZonasService } from 'src/app/services/zonas.service';
-import { DetalleCiudadPage } from '../detalle-ciudad/detalle-ciudad.page';
+import { DetalledepartamentoPage } from '../detalle-departamento/detalle-departamento.page';
 
 @Component({
   selector: 'app-departamentos',
@@ -30,11 +30,11 @@ export class DepartamentosPage implements AfterViewInit {
     ]
   }
 
-  @Input('ELEMENT_DATA')  ELEMENT_DATA!:Ciudad[];
+  @Input('ELEMENT_DATA')  ELEMENT_DATA!:Departamento[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns:string[] = ['name', 'stateName', 'countryName', 'creationDate', 'acctions'];
-  dataSource = new MatTableDataSource<Ciudad>(this.ELEMENT_DATA);
+  displayedColumns:string[] = ['name', 'countryName', 'countryCode', 'status', 'creationDate', 'acctions'];
+  dataSource = new MatTableDataSource<Departamento>(this.ELEMENT_DATA);
 
   isLoadingResults:boolean = true;
 
@@ -47,13 +47,13 @@ export class DepartamentosPage implements AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort;
-    this.getAllCities()
+    this.getAllDepartamentos()
   }
 
-  getAllCities() {
-    let resp = this._zonasServ.getCiudades()
-    resp.subscribe(cities => {
-      this.dataSource.data = cities as Ciudad[]
+  getAllDepartamentos() {
+    let resp = this._zonasServ.getDepartamentos()
+    resp.subscribe(departamentos => {
+      this.dataSource.data = departamentos.result as Departamento[]
       this.isLoadingResults = false
       console.log(this.dataSource.data)
     }, (err => console.log(err)))
@@ -79,16 +79,16 @@ export class DepartamentosPage implements AfterViewInit {
   on(id?:string){
     const config = {
       data: {
-        title: id ?'Editar Ciudad' :'Agregar Ciudad',
-        ciudadId: id
+        title: id ?'Editar Departamento' :'Agregar Departamento',
+        departamentoId: id
       }
     }
-    this._dialog.open(DetalleCiudadPage, config)
+    this._dialog.open(DetalledepartamentoPage, config)
     .afterClosed()
     .subscribe((confirmado:boolean) => {
       if(confirmado){
         this.isLoadingResults = true
-        this.getAllCities()
+        this.getAllDepartamentos()
       }
     })
   }

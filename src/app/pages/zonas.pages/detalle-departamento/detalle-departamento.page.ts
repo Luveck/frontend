@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { Ciudad, Pais } from 'src/app/interfaces/models'
+import { Departamento, Pais } from 'src/app/interfaces/models'
 import { ZonasService } from 'src/app/services/zonas.service'
 
 @Component({
@@ -11,16 +11,15 @@ import { ZonasService } from 'src/app/services/zonas.service'
 })
 
 export class DetalledepartamentoPage implements OnInit {
-  currentCiudad !: Ciudad | undefined
+  currentDepartamento !: Departamento | undefined
   isLoadingResults?:boolean
   paises!: Pais[]
   paisTemp?: Pais
   departamentos: any
 
-  public newCiudadForm = new FormGroup({
+  public newDepartamentoForm = new FormGroup({
+    country: new FormControl('', Validators.required),
     name: new FormControl('', Validators.required),
-    countryName: new FormControl('', Validators.required),
-    stateName: new FormControl('', Validators.required),
   })
 
   constructor(
@@ -31,11 +30,11 @@ export class DetalledepartamentoPage implements OnInit {
 
   ngOnInit(): void {
     this.paises = this.zonasServ.listPaises
-    if(this.data.ciudadId){
+    if(this.data.departamentoId){
       this.isLoadingResults = true
-      const ciudad = this.zonasServ.getCiudadById(this.data.ciudadId)
-      ciudad.subscribe(res => {
-        this.currentCiudad = res
+      const departamento = this.zonasServ.getDepartamentoById(this.data.departamentoId)
+      departamento.subscribe(res => {
+        this.currentDepartamento = res.result
         this.isLoadingResults = false
         this.initValores()
       }, (err => console.log(err)))
@@ -44,30 +43,31 @@ export class DetalledepartamentoPage implements OnInit {
 
   selectPais(event:any){
     this.paisTemp = this.paises[event.value]
-    this.zonasServ.getDepartamentosByPais(this.paisTemp.name).subscribe(res => this.departamentos = res)
   }
 
   initValores(){
-    this.newCiudadForm.patchValue({
-      name: this.currentCiudad!.name,
-
-//      stateId: this.currentCiudad.stateId.toString()
+    this.newDepartamentoForm.patchValue({
+      name: this.currentDepartamento!.name,
     })
   }
 
   resetForm(){
-    this.newCiudadForm.reset()
+    this.newDepartamentoForm.reset()
   }
 
   addEditCiudad(){
-    if(!this.data.ciudadId){
-      let peticion = this.zonasServ.updateCiudad(this.newCiudadForm.value)
+    const dataDepartamento = {
+      name: this.newDepartamentoForm.value.name,
+      idCountry: this.paisTemp?.id,
+    }
+    if(!this.data.departamentoId){
+      let peticion = this.zonasServ.addDepartamento(dataDepartamento)
       peticion.subscribe(() => {
-        this.zonasServ.notify('Ciudad registrada', 'success')
+        this.zonasServ.notify('Departamento registrado', 'success')
         this.dialogo.close(true);
       }, err => console.log(err))
     }else{
-      let peticion = this.zonasServ.updateCiudad(this.newCiudadForm.value, parseInt(this.data.ciudadId))
+      let peticion = this.zonasServ.updateCiudad(this.newDepartamentoForm.value, parseInt(this.data.departamentoId))
       peticion.subscribe(() => {
         this.zonasServ.notify('Registro actualizado', 'success')
         this.dialogo.close(true);

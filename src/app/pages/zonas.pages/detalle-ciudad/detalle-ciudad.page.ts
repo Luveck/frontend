@@ -44,7 +44,7 @@ export class DetalleCiudadPage implements OnInit {
 
   selectPais(event:any){
     this.paisTemp = this.paises[event.value]
-    this.zonasServ.getDepartamentosByPais(this.paisTemp.name).subscribe(res => this.departamentos = res)
+    //this.zonasServ.getDepartamentosByPais(this.paisTemp.name).subscribe(res => this.departamentos = res)
   }
 
   initValores(){

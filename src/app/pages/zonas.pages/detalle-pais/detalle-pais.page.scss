@@ -30,8 +30,8 @@ main{
           margin-top: 1rem;
           width: 100%;
           text-align: center;
-          button{
-            margin: 0 0.5rem 0 0;
+          .chip{
+            cursor: pointer;
           }
         }
       }

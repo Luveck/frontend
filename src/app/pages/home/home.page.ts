@@ -27,7 +27,6 @@ export class HomePage implements OnInit {
   ){}
 
   ngOnInit(): void {
-    this._zonasServ.getApiToken()
     this._zonasServ.getPaises().subscribe(res =>  {
       this.counterPaises = res.result.length
       this._zonasServ.listPaises = res.result

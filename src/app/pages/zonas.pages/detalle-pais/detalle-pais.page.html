@@ -6,20 +6,20 @@
 
   <div class="fm_header" *ngIf="data.paisId">
     <section class="avatar">
-      <img src="https://flagcdn.com/{{currentPais?.iso3! | lowercase}}.svg" alt="">
+      <img [src]="urlFlag">
       <div class="datos">
-        <p>{{currentPais?.name!}}</p>
+        <p>{{currentPais?.name}}</p>
         <div class="bots">
-          <span class="chip" [ngClass]="{'active': currentPais?.status! == true, 'inactive': currentPais?.status! == false}">{{currentPais?.status! ?'Activo' :'Inactivo'}}</span>
+          <span class="chip" (click)="changeStatus(currentPais?.status)" [ngClass]="{'active': currentPais?.status == false, 'inactive': currentPais?.status == true}">{{currentPais?.status ?'Inhabilitar' :'habilitar'}}</span>
         </div>
       </div>
     </section>
     <section class="resumen">
       <ul>
-        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentPais?.createBy!}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentPais?.creationDate! |date: 'd/M/yy, h:mm a'}}</li>
-        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentPais?.updateBy!}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentPais?.updateDate! |date: 'd/M/yy, h:mm a'}}</li>
+        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentPais?.createBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentPais?.creationDate |date: 'd/M/yy, h:mm a'}}</li>
+        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentPais?.updateBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentPais?.updateDate |date: 'd/M/yy, h:mm a'}}</li>
       </ul>
     </section>
   </div>

@@ -11,7 +11,6 @@ export class ZonasService{
   listPaises!:Pais[]
   listDepartamentos!:Departamento[]
   listCiudades!:Ciudad[]
-  apiToken!:string
   headers:any
 
   constructor(
@@ -22,28 +21,10 @@ export class ZonasService{
     this.headers = {'Authorization':`Bearer ${this._authServ.userToken}`}
   }
 
-  /* api de paises */
-  getApiToken(){
-    this._http.get(
-      'https://www.universal-tutorial.com/api/getaccesstoken',
-      {headers: {
-        'api-token':'oWeQFMFe1cZlEwHEWdeq-zZmaBRQrl8V3DbWX4s1P0-4egYR4pQckPDMMBl3RPIk_ME',
-        'user-email': 'ecaceres@yourappland.com'
-      }}).subscribe((res:any) => this.apiToken = res.auth_token)
-  }
-
-  getDepartamentosByPais(pais:string){
-    return this._http.get(
-      `https://www.universal-tutorial.com/api/states/${pais}`,
-      {headers: {
-        'Authorization': `Bearer ${this.apiToken}`,
-        'Accept': 'application/json'
-      }})
-  }
-
   notify(msg:string, icon:any){
     this._dataServ.fir(msg, icon)
   }
+
   /* Endpoints de Paies */
   getPaises() {
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCountries`,
@@ -68,13 +49,14 @@ export class ZonasService{
     })
   }
 
-  updatePais(formData:any, idPais?:number, status?:boolean){
+  updatePais(formData:any, idPais:number, status?:boolean){
     let dataPais:Pais
     dataPais = {
       "id": idPais,
       ...formData,
       "status": status
     }
+    console.log(dataPais)
     return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCountry`, dataPais, {headers: this.headers})
   }
 
@@ -84,8 +66,18 @@ export class ZonasService{
   }
 
   getDepartamentoById(id:string){
-    return this._http.get<Departamento>(`${this._dataServ.baseURL}/Department/GetDepartmentById?Id=${id}`)
+    return this._http.get<any>(`${this._dataServ.baseURL}/Department/GetDepartmentById?Id=${id}`, {headers: this.headers})
+  }
 
+  addDepartamento(formData:any){
+    let dataDepartamento:Departamento
+    dataDepartamento = {
+      ...formData,
+      "status": true
+    }
+    return this._http.post(`${this._dataServ.baseURL}/Administration/CreateDepartment`, dataDepartamento, {
+      headers: this.headers
+    })
   }
 
   /* Endpoints de Ciudades */

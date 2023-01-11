@@ -5,7 +5,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { Pais } from 'src/app/interfaces/models';
 import { ZonasService } from 'src/app/services/zonas.service';
 import { DetallePaisPage } from '../detalle-pais/detalle-pais.page';
@@ -92,25 +91,5 @@ export class PaisesPage implements AfterViewInit {
         this.getAllCountries()
       }
     })
-  }
-
-  dialog(id: number, estado: boolean) {
-    let paisEnCuestion = this.dataSource.data.filter(pais => pais.id === id)
-    let msg = estado ? '¿Seguro de querer inhabilitar este pais?' : '¿Seguro de querer habilitar este pais?'
-
-    this._dialog.open(DialogConfComponent, {
-      data: `${msg}`
-    })
-      .afterClosed()
-      .subscribe((confirmado: Boolean) => {
-        if (confirmado) {
-          paisEnCuestion[0].status = !paisEnCuestion[0].status
-          let respuesta = this._zonasServ.updatePais(paisEnCuestion[0])
-          respuesta.subscribe(() => {
-            this._zonasServ.notify('Registro actualizado', 'success')
-            this.getAllCountries()
-          })
-        }
-      })
   }
 }
