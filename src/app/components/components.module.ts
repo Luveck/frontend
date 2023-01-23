@@ -7,16 +7,12 @@ import { MaterialModule } from '../material.module';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { DialogConfComponent } from './dialog-conf/dialog-conf.component';
 import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
-import { ModalProdIniComponent } from './modal-prod-ini/modal-prod-ini.component';
-import { ClientProfileComponent } from './client-profile/client-profile.component';
 
 @NgModule({
   declarations: [
     BreadcrumbComponent,
     DialogConfComponent,
-    ScrollToTopComponent,
-    ModalProdIniComponent,
-    ClientProfileComponent
+    ScrollToTopComponent
   ],
   imports: [
     RouterModule,
@@ -28,8 +24,7 @@ import { ClientProfileComponent } from './client-profile/client-profile.componen
   exports: [
     BreadcrumbComponent,
     DialogConfComponent,
-    ScrollToTopComponent,
-    ClientProfileComponent
+    ScrollToTopComponent
   ]
 })
 

@@ -4,7 +4,7 @@
       <button class="btnMenu" mat-icon-button (click)="showMenu = !showMenu">
         <mat-icon>menu</mat-icon>
       </button>
-      <img class="nav_logo" [src]="localTheme ?'assets/logo_light.png' :'assets/logo_dark.png'">
+      <img class="nav_logo" (click)="selectSection('inicio')" [src]="localTheme ?'assets/logo_light.png' :'assets/logo_dark.png'">
     </div>
     <div class="btnsHeader">
       <button mat-icon-button matTooltip="Mi Perfil" *ngIf="authServ.userToken" (click)="showProfile()">
@@ -15,6 +15,7 @@
       </button>
     </div>
   </header>
+
   <div class="main_logo">
     <ul class="nav_list animated fadeIn" [ngClass]="{'show': showMenu === true}">
       <li class="nav_item">
@@ -35,254 +36,14 @@
     </ul>
   </div>
 
-  <div *ngIf="SectionSelect == 'inicio'" class="inicio animated fadeIn">
-    <h1>Bienvenido al programa Pasión por Vivir</h1>
-    <swiper [config]="swipperConfig" [ngClass]="{'light': localTheme, 'dark': !localTheme}">
-      <ng-template swiperSlide>
-        <div class="sItem reverse">
-          <div class="textoSlide">
-            <p>
-              El proyecto <span>Pasión por Vivir</span> consiste en ayudar a aquellas personas que están bajo un tratamiento médico parcial o permanente a obtener medicación gratuita mediante la acumulación de compras en farmacias.
-            </p>
-            <span class="linkRegis" (click)="SectionSelect = 'registro'">
-              Registrarme en el programa
-            </span>
-          </div>
-          <div class="iniImage"><img src="assets/luveck_inicio_1.png"></div>
-        </div>
-      </ng-template>
-      <ng-template swiperSlide>
-        <div class="sItem">
-          <div class="iniImage"><img src="assets/luveck_inicio_2.png"></div>
-          <div class="textoSlide">
-            <p>
-              Luveck proporciona, el beneficio del canje que puede ser adquirido de dos maneras:
-            </p>
-            <ul>
-              <li>Proporcionando su iformación a los dependientes de su farmacia de confianza quien creará su acceso a la plataforma.</li>
-              <li>Realizando su inscripción usted mismo a través de la plataforma al llenar los datos requeridos.</li>
-            </ul>
-            <span class="linkRegis" (click)="SectionSelect = 'info'">
-              Ver más.
-            </span>
-          </div>
-        </div>
-      </ng-template>
-      <ng-template swiperSlide>
-        <div class="sItem reverse">
-          <div class="textoSlide">
-            <p>
-              Al pertenecer al proyecto <span>Pasión por Vivir</span> puede optar por grandes “beneficios de canjes” en varios medicamentos, como:
-            </p>
-            <ul>
-              <li>Prescripción médica.</li>
-              <li>Línea genérica.</li>
-            </ul>
-            <p>
-              Para conocer más de estos beneficios puede consultar en su farmacia de preferencia.
-            </p>
-            <span class="linkRegis" (click)="SectionSelect = 'productos'">
-              Ver más.
-            </span>
-          </div>
-          <div class="iniImage"><img src="assets/luveck_inicio_3.png"></div>
-        </div>
-      </ng-template>
-    </swiper>
-  </div>
 
-  <section *ngIf="SectionSelect == 'info'" class="masInfo animated fadeIn">
-    <h1>¿Cómo ser parte del Programa?</h1>
-    <div class="infoItem">
-      <div class="text">
-        <div class="badg">1</div>
-        <span>Acuda a su farmacia de confianza</span>
-        <p>Se le asesorará sobre los beneficios del Programa y como Inscribirse.</p>
-      </div>
-      <img src="assets/beneficio_1.png">
-    </div>
-    <div class="infoItem item2">
-      <img src="assets/beneficio_2.png">
-      <div class="text">
-        <div class="badg">2</div>
-        <span>Registro y acumulación de compras</span>
-        <p>Compre el producto indicado por su médico en cualquiera de las farmacias afiliadas al Programa y solicite al dependiente de la farmacia el registro de sus facturas.</p>
-      </div>
-    </div>
-    <div class="infoItem">
-      <div class="text">
-        <div class="badg">3</div>
-        <span>Reciba su beneficio</span>
-        <p>Al acumular cierta cantidad de compras del mismo producto y presentación recibirá una caja con las mismas características sin costo.</p>
-      </div>
-      <img src="assets/beneficio_3.png">
-    </div>
-    <div class="linkRegis">
-      <span (click)="SectionSelect = 'registro'">
-        Registrarme en el programa
-      </span>
-    </div>
-  </section>
+  <app-init *ngIf="SectionSelect == 'inicio'" class="animated fadeIn" (sectionEvent)="selectSection($event)"></app-init>
 
-  <section *ngIf="SectionSelect == 'productos'" class="productos animated fadeIn">
-    <h1>Productos disponibles</h1>
-    <p>Ponemos al alcance de nuestros consumidores productos farmacéuticos diferenciadores con estándares de calidad mundial.</p>
+  <app-beneficios *ngIf="SectionSelect == 'info'" class="animated fadeIn" (sectionEvent)="selectSection($event)"></app-beneficios>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Buscar producto</mat-label>
-      <input matInput  #input>
-    </mat-form-field>
+  <app-prods *ngIf="SectionSelect == 'productos'" class="animated fadeIn" [color]="localTheme"></app-prods>
 
-    <div class="prod_content">
-      <mat-card class="mat-elevation-z8" *ngFor="let prod of prodsCanje" (click)="openModalProd(prod)">
-        <img [src]="prod.img">
-        <h2>{{prod.nombreProd}}</h2>
-        <span>Leer mas</span>
-      </mat-card>
-    </div>
-  </section>
-
-  <section *ngIf="SectionSelect == 'registro' && !authServ.userToken" class="registro animated fadeIn">
-    <h1>Registrarme para obtener canjes</h1>
-    <p>Inscríbete a través de este formulario para ser parte del proyecto "Pasión por Vivir".</p>
-
-    <div class="regis_content">
-      <img src="assets/luveck_registro.png">
-      <div class="regForm">
-        <form [formGroup]="loginForm" autocomplete="off" *ngIf="typeForm == 'login'">
-          <mat-form-field appearance="outline">
-            <mat-label>DNI</mat-label>
-            <input matInput placeholder="DNI de usuario" formControlName="dni" maxlength="13">
-            <mat-icon matPrefix>person</mat-icon>
-            <mat-error>
-              DNI requerido
-            </mat-error>
-          </mat-form-field>
-
-          <p style="text-align: end;"><span [routerLink]="['/authentication/forgotpassword']">Olvide mi contraseña</span></p>
-          <mat-form-field appearance="outline">
-            <mat-label>Contraseña</mat-label>
-            <input matInput [type]="hidePassword ?'password' :'text'" placeholder="Contraseña" formControlName="password" required>
-            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
-              <mat-icon>{{hidePassword ?'visibility_off' :'visibility'}}</mat-icon>
-            </button>
-            <mat-error>
-              Contraseña requerida
-            </mat-error>
-          </mat-form-field>
-
-          <mat-checkbox formControlName="remember">Recordar usuario</mat-checkbox>
-          <br>
-
-          <button mat-raised-button color="primary" [disabled]="!loginForm.valid"
-            (click)="onLogin(loginForm.value)">Iniciar Sesión
-            <mat-icon class="lod" *ngIf="dataServ.progress">cached</mat-icon>
-          </button>
-
-          <p>¿Nuevo en la plataforma?  <span (click)="typeForm = 'register'">Crea una cuenta</span></p>
-        </form>
-
-        <form [formGroup]="registerForm" autocomplete="off" *ngIf="typeForm == 'register'">
-          <mat-form-field appearance="outline">
-            <mat-label>DNI</mat-label>
-            <input matInput placeholder="DNI de usuario" formControlName="dni" maxlength="13">
-            <mat-error
-              *ngIf="registerForm.get('dni')?.invalid && (registerForm.get('dni')?.dirty || registerForm.get('dni')?.touched) && registerForm.get('dni')?.errors?.['required']">
-              DNI requerido
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>email</mat-label>
-            <input matInput placeholder="Correo" formControlName="email">
-            <mat-error *ngIf="!registerForm.get('email')?.errors?.['required'] && (registerForm.get('email')?.errors?.['pattern'])">
-              Correo invalido
-            </mat-error>
-            <mat-error
-              *ngIf="registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched) && registerForm.get('email')?.errors?.['required']">
-              Correo requerido
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Nombre</mat-label>
-            <input matInput placeholder="Nombre de usuario" formControlName="name" required>
-            <mat-error
-              *ngIf="registerForm.get('name')?.invalid && (registerForm.get('name')?.dirty || registerForm.get('name')?.touched) && registerForm.get('name')?.errors?.['required']">
-              Nombre requerido
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Apellido</mat-label>
-            <input matInput placeholder="Apellido de usuario" formControlName="lastName" required>
-            <mat-error
-              *ngIf="registerForm.get('lastName')?.invalid && (registerForm.get('lastName')?.dirty || registerForm.get('lastName')?.touched) && registerForm.get('lastName')?.errors?.['required']">
-              Apellido requerido
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Teléfono</mat-label>
-            <input matInput placeholder="Teléfono" formControlName="phone" required>
-            <mat-error *ngIf="!registerForm.get('phone')?.errors?.['required'] && (registerForm.get('phone')?.errors?.['pattern'])">
-              Teléfono invalido
-            </mat-error>
-            <mat-error
-              *ngIf="registerForm.get('phone')?.invalid && (registerForm.get('phone')?.dirty || registerForm.get('phone')?.touched) && registerForm.get('phone')?.errors?.['required']">
-              Teléfono requerido
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Fecha de nacimiento</mat-label>
-            <input matInput [matDatepicker]="picker" formControlName="bornDate">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <mat-error
-              *ngIf="registerForm.get('bornDate')?.invalid && (registerForm.get('bornDate')?.dirty || registerForm.get('bornDate')?.touched) && registerForm.get('bornDate')?.errors?.['required']">
-              Fecha de nacimiento requerida
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Género</mat-label>
-            <mat-select formControlName="sex">
-              <mat-option value="hombre">Hombre</mat-option>
-              <mat-option value="mujer">Mujer</mat-option>
-            </mat-select>
-            <mat-error
-              *ngIf="registerForm.get('sex')?.invalid && (registerForm.get('sex')?.dirty || registerForm.get('sex')?.touched) && registerForm.get('sex')?.errors?.['required']">
-              Género requerido
-            </mat-error>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
-            <mat-label>Contraseña</mat-label>
-            <input matInput [type]="hidePassword ?'password' :'text'" formControlName="password" placeholder="Contraseña" [NgPasswordValidator]="options">
-            <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
-              <mat-icon>{{hidePassword ?'visibility_off' :'visibility'}}</mat-icon>
-            </button>
-            <mat-error *ngIf="!registerForm.get('password')?.errors?.['required'] && (registerForm.get('password')?.errors?.['pattern'])">
-              Contraseña insegura
-            </mat-error>
-            <mat-error
-              *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched) && registerForm.get('password')?.errors?.['required']">
-              Contraseña requerida
-            </mat-error>
-          </mat-form-field>
-
-          <button class="btnReg" mat-flat-button color="primary" [disabled]="registerForm.invalid"
-            (click)="onRegister(registerForm.value)">
-            Registro
-            <mat-icon class="lod" *ngIf="dataServ.progress">cached</mat-icon>
-          </button>
-
-          <p>¿Ya tienes una cuenta? <span (click)="typeForm = 'login'">Inicia sesión</span></p>
-        </form>
-      </div>
-    </div>
-  </section>
+  <app-regis *ngIf="SectionSelect == 'registro' && !authServ.userToken" class="animated fadeIn" (sectionEvent)="selectSection($event)"></app-regis>
 
   <section *ngIf="SectionSelect == 'canjes' && authServ.userToken" class="canjes animated fadeIn">
     <h1>Registro de canjes</h1>

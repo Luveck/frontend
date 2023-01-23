@@ -1,0 +1,51 @@
+<div class="inicio">
+  <h1>Bienvenido al programa Pasión por Vivir</h1>
+  <swiper [config]="swipperConfig" >
+    <ng-template swiperSlide>
+      <div class="sItem reverse">
+        <div class="textoSlide">
+          <p>
+            Al ser parte de nuestro programa <span>Pasión por vivir</span> tienes la oportunidad de obtener canje de medicamentos por tus compras en las farmacias participantes.
+          </p>
+          <p>
+            Así como recordatorios, avisos y conocer el estado de tus compras para redimir canjes recuerda estar pendiente cada mes para obtener este y otros beneficios más.
+          </p>
+          <span class="linkRegis" *ngIf="!authServ.userToken" (click)="selectSection('registro')">
+            Registrarme en el programa.
+          </span>
+          <span class="linkRegis" *ngIf="authServ.userToken" (click)="selectSection('canjes')">
+            Ver registro de mis canjes.
+          </span>
+        </div>
+        <div class="iniImage"><img src="assets/ppv_1.webp"></div>
+      </div>
+    </ng-template>
+    <ng-template swiperSlide>
+      <div class="sItem">
+        <div class="iniImage"><img src="assets/ppv_2.webp"></div>
+        <div class="textoSlide">
+          <p>
+            El programa <span>Pasión por vivir</span> consiste en ayudar a las personas que están bajo un tratamiento médico sin importar edad o género a obtener canjes por la compra de nuestros medicamentos disponibles con canje en nuestras farmacias participantes
+          </p>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template swiperSlide>
+      <div class="sItem reverse">
+        <div class="textoSlide">
+          <p>
+            Al ingresar al programa tienes la oportunidad de llevar el control de tus canjes de dos maneras:
+          </p>
+          <ul>
+            <li>En la farmacia de tu elección con ayuda de los colaboradores quienes brindarán información de tu proceso, términos y restricciones de tu compra.</li>
+            <li>De manera personal en el dispositivo de tu elección donde podrás dar seguimiento, actualizar la información de compra y tus datos personales.</li>
+          </ul>
+          <span class="linkRegis" (click)="selectSection('info')">
+            Ver más.
+          </span>
+        </div>
+        <div class="iniImage"><img src="assets/ppv_3.webp"></div>
+      </div>
+    </ng-template>
+  </swiper>
+</div>

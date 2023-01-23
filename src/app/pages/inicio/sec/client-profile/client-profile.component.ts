@@ -4,7 +4,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms'
 
 import { AuthService } from 'src/app/services/auth.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
-import { DialogConfComponent } from '../dialog-conf/dialog-conf.component';
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
+
 
 @Component({
   selector: 'app-client-profile',
@@ -55,7 +56,7 @@ export class ClientProfileComponent implements OnInit {
     .afterClosed()
     .subscribe((confirmado: Boolean) => {
       if (confirmado) {
-        this.dialogo.close()
+        this.dialogo.close(true)
         this._authServ.logOut(this._authServ.userData.Role)
       }
     })

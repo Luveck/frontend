@@ -20,8 +20,16 @@ main{
       text-align: center;
       font-size: 2rem;
     }
-    li span{
-      font-weight: 600;
+    li{
+      margin-bottom: 5px;
+      span{
+        font-weight: 600;
+      }
+      a{
+        cursor: pointer;
+        font-weight: 600;
+        color: #578dff;
+      }
     }
   }
 }

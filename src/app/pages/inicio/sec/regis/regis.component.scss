@@ -1,0 +1,70 @@
+.registro{
+  width: 100%;
+  margin: 2rem 0;
+  h1 {
+    margin: 1rem 0;
+    width: 100%;
+    font-size: 2rem;
+    text-align: center;
+  }
+  p{
+    text-align: center;
+  }
+  .regis_content{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    img{
+      width: 50%;
+    }
+    .regForm{
+      text-align: center;
+      margin: 1rem 0;
+      padding: 1.5rem;
+      width: 40%;
+      .mat-form-field {
+        width: 100%;
+        .inputPass{
+          border-bottom: 1px solid gray;
+        }
+        button {
+          border: none;
+        }
+      }
+      .mat-checkbox{
+        width: 100%;
+        text-align: start;
+      }
+      .btnReg{
+        width: 60%;
+      }
+      p{
+        margin-top: 1rem;
+        text-align: center;
+        span{
+          cursor: pointer;
+          color: #2f71ff;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 560px){
+  .registro{
+    margin-top: 1.5rem;
+    h1, p{
+      width: 90%;
+      margin: 0 auto;
+    }
+    .regis_content img{
+      width: 90%;
+    }
+    .regis_content .regForm{
+      width: 80%;
+    }
+  }
+}

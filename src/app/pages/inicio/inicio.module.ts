@@ -9,6 +9,12 @@ import { SwiperModule } from 'swiper/angular';
 
 import { MaterialModule } from 'src/app/material.module';
 import { ComponentsModule } from 'src/app/components/components.module';
+import { InitComponent } from './sec/init/init.component';
+import { BeneficiosComponent } from './sec/beneficios/beneficios.component';
+import { ProdsComponent } from './sec/prods/prods.component';
+import { RegisComponent } from './sec/regis/regis.component';
+import { ModalProdIniComponent } from './sec/modal-prod-ini/modal-prod-ini.component';
+import { ClientProfileComponent } from './sec/client-profile/client-profile.component';
 
 const routes: Routes = [
   {
@@ -28,6 +34,14 @@ const routes: Routes = [
     MaterialModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [InicioPage]
+  declarations: [
+    InicioPage,
+    InitComponent,
+    BeneficiosComponent,
+    ProdsComponent,
+    RegisComponent,
+    ModalProdIniComponent,
+    ClientProfileComponent
+  ]
 })
 export class InicioPageModule {}

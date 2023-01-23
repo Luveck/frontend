@@ -1,0 +1,23 @@
+<main mat-dialog-content>
+  <img [src]="prodData.img">
+  <div class="infoProd">
+    <h1>{{prodData.nombreProd}}</h1>
+    <ul>
+      <li>
+        <span>Presentación: </span>
+        {{prodData.presentacion}}
+      </li>
+      <li>
+        <span>Regla de Canje: </span>
+        {{prodData.regla}}
+      </li>
+      <li>
+        <span>Canje máximo anual: </span>
+        {{prodData.maximoAnual}}
+      </li>
+      <li>
+        <a [href]="prodData.urlDatos" target="_blank">Leer más</a>
+      </li>
+    </ul>
+  </div>
+</main>
