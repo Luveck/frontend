@@ -36,6 +36,7 @@
     </ul>
   </div>
 
+  <button mat-button (click)="authServ.showSesionEndModal()"> ver</button>
 
   <app-init *ngIf="SectionSelect == 'inicio'" class="animated fadeIn" (sectionEvent)="selectSection($event)"></app-init>
 

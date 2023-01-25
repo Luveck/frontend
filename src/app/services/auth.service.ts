@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { lastValueFrom } from 'rxjs';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DataService } from './data.service';
+import { SesionEndComponent } from '../components/sesion-end/sesion-end.component';
 
 @Injectable({
   providedIn: 'root'
@@ -10,7 +11,11 @@ export class AuthService {
   userToken:any = null
   userData:any = null
 
-  constructor(private _dataServ:DataService, private _http:HttpClient) {
+  constructor(
+    private _dataServ:DataService,
+    private _http:HttpClient,
+    private _dialog: MatDialog,
+  ) {
     this.getCurrentUser()
   }
 
@@ -78,5 +83,16 @@ export class AuthService {
     role === 'Admin'
       ? this._dataServ.goTo('/authentication/login')
       : this._dataServ.goTo('/inicio')
+  }
+
+  showSesionEndModal(){
+    const config:MatDialogConfig = {
+      disableClose: true
+    }
+    this._dialog.open(SesionEndComponent, config)
+    .afterClosed()
+    .subscribe(()=>{
+      console.log('me voy')
+    })
   }
 }

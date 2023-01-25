@@ -7,12 +7,14 @@ import { MaterialModule } from '../material.module';
 import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { DialogConfComponent } from './dialog-conf/dialog-conf.component';
 import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
+import { SesionEndComponent } from './sesion-end/sesion-end.component';
 
 @NgModule({
   declarations: [
     BreadcrumbComponent,
     DialogConfComponent,
-    ScrollToTopComponent
+    ScrollToTopComponent,
+    SesionEndComponent
   ],
   imports: [
     RouterModule,
@@ -24,7 +26,8 @@ import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
   exports: [
     BreadcrumbComponent,
     DialogConfComponent,
-    ScrollToTopComponent
+    ScrollToTopComponent,
+    SesionEndComponent
   ]
 })
 
