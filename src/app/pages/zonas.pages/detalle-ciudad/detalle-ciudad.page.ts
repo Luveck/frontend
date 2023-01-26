@@ -38,20 +38,20 @@ export class DetalleCiudadPage implements OnInit {
         this.currentCiudad = res
         this.isLoadingResults = false
         this.initValores()
-      }, (err => console.log(err)))
+      }, (err => {
+        this.isLoadingResults = false
+        console.log(err)
+      }))
     }
   }
 
   selectPais(event:any){
     this.paisTemp = this.paises[event.value]
-    //this.zonasServ.getDepartamentosByPais(this.paisTemp.name).subscribe(res => this.departamentos = res)
   }
 
   initValores(){
     this.newCiudadForm.patchValue({
       name: this.currentCiudad!.name,
-
-//      stateId: this.currentCiudad.stateId.toString()
     })
   }
 
@@ -65,13 +65,17 @@ export class DetalleCiudadPage implements OnInit {
       peticion.subscribe(() => {
         this.zonasServ.notify('Ciudad registrada', 'success')
         this.dialogo.close(true);
-      }, err => console.log(err))
+      }, (err => {
+      console.log(err)
+    }))
     }else{
       let peticion = this.zonasServ.updateCiudad(this.newCiudadForm.value, parseInt(this.data.ciudadId))
       peticion.subscribe(() => {
         this.zonasServ.notify('Registro actualizado', 'success')
         this.dialogo.close(true);
-      }, err => console.log(err))
+      }, (err => {
+      console.log(err)
+    }))
     }
   }
 }

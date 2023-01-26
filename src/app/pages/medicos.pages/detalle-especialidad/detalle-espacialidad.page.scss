@@ -25,13 +25,9 @@ main {
         p {
           font-size: 2rem;
         }
-        .bots {
-          margin-top: 1rem;
-          width: 100%;
-          text-align: center;
-          button {
-            margin: 0 0.5rem 0 0;
-          }
+        .bots{
+          padding-top: 1rem;
+          .chip{cursor: pointer;}
         }
       }
     }

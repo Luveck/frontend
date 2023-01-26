@@ -14,21 +14,15 @@
 
   <div class="catesCont">
     <mat-card class="cat mat-elevation-z8" *ngFor="let especial of medicServ.especialidades">
-      <div class="cat_header">
-        <span>{{especial.name}}</span>
-        <span class="chip" [ngClass]="{'inactive': especial.isDeleted == true, 'active': especial.isDeleted == false}">{{especial.isDeleted ?'Inactiva' :'Activa'}}</span>
-      </div>
       <div class="cat_body">
+        <p><span>Nombre: </span>{{especial.name}}</p>
+        <p><span>Estado: </span><span class="chip" [ngClass]="{'inactive': especial.isDeleted == true, 'active': especial.isDeleted == false}">{{especial.isDeleted ?'Inactiva' :'Activa'}}</span></p>
         <p><span>Fecha de creación: </span>{{especial.creationDate |date:'M/d/yy'}}</p>
       </div>
       <div class="cat_actions">
-        <button mat-flat-button color="warn" (click)="delete(especial)">
-          Cambiar estado
-          <mat-icon>published_with_changes</mat-icon>
-        </button>
-        <button mat-raised-button color="primary" (click)="on(especial.id)">
-          Editar
-          <mat-icon>edit_square</mat-icon>
+        <button mat-stroked-button (click)="on(especial.id)">
+          Ver detalles
+          <mat-icon color="accent">arrow_forward</mat-icon>
         </button>
       </div>
     </mat-card>

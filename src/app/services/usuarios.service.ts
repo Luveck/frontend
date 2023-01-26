@@ -25,18 +25,21 @@ export class UsuariosService {
   }
 
   public getAllUsers(){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.post(`https://apisecurityluveck.azurewebsites.net/api/Security/GetUsers`, {},
       {headers: this.headers}
     )
   }
 
   public getUserInfo(email:string){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.get(`https://apisecurityluveck.azurewebsites.net/api/Security/getUser?Email=${email}`,
       {headers: this.headers}
     )
   }
 
   addUsuario(formData:any){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     console.log(formData)
     let dataUser:any
    /*  dataUser = {
@@ -48,6 +51,7 @@ export class UsuariosService {
   }
 
   UpdateUsuario(formData:any, dni:string, status?:boolean){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     if(formData){
       let dataUser:any
       dataUser = {
@@ -73,12 +77,14 @@ export class UsuariosService {
   /* Endpoints de Roles */
 
   public getAllRoles(){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.get(`https://apisecurityluveck.azurewebsites.net/api/Roles/GetRoles`,
       {headers: this.headers}
     )
   }
 
   public createRole(nameRole:string){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.post(`https://apisecurityluveck.azurewebsites.net/api/Roles/CreateRole?role=${nameRole}`, {},
       {headers: this.headers}
     )

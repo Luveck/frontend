@@ -4,7 +4,7 @@
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
   </div>
 
-  <div class="fm_header" *ngIf="data.ciudadId">
+  <div class="fm_header" *ngIf="data.departamentoId">
     <section class="avatar">
       <div class="datos">
         <p>{{currentDepartamento?.name!}}</p>
@@ -28,8 +28,8 @@
       <mat-form-field appearance="fill">
         <mat-label>País</mat-label>
         <mat-select formControlName="country" (selectionChange)="selectPais($event)">
-          <div *ngFor="let pais of paises; index as i">
-            <mat-option *ngIf="pais.status" [value]="i">
+          <div *ngFor="let pais of paises;">
+            <mat-option *ngIf="pais.status" [value]="pais.id">
               {{pais.name}}
             </mat-option>
           </div>

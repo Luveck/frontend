@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { Especialidad } from 'src/app/interfaces/models';
 import { MedicosService } from 'src/app/services/medicos.service';
 
@@ -9,34 +10,38 @@ import { MedicosService } from 'src/app/services/medicos.service';
   styleUrls: ['./detalle-espacialidad.page.scss']
 })
 export class DetalleEspacialidadPage implements OnInit {
-  currentEspecialidad!: Especialidad | undefined;
+  currentEspecialidad!: Especialidad | any;
   name!: string
-  state: boolean = true
+  state!: boolean
   isLoadingResults?:boolean
 
   constructor(
     private medicServ:MedicosService,
+    private _dialogo:MatDialog,
     public dialogo: MatDialogRef<DetalleEspacialidadPage>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
-    if(this.data.especial){
+    if(this.data.especialId){
       this.isLoadingResults = true
-      const especial = this.medicServ.getEspecialidadById(this.data.especial)
+      const especial = this.medicServ.getEspecialidadById(this.data.especialId)
       especial.subscribe(res => {
         console.log(res)
-        this.currentEspecialidad = res
+        this.currentEspecialidad = res.result
         this.isLoadingResults = false
         this.name = this.currentEspecialidad.name
         this.state = this.currentEspecialidad.isDeleted
-      })
+      },(err => {
+        this.isLoadingResults = false
+        console.log(err)
+      }))
     }
   }
 
   save(){
-    if(this.data.especial){
-      let res = this.medicServ.updateEspecial(this.name, this.state, this.currentEspecialidad)
+    if(this.data.especialId){
+      let res = this.medicServ.updateEspecial(this.name, this.state, this.data.especialId)
       res.subscribe(res => {
         if(res){
           this.medicServ.notify('Especialidad actualizada', 'success')
@@ -58,5 +63,33 @@ export class DetalleEspacialidadPage implements OnInit {
         this.medicServ.notify('Ocurrio un error', 'error')
       }))
     }
+  }
+
+  chageState(state:boolean){
+    let msgDialog:string
+    if(!state){
+      msgDialog = '¿Seguro de querer inhabilitar esta especialidad?'
+    }else{
+      msgDialog = '¿Seguro de querer habilitar esta especialidad?'
+    }
+    this._dialogo.open(DialogConfComponent, {
+      data: msgDialog
+    })
+    .afterClosed()
+    .subscribe((confirmado:boolean)=>{
+      if(confirmado){
+        this.state = !this.state
+        let res = this.medicServ.updateEspecial(this.name, this.state, this.data.especialId)
+          res.subscribe(res => {
+            if(res){
+              this.medicServ.notify('Especialidad actualizada', 'success')
+              this.currentEspecialidad.isDeleted = !state
+            }
+          }, (err => {
+            console.log(err)
+            this.medicServ.notify('Ocurrio un error', 'error')
+          }))
+      }
+    })
   }
 }

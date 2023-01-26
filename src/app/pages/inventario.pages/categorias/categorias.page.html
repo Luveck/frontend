@@ -14,21 +14,15 @@
 
   <div class="catesCont">
     <mat-card class="cat mat-elevation-z8" *ngFor="let cat of inveServ.categorias">
-      <div class="cat_header">
-        <span>{{cat.name}}</span>
-        <span class="chip" [ngClass]="{'inactive': cat.isDeleted == true, 'active': cat.isDeleted == false}">{{cat.isDeleted ?'Inactiva' :'Activa'}}</span>
-      </div>
       <div class="cat_body">
+        <p><span>Nombre: </span>{{cat.name}}</p>
+        <p><span>Estado: </span><span class="chip" [ngClass]="{'inactive': cat.isDeleted == true, 'active': cat.isDeleted == false}">{{cat.isDeleted ?'Inactiva' :'Activa'}}</span></p>
         <p><span>Fecha de creación: </span>{{cat.creationDate |date:'M/d/yy'}}</p>
       </div>
       <div class="cat_actions">
-        <button mat-flat-button color="warn" (click)="delete(cat)">
-          Cambiar estado
-          <mat-icon>published_with_changes</mat-icon>
-        </button>
-        <button mat-raised-button color="primary" (click)="on(cat.id)">
-          Editar
-          <mat-icon>edit_square</mat-icon>
+        <button mat-stroked-button (click)="on(cat.id)">
+          Ver detalles
+          <mat-icon color="accent">arrow_forward</mat-icon>
         </button>
       </div>
     </mat-card>

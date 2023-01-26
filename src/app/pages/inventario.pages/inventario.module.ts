@@ -7,6 +7,7 @@ import { MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomMatPaginatorIntl } from '../paginator-es';
 import { MaterialModule } from 'src/app/material.module';
 import { DetalleCategoriaPage } from './detalle-categoria/detalle-categoria.page';
+import { DetalleProductoPage } from './detalle-producto/detalle-producto.page';
 
 const routes: Routes = [
   {
@@ -16,16 +17,13 @@ const routes: Routes = [
   {
     path: 'productos',
     loadChildren: () => import('./productos/productos.module').then( m => m.productosPageModule)
-  },
-  {
-    path: 'detalle-producto/:id',
-    loadChildren: () => import('./detalle-producto/detalle-producto.module').then( m => m.DetalleProductoPageModule)
   }
 ];
 
 @NgModule({
   declarations:[
-    DetalleCategoriaPage
+    DetalleCategoriaPage,
+    DetalleProductoPage
   ],
   imports: [
     CommonModule,

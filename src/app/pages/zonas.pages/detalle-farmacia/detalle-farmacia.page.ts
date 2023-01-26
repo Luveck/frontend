@@ -44,7 +44,10 @@ export class DetalleFarmaciaPage implements OnInit {
         this.currentFarmacia = res
         this.isLoadingResults = false
         this.initValores()
-      }, (err => console.log(err)))
+      }, (err => {
+        this.isLoadingResults = false
+        console.log(err)
+      }))
     }
   }
 
@@ -68,13 +71,17 @@ export class DetalleFarmaciaPage implements OnInit {
       peticion.subscribe(res => {
         this._zonasServ.notify('Farmacia registrada', 'success')
         this.dialogo.close(true);
-      }, err => console.log(err))
+      }, (err => {
+      console.log(err)
+    }))
     }else{
       let peticion = this._zonasServ.updateFarmacia(this.farmaForm.value, this.currentFarmacia?.isDeleted, this.ciudadTemp, parseInt(this.data.farmaId))
        peticion.subscribe(res => {
         this._zonasServ.notify('Farmacia actualizada', 'success')
         this.dialogo.close(true);
-      }, err => console.log(err))
+      }, (err => {
+      console.log(err)
+    }))
     }
   }
 }

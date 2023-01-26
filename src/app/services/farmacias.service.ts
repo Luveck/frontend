@@ -18,6 +18,7 @@ export class FarmaciasService {
   }
 
   getAllPharmacies(){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.get<any>(`${this._dataServ.baseURL}/Pharmacy/GetPharmacies`,
       {headers: this.headers}
     )

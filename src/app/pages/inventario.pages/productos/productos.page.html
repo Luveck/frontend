@@ -2,7 +2,7 @@
   <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
 
   <header>
-    <button mat-raised-button color="primary" (click)="on('new')">
+    <button mat-raised-button color="primary" (click)="on()">
       <mat-icon>add</mat-icon>
       Agregar Producto
     </button>
@@ -26,24 +26,16 @@
         <td mat-cell *matCellDef="let row"> {{row.name}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="presentation">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Presentación </th>
-        <td mat-cell *matCellDef="let row"> {{row.presentation}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="quantity">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cantidad </th>
-        <td mat-cell *matCellDef="let row"> {{row.quantity}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="typeSell">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> tipo de venta</th>
-        <td mat-cell *matCellDef="let row"> {{row.typeSell}} </td>
-      </ng-container>
-
       <ng-container matColumnDef="cost">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio</th>
         <td mat-cell *matCellDef="let row"> {{row.cost}}.Lps</td>
+      </ng-container>
+
+      <ng-container matColumnDef="state">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+        <td mat-cell *matCellDef="let row">
+          <span class="chip" [ngClass]="{'active': row.state == true, 'inactive': row.state == false}">{{row.state ?'Activo' :'Inactivo'}}</span>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="nameCategory">
@@ -55,11 +47,9 @@
       <ng-container matColumnDef="acctions">
         <th mat-header-cell *matHeaderCellDef> Acciones </th>
         <td mat-cell *matCellDef="let row">
-          <button mat-icon-button color="accent" (click)="on(row.id)" matTooltip="Editar producto">
-            <mat-icon>edit</mat-icon>
-          </button>
-          <button mat-icon-button color="warn" (click)="dialog(row.id)" matTooltip="Eliminar producto">
-            <mat-icon>delete</mat-icon>
+          <button mat-stroked-button (click)="on(row.id)">
+            Ver detalles
+            <mat-icon color="accent">arrow_forward</mat-icon>
           </button>
         </td>
       </ng-container>

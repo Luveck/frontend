@@ -56,7 +56,10 @@ export class UsuariosPage implements AfterViewInit {
       console.log(res)
       this.dataSource.data = res.result as any[]
       this.isLoadingResults = false
-    })
+    }, (err => {
+      this.isLoadingResults = false
+      console.log(err)
+    }))
   }
 
   applyFilter(event: Event) {
@@ -112,11 +115,9 @@ export class UsuariosPage implements AfterViewInit {
   onModalRoles(){
     this._dialog.open(RolesPage)
     .afterClosed()
-    .subscribe((confirmado:boolean) => {
-      if(confirmado){
-        this.isLoadingResults = true
-        this.getAllUsers()
-      }
+    .subscribe(() => {
+      this.isLoadingResults = true
+      this.getAllUsers()
     })
   }
 }

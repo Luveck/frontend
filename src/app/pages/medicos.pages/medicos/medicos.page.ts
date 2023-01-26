@@ -57,7 +57,10 @@ export class MedicosPage implements AfterViewInit {
       this.dataSource.data = Medicos as Medico[]
       this.isLoadingResults = false
       console.log(this.dataSource.data)
-    }, (err => console.log(err)))
+    }, (err => {
+      this.isLoadingResults = false
+      console.log(err)
+    }))
   }
 
   applyFilter(event: Event) {
@@ -86,11 +89,9 @@ export class MedicosPage implements AfterViewInit {
     }
     this._dialog.open(DetalleMedicoPage, config)
     .afterClosed()
-    .subscribe((confirmado:boolean) => {
-      if(confirmado){
-        this.isLoadingResults = true
-        this.getAllMedics()
-      }
+    .subscribe(() => {
+      this.isLoadingResults = true
+      this.getAllMedics()
     })
   }
 

@@ -26,18 +26,21 @@ export class InventarioService {
 
   /* ******endpoints de Categorias****** */
   public getAllCategories(){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCategories`,
       {headers: this.headers}
     )
   }
 
   public getCategoriaById(id:string){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCategoryById?Id=${id}`,
       {headers: this.headers}
     )
   }
 
   public addCategoria(name:string){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     let dataCat:Categoria = {
       "name": name,
       "isDeleted": false,
@@ -48,69 +51,61 @@ export class InventarioService {
   }
 
   public deleteCat(id:number){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.delete(`${this._dataServ.baseURL}/Administration/DeleteCategory?Id=${id}`,
       {headers: this.headers}
     )
   }
 
-  public updateCat(name:string, state:boolean, cat:Categoria | any){
+  public updateCat(name:string, state:boolean, catId:number | any){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     let catToUpdate:Categoria = {
-      "id": cat?.id,
+      "id": catId,
       "name": name,
       "isDeleted": state,
     }
     console.log(catToUpdate)
-    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdateCategory`, catToUpdate,
+    return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCategory`, catToUpdate,
       {headers: this.headers}
     )
   }
-
-  public changeStateCategoria(state:boolean, cat:Categoria | any){
-    let catToUpdate:Categoria = {
-      "id": cat?.id,
-      "name": cat?.name,
-      "isDeleted": state,
-    }
-    console.log(catToUpdate)
-    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdateCategory`, catToUpdate,
-      {headers: this.headers}
-    )
-  }
-
 
   /* ******endpoints de Productos****** */
   public getAllProductos(){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetProducts`,
       {headers: this.headers}
     )
   }
 
   public getProductoById(id:string){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetProductById?Id=${id}`, {headers: this.headers})
   }
 
-  public addProducto(formData:any, categoria:Categoria){
+  public addProducto(formData:any){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     let dataProd:Producto = {
       ...formData,
-      "idCategory": categoria.id,
-      "nameCategory": categoria.name
+      state: true
     }
     console.log(dataProd)
     return this._http.post(`${this._dataServ.baseURL}/Administration/CreateProduct`, dataProd, {headers: this.headers})
   }
 
-  public updateProd(formData:any, categoria:Categoria, prodId:number){
+  public updateProd(formData:any, state:boolean, prodId:number){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     let dataProd:Producto = {
       "id": prodId,
       ...formData,
-      "idCategory": categoria.id,
-      "nameCategory": categoria.name,
+      state:state
     }
     console.log(dataProd)
-    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdateProduct`, dataProd, {headers: this.headers})
+    return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateProduct`, dataProd, {headers: this.headers})
   }
 
   public deleteProd(id:number){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.delete(`${this._dataServ.baseURL}/Administration/DeleteProduct?Id=${id}`, {headers: this.headers})
   }
 }

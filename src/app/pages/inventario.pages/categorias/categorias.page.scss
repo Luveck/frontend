@@ -17,29 +17,17 @@ main{
     .cat{
       width: 300px;
       padding: 10px;
-      .cat_header{
-        border-bottom: 1px solid gray;
-        padding: 0.5rem;
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        span{
-          font-size: 1.2em;
-          font-weight: 600;
-        }
-        span.chip{
-          cursor: pointer;
-        }
-      }
       .cat_body{
         padding: 1rem;
-        text-align: center;
+        font-size: 1rem;
         span{
           font-weight: 600;
         }
       }
       .cat_actions{
+        border-top: 1px solid gray;
         text-align: center;
+        padding: .5rem 0;
         button{
           margin: 0 0.5rem;
         }

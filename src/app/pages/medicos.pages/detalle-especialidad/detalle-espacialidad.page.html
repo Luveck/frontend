@@ -4,22 +4,22 @@
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
   </div>
 
-  <div class="fm_header" *ngIf="data.especial">
+  <div class="fm_header" *ngIf="data.especialId">
     <section class="avatar">
       <div class="datos">
         <p>{{currentEspecialidad?.name}}</p>
         <div class="bots">
-          <span class="chip"
-            [ngClass]="{'inactive': currentEspecialidad?.isDeleted == true, 'active': currentEspecialidad?.isDeleted == false}">{{currentEspecialidad?.isDeleted ?'Inctiva' :'Activa'}}</span>
+          <span class="chip" (click)="chageState(currentEspecialidad?.isDeleted)"
+            [ngClass]="{'inactive': currentEspecialidad?.isDeleted == true, 'active': currentEspecialidad?.isDeleted == false}">Cambiar estado: {{currentEspecialidad?.isDeleted ?'Inactiva' :'Activa'}}</span>
         </div>
       </div>
     </section>
     <section class="resumen">
       <ul>
-        <li><mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentEspecialidad?.createBy!}}</li>
-        <li><mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación:{{currentEspecialidad?.creationDate! |date: 'd/M/yy, h:mm a'}}</li>
-        <li><mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentEspecialidad?.updateBy!}}</li>
-        <li><mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación:{{currentEspecialidad?.updateDate! |date: 'd/M/yy, h:mm a'}}</li>
+        <li><mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentEspecialidad?.createBy}}</li>
+        <li><mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación:{{currentEspecialidad?.creationDate |date: 'd/M/yy, h:mm a'}}</li>
+        <li><mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentEspecialidad?.updateBy}}</li>
+        <li><mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación:{{currentEspecialidad?.updateDate |date: 'd/M/yy, h:mm a'}}</li>
       </ul>
     </section>
   </div>
@@ -35,6 +35,6 @@
 </main>
 <div mat-dialog-actions>
   <div class="btns">
-    <button mat-flat-button color="primary" [disabled]="!name" (click)="save()">Guardar datos</button>
+    <button mat-flat-button color="primary" [disabled]="!name" (click)="save()">Guardar datos <mat-icon>save</mat-icon></button>
   </div>
 </div>

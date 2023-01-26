@@ -1,21 +1,22 @@
-<main>
-  <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
-
-  <div class="fm_header" *ngIf="prodId != 'new'">
+<h2 mat-dialog-title>{{data.title}}</h2>
+<main mat-dialog-content>
+  <div class="fm_header" *ngIf="data.productoId">
     <section class="avatar">
+      <img src="assets/default-thumbnail.jpg">
       <div class="datos">
-        <p>{{currentProd?.name!}}</p>
+        <p>{{currentProd?.name}}</p>
         <div class="bots">
-
+          <span class="chip" (click)="chageState(currentProd?.state)"
+            [ngClass]="{'active': currentProd?.state == true, 'inactive': currentProd?.state == false}">Cambiar estado: {{currentProd?.state ?'Activo' :'Inactivo'}}</span>
         </div>
       </div>
     </section>
     <section class="resumen">
       <ul>
-        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentProd?.createBy!}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentProd?.creationDate! |date: 'd/M/yy, h:mm a'}}</li>
-        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentProd?.updateBy!}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentProd?.updateDate! |date: 'd/M/yy, h:mm a'}}</li>
+        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentProd?.createBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentProd?.creationDate |date: 'd/M/yy, h:mm a'}}</li>
+        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentProd?.updateBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentProd?.updateDate |date: 'd/M/yy, h:mm a'}}</li>
       </ul>
     </section>
   </div>
@@ -25,6 +26,10 @@
       <mat-form-field appearance="fill">
         <mat-label>Nombre</mat-label>
         <input matInput placeholder="Nombre" formControlName="name">
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="barCode">
+        <mat-label>Código de barras</mat-label>
+        <input matInput placeholder="Código de barras" formControlName="barcode">
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Presentación</mat-label>
@@ -44,9 +49,9 @@
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Categoría</mat-label>
-        <mat-select formControlName="nameCategory">
-          <div *ngFor="let cat of cats; index as i">
-            <mat-option *ngIf="!cat.isDeleted" [value]="i">
+        <mat-select formControlName="idCategory">
+          <div *ngFor="let cat of cats">
+            <mat-option *ngIf="!cat.isDeleted" [value]="cat.id">
               {{cat.name}}
             </mat-option>
           </div>
@@ -54,13 +59,14 @@
       </mat-form-field>
       <mat-form-field appearance="fill" class="area">
         <mat-label>Descripción del producto</mat-label>
-        <textarea matInput placeholder="Descripción del producto" formControlName="description" rows="10"></textarea>
+        <textarea matInput placeholder="Descripción del producto" formControlName="description" rows="2"></textarea>
       </mat-form-field>
-    </div>
-
-    <div class="btns">
-      <button mat-raised-button color="primary" [disabled]="prodForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
-      <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
     </div>
   </form>
 </main>
+<div mat-dialog-actions>
+  <div class="btns">
+    <button mat-raised-button color="primary" [disabled]="prodForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
+    <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
+  </div>
+</div>

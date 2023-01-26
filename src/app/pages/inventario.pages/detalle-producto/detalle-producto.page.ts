@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, Inject, OnInit } from '@angular/core'
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { ActivatedRoute } from '@angular/router'
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 import { Categoria, Producto } from 'src/app/interfaces/models'
-import { DataService } from 'src/app/services/data.service'
 import { InventarioService } from 'src/app/services/inventario.service'
 
 @Component({
@@ -13,74 +13,57 @@ import { InventarioService } from 'src/app/services/inventario.service'
 })
 
 export class DetalleProductoPage implements OnInit {
-  public prodId!: string
-  currentProd!: Producto | undefined
+  currentProd!: Producto | any
   cats!: Categoria[]
   categoriaTemp!: Categoria
   isLoadingResults?:boolean
 
   public prodForm = new FormGroup({
     name: new FormControl('', Validators.required),
+    barcode: new FormControl('', Validators.required),
     description: new FormControl('', Validators.required),
     presentation: new FormControl('', Validators.required),
     quantity: new FormControl('', Validators.required),
     typeSell: new FormControl('', Validators.required),
     cost: new FormControl('', Validators.required),
-    nameCategory: new FormControl('', Validators.required),
+    idCategory: new FormControl('',Validators.required),
   })
 
-  public breadcrumb = {
-    links: [
-      {
-        name: 'Inicio',
-        isLink: true,
-        link: '/admin/home'
-      },
-      {
-        name: 'Gestión de productos',
-        isLink: true,
-        link: '/admin/inventario/productos'
-      },
-      {
-        name: 'Detalle producto',
-        isLink: false
-      }
-    ]
-  }
-
   constructor(
-    private _route: ActivatedRoute,
-    private _dataServ:DataService,
     private _inveServ: InventarioService,
+    private _dialogo:MatDialog,
+    public dialogo: MatDialogRef<DetalleProductoPage>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ){}
 
   ngOnInit(): void {
-    this.prodId = this._route.snapshot.params['id']
+    if(this.data.productoId){
+      this.isLoadingResults = true
+      const prod = this._inveServ.getProductoById(this.data.productoId)
+      prod.subscribe(res => {
+        console.log(res)
+        this.currentProd = res.result
+        this.isLoadingResults = false
+        this.initValores()
+      }, (err => {
+        console.log(err)
+        this.isLoadingResults = false
+        this._inveServ.notify('Ocurrio un error', 'error')
+      }))
+    }
     this.cats = this._inveServ.categorias
-    this.prodId != 'new'
-      ?this.getProdById()
-      :null
-  }
-
-  getProdById(){
-    this.isLoadingResults = true
-    let res = this._inveServ.getProductoById(this.prodId)
-    res.subscribe(data => {
-      this.currentProd = data.result
-      this.isLoadingResults = false
-      this.initValores()
-    }, (err => console.log(err)))
   }
 
   initValores(){
     this.prodForm.patchValue({
-      name: this.currentProd!.name,
-      description: this.currentProd!.description,
-      presentation: this.currentProd!.presentation,
-      quantity: this.currentProd!.quantity,
-      typeSell: this.currentProd!.typeSell,
-      cost: this.currentProd!.cost,
-      nameCategory: this.currentProd!.name
+      name: this.currentProd.name,
+      barcode: this.currentProd.barcode,
+      description: this.currentProd.description,
+      presentation: this.currentProd.presentation,
+      quantity: this.currentProd.quantity,
+      typeSell: this.currentProd.typeSell,
+      cost: this.currentProd.cost,
+      idCategory: this.currentProd.idCategory
     })
   }
 
@@ -89,20 +72,51 @@ export class DetalleProductoPage implements OnInit {
   }
 
   save(){
-    let catSelect = parseInt(this.prodForm.get('nameCategory')?.value!)
-    this.categoriaTemp = this.cats[catSelect]
-    if(this.prodId === 'new'){
-      let peticion = this._inveServ.addProducto(this.prodForm.value, this.categoriaTemp)
-      peticion.subscribe(res => {
-        this._inveServ.notify('Producto registrado', 'success')
-        this._dataServ.goBack()
-      }, err => console.log(err))
-    }else{
-      let peticion = this._inveServ.updateProd(this.prodForm.value, this.categoriaTemp, parseInt(this.prodId))
+    if(this.data.productoId){
+      const peticion = this._inveServ.updateProd(this.prodForm.value, this.currentProd.state, this.data.productoId)
       peticion.subscribe(res => {
         this._inveServ.notify('Registro actualizado', 'success')
-        this._dataServ.goBack()
-      }, err => console.log(err))
+        this.dialogo.close()
+      }, err => {
+        console.log(err)
+        this._inveServ.notify('Ocurrio un error', 'error')
+      })
+    }else{
+      const peticion = this._inveServ.addProducto(this.prodForm.value)
+      peticion.subscribe(res => {
+        this._inveServ.notify('Producto registrado', 'success')
+        this.dialogo.close()
+      }, err => {
+        console.log(err)
+        this._inveServ.notify('Ocurrio un error', 'error')
+      })
     }
+  }
+
+  chageState(state:boolean){
+    let msgDialog:string
+    if(state){
+      msgDialog = '¿Seguro de querer inhabilitar este producto?'
+    }else{
+      msgDialog = '¿Seguro de querer habilitar este producto?'
+    }
+    this._dialogo.open(DialogConfComponent, {
+      data: msgDialog
+    })
+    .afterClosed()
+    .subscribe((confirmado:boolean)=>{
+      if(confirmado){
+        this.currentProd.state = !state
+        const res = this._inveServ.updateProd(this.prodForm.value, this.currentProd.state, this.data.productoId)
+          res.subscribe(res => {
+            if(res){
+              this._inveServ.notify('Producto actualizado', 'success')
+            }
+          }, (err => {
+            console.log(err)
+            this._inveServ.notify('Ocurrio un error', 'error')
+          }))
+      }
+    })
   }
 }

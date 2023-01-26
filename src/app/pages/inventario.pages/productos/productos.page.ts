@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, OnInit, Component, Input, ViewChild } from '@angular/core'
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -9,6 +9,7 @@ import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.
 import { InventarioService } from 'src/app/services/inventario.service';
 import { Producto } from 'src/app/interfaces/models';
 import { DataService } from 'src/app/services/data.service';
+import { DetalleProductoPage } from '../detalle-producto/detalle-producto.page';
 
 @Component({
   selector: 'app-productos',
@@ -16,7 +17,7 @@ import { DataService } from 'src/app/services/data.service';
   styleUrls: ['./productos.page.scss'],
 })
 
-export class productosPage implements OnInit {
+export class productosPage implements AfterViewInit {
   public breadcrumb = {
     links: [
       {
@@ -34,11 +35,11 @@ export class productosPage implements OnInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:Producto[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['name', 'presentation', 'quantity', 'typeSell', 'cost', 'nameCategory', 'acctions'];
+  displayedColumns: string[] = ['name', 'cost', 'state', 'nameCategory', 'acctions'];
   dataSource = new MatTableDataSource<Producto>(this.ELEMENT_DATA);
 
   resultsLength = 0;
-  isLoadingResults:boolean = false;
+  isLoadingResults:boolean = true;
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
@@ -47,20 +48,22 @@ export class productosPage implements OnInit {
     private _dataServ:DataService
   ){}
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort;
-    this.cargarAll()
+    this.cargarAllProduct()
   }
 
-  cargarAll(){
-    //this.dataSource.data = this._inveServ.productos
+  cargarAllProduct(){
     let resp = this._inveServ.getAllProductos()
     resp.subscribe(productos => {
       this.dataSource.data = productos.result as Producto[]
       this.isLoadingResults = false
       console.log(this.dataSource.data)
-    }, (err => console.log(err)))
+    }, (err => {
+      this.isLoadingResults = false
+      console.log(err)
+    }))
   }
 
   applyFilter(event: Event) {
@@ -81,21 +84,17 @@ export class productosPage implements OnInit {
   }
 
   on(id?:string){
-    this._dataServ.goTo('admin/inventario/detalle-producto', id)
-  }
-
-  dialog(id: number) {
-    this._dialog.open(DialogConfComponent, {
-      data: `¿Seguro de querer eliminar este producto?`
+    const config = {
+      data: {
+        title: id ?'Editar Producto' :'Agregar Producto',
+        productoId: id
+      }
+    }
+    this._dialog.open(DetalleProductoPage, config)
+    .afterClosed()
+    .subscribe(() => {
+      this.isLoadingResults = true
+      this.cargarAllProduct()
     })
-      .afterClosed()
-      .subscribe((confirmado: Boolean) => {
-        if (confirmado) {
-          let respuesta = this._inveServ.deleteProd(id)
-          respuesta.subscribe(() => {
-            this._dataServ.fir('Producto eliminado', 'success')
-          })
-        }
-      })
   }
 }

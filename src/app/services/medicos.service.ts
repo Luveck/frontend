@@ -26,14 +26,17 @@ export class MedicosService {
 
   /* ******endpoints de Especialidades****** */
   public getAllEspecialidades(){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetPatologies`, {headers: this.headers})
   }
 
   public getEspecialidadById(id:string){
-    return this._http.get<Especialidad>(`${this._dataServ.baseURL}/Administration/GetPatologyById?Id=${id}`, {headers: this.headers})
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetPatologyById?Id=${id}`, {headers: this.headers})
   }
 
   public addEspecialidad(name:string){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     let dataEspecial:Especialidad = {
       "name": name,
       "isDeleted": false,
@@ -42,45 +45,41 @@ export class MedicosService {
   }
 
   public deleteEspecialidad(id:number){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.delete(`${this._dataServ.baseURL}/Administration/DeletePatology?Id=${id}`, {headers: this.headers})
   }
 
-  public updateEspecial(name:string, state:boolean, especial:Especialidad | any){
+  public updateEspecial(name:string, state:boolean, especialId:number | any){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     let especialToUpdate:Especialidad = {
-      "id": especial?.id,
+      "id": especialId,
       "name": name,
       "isDeleted": state,
     }
     console.log(especialToUpdate)
-    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdatePatology`, especialToUpdate, {headers: this.headers})
-  }
-
-  public changeStateEspecialidad(state:boolean, especial:Especialidad | any){
-    let especialToUpdate:Especialidad = {
-      "id": especial?.id,
-      "name": especial?.name,
-      "isDeleted": state,
-    }
-    console.log(especialToUpdate)
-    return this._http.put(`${this._dataServ.baseURL}/Administration/UpdatePatology`, especialToUpdate, {headers: this.headers})
+    return this._http.post(`${this._dataServ.baseURL}/Administration/UpdatePatology`, especialToUpdate, {headers: this.headers})
   }
 
   /* ******endpoints de Medicos****** */
   public getAllMedicos(){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.get<any>(`${this._dataServ.baseURL}/Medical/GetMedicals`,
       {headers: this.headers}
     )
   }
 
   public getMedicoByName(name:string){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.get<Medico>(`${this._dataServ.baseURL}/Medical/GetMedicalByName?nameMedical=${name}`, {headers: this.headers})
   }
 
   public getMedicoById(id:string){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.get<Medico>(`${this._dataServ.baseURL}/Medical/GetMedical?id=${id}`, {headers: this.headers})
   }
 
   public addMedico(formData:any, especialidad:Especialidad){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     let dataMedico:Medico = {
       ...formData,
       "patologyId": especialidad.id,
@@ -91,10 +90,12 @@ export class MedicosService {
   }
 
   public deleteMedico(id:number){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.delete(`${this._dataServ.baseURL}/Medical/DeleteMedical?Id=${id}`, {headers: this.headers})
   }
 
   public updateMedico(formData:any, currentStatus?:boolean, especialidad?:Especialidad, medicoId?:number){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     let dataMedico:Medico = {
       "id": medicoId,
       ...formData,
@@ -108,6 +109,7 @@ export class MedicosService {
 
 
   changeStateMedico(state:boolean, medico:Medico | any){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     let medicoToUpdate:Medico = {
       "id": medico.id,
       "name": medico.name,

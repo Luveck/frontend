@@ -56,7 +56,10 @@ export class PaisesPage implements AfterViewInit {
       this.dataSource.data = paises.result as Pais[]
       this.isLoadingResults = false
       console.log(this.dataSource.data)
-    }, (err => console.log(err)))
+    }, (err => {
+      this.isLoadingResults = false
+      console.log(err)
+    }))
   }
 
   applyFilter(event: Event) {

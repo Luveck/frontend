@@ -18,7 +18,7 @@ export class DetalledepartamentoPage implements OnInit {
   departamentos: any
 
   public newDepartamentoForm = new FormGroup({
-    country: new FormControl('', Validators.required),
+    country: new FormControl(1, Validators.required),
     name: new FormControl('', Validators.required),
   })
 
@@ -37,7 +37,10 @@ export class DetalledepartamentoPage implements OnInit {
         this.currentDepartamento = res.result
         this.isLoadingResults = false
         this.initValores()
-      }, (err => console.log(err)))
+      }, (err => {
+        this.isLoadingResults = false
+        console.log(err)
+      }))
     }
   }
 
@@ -47,6 +50,7 @@ export class DetalledepartamentoPage implements OnInit {
 
   initValores(){
     this.newDepartamentoForm.patchValue({
+      country: this.currentDepartamento!.countryId,
       name: this.currentDepartamento!.name,
     })
   }
@@ -65,13 +69,17 @@ export class DetalledepartamentoPage implements OnInit {
       peticion.subscribe(() => {
         this.zonasServ.notify('Departamento registrado', 'success')
         this.dialogo.close(true);
-      }, err => console.log(err))
+      }, (err => {
+      console.log(err)
+    }))
     }else{
       let peticion = this.zonasServ.updateCiudad(this.newDepartamentoForm.value, parseInt(this.data.departamentoId))
       peticion.subscribe(() => {
         this.zonasServ.notify('Registro actualizado', 'success')
         this.dialogo.close(true);
-      }, err => console.log(err))
+      }, (err => {
+      console.log(err)
+    }))
     }
   }
 }

@@ -5,20 +5,14 @@ import { AuthService } from '../services/auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
+export class LoginGuard implements CanActivate {
 
-  constructor(private authServ: AuthService, private router: Router) { }
+  constructor(private authServ: AuthService) { }
 
   canActivate() {
-    if(this.authServ.userToken){
-      //this.authServ.userData.Role != 'Admin'
-      if(this.authServ.userData.Email != 'admin@luveck.com'){
-        this.router.navigate(['authentication/noauthorized']);
-        return false
-      }
+    if(!this.authServ.userToken){
       return true
     }
-    this.router.navigate(['authentication/login']);
     return false
   }
 }

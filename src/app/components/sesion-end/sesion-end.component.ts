@@ -8,7 +8,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 })
 export class SesionEndComponent {
 
-  constructor(private _dialogo:MatDialog, public dialogo: MatDialogRef<SesionEndComponent>) { }
+  constructor(public dialogo: MatDialogRef<SesionEndComponent>) { }
 
   refreshSession(){
     this.dialogo.close(true)

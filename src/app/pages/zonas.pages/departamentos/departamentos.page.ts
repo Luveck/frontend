@@ -56,7 +56,10 @@ export class DepartamentosPage implements AfterViewInit {
       this.dataSource.data = departamentos.result as Departamento[]
       this.isLoadingResults = false
       console.log(this.dataSource.data)
-    }, (err => console.log(err)))
+    }, (err => {
+      this.isLoadingResults = false
+      console.log(err)
+    }))
   }
 
   applyFilter(event: Event) {
@@ -85,11 +88,9 @@ export class DepartamentosPage implements AfterViewInit {
     }
     this._dialog.open(DetalledepartamentoPage, config)
     .afterClosed()
-    .subscribe((confirmado:boolean) => {
-      if(confirmado){
-        this.isLoadingResults = true
-        this.getAllDepartamentos()
-      }
+    .subscribe(() => {
+      this.isLoadingResults = true
+      this.getAllDepartamentos()
     })
   }
 }

@@ -77,6 +77,7 @@ export interface Categoria{
 export interface Producto{
   id: number
   name: string
+  barcode: string
   description: string
   presentation: string
   quantity: number | any
@@ -84,6 +85,7 @@ export interface Producto{
   cost: number | any
   idCategory: number
   nameCategory: string
+  state:boolean
   createBy?: string
   creationDate?: string
   updateBy?: string

@@ -10,6 +10,7 @@ import { SesionEndComponent } from '../components/sesion-end/sesion-end.componen
 export class AuthService {
   userToken:any = null
   userData:any = null
+  expToken:number|any = null
 
   constructor(
     private _dataServ:DataService,
@@ -54,15 +55,15 @@ export class AuthService {
       Role: tokenData.Role,
       Email: tokenData.Email
     }
+    this.expToken = tokenData.exp
     if(this.checkTokenDate(tokenData.exp)){
-      if(tokenData.Role != 'Cliente' || tokenData.Email === 'admin@luveck.com'){
+      if(tokenData.Role != 'Cliente' || tokenData.Email === 'prueba@luveck'){
         this._dataServ.goTo('/admin/home')
       }else{
         this._dataServ.goTo('/inicio')
       }
     }else{
-      this.logOut(this.userData.Role)
-      this._dataServ.fir('Credenciales vencidas', 'error')
+      this.showSesionEndModal()
     }
   }
 
@@ -92,7 +93,7 @@ export class AuthService {
     this._dialog.open(SesionEndComponent, config)
     .afterClosed()
     .subscribe(()=>{
-      console.log('me voy')
+      this.logOut(this.userData.Role)
     })
   }
 }

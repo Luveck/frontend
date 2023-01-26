@@ -56,7 +56,10 @@ export class CiudadesPage implements AfterViewInit {
       this.dataSource.data = cities.result as Ciudad[]
       this.isLoadingResults = false
       console.log(this.dataSource.data)
-    }, (err => console.log(err)))
+    }, (err => {
+      this.isLoadingResults = false
+      console.log(err)
+    }))
   }
 
   applyFilter(event: Event) {
@@ -85,11 +88,9 @@ export class CiudadesPage implements AfterViewInit {
     }
     this._dialog.open(DetalleCiudadPage, config)
     .afterClosed()
-    .subscribe((confirmado:boolean) => {
-      if(confirmado){
-        this.isLoadingResults = true
-        this.getAllCities()
-      }
+    .subscribe(() => {
+      this.isLoadingResults = true
+      this.getAllCities()
     })
   }
 }
