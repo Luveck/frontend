@@ -7,18 +7,18 @@
   <div class="fm_header" *ngIf="data.farmaId">
     <section class="avatar">
       <div class="datos">
-        <p>{{currentFarmacia?.name!}}</p>
+        <p>{{currentFarmacia?.name}}</p>
         <div class="bots">
-          <span class="chip" [ngClass]="{'inactive': currentFarmacia?.isDeleted == true, 'active': currentFarmacia?.isDeleted == false}">{{currentFarmacia?.isDeleted ?'Inctiva' :'Activa'}}</span>
+          <span class="chip" [ngClass]="{'inactive': currentFarmacia?.isDeleted == true, 'active': currentFarmacia?.isDeleted == false}">Estado: {{currentFarmacia?.isDeleted ?'Inctivo' :'Activo'}}</span>
         </div>
       </div>
     </section>
     <section class="resumen">
       <ul>
-        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentFarmacia?.createBy!}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentFarmacia?.creationDate! |date: 'd/M/yy, h:mm a'}}</li>
-        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentFarmacia?.updateBy!}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentFarmacia?.updateDate! |date: 'd/M/yy, h:mm a'}}</li>
+        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentFarmacia?.createBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentFarmacia?.creationDate |date: 'd/M/yy, h:mm a'}}</li>
+        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentFarmacia?.updateBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentFarmacia?.updateDate |date: 'd/M/yy, h:mm a'}}</li>
       </ul>
     </section>
   </div>
@@ -35,9 +35,9 @@
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Ciudad</mat-label>
-        <mat-select formControlName="cityName">
-          <div *ngFor="let ciudad of ciudades; index as i">
-            <mat-option [value]="i">
+        <mat-select formControlName="cityId">
+          <div *ngFor="let ciudad of ciudades">
+            <mat-option *ngIf="ciudad.state" [value]="ciudad.id">
               {{ciudad.name}}
             </mat-option>
           </div>

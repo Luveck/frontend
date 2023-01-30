@@ -9,8 +9,7 @@
       <div class="datos">
         <p>{{currentEspecialidad?.name}}</p>
         <div class="bots">
-          <span class="chip" (click)="chageState(currentEspecialidad?.isDeleted)"
-            [ngClass]="{'inactive': currentEspecialidad?.isDeleted == true, 'active': currentEspecialidad?.isDeleted == false}">Cambiar estado: {{currentEspecialidad?.isDeleted ?'Inactiva' :'Activa'}}</span>
+          <span class="chip" [ngClass]="{'inactive': currentEspecialidad?.isDeleted == true, 'active': currentEspecialidad?.isDeleted == false}">Estado: {{currentEspecialidad?.isDeleted ?'Inactivo' :'Activo'}}</span>
         </div>
       </div>
     </section>

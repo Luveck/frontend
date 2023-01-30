@@ -20,14 +20,14 @@ main {
       align-items: center;
       .datos {
         width: 250px;
-        text-align: center;
         margin: 0.5rem;
+        text-align: center;
         p {
           font-size: 2rem;
         }
         .bots{
           padding-top: 1rem;
-          .chip{cursor: pointer;}
+          text-align: center;
         }
       }
     }

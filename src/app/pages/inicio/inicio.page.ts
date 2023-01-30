@@ -84,7 +84,7 @@ export class InicioPage {
 
   showProfile(){
     const config:MatDialogConfig = {
-      data: this.authServ.userData.Email
+      data: this.authServ.userData.UserId
     }
     this._dialog.open(ClientProfileComponent, config)
     .afterClosed()

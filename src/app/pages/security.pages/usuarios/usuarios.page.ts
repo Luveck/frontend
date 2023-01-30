@@ -52,7 +52,7 @@ export class UsuariosPage implements AfterViewInit {
   }
 
   getAllUsers(){
-    this._usuariosServ.getAllUsers().subscribe((res:any) => {
+    this._usuariosServ.getUsers().subscribe((res:any) => {
       console.log(res)
       this.dataSource.data = res.result as any[]
       this.isLoadingResults = false
@@ -79,11 +79,11 @@ export class UsuariosPage implements AfterViewInit {
     }
   }
 
-  on(email?:string){
+  on(dni?:string){
     const config = {
       data: {
-        title: email ?'Editar Usuario' :'Agregar Usuario',
-        userEmail: email
+        title: dni ?'Editar Usuario' :'Agregar Usuario',
+        userDni: dni
       }
     }
     this._dialog.open(DetalleUsuarioPage, config)

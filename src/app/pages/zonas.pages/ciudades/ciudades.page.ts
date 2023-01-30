@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Ciudad } from 'src/app/interfaces/models';
 import { ZonasService } from 'src/app/services/zonas.service';
 import { DetalleCiudadPage } from '../detalle-ciudad/detalle-ciudad.page';
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 @Component({
   selector: 'app-ciudades',
@@ -51,9 +52,10 @@ export class CiudadesPage implements AfterViewInit {
   }
 
   getAllCities() {
-    let resp = this._zonasServ.getCiudades()
+    const resp = this._zonasServ.getCiudades()
     resp.subscribe(cities => {
       this.dataSource.data = cities.result as Ciudad[]
+      this._zonasServ.listCiudades = cities.result
       this.isLoadingResults = false
       console.log(this.dataSource.data)
     }, (err => {
@@ -88,9 +90,49 @@ export class CiudadesPage implements AfterViewInit {
     }
     this._dialog.open(DetalleCiudadPage, config)
     .afterClosed()
-    .subscribe(() => {
-      this.isLoadingResults = true
-      this.getAllCities()
+    .subscribe((confirm:boolean) => {
+      if(confirm){
+        this.isLoadingResults = true
+        this.getAllCities()
+      }
     })
+  }
+
+  chageState(row:Ciudad){
+    const formData = {
+      "name": row.name,
+      "departymentId": row.departymentId
+    }
+    let msgDialog:string
+    if(row.state){
+      msgDialog = '¿Seguro de querer inhabilitar esta ciudad?'
+    }else{
+      msgDialog = '¿Seguro de querer habilitar esta ciudad?'
+    }
+    this._dialog.open(DialogConfComponent, {
+      data: msgDialog
+    })
+    .afterClosed()
+    .subscribe((confirmado:boolean)=>{
+      if(confirmado){
+        row.state = !row.state
+        const res = this._zonasServ.updateCiudad(formData, row.id, row.state)
+          res.subscribe(res => {
+            if(res){
+              this._zonasServ.notify('Ciudad actualizada', 'success')
+              this.isLoadingResults = true
+              this.getAllCities()
+            }
+          }, (err => {
+            console.log(err)
+            this.getAllCities()
+            this._zonasServ.notify('Ocurrio un error con el proceso.', 'error')
+          }))
+      }
+    })
+  }
+
+  generateReport(){
+    console.log('voy a generar el reporte xd')
   }
 }

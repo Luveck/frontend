@@ -2,10 +2,17 @@
   <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
 
   <header>
-    <button mat-raised-button color="primary" (click)="on()">
-      <mat-icon>add</mat-icon>
-      Agregar Medico
-    </button>
+    <div>
+      <button mat-raised-button color="primary" (click)="on()">
+        <mat-icon>add</mat-icon>
+        Agregar Médico
+      </button>
+      &nbsp;
+      <button mat-raised-button color="primary" (click)="generateReport()">
+        <mat-icon>task</mat-icon>
+        Generar reporte
+      </button>
+    </div>
 
     <mat-form-field appearance="standard">
       <mat-icon matPrefix>search</mat-icon>
@@ -26,21 +33,16 @@
         <td mat-cell *matCellDef="let row"> {{row.name}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="register">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> N. de registro </th>
-        <td mat-cell *matCellDef="let row"> {{row.register}} </td>
+      <ng-container matColumnDef="patologyName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Especialidad</th>
+        <td mat-cell *matCellDef="let row"> {{row.patologyName}} </td>
       </ng-container>
 
       <ng-container matColumnDef="isDeleted">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Cuenta </th>
         <td mat-cell *matCellDef="let row">
-          <span class="chip" [ngClass]="{'active': row.isDeleted == false, 'inactive': row.isDeleted == true}">{{row.isDeleted ?'Inactiva' :'Activa'}}</span>
+          <span class="chip" [ngClass]="{'active': row.isDeleted == false, 'inactive': row.isDeleted == true}">{{row.isDeleted ?'Inactivo' :'Activo'}}</span>
         </td>
-      </ng-container>
-
-      <ng-container matColumnDef="patologyName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Especialidad</th>
-        <td mat-cell *matCellDef="let row"> {{row.patologyName}} </td>
       </ng-container>
 
       <ng-container matColumnDef="creationDate">
@@ -51,11 +53,14 @@
       <ng-container matColumnDef="acctions">
         <th mat-header-cell *matHeaderCellDef> Acciones </th>
         <td mat-cell *matCellDef="let row">
-          <button mat-icon-button color="accent" (click)="on(row.id)" matTooltip="Editar medico">
-            <mat-icon>edit</mat-icon>
+          <button mat-stroked-button (click)="on(row.id)">
+            Ver detalles
+            <mat-icon color="accent">arrow_forward</mat-icon>
           </button>
-          <button mat-icon-button color="warn" (click)="dialog(row)" matTooltip="{{row.isDeleted ?'Habilitar cuenta' :'Deshabilitar Cuenta'}}">
-            <mat-icon>{{row.isDeleted ?'radio_button_unchecked' :'radio_button_checked'}}</mat-icon>
+
+          <button mat-stroked-button (click)="chageState(row)">
+            Cambiar estado
+            <mat-icon color="warn">published_with_changes</mat-icon>
           </button>
         </td>
       </ng-container>

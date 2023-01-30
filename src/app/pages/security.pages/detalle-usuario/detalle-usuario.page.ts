@@ -35,9 +35,9 @@ export class DetalleUsuarioPage implements OnInit {
     if(this.usersServ.localRoles.length == 0){
       this.usersServ.getAllRoles().subscribe((res:any) => this.usersServ.localRoles = res.result)
     }
-    if(this.data.userEmail){
+    if(this.data.userDni){
       this.isLoadingResults = true
-      this.usersServ.getUserInfo(this.data.userEmail)
+      this.usersServ.getUserByDNI(this.data.userDni)
         .subscribe((res:any) => {
           console.log(res)
           this.currentUser = res.result

@@ -93,6 +93,7 @@ export class AuthService {
     this._dialog.open(SesionEndComponent, config)
     .afterClosed()
     .subscribe(()=>{
+      this._dialog.closeAll()
       this.logOut(this.userData.Role)
     })
   }

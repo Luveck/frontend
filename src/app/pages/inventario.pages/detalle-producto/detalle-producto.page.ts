@@ -1,7 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core'
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 import { Categoria, Producto } from 'src/app/interfaces/models'
 import { InventarioService } from 'src/app/services/inventario.service'
@@ -15,8 +14,7 @@ import { InventarioService } from 'src/app/services/inventario.service'
 export class DetalleProductoPage implements OnInit {
   currentProd!: Producto | any
   cats!: Categoria[]
-  categoriaTemp!: Categoria
-  isLoadingResults?:boolean
+  isLoadingResults!:boolean
 
   public prodForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -31,12 +29,18 @@ export class DetalleProductoPage implements OnInit {
 
   constructor(
     private _inveServ: InventarioService,
-    private _dialogo:MatDialog,
     public dialogo: MatDialogRef<DetalleProductoPage>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){}
 
   ngOnInit(): void {
+    if(!this._inveServ.categorias){
+      const res = this._inveServ.getCategories()
+      res.subscribe(res => this.cats = res.result)
+    }else{
+      this.cats = this._inveServ.categorias
+    }
+
     if(this.data.productoId){
       this.isLoadingResults = true
       const prod = this._inveServ.getProductoById(this.data.productoId)
@@ -48,10 +52,9 @@ export class DetalleProductoPage implements OnInit {
       }, (err => {
         console.log(err)
         this.isLoadingResults = false
-        this._inveServ.notify('Ocurrio un error', 'error')
+        this._inveServ.notify('Ocurrio un error con la petición', 'error')
       }))
     }
-    this.cats = this._inveServ.categorias
   }
 
   initValores(){
@@ -73,50 +76,23 @@ export class DetalleProductoPage implements OnInit {
 
   save(){
     if(this.data.productoId){
-      const peticion = this._inveServ.updateProd(this.prodForm.value, this.currentProd.state, this.data.productoId)
-      peticion.subscribe(res => {
+      const peticion = this._inveServ.updateProd(this.prodForm.value, this.data.productoId, this.currentProd.state)
+      peticion.subscribe(() => {
         this._inveServ.notify('Registro actualizado', 'success')
-        this.dialogo.close()
+        this.dialogo.close(true)
       }, err => {
         console.log(err)
         this._inveServ.notify('Ocurrio un error', 'error')
       })
     }else{
       const peticion = this._inveServ.addProducto(this.prodForm.value)
-      peticion.subscribe(res => {
+      peticion.subscribe(() => {
         this._inveServ.notify('Producto registrado', 'success')
-        this.dialogo.close()
+        this.dialogo.close(true)
       }, err => {
         console.log(err)
         this._inveServ.notify('Ocurrio un error', 'error')
       })
     }
-  }
-
-  chageState(state:boolean){
-    let msgDialog:string
-    if(state){
-      msgDialog = '¿Seguro de querer inhabilitar este producto?'
-    }else{
-      msgDialog = '¿Seguro de querer habilitar este producto?'
-    }
-    this._dialogo.open(DialogConfComponent, {
-      data: msgDialog
-    })
-    .afterClosed()
-    .subscribe((confirmado:boolean)=>{
-      if(confirmado){
-        this.currentProd.state = !state
-        const res = this._inveServ.updateProd(this.prodForm.value, this.currentProd.state, this.data.productoId)
-          res.subscribe(res => {
-            if(res){
-              this._inveServ.notify('Producto actualizado', 'success')
-            }
-          }, (err => {
-            console.log(err)
-            this._inveServ.notify('Ocurrio un error', 'error')
-          }))
-      }
-    })
   }
 }

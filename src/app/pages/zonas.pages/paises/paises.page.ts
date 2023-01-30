@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Pais } from 'src/app/interfaces/models';
 import { ZonasService } from 'src/app/services/zonas.service';
 import { DetallePaisPage } from '../detalle-pais/detalle-pais.page';
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 @Component({
   selector: 'app-paises',
@@ -51,9 +52,10 @@ export class PaisesPage implements AfterViewInit {
   }
 
   getAllCountries() {
-    let resp = this._zonasServ.getPaises()
+    const resp = this._zonasServ.getPaises()
     resp.subscribe(paises => {
       this.dataSource.data = paises.result as Pais[]
+      this._zonasServ.listPaises = paises.result
       this.isLoadingResults = false
       console.log(this.dataSource.data)
     }, (err => {
@@ -88,11 +90,52 @@ export class PaisesPage implements AfterViewInit {
     }
     this._dialog.open(DetallePaisPage, config)
     .afterClosed()
-    .subscribe((confirmado:boolean) => {
-      if(confirmado){
+    .subscribe((confirm:boolean) => {
+      if(confirm){
         this.isLoadingResults = true
         this.getAllCountries()
       }
     })
+  }
+
+  chageState(row:Pais){
+    const formData = {
+      "name": row.name,
+      "iso3": row.iso3,
+      "phoneCode": row.phoneCode,
+      "currency": row.currency,
+      "currencyName": row.currencyName,
+      "currencySymbol": row.currencySymbol
+    }
+    let msgDialog:string
+    if(row.status){
+      msgDialog = '¿Seguro de querer inhabilitar este país?'
+    }else{
+      msgDialog = '¿Seguro de querer habilitar este país?'
+    }
+    this._dialog.open(DialogConfComponent, {
+      data: msgDialog
+    })
+    .afterClosed()
+    .subscribe((confirmado:boolean)=>{
+      if(confirmado){
+        row.status = !row.status
+        const res = this._zonasServ.updatePais(formData, row.id, row.status)
+          res.subscribe(res => {
+            if(res){
+              this._zonasServ.notify('País actualizado', 'success')
+              this.isLoadingResults = true
+              this.getAllCountries()
+            }
+          }, (err => {
+            console.log(err)
+            this._zonasServ.notify('Ocurrio un error con el proceso.', 'error')
+          }))
+      }
+    })
+  }
+
+  generateReport(){
+    console.log('voy a generar el reporte xd')
   }
 }

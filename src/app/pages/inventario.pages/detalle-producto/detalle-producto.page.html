@@ -6,8 +6,7 @@
       <div class="datos">
         <p>{{currentProd?.name}}</p>
         <div class="bots">
-          <span class="chip" (click)="chageState(currentProd?.state)"
-            [ngClass]="{'active': currentProd?.state == true, 'inactive': currentProd?.state == false}">Cambiar estado: {{currentProd?.state ?'Activo' :'Inactivo'}}</span>
+          <span class="chip" [ngClass]="{'active': currentProd?.state == true, 'inactive': currentProd?.state == false}">Estado: {{currentProd?.state ?'Activo' :'Inactivo'}}</span>
         </div>
       </div>
     </section>

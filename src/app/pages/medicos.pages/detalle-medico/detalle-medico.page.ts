@@ -12,15 +12,14 @@ import { MedicosService } from 'src/app/services/medicos.service'
 })
 
 export class DetalleMedicoPage implements OnInit {
-  currentMedic!: Medico | undefined
+  currentMedic!: Medico | any
   especialidades!: Especialidad[]
-  especialidadTemp!: Especialidad
-  isLoadingResults?:boolean
+  isLoadingResults!:boolean
 
   public medicForm = new FormGroup({
     name: new FormControl('', Validators.required),
     register: new FormControl('', Validators.required),
-    patologyName: new FormControl(0, Validators.required)
+    patologyId: new FormControl('', Validators.required)
   })
 
   constructor(
@@ -31,8 +30,8 @@ export class DetalleMedicoPage implements OnInit {
 
   ngOnInit(): void {
     if(!this._medicServ.especialidades){
-      const res = this._medicServ.getAllEspecialidades()
-      res.subscribe(res => this.especialidades = res)
+      const res = this._medicServ.getEspecialidades()
+      res.subscribe(res => this.especialidades = res.result)
     }else{
       this.especialidades = this._medicServ.especialidades
     }
@@ -41,19 +40,23 @@ export class DetalleMedicoPage implements OnInit {
       this.isLoadingResults = true
       const pais = this._medicServ.getMedicoById(this.data.medicoId)
       pais.subscribe(res => {
+        console.log(res)
         this.currentMedic = res
         this.isLoadingResults = false
         this.initValores()
-      }, (err => console.log(err)))
+      }, (err => {
+        console.log(err)
+        this.isLoadingResults = false
+        this._medicServ.notify('Ocurrio un error con la petición', 'error')
+      }))
     }
   }
 
   initValores(){
-    console.log(this.currentMedic)
     this.medicForm.patchValue({
-      name: this.currentMedic!.name,
-      register: this.currentMedic!.register,
-      patologyName: this.currentMedic!.patologyId - 1
+      name: this.currentMedic.name,
+      register: this.currentMedic.register,
+      patologyId: this.currentMedic.patologyId
     })
   }
 
@@ -62,20 +65,24 @@ export class DetalleMedicoPage implements OnInit {
   }
 
   save(){
-    let especialSelect = this.medicForm.get('patologyName')?.value!
-    this.especialidadTemp = this.especialidades[especialSelect]
-    if(!this.data.medicoId){
-      let peticion = this._medicServ.addMedico(this.medicForm.value, this.especialidadTemp)
-      peticion.subscribe(res => {
-        this._medicServ.notify('Medico registrado', 'success')
-        this.dialogo.close(true);
-      }, err => console.log(err))
-    }else{
-      let peticion = this._medicServ.updateMedico(this.medicForm.value, this.currentMedic?.isDeleted, this.especialidadTemp, parseInt(this.data.medicoId))
-       peticion.subscribe(res => {
+    if(this.data.medicoId){
+      const peticion = this._medicServ.updateMedico(this.medicForm.value, this.data.medicoId, this.currentMedic.isDeleted)
+       peticion.subscribe(() => {
         this._medicServ.notify('Medico actualizado', 'success')
         this.dialogo.close(true);
-      }, err => console.log(err))
+      }, err => {
+        console.log(err)
+        this._medicServ.notify('Ocurrio un error con el proceso', 'error')
+      })
+    }else{
+      const peticion = this._medicServ.addMedico(this.medicForm.value)
+      peticion.subscribe(() => {
+        this._medicServ.notify('Medico registrado', 'success')
+        this.dialogo.close(true);
+      }, (err => {
+        console.log(err)
+        this._medicServ.notify('Ocurrio un error con el proceso', 'error')
+      }))
     }
   }
 }

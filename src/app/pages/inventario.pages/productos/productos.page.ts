@@ -5,11 +5,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
-import { InventarioService } from 'src/app/services/inventario.service';
 import { Producto } from 'src/app/interfaces/models';
-import { DataService } from 'src/app/services/data.service';
+import { InventarioService } from 'src/app/services/inventario.service';
 import { DetalleProductoPage } from '../detalle-producto/detalle-producto.page';
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 @Component({
   selector: 'app-productos',
@@ -35,29 +34,28 @@ export class productosPage implements AfterViewInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:Producto[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['name', 'cost', 'state', 'nameCategory', 'acctions'];
+  displayedColumns: string[] = ['name', 'cost', 'nameCategory', 'state', 'creationDate', 'acctions'];
   dataSource = new MatTableDataSource<Producto>(this.ELEMENT_DATA);
 
-  resultsLength = 0;
   isLoadingResults:boolean = true;
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
     private _dialog:MatDialog,
     public _inveServ:InventarioService,
-    private _dataServ:DataService
   ){}
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort;
-    this.cargarAllProduct()
+    this.getAllProduct()
   }
 
-  cargarAllProduct(){
-    let resp = this._inveServ.getAllProductos()
+  getAllProduct(){
+    let resp = this._inveServ.getProductos()
     resp.subscribe(productos => {
       this.dataSource.data = productos.result as Producto[]
+      this._inveServ.listProducts = productos.result
       this.isLoadingResults = false
       console.log(this.dataSource.data)
     }, (err => {
@@ -92,9 +90,54 @@ export class productosPage implements AfterViewInit {
     }
     this._dialog.open(DetalleProductoPage, config)
     .afterClosed()
-    .subscribe(() => {
-      this.isLoadingResults = true
-      this.cargarAllProduct()
+    .subscribe((confim:boolean) => {
+      if(confim){
+        this.isLoadingResults = true
+        this.getAllProduct()
+      }
     })
+  }
+
+  chageState(row:Producto){
+    const formData = {
+      "name": row.name,
+      "barcode": row.barcode,
+      "description": row.description,
+      "presentation": row.presentation,
+      "quantity": row.quantity,
+      "typeSell": row.typeSell,
+      "cost": row.cost,
+      "idCategory": row.idCategory
+    }
+    let msgDialog:string
+    if(row.state){
+      msgDialog = '¿Seguro de querer inhabilitar este producto?'
+    }else{
+      msgDialog = '¿Seguro de querer habilitar este producto?'
+    }
+    this._dialog.open(DialogConfComponent, {
+      data: msgDialog
+    })
+    .afterClosed()
+    .subscribe((confirmado:boolean)=>{
+      if(confirmado){
+        row.state = !row.state
+        const res = this._inveServ.updateProd(formData, row.id, row.state)
+          res.subscribe(res => {
+            if(res){
+              this._inveServ.notify('Producto actualizado', 'success')
+              this.isLoadingResults = true
+              this.getAllProduct()
+            }
+          }, (err => {
+            console.log(err)
+            this._inveServ.notify('Ocurrio un error con el proceso.', 'error')
+          }))
+      }
+    })
+  }
+
+  generateReport(){
+    console.log('voy a generar el reporte xd')
   }
 }

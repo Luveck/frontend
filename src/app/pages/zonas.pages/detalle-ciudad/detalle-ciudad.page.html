@@ -7,43 +7,35 @@
   <div class="fm_header" *ngIf="data.ciudadId">
     <section class="avatar">
       <div class="datos">
-        <p>{{currentCiudad?.name!}}</p>
+        <p>{{currentCiudad?.name}}</p>
         <div class="bots">
-
+          <span class="chip" [ngClass]="{'active': currentCiudad?.state == true, 'inactive': currentCiudad?.state == false}">Estado: {{currentCiudad?.state ?'Activo' :'Inactivo'}}</span>
         </div>
       </div>
     </section>
     <section class="resumen">
       <ul>
-        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentCiudad?.createBy!}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentCiudad?.creationDate! |date: 'd/M/yy, h:mm a'}}</li>
-        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentCiudad?.updateBy!}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentCiudad?.updateDate! |date: 'd/M/yy, h:mm a'}}</li>
+        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentCiudad?.createBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentCiudad?.creationDate |date: 'd/M/yy, h:mm a'}}</li>
+        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentCiudad?.updateBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentCiudad?.updateDate |date: 'd/M/yy, h:mm a'}}</li>
       </ul>
     </section>
   </div>
 
-  <form class="wrapForm" [formGroup]="newCiudadForm" autocomplete="off">
+  <form class="wrapForm" [formGroup]="ciudadForm" autocomplete="off">
     <div class="inputs">
       <mat-form-field appearance="fill">
-        <mat-label>País</mat-label>
-        <mat-select formControlName="countryName" (selectionChange)="selectPais($event)">
-          <div *ngFor="let pais of paises; index as i">
-            <mat-option *ngIf="pais.status" [value]="i">
-              {{pais.name}}
+        <mat-label>Departamento</mat-label>
+        <mat-select formControlName="departymentId">
+          <div *ngFor="let departamento of departamentos">
+            <mat-option *ngIf="departamento.status" [value]="departamento.id">
+              {{departamento.name}}
             </mat-option>
           </div>
         </mat-select>
       </mat-form-field>
 
-      <mat-form-field appearance="fill">
-        <mat-label>Departamento</mat-label>
-        <mat-select formControlName="stateName">
-          <mat-option *ngFor="let departamento of departamentos" [value]="departamento.state_name">
-            {{departamento.state_name}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Nombre</mat-label>
         <input matInput placeholder="Nombre" formControlName="name">
@@ -53,7 +45,7 @@
 </main>
 <div mat-dialog-actions>
   <div class="btns">
-    <button mat-raised-button color="primary" [disabled]="newCiudadForm.invalid" (click)="addEditCiudad()">Guardar <mat-icon>save</mat-icon></button>
+    <button mat-raised-button color="primary" [disabled]="ciudadForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
     <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
   </div>
 </div>

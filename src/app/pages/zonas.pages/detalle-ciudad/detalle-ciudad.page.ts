@@ -1,7 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
-import { Ciudad, Pais } from 'src/app/interfaces/models'
+
+import { Ciudad, Departamento } from 'src/app/interfaces/models'
 import { ZonasService } from 'src/app/services/zonas.service'
 
 @Component({
@@ -11,71 +12,69 @@ import { ZonasService } from 'src/app/services/zonas.service'
 })
 
 export class DetalleCiudadPage implements OnInit {
-  currentCiudad !: Ciudad | undefined
-  isLoadingResults?:boolean
-  paises!: Pais[]
-  paisTemp?: Pais
-  departamentos: any
+  currentCiudad!: Ciudad | any
+  departamentos!: Departamento[]
+  isLoadingResults!:boolean
 
-  public newCiudadForm = new FormGroup({
-    name: new FormControl('', Validators.required),
-    countryName: new FormControl('', Validators.required),
-    stateName: new FormControl('', Validators.required),
+  public ciudadForm = new FormGroup({
+    departymentId: new FormControl('', Validators.required),
+    name: new FormControl('', Validators.required)
   })
 
   constructor(
-    public zonasServ:ZonasService,
+    private _zonasServ:ZonasService,
     public dialogo: MatDialogRef<DetalleCiudadPage>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){}
 
   ngOnInit(): void {
-    this.paises = this.zonasServ.listPaises
     if(this.data.ciudadId){
       this.isLoadingResults = true
-      const ciudad = this.zonasServ.getCiudadById(this.data.ciudadId)
+      const ciudad = this._zonasServ.getCiudadById(this.data.ciudadId)
       ciudad.subscribe(res => {
-        this.currentCiudad = res
+        console.log(res)
+        this.currentCiudad = res.result
         this.isLoadingResults = false
         this.initValores()
       }, (err => {
-        this.isLoadingResults = false
         console.log(err)
+        this.isLoadingResults = false
+        this._zonasServ.notify('Ocurrio un error con la petición', 'error')
       }))
     }
-  }
-
-  selectPais(event:any){
-    this.paisTemp = this.paises[event.value]
+    this.departamentos = this._zonasServ.listDepartamentos
   }
 
   initValores(){
-    this.newCiudadForm.patchValue({
-      name: this.currentCiudad!.name,
+    this.ciudadForm.patchValue({
+      departymentId: this.currentCiudad.departymentId,
+      name: this.currentCiudad.name,
     })
   }
 
   resetForm(){
-    this.newCiudadForm.reset()
+    this.ciudadForm.reset()
   }
 
-  addEditCiudad(){
-    if(!this.data.ciudadId){
-      let peticion = this.zonasServ.updateCiudad(this.newCiudadForm.value)
+  save(){
+    if(this.data.ciudadId){
+      const peticion = this._zonasServ.updateCiudad(this.ciudadForm.value, this.data.ciudadId, this.currentCiudad.state)
       peticion.subscribe(() => {
-        this.zonasServ.notify('Ciudad registrada', 'success')
+        this._zonasServ.notify('Registro actualizado', 'success')
         this.dialogo.close(true);
       }, (err => {
-      console.log(err)
-    }))
+        console.log(err)
+        this._zonasServ.notify('Ocurrio un error con el proceso', 'error')
+      }))
     }else{
-      let peticion = this.zonasServ.updateCiudad(this.newCiudadForm.value, parseInt(this.data.ciudadId))
+      const peticion = this._zonasServ.addCiudad(this.ciudadForm.value)
       peticion.subscribe(() => {
-        this.zonasServ.notify('Registro actualizado', 'success')
+        this._zonasServ.notify('Ciudad registrada', 'success')
         this.dialogo.close(true);
       }, (err => {
-      console.log(err)
-    }))
+        console.log(err)
+        this._zonasServ.notify('Ocurrio un error con el proceso', 'error')
+      }))
     }
   }
 }

@@ -7,28 +7,28 @@
   <div class="fm_header" *ngIf="data.departamentoId">
     <section class="avatar">
       <div class="datos">
-        <p>{{currentDepartamento?.name!}}</p>
+        <p>{{currentDepartamento?.name}}</p>
         <div class="bots">
-
+          <span class="chip" [ngClass]="{'active': currentDepartamento?.status == true, 'inactive': currentDepartamento?.status == false}">Estado: {{currentDepartamento?.status ?'Activo' :'Inactivo'}}</span>
         </div>
       </div>
     </section>
     <section class="resumen">
       <ul>
-        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentDepartamento?.createBy!}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentDepartamento?.creationDate! |date: 'd/M/yy, h:mm a'}}</li>
-        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentDepartamento?.updateBy!}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentDepartamento?.updateDate! |date: 'd/M/yy, h:mm a'}}</li>
+        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentDepartamento?.createBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentDepartamento?.creationDate |date: 'd/M/yy, h:mm a'}}</li>
+        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentDepartamento?.updateBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentDepartamento?.updateDate |date: 'd/M/yy, h:mm a'}}</li>
       </ul>
     </section>
   </div>
 
-  <form class="wrapForm" [formGroup]="newDepartamentoForm" autocomplete="off">
+  <form class="wrapForm" [formGroup]="departamentoForm" autocomplete="off">
     <div class="inputs">
       <mat-form-field appearance="fill">
         <mat-label>País</mat-label>
-        <mat-select formControlName="country" (selectionChange)="selectPais($event)">
-          <div *ngFor="let pais of paises;">
+        <mat-select formControlName="idCountry">
+          <div *ngFor="let pais of paises">
             <mat-option *ngIf="pais.status" [value]="pais.id">
               {{pais.name}}
             </mat-option>
@@ -45,7 +45,7 @@
 </main>
 <div mat-dialog-actions>
   <div class="btns">
-    <button mat-raised-button color="primary" [disabled]="newDepartamentoForm.invalid" (click)="addEditCiudad()">Guardar <mat-icon>save</mat-icon></button>
+    <button mat-raised-button color="primary" [disabled]="departamentoForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
     <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
   </div>
 </div>

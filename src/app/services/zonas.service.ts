@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Pais, Departamento, Ciudad, Farmacia } from '../interfaces/models';
+import { Pais, Departamento, Ciudad } from '../interfaces/models';
 import { AuthService } from './auth.service';
 import { DataService } from './data.service';
 
@@ -42,8 +42,7 @@ export class ZonasService{
 
   addPais(formData:any){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    let dataPais:Pais
-    dataPais = {
+    let dataPais:Pais = {
       ...formData,
       "status": true
     }
@@ -52,39 +51,57 @@ export class ZonasService{
     })
   }
 
-  updatePais(formData:any, idPais:number, status?:boolean){
+  updatePais(formData:any, idPais:number, status:boolean){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    let dataPais:Pais
-    dataPais = {
+    let dataPais:Pais = {
       "id": idPais,
       ...formData,
       "status": status
     }
     console.log(dataPais)
-    return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCountry`, dataPais, {headers: this.headers})
+    return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCountry`, dataPais,
+      {headers: this.headers}
+    )
   }
 
   /* Endpoints de Departamentos */
   getDepartamentos(){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetDepartments`, {headers: this.headers})
+    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetDepartments`,
+      {headers: this.headers}
+    )
   }
 
   getDepartamentoById(id:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetDepartmentById?Id=${id}`, {headers: this.headers})
+    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetDepartmentById?Id=${id}`,
+      {headers: this.headers}
+    )
   }
 
   addDepartamento(formData:any){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    let dataDepartamento:Departamento
-    dataDepartamento = {
+    let dataDepartamento:Departamento = {
       ...formData,
       "status": true
     }
+    console.log(dataDepartamento)
     return this._http.post(`${this._dataServ.baseURL}/Administration/CreateDepartment`, dataDepartamento, {
       headers: this.headers
     })
+  }
+
+  updateDepartamento(formData:any, idDepartamento:number, status:boolean){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    let dataDepartamento:Departamento = {
+      "id": idDepartamento,
+      ...formData,
+      "status": status
+    }
+    console.log(dataDepartamento)
+    return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateDepartment`, dataDepartamento,
+      {headers: this.headers}
+    )
   }
 
   /* Endpoints de Ciudades */
@@ -97,108 +114,33 @@ export class ZonasService{
 
   getCiudadById(id:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get<Ciudad>(`${this._dataServ.baseURL}/Administration/GetCityById?Id=${id}`, {headers: this.headers})
+    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCityById?Id=${id}`,
+      {headers: this.headers}
+    )
   }
 
   addCiudad(formData:any){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    let dataCiudad:Ciudad
-    dataCiudad = {
+    let dataCiudad:Ciudad = {
       ...formData,
-      "status": true
+      "state": true
     }
+    console.log(dataCiudad)
     return this._http.post(`${this._dataServ.baseURL}/Administration/CreateCity`, dataCiudad, {
       headers: this.headers
     })
   }
 
-  updateCiudad(formData:any, idCity?:number){
+  updateCiudad(formData:any, idCity:number, state:boolean){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    let dataCiudad:Ciudad
-    if(idCity){
-      dataCiudad = {
-        "id": idCity,
-        "name": formData.name,
-        "stateId": '1',
-        "stateCode": 'FM',
-        "stateName": formData.stateName,
-      }
-    }else{
-      dataCiudad = {
-        "name": formData.name,
-        "stateId": '1',
-        "stateCode": 'FM',
-        "stateName": formData.stateName
-      }
-    }
-    return this._http.post(`${this._dataServ.baseURL}/Administration/CreateUpdateCity?user=${this._authServ.userData.name}`, dataCiudad)
-  }
-
-  /* Endpoints de farmacias */
-  getFarmacias(){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get<any>(`${this._dataServ.baseURL}/Pharmacy/GetPharmacies`,
-      {headers: this.headers}
-    )
-  }
-
-  public getFarmaciaByName(name:string){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get<Farmacia>(`${this._dataServ.baseURL}/Pharmacy/GetPharmaciesByName?namePharmacy=${name}`)
-  }
-
-  public getFarmaciaById(id:string){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get<Farmacia>(`${this._dataServ.baseURL}/Pharmacy/GetPharmacy?id=${id}`)
-  }
-
-  public addFarmacia(formData:any, ciudad:Ciudad){
-    let dataFarmacia:Farmacia = {
+    let dataCiudad:Ciudad = {
+      "id": idCity,
       ...formData,
-      "cityId": ciudad.id,
-      "cityName": ciudad.name,
-      "createBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "creationDate": new Date().toISOString(),
-      "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "updateDate": new Date().toISOString()
+      "state": state,
     }
-    console.log(dataFarmacia)
-    return this._http.post(`${this._dataServ.baseURL}/Pharmacy/CreatePharmacy`, dataFarmacia)
-  }
-
-  public deleteFarmacia(id:number){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.delete(`${this._dataServ.baseURL}/Pharmacy/DeletePharmacy?Id=${id}&user=${this._authServ.userData.name}`)
-  }
-
-  public updateFarmacia(formData:any, currentStatus?:boolean, ciudad?:Ciudad, farnaId?:number){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    let dataFarmacia:Farmacia = {
-      "id": farnaId,
-      ...formData,
-      "isDeleted": currentStatus,
-      "cityId": ciudad?.id,
-      "cityName": ciudad?.name
-    }
-    console.log(dataFarmacia)
-    return this._http.put(`${this._dataServ.baseURL}/Pharmacy/UpdatePharmacy`, dataFarmacia)
-  }
-
-  changeStateFarmacia(state:boolean, farmacia:Farmacia | any){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    let farmaToUpdate:Farmacia = {
-      "id": farmacia.id,
-      "name": farmacia.name,
-      "adress": farmacia.adress,
-      "cityId": farmacia.cityId,
-      "cityName": farmacia.cityName,
-      "isDeleted": state,
-      "createBy": farmacia.createBy,
-      "creationDate": farmacia.creationDate,
-      "updateBy": `${this._authServ.userData.name} ${this._authServ.userData.lastName}`,
-      "updateDate": new Date().toISOString()
-    }
-    console.log(farmaToUpdate)
-    return this._http.put(`${this._dataServ.baseURL}/Pharmacy/UpdatePharmacy`, farmaToUpdate)
+    console.log(dataCiudad)
+    return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCity`, dataCiudad, {
+      headers: this.headers
+    })
   }
 }

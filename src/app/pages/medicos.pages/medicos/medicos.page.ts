@@ -5,10 +5,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { Medico } from 'src/app/interfaces/models';
 import { MedicosService } from 'src/app/services/medicos.service';
 import { DetalleMedicoPage } from '../detalle-medico/detalle-medico.page';
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 @Component({
   selector: 'app-medicos',
@@ -25,7 +25,7 @@ export class MedicosPage implements AfterViewInit {
         link: '/admin/home'
       },
       {
-        name: 'Gestión de Medicos',
+        name: 'Gestión de Médicos',
         isLink: false,
       }
     ]
@@ -34,7 +34,7 @@ export class MedicosPage implements AfterViewInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:Medico[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['name', 'register', 'isDeleted', 'patologyName', 'creationDate', 'acctions'];
+  displayedColumns: string[] = ['name', 'patologyName', 'isDeleted', 'creationDate', 'acctions'];
   dataSource = new MatTableDataSource<Medico>(this.ELEMENT_DATA);
 
   isLoadingResults:boolean = true;
@@ -52,9 +52,9 @@ export class MedicosPage implements AfterViewInit {
   }
 
   getAllMedics(){
-    let resp = this._medicServ.getAllMedicos()
+    let resp = this._medicServ.getMedicos()
     resp.subscribe(Medicos => {
-      this.dataSource.data = Medicos as Medico[]
+      this.dataSource.data = Medicos.result as Medico[]
       this.isLoadingResults = false
       console.log(this.dataSource.data)
     }, (err => {
@@ -83,59 +83,56 @@ export class MedicosPage implements AfterViewInit {
   on(id?:string){
     const config = {
       data: {
-        title: id ?'Editar Medico' :'Agregar Medico',
+        title: id ?'Editar Médico' :'Agregar Médico',
         medicoId: id
       }
     }
     this._dialog.open(DetalleMedicoPage, config)
     .afterClosed()
-    .subscribe(() => {
-      this.isLoadingResults = true
-      this.getAllMedics()
+    .subscribe((confirm:boolean) => {
+      if(confirm){
+        this.isLoadingResults = true
+        this.getAllMedics()
+      }
     })
   }
 
-  dialog(medico:Medico) {
-    if(!medico.isDeleted){
-      this._dialog.open(DialogConfComponent, {
-        data: `¿Seguro de querer inhabilitar la cuenta de este medico?`
-      })
-      .afterClosed()
-      .subscribe((confirmado: Boolean) => {
-        if (confirmado) {
-          const res = this._medicServ.deleteMedico(medico.id!)
-          res.subscribe(res => {
-            if(res){
-              this._medicServ.notify('Cuenta inhabilidata', 'success')
-              this.isLoadingResults = true
-              this.getAllMedics()
-            }
-          }, (err => {
-            console.log(err)
-            this._medicServ.notify('Ocurrio un error', 'error')
-          }))
-        }
-      })
-    }else{
-      this._dialog.open(DialogConfComponent, {
-        data: `¿Seguro de querer habilitar la cuenta de este medico?`
-      })
-      .afterClosed()
-      .subscribe((confirmado: Boolean) => {
-        if (confirmado) {
-          const res = this._medicServ.changeStateMedico(false, medico)
-          res.subscribe(res => {
-            if(res){
-              this._medicServ.notify('Cuenta restaurada', 'success')
-              this.isLoadingResults = true
-              this.getAllMedics()
-            }
-          }, (err => {
-            console.log(err)
-            this._medicServ.notify('Ocurrio un error', 'error')
-          }))
-        }
-      })
+  chageState(row:Medico){
+    const formData = {
+      "name": row.name,
+      "register": row.register,
+      "patologyId": row.patologyId
     }
+    let msgDialog:string
+    if(!row.isDeleted){
+      msgDialog = '¿Seguro de querer inhabilitar el registro de este médico?'
+    }else{
+      msgDialog = '¿Seguro de querer habilitar el registro de este médico?'
+    }
+    this._dialog.open(DialogConfComponent, {
+      data: msgDialog
+    })
+    .afterClosed()
+    .subscribe((confirmado:boolean)=>{
+      if(confirmado){
+        row.isDeleted = !row.isDeleted
+        const res = this._medicServ.updateMedico(formData, row.id, row.isDeleted)
+          res.subscribe(res => {
+            if(res){
+              this._medicServ.notify('Médico actualizado', 'success')
+              this.isLoadingResults = true
+              this.getAllMedics()
+            }
+          }, (err => {
+            console.log(err)
+            this.getAllMedics()
+            this._medicServ.notify('Ocurrio un error con el proceso.', 'error')
+          }))
+      }
+    })
+  }
+
+  generateReport(){
+    console.log('voy a generar el reporte xd')
   }
 }

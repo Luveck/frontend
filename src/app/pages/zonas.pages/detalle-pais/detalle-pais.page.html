@@ -10,7 +10,7 @@
       <div class="datos">
         <p>{{currentPais?.name}}</p>
         <div class="bots">
-          <span class="chip" (click)="changeStatus(currentPais?.status)" [ngClass]="{'active': currentPais?.status == false, 'inactive': currentPais?.status == true}">{{currentPais?.status ?'Inhabilitar' :'habilitar'}}</span>
+          <span class="chip" [ngClass]="{'active': currentPais?.status == true, 'inactive': currentPais?.status == false}">Estado: {{currentPais?.status ?'Activo' :'Inactivo'}}</span>
         </div>
       </div>
     </section>
@@ -24,7 +24,7 @@
     </section>
   </div>
 
-  <form class="wrapForm" [formGroup]="newPaisForm" autocomplete="off">
+  <form class="wrapForm" [formGroup]="paisForm" autocomplete="off">
     <div class="inputs">
       <mat-form-field appearance="fill">
         <mat-label>Nombre</mat-label>
@@ -55,7 +55,7 @@
 </main>
 <div mat-dialog-actions>
   <div class="btns">
-    <button mat-raised-button color="primary" [disabled]="newPaisForm.invalid" (click)="addEditPais()">Guardar <mat-icon>save</mat-icon></button>
+    <button mat-raised-button color="primary" [disabled]="paisForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
     <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
   </div>
 </div>

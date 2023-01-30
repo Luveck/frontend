@@ -8,6 +8,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Departamento } from 'src/app/interfaces/models';
 import { ZonasService } from 'src/app/services/zonas.service';
 import { DetalledepartamentoPage } from '../detalle-departamento/detalle-departamento.page';
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 @Component({
   selector: 'app-departamentos',
@@ -36,7 +37,7 @@ export class DepartamentosPage implements AfterViewInit {
   displayedColumns:string[] = ['name', 'countryName', 'countryCode', 'status', 'creationDate', 'acctions'];
   dataSource = new MatTableDataSource<Departamento>(this.ELEMENT_DATA);
 
-  isLoadingResults:boolean = true;
+  isLoadingResults:boolean = true
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
@@ -51,9 +52,10 @@ export class DepartamentosPage implements AfterViewInit {
   }
 
   getAllDepartamentos() {
-    let resp = this._zonasServ.getDepartamentos()
+    const resp = this._zonasServ.getDepartamentos()
     resp.subscribe(departamentos => {
       this.dataSource.data = departamentos.result as Departamento[]
+      this._zonasServ.listDepartamentos = departamentos.result
       this.isLoadingResults = false
       console.log(this.dataSource.data)
     }, (err => {
@@ -88,9 +90,48 @@ export class DepartamentosPage implements AfterViewInit {
     }
     this._dialog.open(DetalledepartamentoPage, config)
     .afterClosed()
-    .subscribe(() => {
-      this.isLoadingResults = true
-      this.getAllDepartamentos()
+    .subscribe((confirm:boolean) => {
+      if(confirm){
+        this.isLoadingResults = true
+        this.getAllDepartamentos()
+      }
     })
+  }
+
+  chageState(row:Departamento){
+    const formData = {
+      "name": row.name,
+      "idCountry": row.countryId
+    }
+    let msgDialog:string
+    if(row.status){
+      msgDialog = '¿Seguro de querer inhabilitar este departamento?'
+    }else{
+      msgDialog = '¿Seguro de querer habilitar este departamento?'
+    }
+    this._dialog.open(DialogConfComponent, {
+      data: msgDialog
+    })
+    .afterClosed()
+    .subscribe((confirmado:boolean)=>{
+      if(confirmado){
+        row.status = !row.status
+        const res = this._zonasServ.updateDepartamento(formData, row.id, row.status)
+          res.subscribe(res => {
+            if(res){
+              this._zonasServ.notify('Departamento actualizado', 'success')
+              this.isLoadingResults = true
+              this.getAllDepartamentos()
+            }
+          }, (err => {
+            console.log(err)
+            this._zonasServ.notify('Ocurrio un error con el proceso.', 'error')
+          }))
+      }
+    })
+  }
+
+  generateReport(){
+    console.log('voy a generar el reporte xd')
   }
 }

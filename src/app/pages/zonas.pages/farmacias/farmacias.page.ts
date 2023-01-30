@@ -5,10 +5,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { Farmacia } from 'src/app/interfaces/models';
-import { ZonasService } from 'src/app/services/zonas.service';
+import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { DetalleFarmaciaPage } from '../detalle-farmacia/detalle-farmacia.page';
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 @Component({
   selector: 'app-farmacias',
@@ -34,7 +34,7 @@ export class FarmaciasPage implements AfterViewInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:Farmacia[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['name', 'cityName', 'isDeleted', 'creationDate', 'acctions'];
+  displayedColumns: string[] = ['name', 'city', 'isDeleted', 'creationDate', 'acctions'];
   dataSource = new MatTableDataSource<Farmacia>(this.ELEMENT_DATA);
 
   isLoadingResults:boolean = true;
@@ -42,7 +42,7 @@ export class FarmaciasPage implements AfterViewInit {
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
     private _dialog: MatDialog,
-    private _zonasServ:ZonasService,
+    private _farmaServ:FarmaciasService
   ){}
 
   ngAfterViewInit(): void {
@@ -52,11 +52,12 @@ export class FarmaciasPage implements AfterViewInit {
   }
 
   getAllFarmacias(){
-    let resp = this._zonasServ.getFarmacias()
+    const resp = this._farmaServ.getFarmacias()
     resp.subscribe(farmas => {
-      console.log(farmas)
-      this.dataSource.data = farmas as Farmacia[]
+      this.dataSource.data = farmas.result as Farmacia[]
+      this._farmaServ.listFarmacias = farmas.result
       this.isLoadingResults = false
+      console.log(this.dataSource.data)
     }, (err => {
       this.isLoadingResults = false
       console.log(err)
@@ -89,55 +90,50 @@ export class FarmaciasPage implements AfterViewInit {
     }
     this._dialog.open(DetalleFarmaciaPage, config)
     .afterClosed()
-    .subscribe((confirmado:boolean) => {
-      if(confirmado){
+    .subscribe((confirm:boolean) => {
+      if(confirm){
         this.isLoadingResults = true
         this.getAllFarmacias()
       }
     })
   }
 
-  dialog(farmacia:Farmacia){
-    if(!farmacia.isDeleted){
-      this._dialog.open(DialogConfComponent, {
-        data: `¿Seguro de querer inhabilitar esta farmacia?`
-      })
-      .afterClosed()
-      .subscribe((confirmado: Boolean) => {
-        if (confirmado) {
-          const res = this._zonasServ.deleteFarmacia(farmacia.id!)
-          res.subscribe(res => {
-            if(res){
-              this._zonasServ.notify('Farmacia inhabilidata', 'success')
-              this.isLoadingResults = true
-              this.getAllFarmacias()
-            }
-          }, (err => {
-            console.log(err)
-            this._zonasServ.notify('Ocurrio un error', 'error')
-          }))
-        }
-      })
-    }else{
-      this._dialog.open(DialogConfComponent, {
-        data: `¿Seguro de querer habilitar esta farmacia?`
-      })
-      .afterClosed()
-      .subscribe((confirmado: Boolean) => {
-        if (confirmado) {
-          const res = this._zonasServ.changeStateFarmacia(false, farmacia)
-          res.subscribe(res => {
-            if(res){
-              this._zonasServ.notify('Farmacia restaurada', 'success')
-              this.isLoadingResults = true
-              this.getAllFarmacias()
-            }
-          }, (err => {
-            console.log(err)
-            this._zonasServ.notify('Ocurrio un error', 'error')
-          }))
-        }
-      })
+  chageState(row:Farmacia){
+    const formData = {
+      "name": row.name,
+      "adress": row.adress,
+      "cityId": row.cityId
     }
+    let msgDialog:string
+    if(!row.isDeleted){
+      msgDialog = '¿Seguro de querer inhabilitar esta farmacia?'
+    }else{
+      msgDialog = '¿Seguro de querer habilitar esta farmacia?'
+    }
+    this._dialog.open(DialogConfComponent, {
+      data: msgDialog
+    })
+    .afterClosed()
+    .subscribe((confirmado:boolean)=>{
+      if(confirmado){
+        row.isDeleted = !row.isDeleted
+        const res = this._farmaServ.updateFarmacia(formData, row.id, row.isDeleted)
+          res.subscribe(res => {
+            if(res){
+              this._farmaServ.notify('Farmacia actualizada', 'success')
+              this.isLoadingResults = true
+              this.getAllFarmacias()
+            }
+          }, (err => {
+            console.log(err)
+            this.getAllFarmacias()
+            this._farmaServ.notify('Ocurrio un error con el proceso.', 'error')
+          }))
+      }
+    })
+  }
+
+  generateReport(){
+    console.log('voy a generar el reporte xd')
   }
 }

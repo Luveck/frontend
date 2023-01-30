@@ -3,19 +3,16 @@ main{
   margin: 0 auto;
   padding-top: 6rem;
   header{
-    width: 100%;
-    margin: 0 1rem;
+    margin: 0 auto;
   }
   .catesCont{
-    width: 90%;
-    padding: 2rem;
-    display: flex;
-    flex-wrap: wrap;
+    width: 100%;
+    padding: 2rem 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     justify-content: center;
-    align-items: center;
-    gap: 1.5rem;
+    gap: 1rem;
     .cat{
-      width: 300px;
       padding: 10px;
       .cat_body{
         padding: 1rem;
@@ -27,9 +24,10 @@ main{
       .cat_actions{
         border-top: 1px solid gray;
         text-align: center;
+        display: flex;
         padding: .5rem 0;
         button{
-          margin: 0 auto;
+          margin: 0 0.3rem;
         }
       }
     }

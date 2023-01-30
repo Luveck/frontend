@@ -8,6 +8,7 @@ import { CustomMatPaginatorIntl } from '../paginator-es';
 import { MaterialModule } from 'src/app/material.module';
 import { DetalleCategoriaPage } from './detalle-categoria/detalle-categoria.page';
 import { DetalleProductoPage } from './detalle-producto/detalle-producto.page';
+import { DetalleReglasComponent } from './detalle-reglas/detalle-reglas.component';
 
 const routes: Routes = [
   {
@@ -17,13 +18,18 @@ const routes: Routes = [
   {
     path: 'productos',
     loadChildren: () => import('./productos/productos.module').then( m => m.productosPageModule)
+  },
+  {
+    path: 'reglas',
+    loadChildren: () => import('./reglas/reglas.module').then( m => m.reglasPageModule)
   }
 ];
 
 @NgModule({
   declarations:[
     DetalleCategoriaPage,
-    DetalleProductoPage
+    DetalleProductoPage,
+    DetalleReglasComponent
   ],
   imports: [
     CommonModule,

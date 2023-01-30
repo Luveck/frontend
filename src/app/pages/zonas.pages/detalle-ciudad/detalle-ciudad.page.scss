@@ -27,12 +27,8 @@ main{
           font-size: 2rem;
         }
         .bots{
-          margin-top: 1rem;
-          width: 100%;
+          padding-top: 1rem;
           text-align: center;
-          button{
-            margin: 0 0.5rem 0 0;
-          }
         }
       }
     }
@@ -58,7 +54,7 @@ main{
     padding: 10px 0;
     .inputs{
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr;
       mat-form-field{
         width: 90%;
         margin: auto;

@@ -7,18 +7,18 @@
   <div class="fm_header" *ngIf="data.medicoId">
     <section class="avatar">
       <div class="datos">
-        <p>{{currentMedic?.name!}}</p>
+        <p>{{currentMedic?.name}}</p>
         <div class="bots">
-          <span class="chip" [ngClass]="{'inactive': currentMedic?.isDeleted == true, 'active': currentMedic?.isDeleted == false}">{{currentMedic?.isDeleted ?'Inctiva' :'Activa'}}</span>
+          <span class="chip" [ngClass]="{'inactive': currentMedic?.isDeleted == true, 'active': currentMedic?.isDeleted == false}">Estado: {{currentMedic?.isDeleted ?'Inctivo' :'Activo'}}</span>
         </div>
       </div>
     </section>
     <section class="resumen">
       <ul>
-        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentMedic?.createBy!}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentMedic?.creationDate! |date: 'd/M/yy, h:mm a'}}</li>
-        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentMedic?.updateBy!}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentMedic?.updateDate! |date: 'd/M/yy, h:mm a'}}</li>
+        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentMedic?.createBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de craación: {{currentMedic?.creationDate |date: 'd/M/yy, h:mm a'}}</li>
+        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentMedic?.updateBy}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentMedic?.updateDate |date: 'd/M/yy, h:mm a'}}</li>
       </ul>
     </section>
   </div>
@@ -31,13 +31,13 @@
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>N. de registro</mat-label>
-        <input matInput placeholder="Presentación" formControlName="register">
+        <input matInput placeholder="N. de registro" formControlName="register">
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Especialidad</mat-label>
-        <mat-select formControlName="patologyName">
-          <div *ngFor="let especial of especialidades; index as i">
-            <mat-option *ngIf="!especial.isDeleted" [value]="i">
+        <mat-select formControlName="patologyId">
+          <div *ngFor="let especial of especialidades">
+            <mat-option *ngIf="!especial.isDeleted" [value]="especial.id">
               {{especial.name}}
             </mat-option>
           </div>

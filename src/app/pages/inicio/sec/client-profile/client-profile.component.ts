@@ -31,11 +31,11 @@ export class ClientProfileComponent implements OnInit {
     private _authServ:AuthService,
     private _dialogo:MatDialog,
     public dialogo: MatDialogRef<ClientProfileComponent>,
-    @Inject(MAT_DIALOG_DATA) public email: string) { }
+    @Inject(MAT_DIALOG_DATA) public UserId: string) { }
 
   ngOnInit(): void {
     this.isLoadingResults = true
-    this._usersServ.getUserInfo(this.email)
+    this._usersServ.getUserByID(this.UserId)
       .subscribe((res:any) => {
         console.log(res)
         this.userData = res.result

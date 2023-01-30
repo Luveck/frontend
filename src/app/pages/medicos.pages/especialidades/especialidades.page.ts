@@ -3,7 +3,8 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { MedicosService } from 'src/app/services/medicos.service';
 import { DetalleEspacialidadPage } from '../detalle-especialidad/detalle-espacialidad.page';
-
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
+import { Especialidad } from 'src/app/interfaces/models';
 
 @Component({
   selector: 'app-especialidades',
@@ -29,16 +30,16 @@ export class EspecialidadesPage implements OnInit {
   isLoadingResults:boolean = true;
 
   constructor(
-    private _dialogo:MatDialog,
+    private _dialog:MatDialog,
     public medicServ:MedicosService
   ){}
 
   ngOnInit(): void {
-    this.cargarAll()
+    this.getAllEspecials()
   }
 
-  cargarAll(){
-    let catsAll = this.medicServ.getAllEspecialidades()
+  getAllEspecials(){
+    const catsAll = this.medicServ.getEspecialidades()
     catsAll.subscribe(res => {
       this.isLoadingResults = false
       this.medicServ.especialidades = res.result
@@ -49,18 +50,54 @@ export class EspecialidadesPage implements OnInit {
     }))
   }
 
-  on(id?:string){
+  on(id?:number){
     const config = {
       data: {
         title: id ?'Editar especialidad' :'Agregar especialidad',
         especialId: id
       }
     }
-    this._dialogo.open(DetalleEspacialidadPage, config)
+    this._dialog.open(DetalleEspacialidadPage, config)
     .afterClosed()
-    .subscribe(() => {
-      this.isLoadingResults = true
-      this.cargarAll()
+    .subscribe((confirm:boolean) => {
+      if(confirm){
+        this.isLoadingResults = true
+        this.getAllEspecials()
+      }
     })
+  }
+
+  chageState(row:Especialidad){
+    let msgDialog:string
+    if(!row.isDeleted){
+      msgDialog = '¿Seguro de querer inhabilitar esta Especialidad?'
+    }else{
+      msgDialog = '¿Seguro de querer habilitar esta Especialidad?'
+    }
+    this._dialog.open(DialogConfComponent, {
+      data: msgDialog
+    })
+    .afterClosed()
+    .subscribe((confirmado:boolean)=>{
+      if(confirmado){
+        row.isDeleted = !row.isDeleted
+        const res = this.medicServ.updateEspecial(row.name, row.id, row.isDeleted)
+          res.subscribe(res => {
+            if(res){
+              this.medicServ.notify('Especilidad actualizada', 'success')
+              this.isLoadingResults = true
+              this.getAllEspecials()
+            }
+          }, (err => {
+            console.log(err)
+            this.getAllEspecials()
+            this.medicServ.notify('Ocurrio un error con el proceso.', 'error')
+          }))
+      }
+    })
+  }
+
+  generateReport(){
+    console.log('voy a generar el reporte xd')
   }
 }

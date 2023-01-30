@@ -11,30 +11,29 @@ main{
     text-align: center;
   }
   .mainBody{
-    width: 100%;
-    display: flex;
+    width: 90%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
+    gap: 1.5rem;
     mat-card{
       padding: 1rem;
-      width: 40%;
       height: 200px;
       display: flex;
       align-items: center;
       justify-content: space-evenly;
       mat-icon.icoGrande{
         color: darken($color: #b9ccda, $amount: 10);
-        font-size: 10rem;
-        width: 150px;
-        height: 150px;
+        font-size: 6rem;
+        width: 100px;
+        height: 100px;
         overflow: visible;
       }
       .texto{
         text-align: center;
         span{
-          font-size: 4rem;
+          font-size: 3rem;
         }
         span.more{
           display: flex;
@@ -44,9 +43,9 @@ main{
           font-size: 1.2rem;
           mat-icon{
             color: darken($color: #b9ccda, $amount: 10);
-            font-size: 2.5rem;
-            width: 40px;
-            height: 40px;
+            font-size: 1.5rem;
+            width: 30px;
+            height: 30px;
             overflow: visible;
           }
         }

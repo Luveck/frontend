@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Farmacia } from '../interfaces/models';
+import { Rule } from '../interfaces/models';
 import { AuthService } from './auth.service';
 import { DataService } from './data.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class FarmaciasService {
-  listFarmacias!:Farmacia[]
+export class RulesService {
+  reglas!: Rule[]
   headers:any
 
   constructor(
@@ -23,40 +23,40 @@ export class FarmaciasService {
     this._dataServ.fir(msg, icon)
   }
 
-  getFarmacias(){
+  getRules(){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get<any>(`${this._dataServ.baseURL}/Pharmacy/GetPharmacies`,
+    return this._http.get<any>(`${this._dataServ.baseURL}/RuleChange/GetRules`,
       {headers: this.headers}
     )
   }
 
-  getFarmaciaById(id:string){
+  getRulesById(id:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get<any>(`${this._dataServ.baseURL}/Pharmacy/GetPharmacy?id=${id}`,
+    return this._http.get<any>(`${this._dataServ.baseURL}/RuleChange/GetRule${id}`,
       {headers: this.headers}
     )
   }
 
-  addFarmacia(formData:any){
+  addRule(formData:any){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    let dataFarmacia:Farmacia = {
-      ...formData,
-      "isDeleted": true
+    let dataRule:Rule = {
+      ...formData
     }
-    return this._http.post(`${this._dataServ.baseURL}/Pharmacy/CreatePharmacy`, dataFarmacia, {
+    console.log(dataRule)
+    return this._http.post(`${this._dataServ.baseURL}/RuleChange/CreateRule`, dataRule, {
       headers: this.headers
     })
   }
 
-  updateFarmacia(formData:any, idFarmacia:number, state:boolean){
+  updateRule(formData:any, ruleId:number|undefined, state:boolean){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    let dataFarmacia:Farmacia = {
-      "id": idFarmacia,
+    let dataRule:Rule = {
+      "id": ruleId,
       ...formData,
-      "isDeleted": state,
+      "state": state
     }
-    console.log(dataFarmacia)
-    return this._http.post(`${this._dataServ.baseURL}/Pharmacy/UpdatePharmacy`, dataFarmacia, {
+    console.log(dataRule)
+    return this._http.post(`${this._dataServ.baseURL}/RuleChange/UpdateRule`, dataRule, {
       headers: this.headers
     })
   }

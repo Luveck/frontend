@@ -2,10 +2,17 @@
   <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
 
   <header>
-    <button mat-raised-button color="primary" (click)="on()">
-      <mat-icon>add</mat-icon>
-      Agregar Ciudad
-    </button>
+    <div>
+      <button mat-raised-button color="primary" (click)="on()">
+        <mat-icon>add</mat-icon>
+        Agregar Ciudad
+      </button>
+      &nbsp;
+      <button mat-raised-button color="primary" (click)="generateReport()">
+        <mat-icon>task</mat-icon>
+        Generar reporte
+      </button>
+    </div>
 
     <mat-form-field appearance="standard">
       <mat-icon matPrefix>search</mat-icon>
@@ -54,6 +61,11 @@
           <button mat-stroked-button (click)="on(row.id)">
             Ver detalles
             <mat-icon color="accent">arrow_forward</mat-icon>
+          </button>
+
+          <button mat-stroked-button (click)="chageState(row)">
+            Cambiar estado
+            <mat-icon color="warn">published_with_changes</mat-icon>
           </button>
         </td>
       </ng-container>

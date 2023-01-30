@@ -5,7 +5,7 @@
     <div>
       <button mat-raised-button color="primary" (click)="on()">
         <mat-icon>add</mat-icon>
-        Agregar Especualidad
+        Agregar Regla
       </button>
       &nbsp;
       <button mat-raised-button color="primary" (click)="generateReport()">
@@ -20,19 +20,21 @@
   </div>
 
   <div class="catesCont">
-    <mat-card class="cat mat-elevation-z8" *ngFor="let especial of medicServ.especialidades">
+    <mat-card class="cat mat-elevation-z8" *ngFor="let rule of rulesServ.reglas">
       <div class="cat_body">
-        <p><span>Nombre: </span>{{especial.name}}</p>
-        <p><span>Estado: </span><span class="chip" [ngClass]="{'inactive': especial.isDeleted == true, 'active': especial.isDeleted == false}">{{especial.isDeleted ?'Inactiva' :'Activa'}}</span></p>
-        <p><span>Fecha de creación: </span>{{especial.creationDate |date:'M/d/yy'}}</p>
+        <p><span>Producto: </span>{{rule.productName}}</p>
+        <p><span>Cantidad a compar: </span>{{rule.quantityBuy}}</p>
+        <p><span>Cantidad a entregar: </span>{{rule.quantityGive}}</p>
+        <p><span>Estado: </span><span class="chip" [ngClass]="{'inactive': rule.state == false, 'active': rule.state == true}">{{rule.state ?'Activo' :'Inctivo'}}</span></p>
+        <p><span>Fecha de creación: </span>{{rule.creationDate |date:'M/d/yy'}}</p>
       </div>
       <div class="cat_actions">
-        <button mat-stroked-button (click)="on(especial.id)">
+        <button mat-stroked-button (click)="on(rule.id)">
           Ver detalles
           <mat-icon color="accent">arrow_forward</mat-icon>
         </button>
 
-        <button mat-stroked-button (click)="chageState(especial)">
+        <button mat-stroked-button (click)="chageState(rule)">
           Cambiar estado
           <mat-icon color="warn">published_with_changes</mat-icon>
         </button>

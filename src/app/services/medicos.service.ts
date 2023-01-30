@@ -9,7 +9,7 @@ import { Especialidad, Medico } from '../interfaces/models';
   providedIn: 'root'
 })
 export class MedicosService {
-  especialidades:Especialidad[] |any
+  especialidades!:Especialidad[]
   headers:any
 
   constructor(
@@ -25,14 +25,18 @@ export class MedicosService {
   }
 
   /* ******endpoints de Especialidades****** */
-  public getAllEspecialidades(){
+  public getEspecialidades(){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetPatologies`, {headers: this.headers})
+    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetPatologies`,
+      {headers: this.headers}
+    )
   }
 
   public getEspecialidadById(id:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetPatologyById?Id=${id}`, {headers: this.headers})
+    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetPatologyById?Id=${id}`,
+      {headers: this.headers}
+    )
   }
 
   public addEspecialidad(name:string){
@@ -41,27 +45,33 @@ export class MedicosService {
       "name": name,
       "isDeleted": false,
     }
-    return this._http.post(`${this._dataServ.baseURL}/Administration/CreatePatology`, dataEspecial, {headers: this.headers})
+    return this._http.post(`${this._dataServ.baseURL}/Administration/CreatePatology`, dataEspecial,
+      {headers: this.headers}
+    )
   }
 
   public deleteEspecialidad(id:number){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.delete(`${this._dataServ.baseURL}/Administration/DeletePatology?Id=${id}`, {headers: this.headers})
+    return this._http.delete(`${this._dataServ.baseURL}/Administration/DeletePatology?Id=${id}`,
+      {headers: this.headers}
+    )
   }
 
-  public updateEspecial(name:string, state:boolean, especialId:number | any){
+  public updateEspecial(name:string, especialId:number|undefined, state:boolean){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    let especialToUpdate:Especialidad = {
+    let dataEspecial:Especialidad = {
       "id": especialId,
       "name": name,
       "isDeleted": state,
     }
-    console.log(especialToUpdate)
-    return this._http.post(`${this._dataServ.baseURL}/Administration/UpdatePatology`, especialToUpdate, {headers: this.headers})
+    console.log(dataEspecial)
+    return this._http.post(`${this._dataServ.baseURL}/Administration/UpdatePatology`, dataEspecial,
+      {headers: this.headers}
+    )
   }
 
   /* ******endpoints de Medicos****** */
-  public getAllMedicos(){
+  public getMedicos(){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.get<any>(`${this._dataServ.baseURL}/Medical/GetMedicals`,
       {headers: this.headers}
@@ -70,55 +80,47 @@ export class MedicosService {
 
   public getMedicoByName(name:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get<Medico>(`${this._dataServ.baseURL}/Medical/GetMedicalByName?nameMedical=${name}`, {headers: this.headers})
+    return this._http.get<Medico>(`${this._dataServ.baseURL}/Medical/GetMedicalByName?nameMedical=${name}`,
+      {headers: this.headers}
+    )
   }
 
   public getMedicoById(id:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get<Medico>(`${this._dataServ.baseURL}/Medical/GetMedical?id=${id}`, {headers: this.headers})
+    return this._http.get<any>(`${this._dataServ.baseURL}/Medical/GetMedical?id=${id}`,
+      {headers: this.headers}
+    )
   }
 
-  public addMedico(formData:any, especialidad:Especialidad){
+  public addMedico(formData:any){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     let dataMedico:Medico = {
       ...formData,
-      "patologyId": especialidad.id,
-      "patologyName": especialidad.name,
+      "isDeleted": false
     }
     console.log(dataMedico)
-    return this._http.post(`${this._dataServ.baseURL}/Medical/CreateMedical`, dataMedico)
+    return this._http.post(`${this._dataServ.baseURL}/Medical/CreateMedical`, dataMedico,
+      {headers: this.headers}
+    )
   }
 
   public deleteMedico(id:number){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.delete(`${this._dataServ.baseURL}/Medical/DeleteMedical?Id=${id}`, {headers: this.headers})
+    return this._http.delete(`${this._dataServ.baseURL}/Medical/DeleteMedical?Id=${id}`,
+      {headers: this.headers}
+    )
   }
 
-  public updateMedico(formData:any, currentStatus?:boolean, especialidad?:Especialidad, medicoId?:number){
+  public updateMedico(formData:any, medicoId:number, state:boolean){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     let dataMedico:Medico = {
       "id": medicoId,
       ...formData,
-      "isDeleted": currentStatus,
-      "patologyId": especialidad?.id,
-      "patologyName": especialidad?.name
-    }
-    console.log(dataMedico)
-    return this._http.put(`${this._dataServ.baseURL}/Medical/UpdateMedical`, dataMedico, {headers: this.headers})
-  }
-
-
-  changeStateMedico(state:boolean, medico:Medico | any){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    let medicoToUpdate:Medico = {
-      "id": medico.id,
-      "name": medico.name,
-      "register": medico.register,
-      "patologyId": medico.patologyId,
-      "patologyName": medico.patologyName,
       "isDeleted": state
     }
-    console.log(medicoToUpdate)
-    return this._http.put(`${this._dataServ.baseURL}/Medical/UpdateMedical`, medicoToUpdate, {headers: this.headers})
+    console.log(dataMedico)
+    return this._http.post(`${this._dataServ.baseURL}/Medical/UpdateMedical`, dataMedico,
+      {headers: this.headers}
+    )
   }
 }

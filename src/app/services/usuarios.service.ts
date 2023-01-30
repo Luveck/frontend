@@ -24,16 +24,23 @@ export class UsuariosService {
     this._dataServ.fir(msg, icon)
   }
 
-  public getAllUsers(){
+  public getUsers(){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.post(`https://apisecurityluveck.azurewebsites.net/api/Security/GetUsers`, {},
       {headers: this.headers}
     )
   }
 
-  public getUserInfo(email:string){
+  public getUserByID(id:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get(`https://apisecurityluveck.azurewebsites.net/api/Security/getUser?Email=${email}`,
+    return this._http.get(`https://apisecurityluveck.azurewebsites.net/api/Security/getUserByID?Id=${id}`,
+      {headers: this.headers}
+    )
+  }
+
+  public getUserByDNI(dni:string){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    return this._http.get(`https://apisecurityluveck.azurewebsites.net/api/Security/getUserByDNI?DNI=${dni}`,
       {headers: this.headers}
     )
   }

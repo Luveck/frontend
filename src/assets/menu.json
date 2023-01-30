@@ -12,6 +12,18 @@
     "routerLink": "zonas/farmacias"
   },
   {
+    "text": "Reglas de canje",
+    "subText": "Gestión de reglas",
+    "icon": "rule",
+    "routerLink": "inventario/reglas"
+  },
+  {
+    "text": "Registro de ventas",
+    "subText": "Gestión de ventas",
+    "icon": "real_estate_agent",
+    "routerLink": "inventario/reglas"
+  },
+  {
     "text": "Seguridad",
     "subText": "Gestión de seguridad",
     "icon": "admin_panel_settings",
@@ -54,18 +66,19 @@
         "routerLink": "inventario/productos"
       }
     ]
-  },{
+  },
+  {
     "text": "Medicos",
     "subText": "Gestión de medicos",
     "icon": "medical_information",
     "children": [
       {
-        "text": "Especialidad",
+        "text": "Especialidades",
         "icon": "workspace_premium",
         "routerLink": "medicos/especialidades"
       },
       {
-        "text": "Medicos",
+        "text": "Médicos",
         "icon": "group_add",
         "routerLink": "medicos/medicos"
       }

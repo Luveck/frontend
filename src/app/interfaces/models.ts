@@ -37,13 +37,13 @@ export interface Departamento{
 }
 
 export interface Ciudad{
-  id?: number,
+  id: number,
   name: string,
-  stateId: string,
-  stateCode: string,
-  stateName: string,
-  countryId?: string,
-  countryName?: string,
+  state: boolean,
+  departymentId: number,
+  departmentName: string,
+  countryId: number,
+  countryName: string,
   createBy?: string
   creationDate?: string
   updateBy?: string
@@ -51,12 +51,12 @@ export interface Ciudad{
 }
 
 export interface Farmacia{
-  id?: number,
+  id: number,
   name: string,
   adress: string,
   isDeleted: boolean,
   cityId: number,
-  cityName: string
+  city: string
   createBy?: string
   creationDate?: string
   updateBy?: string
@@ -80,12 +80,29 @@ export interface Producto{
   barcode: string
   description: string
   presentation: string
-  quantity: number | any
+  quantity: number
   typeSell: string
-  cost: number | any
+  cost: number
   idCategory: number
   nameCategory: string
   state:boolean
+  createBy?: string
+  creationDate?: string
+  updateBy?: string
+  updateDate?: string
+}
+
+export interface Rule{
+  id: number,
+  daysAround: number,
+  periodicity: number,
+  quantityBuy: number,
+  quantityGive: number,
+  maxChangeYear: number,
+  productId: number,
+  productName: string,
+  barcode: string
+  state: boolean,
   createBy?: string
   creationDate?: string
   updateBy?: string
@@ -110,6 +127,20 @@ export interface Medico{
   isDeleted: boolean
   patologyId: number
   patologyName: string
+  createBy?: string
+  creationDate?: string
+  updateBy?: string
+  updateDate?: string
+}
+
+/* Modulo de ventas */
+export interface Venta{
+  id: number,
+  pharmacyId: number,
+  pharmacyName: string,
+  nameUser: string,
+  userId: string,
+  noPurchase: string,
   createBy?: string
   creationDate?: string
   updateBy?: string
