@@ -7,11 +7,11 @@ import { InventarioService } from 'src/app/services/inventario.service'
 
 @Component({
   selector: 'app-detalle-producto',
-  templateUrl: './detalle-producto.page.html',
-  styleUrls: ['./detalle-producto.page.scss'],
+  templateUrl: './detalle-producto.html',
+  styleUrls: ['./detalle-producto.scss'],
 })
 
-export class DetalleProductoPage implements OnInit {
+export class DetalleProducto implements OnInit {
   currentProd!: Producto | any
   cats!: Categoria[]
   isLoadingResults!:boolean
@@ -29,7 +29,7 @@ export class DetalleProductoPage implements OnInit {
 
   constructor(
     private _inveServ: InventarioService,
-    public dialogo: MatDialogRef<DetalleProductoPage>,
+    public dialogo: MatDialogRef<DetalleProducto>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){}
 

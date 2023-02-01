@@ -4,23 +4,29 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { RouterModule, Routes } from '@angular/router';
 import { NotAuthorizedComponent } from './not-authorized/not-authorized.component';
+import { NgPasswordValidatorModule } from 'ng-password-validator';
+import { MaterialModule } from 'src/app/material.module';
+import { LoginPage } from './login/login.page';
+import { RegisterPage } from './register/register.page';
+import { ResetPasswordPage } from './reset-password/reset-password.page';
+import { ForgotPasswordPage } from './forgot-password/forgot-password.page';
 
 const routes: Routes = [
   {
     path: 'login',
-    loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)
+    component: LoginPage
   },
   {
     path: 'register',
-    loadChildren: () => import('./register/register.module').then( m => m.RegisterPageModule)
+    component: RegisterPage
   },
   {
     path: 'resetpassword',
-    loadChildren: () => import('./reset-password/reset-password.module').then( m => m.ResetPasswordPageModule)
+    component: ResetPasswordPage
   },
   {
     path: 'forgotpassword',
-    loadChildren: () => import('./forgot-password/forgot-password.module').then( m => m.ForgotPasswordPageModule)
+    component: ForgotPasswordPage
   },
   {
     path: 'noauthorized',
@@ -30,12 +36,18 @@ const routes: Routes = [
 
 @NgModule({
   declarations:[
+    LoginPage,
+    RegisterPage,
+    ResetPasswordPage,
+    ForgotPasswordPage,
     NotAuthorizedComponent
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    NgPasswordValidatorModule,
+    MaterialModule,
     RouterModule.forChild(routes)
   ]
 })

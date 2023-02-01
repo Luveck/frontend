@@ -7,7 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { Medico } from 'src/app/interfaces/models';
 import { MedicosService } from 'src/app/services/medicos.service';
-import { DetalleMedicoPage } from '../detalle-medico/detalle-medico.page';
+import { DetalleMedico } from '../detalle-medico/detalle-medico';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 @Component({
@@ -87,7 +87,7 @@ export class MedicosPage implements AfterViewInit {
         medicoId: id
       }
     }
-    this._dialog.open(DetalleMedicoPage, config)
+    this._dialog.open(DetalleMedico, config)
     .afterClosed()
     .subscribe((confirm:boolean) => {
       if(confirm){

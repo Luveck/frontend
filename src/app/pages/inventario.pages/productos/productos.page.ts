@@ -7,7 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { Producto } from 'src/app/interfaces/models';
 import { InventarioService } from 'src/app/services/inventario.service';
-import { DetalleProductoPage } from '../detalle-producto/detalle-producto.page';
+import { DetalleProducto } from '../detalle-producto/detalle-producto';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 @Component({
@@ -16,7 +16,7 @@ import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.
   styleUrls: ['./productos.page.scss'],
 })
 
-export class productosPage implements AfterViewInit {
+export class ProductosPage implements AfterViewInit {
   public breadcrumb = {
     links: [
       {
@@ -88,7 +88,7 @@ export class productosPage implements AfterViewInit {
         productoId: id
       }
     }
-    this._dialog.open(DetalleProductoPage, config)
+    this._dialog.open(DetalleProducto, config)
     .afterClosed()
     .subscribe((confim:boolean) => {
       if(confim){

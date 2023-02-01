@@ -6,18 +6,18 @@ import { MedicosService } from 'src/app/services/medicos.service';
 
 @Component({
   selector: 'app-detalle-espacialidad',
-  templateUrl: './detalle-espacialidad.page.html',
-  styleUrls: ['./detalle-espacialidad.page.scss']
+  templateUrl: './detalle-espacialidad.html',
+  styleUrls: ['./detalle-espacialidad.scss']
 })
 
-export class DetalleEspacialidadPage implements OnInit {
+export class DetalleEspacialidad implements OnInit {
   currentEspecialidad!: Especialidad | any;
   name!: string
   isLoadingResults!:boolean
 
   constructor(
     private _medicServ:MedicosService,
-    public dialogo: MatDialogRef<DetalleEspacialidadPage>,
+    public dialogo: MatDialogRef<DetalleEspacialidad>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 

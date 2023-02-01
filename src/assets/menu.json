@@ -20,8 +20,8 @@
   {
     "text": "Registro de ventas",
     "subText": "Gestión de ventas",
-    "icon": "real_estate_agent",
-    "routerLink": "inventario/reglas"
+    "icon": "point_of_sale",
+    "routerLink": "ventas/ventas"
   },
   {
     "text": "Seguridad",

@@ -16,10 +16,6 @@ const routes: Routes = [
         loadChildren: () => import('../pages/zonas.pages/zonas.module').then( m => m.ZonasModule),
       },
       {
-        path: 'sbu',
-        loadChildren: () => import('../pages/sbu/sbu.module').then( m => m.SbuPageModule),
-      },
-      {
         path: 'security',
         loadChildren: () => import('../pages/security.pages/security.module').then( m => m.SecurityModule),
       },
@@ -30,6 +26,10 @@ const routes: Routes = [
       {
         path: 'medicos',
         loadChildren: () => import('../pages/medicos.pages/medicos.module').then( m => m.MedicosModule),
+      },
+      {
+        path: 'ventas',
+        loadChildren: () => import('../pages/ventas.pages/ventas.module').then( m => m.VentasModule),
       },
       {
         path: '',

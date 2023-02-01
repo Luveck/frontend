@@ -8,35 +8,27 @@ import { CustomMatPaginatorIntl } from '../paginator-es';
 import { MaterialModule } from 'src/app/material.module';
 import { ComponentsModule } from 'src/app/components/components.module';
 
-import { DetalleEspacialidad } from './detalle-especialidad/detalle-espacialidad';
-import { DetalleMedico } from './detalle-medico/detalle-medico';
-import { EspecialidadesPage } from './especialidades/especialidades.page';
-import { MedicosPage } from './medicos/medicos.page';
+import { VentasPage } from './ventas/ventas.page';
+import { DetalleVenta } from './detalle-ventas/detalle-venta';
 
 const routes: Routes = [
   {
-    path: 'especialidades',
-    component: EspecialidadesPage
-  },
-  {
-    path: 'medicos',
-    component: MedicosPage
+    path: 'ventas',
+    component: VentasPage
   }
 ];
 
 @NgModule({
   declarations:[
-    DetalleEspacialidad,
-    DetalleMedico,
-    EspecialidadesPage,
-    MedicosPage
+    VentasPage,
+    DetalleVenta
   ],
   imports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    MaterialModule,
     ComponentsModule,
+    MaterialModule,
     RouterModule.forChild(routes)
   ],
   providers: [
@@ -47,4 +39,4 @@ const routes: Routes = [
   ]
 })
 
-export class MedicosModule {}
+export class VentasModule {}

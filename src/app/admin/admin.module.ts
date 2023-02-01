@@ -16,4 +16,4 @@ import { MaterialModule } from '../material.module';
   ],
   declarations: [AdminPage]
 })
-export class AdminPageModule {}
+export class AdminModule {}

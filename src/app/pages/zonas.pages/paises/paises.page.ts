@@ -7,7 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { Pais } from 'src/app/interfaces/models';
 import { ZonasService } from 'src/app/services/zonas.service';
-import { DetallePaisPage } from '../detalle-pais/detalle-pais.page';
+import { DetallePais } from '../detalle-pais/detalle-pais';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 @Component({
@@ -88,7 +88,7 @@ export class PaisesPage implements AfterViewInit {
         paisId: id
       }
     }
-    this._dialog.open(DetallePaisPage, config)
+    this._dialog.open(DetallePais, config)
     .afterClosed()
     .subscribe((confirm:boolean) => {
       if(confirm){

@@ -8,10 +8,10 @@ import { RulesService } from 'src/app/services/rules.service';
 
 @Component({
   selector: 'app-detalle-reglas',
-  templateUrl: './detalle-reglas.component.html',
-  styleUrls: ['./detalle-reglas.component.scss']
+  templateUrl: './detalle-reglas.html',
+  styleUrls: ['./detalle-reglas.scss']
 })
-export class DetalleReglasComponent implements OnInit {
+export class DetalleReglas implements OnInit {
   currentRegla!:Rule | any
   prods!: Producto[]
   isLoadingResults!:boolean
@@ -28,7 +28,7 @@ export class DetalleReglasComponent implements OnInit {
   constructor(
     private _inveServ:InventarioService,
     private _rulesServ:RulesService,
-    public dialogo: MatDialogRef<DetalleReglasComponent>,
+    public dialogo: MatDialogRef<DetalleReglas>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 

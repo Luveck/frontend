@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog';
 
 import { MedicosService } from 'src/app/services/medicos.service';
-import { DetalleEspacialidadPage } from '../detalle-especialidad/detalle-espacialidad.page';
+import { DetalleEspacialidad } from '../detalle-especialidad/detalle-espacialidad';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { Especialidad } from 'src/app/interfaces/models';
 
@@ -57,7 +57,7 @@ export class EspecialidadesPage implements OnInit {
         especialId: id
       }
     }
-    this._dialog.open(DetalleEspacialidadPage, config)
+    this._dialog.open(DetalleEspacialidad, config)
     .afterClosed()
     .subscribe((confirm:boolean) => {
       if(confirm){

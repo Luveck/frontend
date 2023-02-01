@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog';
 
-import { DetalleReglasComponent } from 'src/app/pages/inventario.pages/detalle-reglas/detalle-reglas.component';
+import { DetalleReglas } from 'src/app/pages/inventario.pages/detalle-reglas/detalle-reglas';
 import { RulesService } from 'src/app/services/rules.service';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { Rule } from 'src/app/interfaces/models';
@@ -12,7 +12,7 @@ import { Rule } from 'src/app/interfaces/models';
   styleUrls: ['./reglas.page.scss'],
 })
 
-export class reglasPage implements OnInit {
+export class ReglasPage implements OnInit {
   public breadcrumb = {
     links: [
       {
@@ -57,7 +57,7 @@ export class reglasPage implements OnInit {
         ruleId: id
       }
     }
-    this._dialog.open(DetalleReglasComponent, config)
+    this._dialog.open(DetalleReglas, config)
     .afterClosed()
     .subscribe((confirm:boolean) => {
       if(confirm){

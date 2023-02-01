@@ -7,7 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { Departamento } from 'src/app/interfaces/models';
 import { ZonasService } from 'src/app/services/zonas.service';
-import { DetalledepartamentoPage } from '../detalle-departamento/detalle-departamento.page';
+import { Detalledepartamento } from '../detalle-departamento/detalle-departamento';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 @Component({
@@ -88,7 +88,7 @@ export class DepartamentosPage implements AfterViewInit {
         departamentoId: id
       }
     }
-    this._dialog.open(DetalledepartamentoPage, config)
+    this._dialog.open(Detalledepartamento, config)
     .afterClosed()
     .subscribe((confirm:boolean) => {
       if(confirm){

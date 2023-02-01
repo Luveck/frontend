@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog';
 
-import { DetalleCategoriaPage } from 'src/app/pages/inventario.pages/detalle-categoria/detalle-categoria.page';
+import { DetalleCategoria } from 'src/app/pages/inventario.pages/detalle-categoria/detalle-categoria';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { Categoria } from 'src/app/interfaces/models';
@@ -57,7 +57,7 @@ export class CategoriasPage implements OnInit {
         catId: id
       }
     }
-    this._dialog.open(DetalleCategoriaPage, config)
+    this._dialog.open(DetalleCategoria, config)
     .afterClosed()
     .subscribe((confirm:boolean) => {
       if(confirm){

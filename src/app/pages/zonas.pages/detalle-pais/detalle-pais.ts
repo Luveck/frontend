@@ -7,11 +7,11 @@ import { ZonasService } from 'src/app/services/zonas.service'
 
 @Component({
   selector: 'app-detalle-pais',
-  templateUrl: './detalle-pais.page.html',
-  styleUrls: ['./detalle-pais.page.scss'],
+  templateUrl: './detalle-pais.html',
+  styleUrls: ['./detalle-pais.scss'],
 })
 
-export class DetallePaisPage implements OnInit {
+export class DetallePais implements OnInit {
   currentPais!: Pais | any
   isLoadingResults!:boolean
   urlFlag!:string
@@ -27,7 +27,7 @@ export class DetallePaisPage implements OnInit {
 
   constructor(
     private _zonasServ:ZonasService,
-    public dialogo: MatDialogRef<DetallePaisPage>,
+    public dialogo: MatDialogRef<DetallePais>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){}
 

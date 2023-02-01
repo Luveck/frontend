@@ -7,7 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { Ciudad } from 'src/app/interfaces/models';
 import { ZonasService } from 'src/app/services/zonas.service';
-import { DetalleCiudadPage } from '../detalle-ciudad/detalle-ciudad.page';
+import { DetalleCiudad } from '../detalle-ciudad/detalle-ciudad';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 @Component({
@@ -88,7 +88,7 @@ export class CiudadesPage implements AfterViewInit {
         ciudadId: id
       }
     }
-    this._dialog.open(DetalleCiudadPage, config)
+    this._dialog.open(DetalleCiudad, config)
     .afterClosed()
     .subscribe((confirm:boolean) => {
       if(confirm){

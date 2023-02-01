@@ -7,7 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 import { UsuariosService } from 'src/app/services/usuarios.service';
-import { DetalleUsuarioPage } from '../detalle-usuario/detalle-usuario.page';
+import { DetalleUsuario } from '../detalle-usuario/detalle-usuario';
 import { RolesPage } from '../roles/roles.page';
 
 @Component({
@@ -86,7 +86,7 @@ export class UsuariosPage implements AfterViewInit {
         userDni: dni
       }
     }
-    this._dialog.open(DetalleUsuarioPage, config)
+    this._dialog.open(DetalleUsuario, config)
     .afterClosed()
     .subscribe((confirmado:boolean) => {
       if(confirmado){

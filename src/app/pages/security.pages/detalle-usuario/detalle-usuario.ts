@@ -6,11 +6,11 @@ import { UsuariosService } from 'src/app/services/usuarios.service';
 
 @Component({
   selector: 'app-detalle-usuario',
-  templateUrl: './detalle-usuario.page.html',
-  styleUrls: ['./detalle-usuario.page.scss'],
+  templateUrl: './detalle-usuario.html',
+  styleUrls: ['./detalle-usuario.scss'],
 })
 
-export class DetalleUsuarioPage implements OnInit {
+export class DetalleUsuario implements OnInit {
   currentUser!: any
   isLoadingResults?:boolean
 
@@ -27,7 +27,7 @@ export class DetalleUsuarioPage implements OnInit {
 
   constructor(
     public usersServ:UsuariosService,
-    public dialogo: MatDialogRef<DetalleUsuarioPage>,
+    public dialogo: MatDialogRef<DetalleUsuario>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){}
 

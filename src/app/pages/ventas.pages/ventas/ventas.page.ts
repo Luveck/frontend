@@ -5,18 +5,18 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { Farmacia } from 'src/app/interfaces/models';
-import { FarmaciasService } from 'src/app/services/farmacias.service';
-import { DetalleFarmacia } from '../detalle-farmacia/detalle-farmacia';
+import { Departamento } from 'src/app/interfaces/models';
+import { ZonasService } from 'src/app/services/zonas.service';
+import { DetalleVenta } from '../detalle-ventas/detalle-venta';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 @Component({
-  selector: 'app-farmacias',
-  templateUrl: './farmacias.page.html',
-  styleUrls: ['./farmacias.page.scss'],
+  selector: 'app-ventas',
+  templateUrl: './ventas.page.html',
+  styleUrls: ['./ventas.page.scss'],
 })
 
-export class FarmaciasPage implements AfterViewInit {
+export class VentasPage implements AfterViewInit {
   public breadcrumb = {
     links: [
       {
@@ -25,37 +25,37 @@ export class FarmaciasPage implements AfterViewInit {
         link: '/admin/home'
       },
       {
-        name: 'Gestión de Farmacias',
+        name: 'Gestión de Ventas',
         isLink: false,
       }
     ]
   }
 
-  @Input('ELEMENT_DATA')  ELEMENT_DATA!:Farmacia[];
+  @Input('ELEMENT_DATA')  ELEMENT_DATA!:Departamento[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['name', 'city', 'isDeleted', 'creationDate', 'acctions'];
-  dataSource = new MatTableDataSource<Farmacia>(this.ELEMENT_DATA);
+  displayedColumns:string[] = ['name', 'countryName', 'countryCode', 'status', 'creationDate', 'acctions'];
+  dataSource = new MatTableDataSource<Departamento>(this.ELEMENT_DATA);
 
-  isLoadingResults:boolean = true;
+  isLoadingResults:boolean = true
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
     private _dialog: MatDialog,
-    private _farmaServ:FarmaciasService
+    private _zonasServ:ZonasService,
   ){}
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort;
-    this.getAllFarmacias()
+    this.getAllDepartamentos()
   }
 
-  getAllFarmacias(){
-    const resp = this._farmaServ.getFarmacias()
-    resp.subscribe(farmas => {
-      this.dataSource.data = farmas.result as Farmacia[]
-      this._farmaServ.listFarmacias = farmas.result
+  getAllDepartamentos() {
+    const resp = this._zonasServ.getDepartamentos()
+    resp.subscribe(departamentos => {
+      this.dataSource.data = departamentos.result as Departamento[]
+      this._zonasServ.listDepartamentos = departamentos.result
       this.isLoadingResults = false
       console.log(this.dataSource.data)
     }, (err => {
@@ -84,31 +84,30 @@ export class FarmaciasPage implements AfterViewInit {
   on(id?:string){
     const config = {
       data: {
-        title: id ?'Editar Farmacia' :'Agregar Farmacia',
-        farmaId: id
+        title: id ?'Editar Venta' :'Agregar Venta',
+        departamentoId: id
       }
     }
-    this._dialog.open(DetalleFarmacia, config)
+    this._dialog.open(DetalleVenta, config)
     .afterClosed()
     .subscribe((confirm:boolean) => {
       if(confirm){
         this.isLoadingResults = true
-        this.getAllFarmacias()
+        this.getAllDepartamentos()
       }
     })
   }
 
-  chageState(row:Farmacia){
+  chageState(row:Departamento){
     const formData = {
       "name": row.name,
-      "adress": row.adress,
-      "cityId": row.cityId
+      "idCountry": row.countryId
     }
     let msgDialog:string
-    if(!row.isDeleted){
-      msgDialog = '¿Seguro de querer inhabilitar esta farmacia?'
+    if(row.status){
+      msgDialog = '¿Seguro de querer inhabilitar este departamento?'
     }else{
-      msgDialog = '¿Seguro de querer habilitar esta farmacia?'
+      msgDialog = '¿Seguro de querer habilitar este departamento?'
     }
     this._dialog.open(DialogConfComponent, {
       data: msgDialog
@@ -116,18 +115,17 @@ export class FarmaciasPage implements AfterViewInit {
     .afterClosed()
     .subscribe((confirmado:boolean)=>{
       if(confirmado){
-        row.isDeleted = !row.isDeleted
-        const res = this._farmaServ.updateFarmacia(formData, row.id, row.isDeleted)
+        row.status = !row.status
+        const res = this._zonasServ.updateDepartamento(formData, row.id, row.status)
           res.subscribe(res => {
             if(res){
-              this._farmaServ.notify('Farmacia actualizada', 'success')
+              this._zonasServ.notify('Departamento actualizado', 'success')
               this.isLoadingResults = true
-              this.getAllFarmacias()
+              this.getAllDepartamentos()
             }
           }, (err => {
             console.log(err)
-            this.getAllFarmacias()
-            this._farmaServ.notify('Ocurrio un error con el proceso.', 'error')
+            this._zonasServ.notify('Ocurrio un error con el proceso.', 'error')
           }))
       }
     })

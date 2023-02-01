@@ -7,11 +7,11 @@ import { ZonasService } from 'src/app/services/zonas.service'
 
 @Component({
   selector: 'app-detalle-ciudad',
-  templateUrl: './detalle-ciudad.page.html',
-  styleUrls: ['./detalle-ciudad.page.scss'],
+  templateUrl: './detalle-ciudad.html',
+  styleUrls: ['./detalle-ciudad.scss'],
 })
 
-export class DetalleCiudadPage implements OnInit {
+export class DetalleCiudad implements OnInit {
   currentCiudad!: Ciudad | any
   departamentos!: Departamento[]
   isLoadingResults!:boolean
@@ -23,7 +23,7 @@ export class DetalleCiudadPage implements OnInit {
 
   constructor(
     private _zonasServ:ZonasService,
-    public dialogo: MatDialogRef<DetalleCiudadPage>,
+    public dialogo: MatDialogRef<DetalleCiudad>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){}
 

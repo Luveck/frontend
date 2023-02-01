@@ -8,11 +8,11 @@ import { FarmaciasService } from 'src/app/services/farmacias.service';
 
 @Component({
   selector: 'app-detalle-farmacia',
-  templateUrl: './detalle-farmacia.page.html',
-  styleUrls: ['./detalle-farmacia.page.scss'],
+  templateUrl: './detalle-farmacia.html',
+  styleUrls: ['./detalle-farmacia.scss'],
 })
 
-export class DetalleFarmaciaPage implements OnInit {
+export class DetalleFarmacia implements OnInit {
   currentFarmacia!: Farmacia | any
   ciudades!: Ciudad[]
   isLoadingResults!:boolean
@@ -26,7 +26,7 @@ export class DetalleFarmaciaPage implements OnInit {
   constructor(
     private _zonasServ:ZonasService,
     private _farmaServ:FarmaciasService,
-    public dialogo: MatDialogRef<DetalleFarmaciaPage>,
+    public dialogo: MatDialogRef<DetalleFarmacia>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){}
 

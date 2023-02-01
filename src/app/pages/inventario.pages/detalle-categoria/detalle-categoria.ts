@@ -6,18 +6,18 @@ import { InventarioService } from 'src/app/services/inventario.service';
 
 @Component({
   selector: 'app-detalle-categoria',
-  templateUrl: './detalle-categoria.page.html',
-  styleUrls: ['./detalle-categoria.page.scss']
+  templateUrl: './detalle-categoria.html',
+  styleUrls: ['./detalle-categoria.scss']
 })
 
-export class DetalleCategoriaPage implements OnInit {
+export class DetalleCategoria implements OnInit {
   currentCategoria!: Categoria | any;
   name!: string
   isLoadingResults!:boolean
 
   constructor(
     private _inveServ:InventarioService,
-    public dialogo: MatDialogRef<DetalleCategoriaPage>,
+    public dialogo: MatDialogRef<DetalleCategoria>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 

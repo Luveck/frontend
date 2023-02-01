@@ -7,11 +7,11 @@ import { MedicosService } from 'src/app/services/medicos.service'
 
 @Component({
   selector: 'app-detalle-medico',
-  templateUrl: './detalle-medico.page.html',
-  styleUrls: ['./detalle-medico.page.scss'],
+  templateUrl: './detalle-medico.html',
+  styleUrls: ['./detalle-medico.scss'],
 })
 
-export class DetalleMedicoPage implements OnInit {
+export class DetalleMedico implements OnInit {
   currentMedic!: Medico | any
   especialidades!: Especialidad[]
   isLoadingResults!:boolean
@@ -24,7 +24,7 @@ export class DetalleMedicoPage implements OnInit {
 
   constructor(
     private _medicServ: MedicosService,
-    public dialogo: MatDialogRef<DetalleMedicoPage>,
+    public dialogo: MatDialogRef<DetalleMedico>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){}
 
