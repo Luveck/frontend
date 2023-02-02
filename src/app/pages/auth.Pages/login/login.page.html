@@ -7,7 +7,7 @@
     <form [formGroup]="loginForm" autocomplete="off">
       <mat-form-field appearance="outline">
         <mat-label>DNI</mat-label>
-        <input matInput placeholder="DNI de usuario" formControlName="dni">
+        <input matInput placeholder="DNI de usuario" formControlName="dni" maxlength="13">
         <mat-icon matPrefix>person</mat-icon>
         <mat-error>
           DNI requerido

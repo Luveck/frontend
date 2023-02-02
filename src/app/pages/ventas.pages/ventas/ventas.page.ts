@@ -5,10 +5,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { Departamento } from 'src/app/interfaces/models';
-import { ZonasService } from 'src/app/services/zonas.service';
+import { Venta } from 'src/app/interfaces/models';
 import { DetalleVenta } from '../detalle-ventas/detalle-venta';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
+import { VentasService } from 'src/app/services/ventas.service';
+import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
 
 @Component({
   selector: 'app-ventas',
@@ -31,31 +32,30 @@ export class VentasPage implements AfterViewInit {
     ]
   }
 
-  @Input('ELEMENT_DATA')  ELEMENT_DATA!:Departamento[];
+  @Input('ELEMENT_DATA')  ELEMENT_DATA!:Venta[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns:string[] = ['name', 'countryName', 'countryCode', 'status', 'creationDate', 'acctions'];
-  dataSource = new MatTableDataSource<Departamento>(this.ELEMENT_DATA);
+  displayedColumns:string[] = ['noPurchase', 'namePharmacy', 'buyer', 'reviewed', 'creationDate', 'acctions'];
+  dataSource = new MatTableDataSource<Venta>(this.ELEMENT_DATA);
 
   isLoadingResults:boolean = true
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
     private _dialog: MatDialog,
-    private _zonasServ:ZonasService,
+    private _ventasServ:VentasService,
   ){}
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort;
-    this.getAllDepartamentos()
+    this.getAllVentas()
   }
 
-  getAllDepartamentos() {
-    const resp = this._zonasServ.getDepartamentos()
-    resp.subscribe(departamentos => {
-      this.dataSource.data = departamentos.result as Departamento[]
-      this._zonasServ.listDepartamentos = departamentos.result
+  getAllVentas() {
+    const resp = this._ventasServ.getVentas()
+    resp.subscribe(ventas => {
+      this.dataSource.data = ventas.result as Venta[]
       this.isLoadingResults = false
       console.log(this.dataSource.data)
     }, (err => {
@@ -85,7 +85,7 @@ export class VentasPage implements AfterViewInit {
     const config = {
       data: {
         title: id ?'Editar Venta' :'Agregar Venta',
-        departamentoId: id
+        ventaId: id
       }
     }
     this._dialog.open(DetalleVenta, config)
@@ -93,21 +93,22 @@ export class VentasPage implements AfterViewInit {
     .subscribe((confirm:boolean) => {
       if(confirm){
         this.isLoadingResults = true
-        this.getAllDepartamentos()
+        this.getAllVentas()
       }
     })
   }
 
-  chageState(row:Departamento){
+  chageState(row:Venta){
     const formData = {
-      "name": row.name,
-      "idCountry": row.countryId
+      "pharmacyId": row.idPharmacy,
+      "userId": row.buyer,
+      "noPurchase": row.noPurchase
     }
     let msgDialog:string
-    if(row.status){
-      msgDialog = '¿Seguro de querer inhabilitar este departamento?'
+    if(row.reviewed){
+      msgDialog = '¿Seguro de querer verificar esta venta?'
     }else{
-      msgDialog = '¿Seguro de querer habilitar este departamento?'
+      msgDialog = '¿Seguro de querer invalidar esta venta?'
     }
     this._dialog.open(DialogConfComponent, {
       data: msgDialog
@@ -115,23 +116,29 @@ export class VentasPage implements AfterViewInit {
     .afterClosed()
     .subscribe((confirmado:boolean)=>{
       if(confirmado){
-        row.status = !row.status
-        const res = this._zonasServ.updateDepartamento(formData, row.id, row.status)
+        row.reviewed = !row.reviewed
+        const res = this._ventasServ.updateVenta(formData, row.id, row.reviewed)
           res.subscribe(res => {
             if(res){
-              this._zonasServ.notify('Departamento actualizado', 'success')
+              this._ventasServ.notify('Venta velidada', 'success')
               this.isLoadingResults = true
-              this.getAllDepartamentos()
+              this.getAllVentas()
             }
           }, (err => {
             console.log(err)
-            this._zonasServ.notify('Ocurrio un error con el proceso.', 'error')
+            this._ventasServ.notify('Ocurrio un error con el proceso.', 'error')
           }))
       }
     })
   }
 
   generateReport(){
-    console.log('voy a generar el reporte xd')
+    this._dialog.open(ModalReportComponent, {
+      disableClose: true,
+      data: {
+        'title': 'Reporte General de Ventas',
+        'body': this.dataSource.data
+      }
+    })
   }
 }

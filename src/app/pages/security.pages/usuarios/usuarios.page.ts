@@ -4,10 +4,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { DetalleUsuario } from '../detalle-usuario/detalle-usuario';
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { RolesPage } from '../roles/roles.page';
 
 @Component({
@@ -94,6 +94,10 @@ export class UsuariosPage implements AfterViewInit {
         this.getAllUsers()
       }
     })
+  }
+
+  chageState(user:any){
+    console.log(user)
   }
 
   dialog(id: string, estado: boolean) {

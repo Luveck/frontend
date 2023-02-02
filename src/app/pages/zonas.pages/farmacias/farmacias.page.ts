@@ -9,6 +9,7 @@ import { Farmacia } from 'src/app/interfaces/models';
 import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { DetalleFarmacia } from '../detalle-farmacia/detalle-farmacia';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
+import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
 
 @Component({
   selector: 'app-farmacias',
@@ -133,7 +134,13 @@ export class FarmaciasPage implements AfterViewInit {
     })
   }
 
-  generateReport(){
-    console.log('voy a generar el reporte xd')
+  generateReport() {
+    this._dialog.open(ModalReportComponent, {
+      disableClose: true,
+      data: {
+        'title': 'Reporte General de Farmacias',
+        'body': this.dataSource.data
+      }
+    })
   }
 }

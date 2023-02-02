@@ -4,15 +4,17 @@
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
   </div>
   <div class="contensRoles">
-    <div class="itemRol" *ngFor="let rol of usuariosServ.localRoles; index as i">
-      <span>{{rol.name}}</span>
-      <div class="actions">
-        <button mat-icon-button color="accent" (click)="on(rol.name)" matTooltip="Editar Rol">
-          <mat-icon>edit</mat-icon>
-        </button>
-        <button mat-icon-button color="warn" (click)="dialog(i)" matTooltip="Eliminar Rol">
-          <mat-icon>delete</mat-icon>
-        </button>
+    <div class="itemRol" *ngFor="let rol of usuariosServ.localRoles">
+      <div *ngIf="rol.state">
+        <span>{{rol.name}}</span>
+        <div class="actions">
+          <button mat-icon-button color="accent" (click)="on(rol.name)" matTooltip="Editar Rol">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" matTooltip="Eliminar Rol">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
       </div>
     </div>
   </div>

@@ -5,7 +5,7 @@
   <div class="mainBody">
     <mat-card class="mat-elevation-z8">
       <div class="texto">
-        <span>{{counterVentas}}</span>
+        <span>{{counterVentas || 0}}</span>
         <h2>Ventas registradas</h2>
         <button mat-stroked-button routerLink="/admin/ventas/ventas">
           Ver detalles

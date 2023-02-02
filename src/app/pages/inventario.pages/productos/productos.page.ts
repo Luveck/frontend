@@ -9,6 +9,7 @@ import { Producto } from 'src/app/interfaces/models';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { DetalleProducto } from '../detalle-producto/detalle-producto';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
+import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
 
 @Component({
   selector: 'app-productos',
@@ -138,6 +139,12 @@ export class ProductosPage implements AfterViewInit {
   }
 
   generateReport(){
-    console.log('voy a generar el reporte xd')
+    this._dialog.open(ModalReportComponent, {
+      disableClose: true,
+      data: {
+        'title': 'Reporte General de Productos',
+        'body': this.dataSource.data
+      }
+    })
   }
 }

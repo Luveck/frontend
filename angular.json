@@ -18,7 +18,9 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "allowedCommonJsDependencies": [
-              "sweetalert2"
+              "sweetalert2",
+              "html2canvas",
+              "jspdf"
             ],
             "outputPath": "dist/luveck-frontend",
             "index": "src/index.html",
@@ -34,7 +36,10 @@
               "src/styles.scss",
               "node_modules/sweetalert2/src/sweetalert2.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/html2canvas/dist/html2canvas.min.js",
+              "node_modules/jspdf/dist/jspdf.umd.min.js"
+            ]
           },
           "configurations": {
             "production": {

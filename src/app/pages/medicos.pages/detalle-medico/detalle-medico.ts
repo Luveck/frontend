@@ -41,7 +41,7 @@ export class DetalleMedico implements OnInit {
       const pais = this._medicServ.getMedicoById(this.data.medicoId)
       pais.subscribe(res => {
         console.log(res)
-        this.currentMedic = res
+        this.currentMedic = res.result
         this.isLoadingResults = false
         this.initValores()
       }, (err => {

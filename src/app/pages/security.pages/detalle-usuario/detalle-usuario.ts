@@ -32,7 +32,7 @@ export class DetalleUsuario implements OnInit {
   ){}
 
   ngOnInit(): void {
-    if(this.usersServ.localRoles.length == 0){
+    if(this.usersServ.localRoles){
       this.usersServ.getAllRoles().subscribe((res:any) => this.usersServ.localRoles = res.result)
     }
     if(this.data.userDni){

@@ -1,6 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core'
-import { MatDialog } from '@angular/material/dialog';
-import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
+import { Component, OnInit } from '@angular/core'
 import { DataService } from 'src/app/services/data.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 
@@ -15,7 +13,6 @@ export class RolesPage implements OnInit {
   isLoadingResults:boolean = true;
 
   constructor(
-    private _dialog:MatDialog,
     private _dataServ:DataService,
     public usuariosServ:UsuariosService
   ){}
@@ -23,6 +20,7 @@ export class RolesPage implements OnInit {
   ngOnInit(): void {
     this.isLoadingResults = true
     this.usuariosServ.getAllRoles().subscribe((res:any) => {
+      console.log(res)
       this.isLoadingResults = false
       this.usuariosServ.localRoles = res.result
     }, (error)=>{
@@ -35,21 +33,6 @@ export class RolesPage implements OnInit {
 
   on(name:string){
     this.name = name
-  }
-
-  dialog(index:number) {
-    let msg = '¿Seguro de querer eliminar este rol?'
-
-    this._dialog.open(DialogConfComponent, {
-      data: `${msg}`
-    })
-      .afterClosed()
-      .subscribe((confirmado: Boolean) => {
-        if (confirmado) {
-          this.usuariosServ.localRoles.slice(index, 1)
-          this.usuariosServ.notify('Registro actualizado', 'success')
-        }
-      })
   }
 
   save(){

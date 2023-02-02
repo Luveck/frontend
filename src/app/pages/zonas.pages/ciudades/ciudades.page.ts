@@ -9,6 +9,7 @@ import { Ciudad } from 'src/app/interfaces/models';
 import { ZonasService } from 'src/app/services/zonas.service';
 import { DetalleCiudad } from '../detalle-ciudad/detalle-ciudad';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
+import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
 
 @Component({
   selector: 'app-ciudades',
@@ -133,6 +134,12 @@ export class CiudadesPage implements AfterViewInit {
   }
 
   generateReport(){
-    console.log('voy a generar el reporte xd')
+    this._dialog.open(ModalReportComponent, {
+      disableClose: true,
+      data: {
+        'title': 'Reporte General de Ciudades',
+        'body': this.dataSource.data
+      }
+    })
   }
 }

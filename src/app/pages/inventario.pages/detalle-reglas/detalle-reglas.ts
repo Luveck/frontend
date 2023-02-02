@@ -35,7 +35,7 @@ export class DetalleReglas implements OnInit {
   ngOnInit(): void {
     if(this.data.ruleId){
       this.isLoadingResults = true
-      const farmacia = this._rulesServ.getRulesById(this.data.farmaId)
+      const farmacia = this._rulesServ.getRuleById(this.data.ruleId)
       farmacia.subscribe(res => {
         console.log(res)
         this.currentRegla = res.result

@@ -7,7 +7,7 @@
         <mat-icon>add</mat-icon>
         Agregar Usuario
       </button>
-
+      &nbsp;
 <!--       <button mat-raised-button color="primary" (click)="onModalRoles()">
         <mat-icon>contacts</mat-icon>
         Ver Roles
@@ -17,7 +17,7 @@
     <mat-form-field appearance="standard">
       <mat-icon matPrefix>search</mat-icon>
       <mat-label>Buscar</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Buscar por nombre" #input autocomplete="off">
+      <input matInput (keyup)="applyFilter($event)" placeholder="Buscar por nombre / DNI / role" #input autocomplete="off">
     </mat-form-field>
   </header>
 
@@ -56,6 +56,11 @@
           <button mat-stroked-button (click)="on(row.userName)">
             Ver detalles
             <mat-icon color="accent">arrow_forward</mat-icon>
+          </button>
+
+          <button mat-stroked-button (click)="chageState(row)">
+            Cambiar estado
+            <mat-icon color="warn">published_with_changes</mat-icon>
           </button>
         </td>
       </ng-container>

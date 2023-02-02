@@ -5,6 +5,7 @@ import { DetalleReglas } from 'src/app/pages/inventario.pages/detalle-reglas/det
 import { RulesService } from 'src/app/services/rules.service';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { Rule } from 'src/app/interfaces/models';
+import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
 
 @Component({
   selector: 'app-reglas',
@@ -106,6 +107,12 @@ export class ReglasPage implements OnInit {
   }
 
   generateReport(){
-    console.log('voy a generar el reporte xd')
+    this._dialog.open(ModalReportComponent, {
+      disableClose: true,
+      data: {
+        'title': 'Reporte General de Reglas de Canje',
+        'body': this.rulesServ.reglas
+      }
+    })
   }
 }

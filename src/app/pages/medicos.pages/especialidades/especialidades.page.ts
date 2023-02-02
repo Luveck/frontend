@@ -5,6 +5,7 @@ import { MedicosService } from 'src/app/services/medicos.service';
 import { DetalleEspacialidad } from '../detalle-especialidad/detalle-espacialidad';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { Especialidad } from 'src/app/interfaces/models';
+import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
 
 @Component({
   selector: 'app-especialidades',
@@ -98,6 +99,12 @@ export class EspecialidadesPage implements OnInit {
   }
 
   generateReport(){
-    console.log('voy a generar el reporte xd')
+    this._dialog.open(ModalReportComponent, {
+      disableClose: true,
+      data: {
+        'title': 'Reporte General de Especialidades Médicas',
+        'body': this.medicServ.especialidades
+      }
+    })
   }
 }

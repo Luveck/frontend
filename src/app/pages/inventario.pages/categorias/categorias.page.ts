@@ -5,6 +5,7 @@ import { DetalleCategoria } from 'src/app/pages/inventario.pages/detalle-categor
 import { InventarioService } from 'src/app/services/inventario.service';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { Categoria } from 'src/app/interfaces/models';
+import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
 
 @Component({
   selector: 'app-categorias',
@@ -98,6 +99,12 @@ export class CategoriasPage implements OnInit {
   }
 
   generateReport(){
-    console.log('voy a generar el reporte xd')
+    this._dialog.open(ModalReportComponent, {
+      disableClose: true,
+      data: {
+        'title': 'Reporte General de Categorias de Productos',
+        'body': this.inveServ.categorias
+      }
+    })
   }
 }

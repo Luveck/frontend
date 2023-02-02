@@ -30,9 +30,9 @@ export class RulesService {
     )
   }
 
-  getRulesById(id:string){
+  getRuleById(id:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get<any>(`${this._dataServ.baseURL}/RuleChange/GetRule${id}`,
+    return this._http.get<any>(`${this._dataServ.baseURL}/RuleChange/GetRuleById?Id=${id}`,
       {headers: this.headers}
     )
   }

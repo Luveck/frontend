@@ -43,8 +43,8 @@
       <mat-form-field appearance="fill">
         <mat-label>Rol</mat-label>
         <mat-select formControlName="role">
-          <div *ngFor="let rol of usersServ.localRoles; index as i">
-            <mat-option [value]="rol.name">
+          <div *ngFor="let rol of usersServ.localRoles">
+            <mat-option *ngIf="rol.state" [value]="rol.name">
               {{rol.name}}
             </mat-option>
           </div>

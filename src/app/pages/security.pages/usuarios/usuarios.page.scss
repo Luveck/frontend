@@ -13,7 +13,7 @@ main{
       padding: 0;
     }
     button{
-      margin: 1rem .5rem;
+      margin-bottom: 1rem;
     }
   }
   table {
@@ -23,8 +23,16 @@ main{
     color: var(--dark-text);
     font-weight: 900;
   }
-  td, th {
-    width: auto;
+  th, td{
     text-align: center;
+  }
+  .mat-column-acctions{
+    word-wrap: break-word !important;
+    white-space: unset !important;
+    width: 34% !important;
+    overflow-wrap: break-word;
+    button{
+      margin: 0.5rem 0.3rem;
+    }
   }
 }

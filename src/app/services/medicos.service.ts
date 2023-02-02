@@ -87,7 +87,7 @@ export class MedicosService {
 
   public getMedicoById(id:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get<any>(`${this._dataServ.baseURL}/Medical/GetMedical?id=${id}`,
+    return this._http.get<any>(`${this._dataServ.baseURL}/Medical/GetMedicalById?id=${id}`,
       {headers: this.headers}
     )
   }

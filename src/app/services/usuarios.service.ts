@@ -7,8 +7,8 @@ import { DataService } from './data.service';
   providedIn: 'root'
 })
 export class UsuariosService {
-  localUsers:any[] = []
-  localRoles:any[] = []
+  localUsers!:any[]
+  localRoles!:any[]
   headers: any
 
   constructor(
@@ -26,7 +26,7 @@ export class UsuariosService {
 
   public getUsers(){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.post(`https://apisecurityluveck.azurewebsites.net/api/Security/GetUsers`, {},
+    return this._http.get(`https://apisecurityluveck.azurewebsites.net/api/Security/GetUsers`,
       {headers: this.headers}
     )
   }

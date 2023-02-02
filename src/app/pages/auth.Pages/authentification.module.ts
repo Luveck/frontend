@@ -10,23 +10,28 @@ import { LoginPage } from './login/login.page';
 import { RegisterPage } from './register/register.page';
 import { ResetPasswordPage } from './reset-password/reset-password.page';
 import { ForgotPasswordPage } from './forgot-password/forgot-password.page';
+import { LoginGuard } from 'src/app/guards/login.guard';
 
 const routes: Routes = [
   {
     path: 'login',
-    component: LoginPage
+    component: LoginPage,
+    canActivate: [LoginGuard]
   },
   {
     path: 'register',
-    component: RegisterPage
+    component: RegisterPage,
+    canActivate: [LoginGuard]
   },
   {
     path: 'resetpassword',
-    component: ResetPasswordPage
+    component: ResetPasswordPage,
+    canActivate: [LoginGuard]
   },
   {
     path: 'forgotpassword',
-    component: ForgotPasswordPage
+    component: ForgotPasswordPage,
+    canActivate: [LoginGuard]
   },
   {
     path: 'noauthorized',

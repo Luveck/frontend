@@ -8,13 +8,15 @@ import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
 import { DialogConfComponent } from './dialog-conf/dialog-conf.component';
 import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
 import { SesionEndComponent } from './sesion-end/sesion-end.component';
+import { ModalReportComponent } from './modal-report/modal-report.component';
 
 @NgModule({
   declarations: [
     BreadcrumbComponent,
     DialogConfComponent,
     ScrollToTopComponent,
-    SesionEndComponent
+    SesionEndComponent,
+    ModalReportComponent
   ],
   imports: [
     RouterModule,
@@ -27,7 +29,8 @@ import { SesionEndComponent } from './sesion-end/sesion-end.component';
     BreadcrumbComponent,
     DialogConfComponent,
     ScrollToTopComponent,
-    SesionEndComponent
+    SesionEndComponent,
+    ModalReportComponent
   ]
 })
 

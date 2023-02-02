@@ -57,7 +57,7 @@ export class AuthService {
     }
     this.expToken = tokenData.exp
     if(this.checkTokenDate(tokenData.exp)){
-      if(tokenData.Role != 'Cliente' || tokenData.Email === 'prueba@luveck'){
+      if(tokenData.Role != 'Cliente'){
         this._dataServ.goTo('/admin/home')
       }else{
         this._dataServ.goTo('/inicio')

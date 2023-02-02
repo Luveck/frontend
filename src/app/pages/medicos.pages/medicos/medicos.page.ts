@@ -9,6 +9,7 @@ import { Medico } from 'src/app/interfaces/models';
 import { MedicosService } from 'src/app/services/medicos.service';
 import { DetalleMedico } from '../detalle-medico/detalle-medico';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
+import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
 
 @Component({
   selector: 'app-medicos',
@@ -53,10 +54,10 @@ export class MedicosPage implements AfterViewInit {
 
   getAllMedics(){
     let resp = this._medicServ.getMedicos()
-    resp.subscribe(Medicos => {
-      this.dataSource.data = Medicos.result as Medico[]
+    resp.subscribe(medicos => {
+      console.log(medicos)
+      this.dataSource.data = medicos.result as Medico[]
       this.isLoadingResults = false
-      console.log(this.dataSource.data)
     }, (err => {
       this.isLoadingResults = false
       console.log(err)
@@ -133,6 +134,12 @@ export class MedicosPage implements AfterViewInit {
   }
 
   generateReport(){
-    console.log('voy a generar el reporte xd')
+    this._dialog.open(ModalReportComponent, {
+      disableClose: true,
+      data: {
+        'title': 'Reporte General de Médicos',
+        'body': this.dataSource.data
+      }
+    })
   }
 }
