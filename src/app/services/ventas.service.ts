@@ -29,10 +29,18 @@ export class VentasService {
     )
   }
 
+  getVentaByNoPurchase(noPurchase:string){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    return this._http.get<any>(`${this._dataServ.baseURL}/Purchase/GetPurchaseByNoPurchase?PurchaseNo=${noPurchase}`,
+      {headers: this.headers}
+    )
+  }
+
   addVenta(formData:any){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     let dataVenta:Venta = {
       ...formData,
+      "userId": this._authServ.userData.UserId,
       "reviewed": false
     }
     return this._http.post(`${this._dataServ.baseURL}/Purchase/CreatePurchase`, dataVenta, {
@@ -46,10 +54,18 @@ export class VentasService {
       "id": idVenta,
       ...formData,
       "reviewed": state,
+      "dateShiped": new Date()
     }
     console.log(dataVenta)
     return this._http.post(`${this._dataServ.baseURL}/Purchase/UpdatePurchase`, dataVenta, {
       headers: this.headers
     })
+  }
+
+  getProductosOfVenta(id:string){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    return this._http.get<any>(`${this._dataServ.baseURL}/ProductPurchase/GetProductByPurchase?purchaseId=${id}`,
+      {headers: this.headers}
+    )
   }
 }

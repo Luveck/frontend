@@ -38,15 +38,10 @@
         <td mat-cell *matCellDef="let row"> {{row.namePharmacy}} </td>
       </ng-container>
 
-      <ng-container matColumnDef="buyer">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Cliente</th>
-        <td mat-cell *matCellDef="let row"> {{row.buyer}} </td>
-      </ng-container>
-
       <ng-container matColumnDef="reviewed">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Verificación </th>
         <td mat-cell *matCellDef="let row">
-          <span class="chip" [ngClass]="{'active': row.reviewed == true, 'inactive': row.reviewed == false}">{{row.reviewed ?'Verificado' :'Invalido'}}</span>
+          <span class="chip" [ngClass]="{'active': row.reviewed == true, 'inactive': row.reviewed == false}">{{row.reviewed ?'Verificado' :'Sin verificar'}}</span>
         </td>
       </ng-container>
 
@@ -58,13 +53,13 @@
       <ng-container matColumnDef="acctions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
         <td mat-cell *matCellDef="let row">
-          <button mat-stroked-button (click)="on(row.id)">
+          <button mat-stroked-button (click)="on(row)">
             Ver detalles
             <mat-icon color="accent">arrow_forward</mat-icon>
           </button>
 
-          <button mat-stroked-button (click)="chageState(row)">
-            Validad venta
+          <button mat-stroked-button (click)="chageState(row)" *ngIf="!row.reviewed">
+            Verificar venta
             <mat-icon color="warn">published_with_changes</mat-icon>
           </button>
         </td>

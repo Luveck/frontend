@@ -35,7 +35,7 @@ export class VentasPage implements AfterViewInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:Venta[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns:string[] = ['noPurchase', 'namePharmacy', 'buyer', 'reviewed', 'creationDate', 'acctions'];
+  displayedColumns:string[] = ['noPurchase', 'namePharmacy', 'reviewed', 'creationDate', 'acctions'];
   dataSource = new MatTableDataSource<Venta>(this.ELEMENT_DATA);
 
   isLoadingResults:boolean = true
@@ -81,11 +81,12 @@ export class VentasPage implements AfterViewInit {
     }
   }
 
-  on(id?:string){
+  on(row?:Venta){
     const config = {
       data: {
-        title: id ?'Editar Venta' :'Agregar Venta',
-        ventaId: id
+        title: row?.id ?'Editar Venta' :'Agregar Venta',
+        ventaId: row?.id,
+        currentVenta: row
       }
     }
     this._dialog.open(DetalleVenta, config)
@@ -105,7 +106,7 @@ export class VentasPage implements AfterViewInit {
       "noPurchase": row.noPurchase
     }
     let msgDialog:string
-    if(row.reviewed){
+    if(!row.reviewed){
       msgDialog = '¿Seguro de querer verificar esta venta?'
     }else{
       msgDialog = '¿Seguro de querer invalidar esta venta?'

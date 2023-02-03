@@ -29,6 +29,11 @@ mat-dialog-container{
       }
       th, td{
         padding: 12px 15px;
+        border-right: 1px solid #dddddd;
+
+        &:last-of-type{
+          border-right: none;
+        }
       }
       tbody tr {
         text-align: center;

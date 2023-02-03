@@ -16,7 +16,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let item of data.body">
-            <td *ngFor="let colum of colums">{{item[colum]}}</td>
+            <td *ngFor="let colum of colums">{{colum != 'dateShiped' ?item[colum] :item[colum] |date: 'M/d/yy, h:mm a'}}</td>
           </tr>
         </tbody>
       </table>

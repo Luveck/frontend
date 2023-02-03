@@ -22,7 +22,6 @@ export class ModalReportComponent implements OnInit {
 
   ngOnInit(): void {
     this.fecha = new Date()
-    console.log(this.data)
     this.defineSquema()
   }
 
@@ -33,7 +32,6 @@ export class ModalReportComponent implements OnInit {
   defineSquema(){
     const headeres = Object.keys(this.data.body[0])
     headeres.map(header => !this.columsExcluded.includes(header) ?this.colums.push(header) :null)
-    console.info(this.colums)
   }
 
   saveReport(){

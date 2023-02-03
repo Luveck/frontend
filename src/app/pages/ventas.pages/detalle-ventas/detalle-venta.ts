@@ -2,8 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 
-import { Departamento, Pais } from 'src/app/interfaces/models'
-import { ZonasService } from 'src/app/services/zonas.service'
+import { Venta, Producto, Farmacia } from 'src/app/interfaces/models'
+import { VentasService } from 'src/app/services/ventas.service';
+import { InventarioService } from 'src/app/services/inventario.service';
+import { FarmaciasService } from 'src/app/services/farmacias.service';
 
 @Component({
   selector: 'app-detalle-venta',
@@ -12,68 +14,74 @@ import { ZonasService } from 'src/app/services/zonas.service'
 })
 
 export class DetalleVenta implements OnInit {
-  currentDepartamento!: Departamento | any
-  paises!: Pais[]
+  currentVenta!: Venta | any
+  productsOnCurrentVenta!: any[]
+  productos!: Producto[]
+  farmacias!: Farmacia[]
   isLoadingResults!:boolean
 
-  public departamentoForm = new FormGroup({
-    idCountry: new FormControl('', Validators.required),
-    name: new FormControl('', Validators.required),
+  public ventaForm = new FormGroup({
+    pharmacyId: new FormControl('', Validators.required),
+    noPurchase: new FormControl('', Validators.required)
   })
 
   constructor(
-    private _zonasServ:ZonasService,
+    private _ventasServ:VentasService,
+    private _inveServ:InventarioService,
+    private _farmaServ:FarmaciasService,
     public dialogo: MatDialogRef<DetalleVenta>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){}
 
   ngOnInit(): void {
-    if(this.data.departamentoId){
+    if(this.data.ventaId){
+      this.currentVenta = this.data.currentVenta
+      this.initValores()
       this.isLoadingResults = true
-      const departamento = this._zonasServ.getDepartamentoById(this.data.departamentoId)
-      departamento.subscribe(res => {
+      const products = this._ventasServ.getProductosOfVenta(this.data.ventaId)
+      products.subscribe(res => {
         console.log(res)
-        this.currentDepartamento = res.result
+        this.productsOnCurrentVenta = res.result
         this.isLoadingResults = false
-        this.initValores()
       }, (err => {
         console.log(err)
         this.isLoadingResults = false
-        this._zonasServ.notify('Ocurrio un error con la petición', 'error')
+        this._ventasServ.notify('Ocurrio un error con la petición', 'error')
       }))
     }
-    this.paises = this._zonasServ.listPaises
+    this.farmacias = this._farmaServ.listFarmacias
+    this.productos = this._inveServ.listProducts
   }
 
   initValores(){
-    this.departamentoForm.patchValue({
-      idCountry: this.currentDepartamento.countryId,
-      name: this.currentDepartamento.name,
+    this.ventaForm.patchValue({
+      pharmacyId: this.currentVenta.idPharmacy,
+      noPurchase: this.currentVenta.noPurchase
     })
   }
 
   resetForm(){
-    this.departamentoForm.reset()
+    this.ventaForm.reset()
   }
 
   save(){
-    if(this.data.departamentoId){
-      const peticion = this._zonasServ.updateDepartamento(this.departamentoForm.value, this.data.departamentoId, this.currentDepartamento.status)
+    if(this.data.ventaId){
+      const peticion = this._ventasServ.updateVenta(this.ventaForm.value, this.data.ventaId, this.currentVenta.reviewed)
       peticion.subscribe(() => {
-        this._zonasServ.notify('Registro actualizado', 'success')
+        this._ventasServ.notify('Registro actualizado', 'success')
         this.dialogo.close(true);
       }, (err => {
         console.log(err)
-        this._zonasServ.notify('Ocurrio un error con el proceso', 'error')
+        this._ventasServ.notify('Ocurrio un error con el proceso', 'error')
       }))
     }else{
-      const peticion = this._zonasServ.addDepartamento(this.departamentoForm.value)
+      const peticion = this._ventasServ.addVenta(this.ventaForm.value)
       peticion.subscribe(() => {
-        this._zonasServ.notify('Departamento registrado', 'success')
+        this._inveServ.notify('Venta registrada', 'success')
         this.dialogo.close(true);
       }, (err => {
         console.log(err)
-        this._zonasServ.notify('Ocurrio un error con el proceso', 'error')
+        this._ventasServ.notify('Ocurrio un error con el proceso', 'error')
       }))
     }
   }

@@ -143,6 +143,18 @@ export interface Venta{
   buyer: string
   noPurchase: string
   reviewed: boolean
+  dateShiped: string
+  createBy?: string
+  creationDate?: string
+  updateBy?: string
+  updateDate?: string
+}
+
+export interface ProductOnVenta{
+  productName: string
+  productId: number
+  quantityShiped: number
+  dateShiped: string
   createBy?: string
   creationDate?: string
   updateBy?: string
