@@ -12,6 +12,10 @@ import { DataService } from 'src/app/services/data.service';
 export class ModalReportComponent implements OnInit {
   fecha:any
   doneCreate:boolean = false
+  colums:string[] = []
+  columsExcluded: string[] = [
+    'id', 'status', 'state', 'isDeleted', 'createBy', 'creationDate', 'updateBy', 'updateDate', 'countryId', 'departymentId', 'cityId', 'idCategory', 'productId', 'patologyId', 'idCityPharmacy', 'idPharmacy', 'reviewed', 'urlOficial'
+  ]
 
   constructor(public dataServ:DataService, public dialogo: MatDialogRef<ModalReportComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
@@ -19,10 +23,17 @@ export class ModalReportComponent implements OnInit {
   ngOnInit(): void {
     this.fecha = new Date()
     console.log(this.data)
+    this.defineSquema()
   }
 
   cerrarDialogo(): void {
     this.dialogo.close();
+  }
+
+  defineSquema(){
+    const headeres = Object.keys(this.data.body[0])
+    headeres.map(header => !this.columsExcluded.includes(header) ?this.colums.push(header) :null)
+    console.info(this.colums)
   }
 
   saveReport(){

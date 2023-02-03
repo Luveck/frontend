@@ -1,3 +1,6 @@
+mat-dialog-container{
+  height: 500px;
+}
 .mat-dialog-title{
   text-align: center;
 }
@@ -9,7 +12,7 @@
     width: 100%;
     text-align: center;
     img{
-      width: 300px;
+      width: 260px;
     }
   }
   .reportBody{
@@ -22,12 +25,13 @@
       thead tr {
         background-color: #193a74;
         color: #ffffff;
-        text-align: left;
+        text-align: center;
       }
       th, td{
         padding: 12px 15px;
       }
       tbody tr {
+        text-align: center;
         border-bottom: 1px solid #dddddd;
         &:nth-of-type(even){
           background-color: #f3f3f3;

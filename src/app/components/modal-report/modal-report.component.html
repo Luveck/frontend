@@ -11,66 +11,12 @@
       <table class="styled-table">
         <thead>
           <tr>
-            <th>Month</th>
-            <th>Savings</th>
-            <th>Savings</th>
-            <th>Savings</th>
-            <th>Savings</th>
-            <th>Savings</th>
-            <th>Savings</th>
-            <th>Savings</th>
+            <th *ngFor="let colum of colums">{{colum}}</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>January</td>
-            <td>$100</td>
-            <td>$100</td>
-            <td>$100</td>
-            <td>$100</td>
-            <td>$100</td>
-            <td>$100</td>
-            <td>$100</td>
-          </tr>
-          <tr>
-            <td>February</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-          </tr>
-          <tr>
-            <td>February</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-          </tr>
-          <tr>
-            <td>February</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-          </tr>
-          <tr>
-            <td>February</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
-            <td>$80</td>
+          <tr *ngFor="let item of data.body">
+            <td *ngFor="let colum of colums">{{item[colum]}}</td>
           </tr>
         </tbody>
       </table>
