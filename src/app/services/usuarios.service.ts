@@ -26,21 +26,21 @@ export class UsuariosService {
 
   public getUsers(){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get(`https://apisecurityluveck.azurewebsites.net/api/Security/GetUsers`,
+    return this._http.get(`https://luveckservicesecurity20230209131650.azurewebsites.net/api/Security/GetUsers`,
       {headers: this.headers}
     )
   }
 
   public getUserByID(id:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get(`https://apisecurityluveck.azurewebsites.net/api/Security/getUserByID?Id=${id}`,
+    return this._http.get(`https://luveckservicesecurity20230209131650.azurewebsites.net/api/Security/getUserByID?Id=${id}`,
       {headers: this.headers}
     )
   }
 
   public getUserByDNI(dni:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get(`https://apisecurityluveck.azurewebsites.net/api/Security/getUserByDNI?DNI=${dni}`,
+    return this._http.get(`https://luveckservicesecurity20230209131650.azurewebsites.net/api/Security/getUserByDNI?DNI=${dni}`,
       {headers: this.headers}
     )
   }
@@ -85,14 +85,14 @@ export class UsuariosService {
 
   public getAllRoles(){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get(`https://apisecurityluveck.azurewebsites.net/api/Roles/GetRoles`,
+    return this._http.get(`https://luveckservicesecurity20230209131650.azurewebsites.net/api/Roles/GetRoles`,
       {headers: this.headers}
     )
   }
 
   public createRole(nameRole:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.post(`https://apisecurityluveck.azurewebsites.net/api/Roles/CreateRole?role=${nameRole}`, {},
+    return this._http.post(`https://luveckservicesecurity20230209131650.azurewebsites.net/api/Roles/CreateRole?role=${nameRole}`, {},
       {headers: this.headers}
     )
   }
