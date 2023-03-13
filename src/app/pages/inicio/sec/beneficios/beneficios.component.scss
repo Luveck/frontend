@@ -15,6 +15,8 @@
     gap: 1.5rem;
     .text{
       text-align: center;
+      font-size: 1.2rem;
+      line-height: 1.5;
       span{
         font-weight: 600;
         color: #ed6c05;
@@ -37,7 +39,8 @@
       }
     }
     img{
-      width: 450px;
+      width: 400px;
+      border-radius: 10px;
     }
   }
   .linkRegis{

@@ -52,7 +52,7 @@
           <mat-icon>{{localTheme ?'light_mode' :'brightness_3'}}</mat-icon>
         </button>
 
-        <button mat-button>
+        <div>
           <div class="nameDate">
             <div class="imgCont">
               <img appNotImage [src]="img">
@@ -63,7 +63,7 @@
               <!-- <span>{{authServ.userData.Email === 'prueba@luveck' ?'Administrador' :'Cliente'}}</span> -->
             </div>
           </div>
-        </button>
+        </div>
 
         <button mat-icon-button matTooltip="Cerrar sesión" (click)="onLogout()">
           <mat-icon>logout</mat-icon>
