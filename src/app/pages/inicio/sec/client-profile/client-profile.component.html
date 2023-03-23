@@ -13,10 +13,6 @@
             <mat-icon>edit</mat-icon>
             Editar información
           </button>
-          <button mat-raised-button color="warn" (click)="onLogout()">
-            <mat-icon>logout</mat-icon>
-            Cerrar Sesión
-          </button>
         </div>
       </div>
     </section>
@@ -25,6 +21,7 @@
         <li> <mat-icon class="example-tab-icon">fingerprint</mat-icon> DNI: {{userData?.userEntity.userName}}</li>
         <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de nacimiento: {{userData?.userEntity.bornDate |date: 'dd/MM/yyyy'}}</li>
         <li> <mat-icon class="example-tab-icon">badge</mat-icon> Rol: {{userData?.role}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de registro: {{userData?.userEntity.createDate |date: 'dd/MM/yyyy'}}</li>
       </ul>
     </section>
   </div>
@@ -58,7 +55,11 @@
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Teléfono</mat-label>
-        <input matInput placeholder="Teléfono" formControlName="phoneNumber">
+        <input matInput placeholder="Teléfono" formControlName="phone">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Dirección</mat-label>
+        <input matInput placeholder="Dirección" formControlName="address">
       </mat-form-field>
     </div>
   </form>

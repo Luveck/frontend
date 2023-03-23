@@ -11,7 +11,8 @@ export class AuthGuard implements CanActivate {
 
   canActivate() {
     if(this.authServ.userToken){
-      if(this.authServ.userData.Role != 'Admin'){
+      console.log(this.authServ.userData.Role)
+      if(this.authServ.userData.Role === 'Cliente'){
         this.router.navigate(['authentication/noauthorized']);
         return false
       }

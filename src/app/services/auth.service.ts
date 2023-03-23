@@ -33,16 +33,19 @@ export class AuthService {
       "dni": formData.dni,
       "password": formData.password
     }
-    //return this._http.post('https://apisecurityluveck.azurewebsites.net/api/Security/Login', info).toPromise()
-    //return this._http.post('https://luveckservicesecurity20230209131650.azurewebsites.net/api/Security/Login', info).toPromise()
-    return this._http.post('https://luveckservicesecurity20230309182300.azurewebsites.net/api/Security/Login', info).toPromise()
+    return this._http.post(`${this._dataServ.baseURLSec}/Security/Login`, info).toPromise()
   }
 
   public async register(formData:any){
-    console.log(formData)
-    //return this._http.post('https://apisecurityluveck.azurewebsites.net/api/Security/Register', formData).toPromise()
-    //return this._http.post('https://luveckservicesecurity20230209131650.azurewebsites.net/api/Security/Register', formData).toPromise()
-    return this._http.post('https://luveckservicesecurity20230309182300.azurewebsites.net/api/Security/Register', formData).toPromise()
+    return this._http.post(`${this._dataServ.baseURLSec}/Security/Register`, formData).toPromise()
+  }
+
+  public async forgotPass(formData:any){
+    return this._http.post(`${this._dataServ.baseURLSec}/Security/Forgot`, formData).toPromise()
+  }
+
+  public resetPass(formData:any){
+    return this._http.post(`${this._dataServ.baseURLSec}/Security/Reset`, formData)
   }
 
   public decodeToken (token:any) {

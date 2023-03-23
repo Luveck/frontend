@@ -5,6 +5,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DataService } from 'src/app/services/data.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ClientProfileComponent } from './sec/client-profile/client-profile.component';
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 
 @Component({
@@ -87,10 +88,17 @@ export class InicioPage {
       data: this.authServ.userData.UserId
     }
     this._dialog.open(ClientProfileComponent, config)
+  }
+
+  onLogout(){
+    this._dialog.open(DialogConfComponent, {
+      data: `¿Seguro de querer Cerrar la sesión?`
+    })
     .afterClosed()
-    .subscribe((isLogin:boolean)=>{
-      if (isLogin) {
+    .subscribe((confirmado: Boolean) => {
+      if (confirmado) {
         this.SectionSelect = 'inicio'
+        this.authServ.logOut(this.authServ.userData.Role)
       }
     })
   }

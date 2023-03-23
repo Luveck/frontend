@@ -10,6 +10,7 @@ import { LoginPage } from './login/login.page';
 import { RegisterPage } from './register/register.page';
 import { ResetPasswordPage } from './reset-password/reset-password.page';
 import { ForgotPasswordPage } from './forgot-password/forgot-password.page';
+import { ChangePasswordPage } from './change-password/change-password.page';
 import { LoginGuard } from 'src/app/guards/login.guard';
 
 const routes: Routes = [
@@ -34,6 +35,10 @@ const routes: Routes = [
     canActivate: [LoginGuard]
   },
   {
+    path: 'changepassword',
+    component: ChangePasswordPage
+  },
+  {
     path: 'noauthorized',
     component: NotAuthorizedComponent
   }
@@ -45,6 +50,7 @@ const routes: Routes = [
     RegisterPage,
     ResetPasswordPage,
     ForgotPasswordPage,
+    ChangePasswordPage,
     NotAuthorizedComponent
   ],
   imports: [

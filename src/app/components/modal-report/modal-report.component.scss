@@ -50,4 +50,11 @@ mat-dialog-container{
 }
 .mat-dialog-actions{
   justify-content: center;
+  button{
+    text-align: center;
+    img{
+      width: 26px;
+      height: 26px;
+    }
+  }
 }

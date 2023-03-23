@@ -1,5 +1,8 @@
 import { Component, OnInit  } from '@angular/core'
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+
+import { AuthService } from 'src/app/services/auth.service';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -8,18 +11,37 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 
 export class ForgotPasswordPage implements OnInit {
-  forgotPassForm: FormGroup | any
+  resetEmailSendMsg:string = ''
 
-  constructor(private _formBuilder: FormBuilder){}
+  public forgotPassForm = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email, Validators.pattern(
+      '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,63}$',
+    ),]),
+  })
+
+  constructor(public dataServ: DataService, private _authServ:AuthService){}
 
   ngOnInit(): void {
-    this.forgotPassForm = this._formBuilder.group({
-      email: ['', [Validators.required, Validators.email, Validators.pattern(
-        '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,63}$')]],
-    });
+
   }
 
-  onForgot(){
-    console.log(this.forgotPassForm.value)
+  onForgot(formData:any){
+    console.log(formData)
+    if(!this.dataServ.progress){
+      this.dataServ.progress = true
+      this._authServ.forgotPass(formData)
+        .then((res:any) => {
+          console.log(res)
+          this.dataServ.progress = false
+          this.dataServ.fir(`${res.messages}`, 'success')
+          this.resetEmailSendMsg = res.messages
+        })
+        .catch ((error:any)=>{
+          this.dataServ.progress = false
+          console.log(error)
+          let msgError = error.error.messages
+          this.dataServ.fir(`${msgError}`, 'error')
+        })
+    }
   }
 }

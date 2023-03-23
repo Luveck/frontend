@@ -4,12 +4,12 @@
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
   </div>
 
-  <div class="perfil_header" *ngIf="data.userEmail">
+  <div class="perfil_header" *ngIf="data.userDni">
     <section class="avatar">
       <div class="datos">
         <p>{{currentUser?.userEntity.name}} {{currentUser?.userEntity.lastName}}</p>
         <div class="bots">
-          <span class="chip" [ngClass]="{'active': currentUser?.userEntity.state == true, 'inactive': currentUser?.userEntity.state == false}">{{currentUser?.userEntity.state ?'Cuenta activa' :'Cuenta inactiva'}}</span>
+          <span class="chip" matTooltip="Cambiar estado" [ngClass]="{'active': currentUser?.userEntity.state == true, 'inactive': currentUser?.userEntity.state == false}">Estado de cuenta: {{currentUser?.userEntity.state ?'activa' :'inactiva'}}</span>
         </div>
       </div>
     </section>
@@ -18,6 +18,7 @@
         <li> <mat-icon class="example-tab-icon">fingerprint</mat-icon> DNI: {{currentUser?.userEntity.userName}}</li>
         <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de nacimiento: {{currentUser?.userEntity.bornDate |date: 'dd/MM/yyyy'}}</li>
         <li> <mat-icon class="example-tab-icon">badge</mat-icon> Rol: {{currentUser?.role}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de registro: {{currentUser?.userEntity.createDate |date: 'dd/MM/yyyy'}}</li>
       </ul>
     </section>
   </div>
@@ -44,7 +45,7 @@
         <mat-label>Rol</mat-label>
         <mat-select formControlName="role">
           <div *ngFor="let rol of usersServ.localRoles">
-            <mat-option *ngIf="rol.state" [value]="rol.name">
+            <mat-option [value]="rol.id">
               {{rol.name}}
             </mat-option>
           </div>
@@ -65,14 +66,18 @@
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Teléfono</mat-label>
-        <input matInput placeholder="Teléfono" formControlName="phoneNumber">
+        <input matInput placeholder="Teléfono" formControlName="phone">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Dirección</mat-label>
+        <input matInput placeholder="Dirección" formControlName="address">
       </mat-form-field>
     </div>
   </form>
 </main>
 <div mat-dialog-actions>
   <div class="btns">
-    <button mat-raised-button color="primary" [disabled]="newUserForm.invalid" (click)="addEditUser()">Guardar <mat-icon>save</mat-icon></button>
+    <button mat-raised-button color="primary" [disabled]="newUserForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
     <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
   </div>
 </div>

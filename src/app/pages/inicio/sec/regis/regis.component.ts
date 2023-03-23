@@ -13,6 +13,7 @@ import { DataService } from 'src/app/services/data.service';
 export class RegisComponent {
   @Output() sectionEvent = new EventEmitter<string>();
   typeForm:string = 'register'
+  resetEmailSendMsg:string = ''
 
   public loginForm = new FormGroup({
     dni : new FormControl('', [Validators.required]),
@@ -28,11 +29,16 @@ export class RegisComponent {
     name : new FormControl('', [Validators.required]),
     lastName : new FormControl('', [Validators.required]),
     phone: new FormControl('', [Validators.required, Validators.pattern('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$'), Validators.minLength(8)]),
-    password: new FormControl('', [Validators.required, Validators.pattern(
-      '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$'
-    )]),
+    password: new FormControl('', [Validators.required]),
     bornDate: new FormControl('', [Validators.required]),
-    sex: new FormControl('', [Validators.required])
+    sex: new FormControl('', [Validators.required]),
+    address: new FormControl('', [Validators.required])
+  })
+
+  public forgotPassForm = new FormGroup({
+    email: new FormControl('', [Validators.required, Validators.email, Validators.pattern(
+      '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,63}$',
+    ),]),
   })
 
   hidePassword:boolean = true;
@@ -89,6 +95,26 @@ export class RegisComponent {
           localStorage.setItem('LuveckUserToken', this.authServ.userToken)
           this.authServ.decodeToken(this.authServ.userToken)
           this.sectionEvent.emit('inicio')
+        })
+        .catch ((error:any)=>{
+          this.dataServ.progress = false
+          console.log(error)
+          let msgError = error.error.messages
+          this.dataServ.fir(`${msgError}`, 'error')
+        })
+    }
+  }
+
+  onForgot(formData:any){
+    console.log(formData)
+    if(!this.dataServ.progress){
+      this.dataServ.progress = true
+      this.authServ.forgotPass(formData)
+        .then((res:any) => {
+          console.log(res)
+          this.dataServ.progress = false
+          this.dataServ.fir(`${res.messages}`, 'success')
+          this.resetEmailSendMsg = res.messages
         })
         .catch ((error:any)=>{
           this.dataServ.progress = false

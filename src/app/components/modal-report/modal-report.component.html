@@ -2,7 +2,7 @@
 <div mat-dialog-content>
   <div id="htmlData">
     <div class="reportHeader">
-      <img src="assets/logo_light.png">
+      <img src="assets/icons/logo_light.png">
       <h1>Programa Pasión por Vivir</h1>
       <h3>{{data.title}}</h3>
       <p>Emitido el {{fecha |date:'EEEE dd LLLL'}} del {{fecha |date:'yyyy'}}</p>
@@ -24,9 +24,16 @@
   </div>
 </div>
 <div mat-dialog-actions>
-    <button mat-raised-button color="warn" (click)="cerrarDialogo()">Cancelar</button>
-    <button mat-raised-button color="primary" (click)="saveReport()" [disabled]="dataServ.progress">
-      {{dataServ.progress ?'Guardando': 'Guardar'}}
-      <mat-icon class="lod" *ngIf="dataServ.progress">cached</mat-icon>
+    <button mat-flat-button color="warn" (click)="cerrarDialogo()">Cancelar</button>
+    <button mat-flat-button color="primary" (click)="saveReportPDF()" [disabled]="dataServ.progress">
+      {{dataServ.progress ?'Guardando': 'Guardar PDF'}}
+      <mat-icon class="lod" *ngIf="dataServ.progress && typeSave == 'pdf'">cached</mat-icon>
+      <img src="assets/icons/file_pdf.svg" alt="">
+    </button>
+
+    <button mat-flat-button color="primary" (click)="saveReportEXCEL()" [disabled]="dataServ.progress">
+      {{dataServ.progress ?'Guardando': 'Guardar Excel'}}
+      <mat-icon class="lod" *ngIf="dataServ.progress && typeSave == 'excel'">cached</mat-icon>
+      <img src="assets/icons/file_excel.svg" alt="">
     </button>
 </div>

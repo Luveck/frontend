@@ -3,7 +3,7 @@
   <p>Inscríbete a través de este formulario para ser parte del proyecto "Pasión por Vivir".</p>
 
   <div class="regis_content">
-    <div class="regisImg"><img src="assets/ppv_8.webp"></div>
+    <div class="regisImg"><img src="assets/images/ppv_8.webp"></div>
     <div class="regForm">
       <form [formGroup]="loginForm" autocomplete="off" *ngIf="typeForm == 'login'">
         <mat-form-field appearance="outline">
@@ -15,7 +15,7 @@
           </mat-error>
         </mat-form-field>
 
-        <p style="text-align: end;"><span [routerLink]="['/authentication/forgotpassword']">Olvide mi contraseña</span></p>
+        <p style="text-align: end;"><span (click)="typeForm = 'forgot'">Olvide mi contraseña</span></p>
         <mat-form-field appearance="outline">
           <mat-label>Contraseña</mat-label>
           <input matInput [type]="hidePassword ?'password' :'text'" placeholder="Contraseña" formControlName="password" required>
@@ -114,6 +114,15 @@
         </mat-form-field>
 
         <mat-form-field appearance="outline">
+          <mat-label>Dirección</mat-label>
+          <input matInput placeholder="Dirección" formControlName="address" required>
+          <mat-error
+            *ngIf="registerForm.get('address')?.invalid && (registerForm.get('address')?.dirty || registerForm.get('address')?.touched) && registerForm.get('address')?.errors?.['required']">
+            Dirección requerida
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
           <mat-label>Contraseña</mat-label>
           <input matInput [type]="hidePassword ?'password' :'text'" formControlName="password" placeholder="Contraseña" [NgPasswordValidator]="options">
           <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
@@ -135,6 +144,37 @@
         </button>
 
         <p>¿Ya tienes una cuenta? <span (click)="typeForm = 'login'">Inicia sesión</span></p>
+      </form>
+
+      <form [formGroup]="forgotPassForm" autocomplete="off" *ngIf="typeForm == 'forgot'">
+        <div class="formHeader">
+          <p>¿Ha olvidado su contraseña? 🔒</p>
+          <span>Ingrese su correo electrónico y le enviaremos instrucciones para restablecer su contraseña.</span>
+        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>email</mat-label>
+          <input matInput placeholder="Correo" formControlName="email">
+          <mat-error *ngIf="!forgotPassForm.get('email')?.errors?.['required'] && (forgotPassForm.get('email')?.errors?.['pattern'])">
+            Correo invalido
+          </mat-error>
+          <mat-error
+            *ngIf="forgotPassForm.get('email')?.invalid && (forgotPassForm.get('email')?.dirty || forgotPassForm.get('email')?.touched) && forgotPassForm.get('email')?.errors?.['required']">
+            Correo requerido
+          </mat-error>
+        </mat-form-field>
+
+        <div class="btnForm">
+          <button [disabled]="!forgotPassForm.valid" mat-raised-button color="primary" mat-button (click)="onForgot(forgotPassForm.value)">
+            Enviar
+            <mat-icon class="lod" *ngIf="dataServ.progress">cached</mat-icon>
+          </button>
+        </div>
+
+        <div class="sendMsg" *ngIf="resetEmailSendMsg.length > 1">
+          <p>{{resetEmailSendMsg}}</p>
+        </div>
+
+        <p><span (click)="typeForm = 'login'">< Regresar</span></p>
       </form>
     </div>
   </div>

@@ -86,9 +86,9 @@
           display: flex;
           flex-direction: column;
           align-content: center;
-
-          span {
-            line-height: 15px;
+          justify-content: center;
+          span{
+            line-height: 1rem;
           }
         }
 

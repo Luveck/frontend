@@ -1,6 +1,9 @@
 import { Component, OnInit  } from '@angular/core'
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 import { NgPasswordValidatorOptions } from 'ng-password-validator';
+import { AuthService } from 'src/app/services/auth.service';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -9,11 +12,14 @@ import { NgPasswordValidatorOptions } from 'ng-password-validator';
 })
 
 export class ResetPasswordPage implements OnInit {
+  email:string = ''
+  code:string = ''
+
   public resetPassForm = new FormGroup({
-    Newpassword: new FormControl('', [Validators.required, Validators.pattern(
+    newPassword: new FormControl('', [Validators.required, Validators.pattern(
       '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$'
     )]),
-    confirmPass: new FormControl('', [Validators.required])
+    confirmPassword: new FormControl('', [Validators.required]),
   })
 
   hidePassword:boolean = true;
@@ -33,13 +39,25 @@ export class ResetPasswordPage implements OnInit {
     }
   }
 
-  constructor(){}
+  constructor(private _dataServ:DataService, public authServ:AuthService, private route: ActivatedRoute){}
 
   ngOnInit(): void {
-
+    this.route.queryParams.subscribe((params:any) => {
+      console.log(params)
+      this.email = params.mail
+      this.code = params.id
+    })
   }
 
-  resetPass(formData:any){
+  resetPass(){
+    let formData:any = this.resetPassForm.value
+    formData.email = this.email
+    formData.code = this.code
     console.log(formData)
+    const peticion = this.authServ.resetPass(formData)
+    peticion.subscribe(()=>{
+      this._dataServ.fir('Su contraseña ha sido  actualizada', 'success')
+      this._dataServ.goTo('/')
+    })
   }
 }

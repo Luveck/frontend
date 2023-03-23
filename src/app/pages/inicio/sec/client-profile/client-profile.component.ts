@@ -1,11 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 
-import { AuthService } from 'src/app/services/auth.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
-import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
-
 
 @Component({
   selector: 'app-client-profile',
@@ -18,24 +15,25 @@ export class ClientProfileComponent implements OnInit {
   enabledEdit:boolean = false
 
   public perfilForm = new FormGroup({
+    dni: new FormControl('', Validators.required),
     name: new FormControl('', Validators.required),
     lastName: new FormControl('', Validators.required),
     email: new FormControl('', Validators.required),
+    role: new FormControl('', Validators.required),
     bornDate: new FormControl('', Validators.required),
     sex: new FormControl('', Validators.required),
-    phoneNumber: new FormControl('', Validators.required)
+    phone: new FormControl('', Validators.required),
+    address: new FormControl('', Validators.required)
   })
 
   constructor(
     private _usersServ:UsuariosService,
-    private _authServ:AuthService,
-    private _dialogo:MatDialog,
     public dialogo: MatDialogRef<ClientProfileComponent>,
-    @Inject(MAT_DIALOG_DATA) public UserId: string) { }
+    @Inject(MAT_DIALOG_DATA) public data: string) { }
 
   ngOnInit(): void {
     this.isLoadingResults = true
-    this._usersServ.getUserByID(this.UserId)
+    this._usersServ.getUserByID(this.data)
       .subscribe((res:any) => {
         console.log(res)
         this.userData = res.result
@@ -49,27 +47,17 @@ export class ClientProfileComponent implements OnInit {
       })
   }
 
-  onLogout(){
-    this._dialogo.open(DialogConfComponent, {
-      data: `¿Seguro de querer Cerrar la sesión?`
-    })
-    .afterClosed()
-    .subscribe((confirmado: Boolean) => {
-      if (confirmado) {
-        this.dialogo.close(true)
-        this._authServ.logOut(this._authServ.userData.Role)
-      }
-    })
-  }
-
   initValues(){
     this.perfilForm.patchValue({
+      dni: this.userData.userEntity.userName,
       name: this.userData.userEntity.name,
       lastName: this.userData.userEntity.lastName,
       email: this.userData.userEntity.email,
+      role: this.userData.role,
       bornDate: this.userData.userEntity.bornDate,
       sex: this.userData.userEntity.sex,
-      phoneNumber: this.userData.userEntity.phoneNumber
+      phone: this.userData.userEntity.phoneNumber,
+      address: this.userData.userEntity.address
     })
     this.perfilForm.disable()
   }

@@ -3,7 +3,7 @@
     <mat-sidenav #sidenav class="sidenav-body mat-elevation-z8" mode="side" opened
        [fixedTopGap]="56" [fixedBottomGap]="1">
       <header>
-        <img [src]="localTheme ?'assets/logo_light.png' :'assets/logo_dark.png'">
+        <img [src]="localTheme ?'assets/icons/logo_light.png' :'assets/icons/logo_dark.png'">
       </header>
 
       <mat-nav-list class="side-navnar">
@@ -39,7 +39,7 @@
 
       <footer>
         <p color="dark">Powered by</p>
-        <img src="assets/logo-appland.png">
+        <img src="assets/icons/logo-appland.png">
       </footer>
     </mat-sidenav>
 
@@ -52,7 +52,7 @@
           <mat-icon>{{localTheme ?'light_mode' :'brightness_3'}}</mat-icon>
         </button>
 
-        <div>
+        <button mat-button (click)="openProfile()">
           <div class="nameDate">
             <div class="imgCont">
               <img appNotImage [src]="img">
@@ -63,7 +63,7 @@
               <!-- <span>{{authServ.userData.Email === 'prueba@luveck' ?'Administrador' :'Cliente'}}</span> -->
             </div>
           </div>
-        </div>
+        </button>
 
         <button mat-icon-button matTooltip="Cerrar sesión" (click)="onLogout()">
           <mat-icon>logout</mat-icon>

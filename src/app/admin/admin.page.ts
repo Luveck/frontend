@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 
 import { fadeAnimation } from '../animations';
 import { DialogConfComponent } from '../components/dialog-conf/dialog-conf.component';
+import { ClientProfileComponent } from '../pages/inicio/sec/client-profile/client-profile.component';
 import { AuthService } from '../services/auth.service';
 import { DataService } from '../services/data.service';
 
@@ -18,7 +19,7 @@ import { DataService } from '../services/data.service';
 })
 
 export class AdminPage implements OnInit {
-  img:String = 'assets/user.png'
+  img:String = 'assets/icons/user.png'
   menuList:Observable<any[]> | undefined
   localTheme:boolean = true
   darkClassName:string = 'theme-dark';
@@ -81,5 +82,12 @@ export class AdminPage implements OnInit {
       this._dataServ.setTheme('light')
       this._overlay.getContainerElement().classList.remove(this.darkClassName);
     }
+  }
+
+  openProfile(){
+    const config = {
+      data: this.authServ.userData.UserId
+    }
+    this._dialogo.open(ClientProfileComponent, config)
   }
 }

@@ -7,8 +7,7 @@ import { DataService } from './data.service';
   providedIn: 'root'
 })
 export class UsuariosService {
-  localUsers!:any[]
-  localRoles!:any[]
+  localRoles:any[] = []
   headers: any
 
   constructor(
@@ -26,21 +25,21 @@ export class UsuariosService {
 
   public getUsers(){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get(`https://luveckservicesecurity20230309182300.azurewebsites.net/api/Security/GetUsers`,
+    return this._http.get(`${this._dataServ.baseURLSec}/Security/GetUsers`,
       {headers: this.headers}
     )
   }
 
   public getUserByID(id:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get(`https://luveckservicesecurity20230309182300.azurewebsites.net/api/Security/getUserByID?Id=${id}`,
+    return this._http.get(`${this._dataServ.baseURLSec}/Security/getUserByID?Id=${id}`,
       {headers: this.headers}
     )
   }
 
   public getUserByDNI(dni:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get(`https://luveckservicesecurity20230309182300.azurewebsites.net/api/Security/getUserByDNI?DNI=${dni}`,
+    return this._http.get(`${this._dataServ.baseURLSec}/Security/getUserByDNI?DNI=${dni}`,
       {headers: this.headers}
     )
   }
@@ -49,50 +48,45 @@ export class UsuariosService {
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     console.log(formData)
     let dataUser:any
-   /*  dataUser = {
-      "id": idUser,
+    dataUser = {
       ...formData,
-      "ctaStatus": true
+      "state": true
     }
-    return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCountry`, dataUser) */
+    return this._http.post(`${this._dataServ.baseURLSec}/Security/CreateUser`, dataUser,
+      {headers: this.headers}
+    )
   }
 
   UpdateUsuario(formData:any, dni:string, status?:boolean){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    if(formData){
-      let dataUser:any
-      dataUser = {
-        "dni": dni,
-        ...formData,
-        "ctaStatus": status
-      }
-      //return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCountry`, dataUser)
-      this.localUsers.forEach((user, index) => {
-        if(user.dni === dni){
-          this.localUsers[index] = dataUser
-        }
-      })
-    }else{
-      this.localUsers.forEach((user, index) => {
-        if(user.dni === dni){
-          this.localUsers[index].ctaStatus = !status
-        }
-      })
+    let dataUser:any
+    dataUser = {
+      "dni": dni,
+      ...formData,
+      "ctaStatus": status
     }
+    return this._http.post(`${this._dataServ.baseURLSec}/Security/UpdateUser`, dataUser)
+  }
+
+  changePassword(formData:any){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    return this._http.post(`${this._dataServ.baseURLSec}/Security/ChangePassword`, formData,
+      {headers: this.headers}
+    )
   }
 
   /* Endpoints de Roles */
 
   public getAllRoles(){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get(`https://luveckservicesecurity20230309182300.azurewebsites.net/api/Roles/GetRoles`,
+    return this._http.get(`${this._dataServ.baseURLSec}/Roles/GetRoles`,
       {headers: this.headers}
     )
   }
 
   public createRole(nameRole:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.post(`https://luveckservicesecurity20230309182300.azurewebsites.net/api/Roles/CreateRole?role=${nameRole}`, {},
+    return this._http.post(`${this._dataServ.baseURLSec}/Roles/CreateRole?role=${nameRole}`, {},
       {headers: this.headers}
     )
   }
