@@ -27,27 +27,27 @@
     <div class="inputs">
       <mat-form-field appearance="fill">
         <mat-label>Limite de dias</mat-label>
-        <input matInput type="number" placeholder="Limite de días" formControlName="daysAround">
+        <input matInput type="number" matTooltip="Limite de días que el cliente tiene para reclamar el canje." placeholder="Limite de días" formControlName="daysAround">
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Reclamar cada</mat-label>
-        <input matInput type="number" placeholder="Reclamar cada" formControlName="periodicity">
+        <input matInput type="number" matTooltip="Cada cuantos días se debe comprar el producto." placeholder="Reclamar cada" formControlName="periodicity">
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Cantidad a comprar</mat-label>
-        <input matInput type="number" placeholder="Cantidad a comprar" formControlName="quantityBuy">
+        <input matInput type="number" matTooltip="Cantidad de productos que se deben comprar para aplicar al canje." placeholder="Cantidad a comprar" formControlName="quantityBuy">
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Cantidad a entregar</mat-label>
-        <input matInput type="number" placeholder="Cantidad a entregar" formControlName="quantityGive">
+        <input matInput type="number" matTooltip="Cantidad de producto que se entrega al momento del reclamo." placeholder="Cantidad a entregar" formControlName="quantityGive">
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Máximo anual</mat-label>
-        <input matInput type="number" placeholder="Máximo anual" formControlName="maxChangeYear">
+        <input matInput type="number" matTooltip="Limite de canjes por año." placeholder="Máximo anual" formControlName="maxChangeYear">
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Producto</mat-label>
-        <mat-select formControlName="productId">
+        <mat-select formControlName="productId" matTooltip="Producto asociado a la regla.">
           <div *ngFor="let prod of prods">
             <mat-option *ngIf="prod.state" [value]="prod.id">
               {{prod.name}}

@@ -57,15 +57,18 @@ export class UsuariosService {
     )
   }
 
-  UpdateUsuario(formData:any, dni:string, status?:boolean){
+  UpdateUsuario(formData:any, state:boolean){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    console.log(formData)
     let dataUser:any
     dataUser = {
-      "dni": dni,
       ...formData,
-      "ctaStatus": status
+      "state": state
     }
-    return this._http.post(`${this._dataServ.baseURLSec}/Security/UpdateUser`, dataUser)
+    console.log(dataUser)
+    return this._http.post(`${this._dataServ.baseURLSec}/Security/UpdateUser`, dataUser,
+      {headers: this.headers}
+    )
   }
 
   changePassword(formData:any){

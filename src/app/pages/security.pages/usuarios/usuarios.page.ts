@@ -7,7 +7,6 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { DetalleUsuario } from '../detalle-usuario/detalle-usuario';
-import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { RolesPage } from '../roles/roles.page';
 
 @Component({
@@ -94,26 +93,6 @@ export class UsuariosPage implements AfterViewInit {
         this.getAllUsers()
       }
     })
-  }
-
-  chageState(user:any){
-    console.log(user)
-  }
-
-  dialog(id: string, estado: boolean) {
-    let msg = estado ? '¿Seguro de querer inhabilitar esta cuenta?' : '¿Seguro de querer habilitar esta cuenta?'
-
-    this._dialog.open(DialogConfComponent, {
-      data: `${msg}`
-    })
-      .afterClosed()
-      .subscribe((confirmado: Boolean) => {
-        if (confirmado) {
-          let respuesta = this._usuariosServ.UpdateUsuario(null, id, estado)
-          this._usuariosServ.notify('Registro actualizado', 'success')
-          this.getAllUsers()
-        }
-      })
   }
 
   onModalRoles(){

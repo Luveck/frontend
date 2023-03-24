@@ -9,7 +9,7 @@
       <div class="datos">
         <p>{{currentUser?.userEntity.name}} {{currentUser?.userEntity.lastName}}</p>
         <div class="bots">
-          <span class="chip" matTooltip="Cambiar estado" [ngClass]="{'active': currentUser?.userEntity.state == true, 'inactive': currentUser?.userEntity.state == false}">Estado de cuenta: {{currentUser?.userEntity.state ?'activa' :'inactiva'}}</span>
+          <span class="chip" (click)="changeUserState(currentUser?.userEntity.state)" style="cursor: pointer;" matTooltip="Cambiar estado" [ngClass]="{'active': currentUser?.userEntity.state == true, 'inactive': currentUser?.userEntity.state == false}">Estado de cuenta: {{currentUser?.userEntity.state ?'activa' :'inactiva'}}</span>
         </div>
       </div>
     </section>
@@ -45,7 +45,7 @@
         <mat-label>Rol</mat-label>
         <mat-select formControlName="role">
           <div *ngFor="let rol of usersServ.localRoles">
-            <mat-option [value]="rol.id">
+            <mat-option [value]="rol.name">
               {{rol.name}}
             </mat-option>
           </div>

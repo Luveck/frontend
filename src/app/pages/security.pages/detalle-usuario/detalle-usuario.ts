@@ -1,9 +1,10 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
 @Component({
   selector: 'app-detalle-usuario',
@@ -31,17 +32,19 @@ export class DetalleUsuario implements OnInit {
   constructor(
     public usersServ:UsuariosService,
     public authServ:AuthService,
+    private _dialog:MatDialog,
     public dialogo: MatDialogRef<DetalleUsuario>,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ){}
-
-  ngOnInit(): void {
+  ){
     if(this.usersServ.localRoles.length === 0){
       this.usersServ.getAllRoles().subscribe((res:any) => {
         console.log(res)
         this.usersServ.localRoles = res.result
       })
     }
+  }
+
+  ngOnInit(): void {
     if(this.data.userDni){
       this.isLoadingResults = true
       this.usersServ.getUserByDNI(this.data.userDni)
@@ -77,31 +80,27 @@ export class DetalleUsuario implements OnInit {
     this.newUserForm.reset()
   }
 
-  save(){
-    /* {
-      "dni": "string",
-      "password": "string",
-      "email": "string",
-      "name": "string",
-      "lastName": "string",
-      "phone": "string",
-      "idRole": "string",
-      "role": "string",
-      "bornDate": "2023-03-22T15:10:04.566Z",
-      "sex": "string",
-      "state": true,
-      "address": "string"
-    } */
+  selectRole(nameRole:string){
+    const tempRole = this.usersServ.localRoles.filter(role => role.name === nameRole)
+    return tempRole[0]
+  }
 
+  save(chageState?:boolean){
+    console.log(chageState)
+    let tempData:any = this.newUserForm.value
+    let {id, name} = this.selectRole(tempData.role)
+    tempData.idRole = id
+    tempData.role = name
     if(this.data.userDni){
-      let peticion = this.usersServ.UpdateUsuario(this.newUserForm.value, this.data.paisId, this.currentUser!.ctaStatus)
-      this.usersServ.notify('Registro actualizado', 'success')
-      this.dialogo.close(true);
+      const peticion = this.usersServ.UpdateUsuario(tempData, (chageState != undefined) ?chageState :this.currentUser.userEntity.state)
+      peticion.subscribe(()=>{
+        this.usersServ.notify('Registro actualizado', 'success')
+        this.dialogo.close(true);
+      },err => {
+        console.log(err)
+        this.usersServ.notify('Ocurrio un error', 'error')
+      })
     }else{
-      let tempData:any = this.newUserForm.value
-      const tempRole = this.usersServ.localRoles.filter(role => role.id === tempData.role)
-      tempData.idRol = tempRole[0].id
-      tempData.role = tempRole[0].name
       const peticion = this.usersServ.addUsuario(tempData)
       peticion.subscribe(() => {
         this.usersServ.notify('Usuario registrado', 'success')
@@ -111,5 +110,18 @@ export class DetalleUsuario implements OnInit {
         this.usersServ.notify('Ocurrio un error', 'error')
       })
     }
+  }
+
+  changeUserState(state:boolean){
+    let msg = state ? '¿Seguro de querer inhabilitar esta cuenta?' : '¿Seguro de querer habilitar esta cuenta?'
+    this._dialog.open(DialogConfComponent, {
+      data: `${msg}`
+    })
+    .afterClosed()
+    .subscribe((confirmado:boolean)=>{
+      if(confirmado){
+        this.save(!state)
+      }
+    })
   }
 }
