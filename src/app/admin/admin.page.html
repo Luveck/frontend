@@ -28,8 +28,7 @@
             </mat-expansion-panel-header>
             <mat-nav-list>
               <mat-list-item [routerLink]="submenu.routerLink" *ngFor="let submenu of menu.children"
-                routerLinkActive="is-active" [routerLinkActiveOptions]="{exact:
-                    true}">
+                routerLinkActive="is-active" [routerLinkActiveOptions]="{exact:true}">
                 <mat-icon>{{submenu.icon}}</mat-icon> {{submenu.text}}
               </mat-list-item>
             </mat-nav-list>
@@ -60,7 +59,6 @@
             <div class="nam">
               <span>{{authServ.userData.UserName}} {{authServ.userData.LastName}}</span>
               <span>{{authServ.userData.Role}}</span>
-              <!-- <span>{{authServ.userData.Email === 'prueba@luveck' ?'Administrador' :'Cliente'}}</span> -->
             </div>
           </div>
         </button>

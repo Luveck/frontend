@@ -41,6 +41,11 @@ const routes: Routes = [
   {
     path: 'noauthorized',
     component: NotAuthorizedComponent
+  },
+  {
+    path: '',
+    redirectTo: 'login',
+    pathMatch: 'full'
   }
 ];
 

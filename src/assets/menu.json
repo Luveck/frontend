@@ -9,24 +9,28 @@
     "text": "Farmacias",
     "subText": "Gestión de paises",
     "icon": "add_business",
-    "routerLink": "zonas/farmacias"
+    "routerLink": "zonas/farmacias",
+    "rol": "Admin"
   },
   {
     "text": "Reglas de canje",
     "subText": "Gestión de reglas",
     "icon": "rule",
-    "routerLink": "inventario/reglas"
+    "routerLink": "inventario/reglas",
+    "rol": "Admin"
   },
   {
     "text": "Registro de ventas",
     "subText": "Gestión de ventas",
     "icon": "point_of_sale",
-    "routerLink": "ventas/ventas"
+    "routerLink": "ventas/ventas",
+    "rol": "Admin"
   },
   {
     "text": "Seguridad",
     "subText": "Gestión de seguridad",
     "icon": "admin_panel_settings",
+    "rol": "Admin",
     "children": [
       {
         "text": "Paises",

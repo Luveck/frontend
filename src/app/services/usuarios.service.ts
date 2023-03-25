@@ -73,6 +73,7 @@ export class UsuariosService {
 
   changePassword(formData:any){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    console.log(formData)
     return this._http.post(`${this._dataServ.baseURLSec}/Security/ChangePassword`, formData,
       {headers: this.headers}
     )

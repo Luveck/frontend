@@ -39,25 +39,42 @@ export class ResetPasswordPage implements OnInit {
     }
   }
 
-  constructor(private _dataServ:DataService, public authServ:AuthService, private route: ActivatedRoute){}
+  constructor(public dataServ:DataService, private _authServ:AuthService, private route: ActivatedRoute){}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params:any) => {
-      console.log(params)
       this.email = params.mail
       this.code = params.id
     })
   }
 
   resetPass(){
-    let formData:any = this.resetPassForm.value
-    formData.email = this.email
-    formData.code = this.code
-    console.log(formData)
-    const peticion = this.authServ.resetPass(formData)
-    peticion.subscribe(()=>{
-      this._dataServ.fir('Su contraseña ha sido  actualizada', 'success')
-      this._dataServ.goTo('/')
-    })
+    if(this.resetPassForm.get('newPassword')?.value != this.resetPassForm.get('confirmPassword')?.value){
+      this.dataServ.fir('Los campos <b>Nueva contraseña</b> y <b>Confirmar contraseña</b> deben coincidir entre si.', 'info')
+      return
+    }
+
+    if(!this.dataServ.progress){
+      this.dataServ.progress = true
+      let formData:any = this.resetPassForm.value
+      formData.email = this.email
+      formData.code = this.code
+      console.log(formData)
+      this._authServ.resetPass(formData)
+        .then((res:any) => {
+          console.log(res)
+          this.dataServ.progress = false
+          this._authServ.userToken = res.result.token
+          localStorage.setItem('LuveckUserToken', this._authServ.userToken)
+          this.dataServ.fir('Su contraseña se ha cambiado correctamente.', 'success')
+          this._authServ.decodeToken(this._authServ.userToken)
+        })
+        .catch ((error:any)=>{
+          this.dataServ.progress = false
+          console.log(error)
+          let msgError = error.error.messages
+          this.dataServ.fir(`${msgError}`, 'error')
+        })
+    }
   }
 }

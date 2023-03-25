@@ -72,7 +72,7 @@ export class RegisComponent {
           if(formData.remember){
             localStorage.setItem('LuveckUserToken', this.authServ.userToken)
           }
-          this.authServ.decodeToken(this.authServ.userToken)
+          this.authServ.decodeToken(this.authServ.userToken, res.result.changePass)
           this.sectionEvent.emit('inicio')
         })
         .catch ((error:any)=>{

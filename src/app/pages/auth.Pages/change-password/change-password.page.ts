@@ -13,8 +13,8 @@ import { UsuariosService } from 'src/app/services/usuarios.service';
 })
 
 export class ChangePasswordPage implements OnInit {
-  public resetPassForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email, Validators.pattern(
+  public changePassForm = new FormGroup({
+    mail: new FormControl('', [Validators.required, Validators.email, Validators.pattern(
       '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,63}$',
     ),]),
     password: new FormControl('', [Validators.required]),
@@ -47,18 +47,23 @@ export class ChangePasswordPage implements OnInit {
 
   }
 
-  resetPass(formData:any){
-    console.log(formData)
+  chagePass(formData:any){
+    if(this.changePassForm.get('newPassword')?.value != this.changePassForm.get('confirmPassword')?.value){
+      this.dataServ.fir('Los campos <b>Nueva contraseña</b> y <b>Confirmar contraseña</b> deben coincidir entre si.', 'info')
+      return
+    }
+
     if(!this.dataServ.progress){
       this.dataServ.progress = true
       const peticion = this._usersServ.changePassword(formData)
       peticion.subscribe((res:any)=>{
         console.log(res)
         this.dataServ.progress = false
-        this._usersServ.notify(`${res.messages}`, 'success')
+        this.dataServ.fir(`${res.messages}. Ya puede iniciar sesión con su nueva contraseña.`, 'success', 5000)
         this._authServ.logOut(this._authServ.userData.Role)
       }, err => {
         console.log(err)
+        this.dataServ.progress = false
         let msgError = err.error.messages
         this._usersServ.notify(`${msgError}`, 'error')
       })
