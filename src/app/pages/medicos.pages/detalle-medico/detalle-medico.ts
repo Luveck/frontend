@@ -68,7 +68,7 @@ export class DetalleMedico implements OnInit {
     if(this.data.medicoId){
       const peticion = this._medicServ.updateMedico(this.medicForm.value, this.data.medicoId, this.currentMedic.isDeleted)
        peticion.subscribe(() => {
-        this._medicServ.notify('Medico actualizado', 'success')
+        this._medicServ.notify('Médico actualizado', 'success')
         this.dialogo.close(true);
       }, err => {
         console.log(err)
@@ -77,7 +77,7 @@ export class DetalleMedico implements OnInit {
     }else{
       const peticion = this._medicServ.addMedico(this.medicForm.value)
       peticion.subscribe(() => {
-        this._medicServ.notify('Medico registrado', 'success')
+        this._medicServ.notify('Médico registrado', 'success')
         this.dialogo.close(true);
       }, (err => {
         console.log(err)

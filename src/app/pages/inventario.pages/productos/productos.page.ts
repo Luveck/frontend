@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 
 import { Producto } from 'src/app/interfaces/models';
 import { InventarioService } from 'src/app/services/inventario.service';
+import { DataService } from 'src/app/services/data.service';
 import { DetalleProducto } from '../detalle-producto/detalle-producto';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
@@ -44,6 +45,7 @@ export class ProductosPage implements AfterViewInit {
     private _liveAnnouncer: LiveAnnouncer,
     private _dialog:MatDialog,
     public _inveServ:InventarioService,
+    private _dataServ:DataService
   ){}
 
   ngAfterViewInit(): void {
@@ -83,7 +85,8 @@ export class ProductosPage implements AfterViewInit {
   }
 
   on(id?:string){
-    const config = {
+    this._dataServ.goTo(`admin/inventario/producto-detalle/${id}`)
+/*     const config = {
       data: {
         title: id ?'Editar Producto' :'Agregar Producto',
         productoId: id
@@ -96,7 +99,7 @@ export class ProductosPage implements AfterViewInit {
         this.isLoadingResults = true
         this.getAllProduct()
       }
-    })
+    }) */
   }
 
   chageState(row:Producto){

@@ -106,6 +106,7 @@
           <mat-select formControlName="sex">
             <mat-option value="hombre">Hombre</mat-option>
             <mat-option value="mujer">Mujer</mat-option>
+            <mat-option value="otro">Otro</mat-option>
           </mat-select>
           <mat-error
             *ngIf="registerForm.get('sex')?.invalid && (registerForm.get('sex')?.dirty || registerForm.get('sex')?.touched) && registerForm.get('sex')?.errors?.['required']">

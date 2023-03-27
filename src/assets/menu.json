@@ -33,7 +33,7 @@
     "rol": "Admin",
     "children": [
       {
-        "text": "Paises",
+        "text": "Países",
         "icon": "flag",
         "routerLink": "zonas/paises"
       },
@@ -72,7 +72,7 @@
     ]
   },
   {
-    "text": "Medicos",
+    "text": "Médicos",
     "subText": "Gestión de medicos",
     "icon": "medical_information",
     "children": [

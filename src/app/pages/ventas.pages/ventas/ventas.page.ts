@@ -121,7 +121,7 @@ export class VentasPage implements AfterViewInit {
         const res = this._ventasServ.updateVenta(formData, row.id, row.reviewed)
           res.subscribe(res => {
             if(res){
-              this._ventasServ.notify('Venta velidada', 'success')
+              this._ventasServ.notify('Venta validada', 'success')
               this.isLoadingResults = true
               this.getAllVentas()
             }

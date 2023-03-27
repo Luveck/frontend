@@ -14,6 +14,7 @@ import { DetalleReglas } from './detalle-reglas/detalle-reglas';
 import { CategoriasPage } from './categorias/categorias.page';
 import { ProductosPage } from './productos/productos.page';
 import { ReglasPage } from './reglas/reglas.page';
+import { FilesDirective } from './detalle-producto/files.directive';
 
 const routes: Routes = [
   {
@@ -23,6 +24,10 @@ const routes: Routes = [
   {
     path: 'productos',
     component: ProductosPage
+  },
+  {
+    path: 'producto-detalle/:id',
+    component: DetalleProducto
   },
   {
     path: 'reglas',
@@ -37,7 +42,8 @@ const routes: Routes = [
     DetalleReglas,
     CategoriasPage,
     ProductosPage,
-    ReglasPage
+    ReglasPage,
+    FilesDirective
   ],
   imports: [
     CommonModule,

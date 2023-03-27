@@ -59,7 +59,8 @@ export class DetalleCategoria implements OnInit {
         }
       }, (err => {
         console.log(err)
-        this._inveServ.notify('Ocurrio un error', 'error')
+        let msgError = err.error.messages
+        this._inveServ.notify(`${msgError}`, 'error')
       }))
     }
   }

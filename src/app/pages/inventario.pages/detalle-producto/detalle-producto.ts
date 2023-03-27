@@ -1,20 +1,48 @@
-import { Component, Inject, OnInit } from '@angular/core'
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core'
+import { ActivatedRoute} from '@angular/router'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { MatDialog } from '@angular/material/dialog';
 
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { Categoria, Producto } from 'src/app/interfaces/models'
 import { InventarioService } from 'src/app/services/inventario.service'
+import { ImageValidator } from './imageValidator';
+import { FileItem } from 'src/app/interfaces/file-item';
 
 @Component({
   selector: 'app-detalle-producto',
   templateUrl: './detalle-producto.html',
   styleUrls: ['./detalle-producto.scss'],
+  providers:[ImageValidator]
 })
 
 export class DetalleProducto implements OnInit {
+  public breadcrumb = {
+    links: [
+      {
+        name: 'Inicio',
+        isLink: true,
+        link: '/admin/home'
+      },
+      {
+        name: 'Gestión de productos',
+        isLink: true,
+        link: '/admin/inventario/productos'
+      },
+      {
+        name: 'Detalles del producto',
+        isLink: false,
+      }
+    ]
+  }
+
+  prodId!:string
   currentProd!: Producto | any
   cats!: Categoria[]
   isLoadingResults!:boolean
+
+  files: File[] = [];
+  isOverDrop = false;
 
   public prodForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -29,21 +57,22 @@ export class DetalleProducto implements OnInit {
 
   constructor(
     private _inveServ: InventarioService,
-    public dialogo: MatDialogRef<DetalleProducto>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    private _route: ActivatedRoute,
+    private _dialogo: MatDialog,
+    private _validate:ImageValidator,
   ){}
 
   ngOnInit(): void {
+    this.prodId = this._route.snapshot.params['id']
     if(!this._inveServ.categorias){
       const res = this._inveServ.getCategories()
       res.subscribe(res => this.cats = res.result)
     }else{
       this.cats = this._inveServ.categorias
     }
-
-    if(this.data.productoId){
+    if(this.prodId != 'new'){
       this.isLoadingResults = true
-      const prod = this._inveServ.getProductoById(this.data.productoId)
+      const prod = this._inveServ.getProductoById(this.prodId)
       prod.subscribe(res => {
         console.log(res)
         this.currentProd = res.result
@@ -74,12 +103,32 @@ export class DetalleProducto implements OnInit {
     this.prodForm.reset()
   }
 
+  generateImg(){
+    console.log(this.files)
+    this.files.forEach(file => {
+      this.convertFileToBase64(file)
+    })
+  }
+
+  convertFileToBase64(file:File): void {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      let fileStringBase64: any = reader.result;
+      let element: any = {
+        FileBase64: fileStringBase64.split(',')[1],
+        Name: file.name,
+        TypeFile: file.type
+      }
+      console.log(element)
+    };
+  }
+
   save(){
-    if(this.data.productoId){
-      const peticion = this._inveServ.updateProd(this.prodForm.value, this.data.productoId, this.currentProd.state)
+    if(this.prodId != 'new'){
+      const peticion = this._inveServ.updateProd(this.prodForm.value, parseInt(this.prodId), this.currentProd.state)
       peticion.subscribe(() => {
         this._inveServ.notify('Registro actualizado', 'success')
-        this.dialogo.close(true)
       }, err => {
         console.log(err)
         this._inveServ.notify('Ocurrio un error', 'error')
@@ -88,11 +137,23 @@ export class DetalleProducto implements OnInit {
       const peticion = this._inveServ.addProducto(this.prodForm.value)
       peticion.subscribe(() => {
         this._inveServ.notify('Producto registrado', 'success')
-        this.dialogo.close(true)
       }, err => {
         console.log(err)
         this._inveServ.notify('Ocurrio un error', 'error')
       })
+    }
+  }
+
+  clear(index:number){
+    this.files.splice(index, 1)
+  }
+
+  onSelectFile(event:any){
+    for(const item of event.target.files){
+      if(this._validate.validateType(item.type)){
+        const newFile = item;
+        this.files.push(newFile);
+      }
     }
   }
 }

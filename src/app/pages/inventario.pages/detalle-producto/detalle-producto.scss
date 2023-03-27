@@ -1,16 +1,15 @@
-mat-dialog-container{
-  height: 463px;
-}
-.mat-dialog-title{
-  text-align: center;
-  margin: 0;
-}
-.mat-dialog-content{
-  height: auto;
-}
 main{
+  width: 90%;
+  padding-top: 6rem;
+  margin: 0 auto;
+  h1{
+    text-align: center;
+    margin: 0;
+  }
+
   .fm_header{
-    width: 100%;
+    width: 80%;
+    margin: 0 auto;
     display: flex;
     justify-content: center;
     section.avatar{
@@ -70,15 +69,87 @@ main{
         }
       }
     }
-    .btns{
-      margin-top: 1rem;
-      display: flex;
+  }
+
+  .contentImgs{
+    width: 80%;
+    margin: 1rem auto;
+    display: grid;
+    grid-template-columns: 30% 70%;
+    grid-gap: 10px;
+    mat-card.drop{
+      height: 200px;
+    }
+    mat-card mat-card-header{
       justify-content: center;
-      gap: 2rem;
+    }
+    mat-card mat-card-content{
+      .drop-zone {
+        border: dotted 3px lightgray;
+        .custon-file{
+          cursor: pointer;
+          input[type='file']{
+            display: none;
+          }
+          height: 160px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          mat-icon{
+            color: #2190f0;
+            font-size: 2rem;
+            overflow: visible;
+            text-align: center;
+          }
+        }
+      }
+
+      .file-over {
+        border: solid 3px #22dc80;
+      }
+    }
+
+    mat-card mat-card-content{
+      .table{
+        width: 100%;
+        max-height: 170px;
+        border-collapse: collapse;
+
+        thead{
+          border-bottom: 1px solid #999;
+          th{
+            text-align: left;
+            padding: 10px;
+          }
+        }
+        tbody{
+          border-bottom: 1px solid #999;
+          tr td{
+            text-align: left;
+            &.name{
+              display: flex;
+              align-items: center;
+              overflow: hidden;
+              padding-right: 2px;
+            }
+          }
+        }
+      }
+    }
+    mat-card-actions{
+      padding: 0;
+      text-align: center;
     }
   }
+
+  .container-btn{
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+  }
 }
-.mat-dialog-actions{
-  border-top: 1px solid gray;
-  justify-content: center;
-}
+

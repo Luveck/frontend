@@ -96,7 +96,7 @@ export class AuthService {
     this.userToken = null
     this.userData = null
     localStorage.removeItem('LuveckUserToken');
-    role === 'Admin' || 'Dependiente'
+    (role === 'Admin' || role === 'Dependiente')
       ? this._dataServ.goTo('/authentication/login')
       : this._dataServ.goTo('/inicio')
   }

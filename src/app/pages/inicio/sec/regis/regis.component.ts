@@ -29,10 +29,12 @@ export class RegisComponent {
     name : new FormControl('', [Validators.required]),
     lastName : new FormControl('', [Validators.required]),
     phone: new FormControl('', [Validators.required, Validators.pattern('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$'), Validators.minLength(8)]),
-    password: new FormControl('', [Validators.required]),
     bornDate: new FormControl('', [Validators.required]),
     sex: new FormControl('', [Validators.required]),
-    address: new FormControl('', [Validators.required])
+    address: new FormControl('', [Validators.required]),
+    password: new FormControl('', [Validators.required, Validators.pattern(
+      '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$'
+    )]),
   })
 
   public forgotPassForm = new FormGroup({
@@ -79,7 +81,9 @@ export class RegisComponent {
           this.dataServ.progress = false
           console.log(error)
           let msgError = error.error.messages
-          this.dataServ.fir(`${msgError}`, 'error')
+          msgError === 'Usuario bloqueado por intentos no validos.'
+            ?this.dataServ.fir(`${msgError}`, 'error')
+            :this.dataServ.fir(`Correo y contraseña del usuario no válidos.`, 'error')
         })
     }
   }
