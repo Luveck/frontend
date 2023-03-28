@@ -83,7 +83,7 @@ export class RegisComponent {
           let msgError = error.error.messages
           msgError === 'Usuario bloqueado por intentos no validos.'
             ?this.dataServ.fir(`${msgError}`, 'error')
-            :this.dataServ.fir(`Correo y contraseña del usuario no válidos.`, 'error')
+            :this.dataServ.fir(`DNI o contraseña del usuario no válidos.`, 'error')
         })
     }
   }

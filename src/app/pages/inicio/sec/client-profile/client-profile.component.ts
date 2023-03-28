@@ -29,7 +29,13 @@ export class ClientProfileComponent implements OnInit {
   constructor(
     private _usersServ:UsuariosService,
     public dialogo: MatDialogRef<ClientProfileComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: string) { }
+    @Inject(MAT_DIALOG_DATA) public data: string) {
+      if(this._usersServ.localRoles.length === 0){
+        this._usersServ.getAllRoles().subscribe((res:any) => {
+          this._usersServ.localRoles = res.result
+        })
+      }
+    }
 
   ngOnInit(): void {
     this.isLoadingResults = true
@@ -72,7 +78,23 @@ export class ClientProfileComponent implements OnInit {
     this.perfilForm.disable()
   }
 
-  save(){
-    console.log(this.perfilForm.value)
+  selectRole(nameRole:string){
+    const tempRole = this._usersServ.localRoles.filter(role => role.name === nameRole)
+    return tempRole[0]
+  }
+
+  save(chageState?:boolean){
+    let tempData:any = this.perfilForm.value
+    let {id, name} = this.selectRole(tempData.role)
+    tempData.idRole = id
+    tempData.role = name
+    const peticion = this._usersServ.UpdateUsuario(tempData, (chageState != undefined) ?chageState :this.userData.userEntity.state)
+    peticion.subscribe(()=>{
+      this._usersServ.notify('Registro actualizado', 'success')
+      this.dialogo.close(true);
+    },err => {
+      console.log(err)
+      this._usersServ.notify('Ocurrio un error', 'error')
+    })
   }
 }

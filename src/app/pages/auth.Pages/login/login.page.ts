@@ -40,7 +40,9 @@ export class LoginPage implements OnInit {
           this.dataServ.progress = false
           console.log(error)
           let msgError = error.error.messages
-          this.dataServ.fir(`${msgError}`, 'error')
+          msgError === 'Usuario bloqueado por intentos no validos.'
+            ?this.dataServ.fir(`${msgError}`, 'error')
+            :this.dataServ.fir(`DNI o contraseña del usuario no válidos.`, 'error')
         })
     }
   }

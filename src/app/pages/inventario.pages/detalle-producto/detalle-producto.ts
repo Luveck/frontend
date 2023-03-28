@@ -4,10 +4,9 @@ import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatDialog } from '@angular/material/dialog';
 
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
-import { Categoria, Producto } from 'src/app/interfaces/models'
+import { Categoria, FilesToProduct, Producto } from 'src/app/interfaces/models'
 import { InventarioService } from 'src/app/services/inventario.service'
 import { ImageValidator } from './imageValidator';
-import { FileItem } from 'src/app/interfaces/file-item';
 
 @Component({
   selector: 'app-detalle-producto',
@@ -43,6 +42,7 @@ export class DetalleProducto implements OnInit {
 
   files: File[] = [];
   isOverDrop = false;
+  filesFormated: FilesToProduct[] = []
 
   public prodForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -104,10 +104,10 @@ export class DetalleProducto implements OnInit {
   }
 
   generateImg(){
-    console.log(this.files)
     this.files.forEach(file => {
       this.convertFileToBase64(file)
     })
+    console.log(this.filesFormated.entries())
   }
 
   convertFileToBase64(file:File): void {
@@ -115,17 +115,22 @@ export class DetalleProducto implements OnInit {
     reader.readAsDataURL(file);
     reader.onload = () => {
       let fileStringBase64: any = reader.result;
-      let element: any = {
-        FileBase64: fileStringBase64.split(',')[1],
-        Name: file.name,
-        TypeFile: file.type
+      let element:FilesToProduct = {
+        fileBase64: fileStringBase64.split(',')[1],
+        name: file.name,
+        typeFile: file.type
       }
-      console.log(element)
+      this.filesFormated.push(element)
     };
   }
 
   save(){
+    if(this.files.length == 0){
+      this._inveServ.notify('El registro del producto debe temer por lo menos una imágen.', 'info')
+      return
+    }
     if(this.prodId != 'new'){
+      this.generateImg()
       const peticion = this._inveServ.updateProd(this.prodForm.value, parseInt(this.prodId), this.currentProd.state)
       peticion.subscribe(() => {
         this._inveServ.notify('Registro actualizado', 'success')
@@ -134,13 +139,14 @@ export class DetalleProducto implements OnInit {
         this._inveServ.notify('Ocurrio un error', 'error')
       })
     }else{
-      const peticion = this._inveServ.addProducto(this.prodForm.value)
-      peticion.subscribe(() => {
+      this.generateImg()
+      const peticion = this._inveServ.addProducto(this.prodForm.value, this.filesFormated)
+/*       peticion.subscribe(() => {
         this._inveServ.notify('Producto registrado', 'success')
       }, err => {
         console.log(err)
         this._inveServ.notify('Ocurrio un error', 'error')
-      })
+      }) */
     }
   }
 

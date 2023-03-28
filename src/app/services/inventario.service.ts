@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { Categoria, Producto } from '../interfaces/models';
+import { Categoria, FilesToProduct, Producto } from '../interfaces/models';
 import { DataService } from './data.service';
 import { AuthService } from './auth.service';
 
@@ -86,16 +86,20 @@ export class InventarioService {
     )
   }
 
-  addProducto(formData:any){
+  addProducto(formData:any, files:FilesToProduct[]){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    console.log(files)
+
     let dataProd:Producto = {
       ...formData,
-      state: true
+      state: true,
+      file: files
     }
     console.log(dataProd)
-    return this._http.post(`${this._dataServ.baseURL}/Administration/CreateProduct`, dataProd,
+    console.log(JSON.stringify(dataProd))
+/*     return this._http.post(`${this._dataServ.baseURL}/Administration/CreateProduct`, dataProd,
       {headers: this.headers}
-    )
+    ) */
   }
 
   updateProd(formData:any, prodId:number, state:boolean){

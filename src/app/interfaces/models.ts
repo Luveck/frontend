@@ -86,10 +86,17 @@ export interface Producto{
   idCategory: number
   nameCategory: string
   state:boolean
+  file: FilesToProduct[]
   createBy?: string
   creationDate?: string
   updateBy?: string
   updateDate?: string
+}
+
+export interface FilesToProduct{
+  name: string
+  fileBase64: string
+  typeFile: string
 }
 
 export interface Rule{

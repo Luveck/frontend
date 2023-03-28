@@ -1,5 +1,3 @@
-import { FileItem } from "src/app/interfaces/file-item";
-
 export class ImageValidator {
   private acceptType = ['image/jpeg', 'image/png', 'image/webp'];
 

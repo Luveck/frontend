@@ -37,7 +37,7 @@ export class HomePage implements AfterViewInit {
   ){}
 
   ngAfterViewInit(): void {
-    if(this._authServ.checkTokenDate(this._authServ.expToken)){
+    if(this._authServ.checkTokenDate(this._authServ.expToken) && this._authServ.userToken){
       this._ventasServ.getVentas().subscribe(res => this.counterVentas = res.result.length)
 
       this._inveServ.getProductos().subscribe(res => {
