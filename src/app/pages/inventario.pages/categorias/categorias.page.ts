@@ -41,7 +41,7 @@ export class CategoriasPage implements OnInit {
 
   getAllCategories(){
     const catsAll = this.inveServ.getCategories()
-    catsAll.subscribe(res => {
+    catsAll.subscribe((res:any) => {
       this.isLoadingResults = false
       this.inveServ.categorias = res.result
       console.log(this.inveServ.categorias)

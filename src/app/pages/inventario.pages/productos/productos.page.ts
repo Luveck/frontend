@@ -56,7 +56,7 @@ export class ProductosPage implements AfterViewInit {
 
   getAllProduct(){
     let resp = this._inveServ.getProductos()
-    resp.subscribe(productos => {
+    resp.subscribe((productos:any) => {
       this.dataSource.data = productos.result as Producto[]
       this._inveServ.listProducts = productos.result
       this.isLoadingResults = false

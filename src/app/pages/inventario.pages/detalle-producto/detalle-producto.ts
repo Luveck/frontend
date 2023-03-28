@@ -66,14 +66,14 @@ export class DetalleProducto implements OnInit {
     this.prodId = this._route.snapshot.params['id']
     if(!this._inveServ.categorias){
       const res = this._inveServ.getCategories()
-      res.subscribe(res => this.cats = res.result)
+      res.subscribe((res:any) => this.cats = res.result)
     }else{
       this.cats = this._inveServ.categorias
     }
     if(this.prodId != 'new'){
       this.isLoadingResults = true
       const prod = this._inveServ.getProductoById(this.prodId)
-      prod.subscribe(res => {
+      prod.subscribe((res:any) => {
         console.log(res)
         this.currentProd = res.result
         this.isLoadingResults = false
@@ -107,7 +107,6 @@ export class DetalleProducto implements OnInit {
     this.files.forEach(file => {
       this.convertFileToBase64(file)
     })
-    console.log(this.filesFormated.entries())
   }
 
   convertFileToBase64(file:File): void {
@@ -141,12 +140,12 @@ export class DetalleProducto implements OnInit {
     }else{
       this.generateImg()
       const peticion = this._inveServ.addProducto(this.prodForm.value, this.filesFormated)
-/*       peticion.subscribe(() => {
+      peticion.subscribe(() => {
         this._inveServ.notify('Producto registrado', 'success')
       }, err => {
         console.log(err)
         this._inveServ.notify('Ocurrio un error', 'error')
-      }) */
+      })
     }
   }
 

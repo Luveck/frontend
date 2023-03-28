@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Categoria, FilesToProduct, Producto } from '../interfaces/models';
 import { DataService } from './data.service';
@@ -18,7 +18,14 @@ export class InventarioService {
     private _authServ:AuthService,
     private _dataServ:DataService
   ) {
-    this.headers = {'Authorization':`Bearer ${this._authServ.userToken}`}
+    this.headers = {
+      headers: new HttpHeaders(
+        {
+          'Authorization':`Bearer ${this._authServ.userToken}`,
+          'Content-Type': 'application/json'
+        }
+      )
+    }
   }
 
   notify(msg:string, icon:any){
@@ -29,14 +36,14 @@ export class InventarioService {
   getCategories(){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCategories`,
-      {headers: this.headers}
+      this.headers
     )
   }
 
   getCategoriaById(id:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCategoryById?Id=${id}`,
-      {headers: this.headers}
+      this.headers
     )
   }
 
@@ -47,14 +54,14 @@ export class InventarioService {
       "isDeleted": false,
     }
     return this._http.post(`${this._dataServ.baseURL}/Administration/CreateCategory`, dataCat,
-      {headers: this.headers}
+      this.headers
     )
   }
 
   deleteCat(id:number){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.delete(`${this._dataServ.baseURL}/Administration/DeleteCategory?Id=${id}`,
-      {headers: this.headers}
+      this.headers
     )
   }
 
@@ -67,7 +74,7 @@ export class InventarioService {
     }
     console.log(dataCat)
     return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCategory`, dataCat,
-      {headers: this.headers}
+      this.headers
     )
   }
 
@@ -75,14 +82,14 @@ export class InventarioService {
   getProductos(){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetProducts`,
-      {headers: this.headers}
+      this.headers
     )
   }
 
   getProductoById(id:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetProductById?Id=${id}`,
-      {headers: this.headers}
+      this.headers
     )
   }
 
@@ -97,9 +104,9 @@ export class InventarioService {
     }
     console.log(dataProd)
     console.log(JSON.stringify(dataProd))
-/*     return this._http.post(`${this._dataServ.baseURL}/Administration/CreateProduct`, dataProd,
-      {headers: this.headers}
-    ) */
+    return this._http.post(`${this._dataServ.baseURL}/Administration/CreateProduct`, dataProd,
+      this.headers
+    )
   }
 
   updateProd(formData:any, prodId:number, state:boolean){
@@ -111,12 +118,12 @@ export class InventarioService {
     }
     console.log(dataProd)
     return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateProduct`, dataProd,
-      {headers: this.headers}
+      this.headers
     )
   }
 
   deleteProd(id:number){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.delete(`${this._dataServ.baseURL}/Administration/DeleteProduct?Id=${id}`, {headers: this.headers})
+    return this._http.delete(`${this._dataServ.baseURL}/Administration/DeleteProduct?Id=${id}`, this.headers)
   }
 }

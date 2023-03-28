@@ -25,7 +25,7 @@ export class DetalleCategoria implements OnInit {
     if(this.data.catId){
       this.isLoadingResults = true
       const cat = this._inveServ.getCategoriaById(this.data.catId)
-      cat.subscribe(res => {
+      cat.subscribe((res:any) => {
         console.log(res)
         this.currentCategoria = res.result
         this.isLoadingResults = false

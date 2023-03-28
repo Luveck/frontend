@@ -40,7 +40,7 @@ export class HomePage implements AfterViewInit {
     if(this._authServ.checkTokenDate(this._authServ.expToken) && this._authServ.userToken){
       this._ventasServ.getVentas().subscribe(res => this.counterVentas = res.result.length)
 
-      this._inveServ.getProductos().subscribe(res => {
+      this._inveServ.getProductos().subscribe((res:any) => {
         this.counterProductos = res.result.length
         this._inveServ.listProducts = res.result
       })
