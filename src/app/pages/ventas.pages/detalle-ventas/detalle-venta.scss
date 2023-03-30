@@ -55,7 +55,13 @@ main{
     padding: 10px 0;
     .inputs{
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+      &.ver2{
+        grid-template-columns: auto 1fr 1fr;
+        button{
+          margin-top: 6px;
+        }
+      }
       mat-form-field{
         width: 90%;
         margin: auto;

@@ -8,7 +8,9 @@
 
   <div class="fm_header" *ngIf="prodId != 'new'">
     <section class="avatar">
-      <img src="assets/icons/default-thumbnail.jpg">
+      <div class="avatarImg">
+        <img src="assets/images/prov/01.png">
+      </div>
       <div class="datos">
         <p>{{currentProd?.name}}</p>
         <div class="bots">
@@ -94,7 +96,7 @@
 
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Imágenes por sibir</mat-card-title>
+        <mat-card-title>Imágenes por subir</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <table class="table">
@@ -121,6 +123,21 @@
         <button mat-raised-button color="warn" (click)="files = []">Limpiar imágenes</button>
       </mat-card-actions>
     </mat-card>
+  </div>
+
+  <div class="listImgs" *ngIf="prodId != 'new'">
+    <div class="imgItem">
+      <button mat-mini-fab color="warn">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <img src="assets/images/prov/01.png" alt="">
+    </div>
+    <div class="imgItem">
+      <button mat-mini-fab color="warn">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <img src="assets/images/prov/02.png" alt="">
+    </div>
   </div>
 
   <div class="container-btn">

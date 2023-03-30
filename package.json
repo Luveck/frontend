@@ -24,6 +24,7 @@
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
     "ng-password-validator": "^3.0.0",
+    "ngx-mat-select-search": "^5.0.0",
     "rxjs": "~7.5.0",
     "sweetalert2": "^11.4.27",
     "swiper": "^8.4.5",

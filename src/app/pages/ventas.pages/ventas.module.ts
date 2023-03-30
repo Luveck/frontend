@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { MatPaginatorIntl } from '@angular/material/paginator';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { CustomMatPaginatorIntl } from '../paginator-es';
 import { MaterialModule } from 'src/app/material.module';
@@ -29,6 +30,7 @@ const routes: Routes = [
     ReactiveFormsModule,
     ComponentsModule,
     MaterialModule,
+    NgxMatSelectSearchModule,
     RouterModule.forChild(routes)
   ],
   providers: [

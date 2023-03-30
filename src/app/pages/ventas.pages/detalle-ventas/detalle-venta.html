@@ -4,7 +4,7 @@
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
   </div>
 
-  <div class="fm_header" *ngIf="data.ventaId">
+  <div class="fm_header" *ngIf="currentVentaId">
     <section class="avatar">
       <div class="datos">
         <p>{{currentVenta?.noPurchase}}</p>
@@ -40,12 +40,56 @@
         <mat-label>No. de factura</mat-label>
         <input matInput placeholder="No. de factura" formControlName="noPurchase">
       </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Cliente</mat-label>
+        <mat-select [formControl]="userCtrl" #singleSelect>
+          <mat-option>
+            <ngx-mat-select-search [formControl]="userFilterCtrl" placeholderLabel="Buscar por DNI" noEntriesFoundLabel="'Registro no encontrado.'"></ngx-mat-select-search>
+          </mat-option>
+
+          <div *ngFor="let user of filteredUsers | async">
+            <mat-option *ngIf="user.state" [value]="user.userName">
+              {{user.userName}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
     </div>
   </form>
+
+  <mat-divider *ngIf="currentVentaId"></mat-divider>
+
+  <section class="wrapForm" *ngIf="currentVentaId">
+    <h2>Productos</h2>
+    <div class="inputs ver2" *ngFor="let p of productsOnCurrentVenta ; index as i">
+      <button mat-icon-button color="warn" (click)="eliminarProd(i)">
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-form-field appearance="fill">
+        <mat-label>Producto</mat-label>
+        <mat-select>
+          <div *ngFor="let prod of productos">
+            <mat-option *ngIf="prod.state" [value]="prod.id">
+              {{prod.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Cantidad</mat-label>
+        <input matInput type="number" placeholder="Cantidad comprada">
+      </mat-form-field>
+    </div>
+
+    <button mat-raised-button color="accent" (click)="addProd()">Agregar producto <mat-icon>add</mat-icon></button>
+  </section>
 </main>
 <div mat-dialog-actions>
   <div class="btns">
-    <button mat-raised-button color="primary" [disabled]="ventaForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
+    <button mat-raised-button color="primary" *ngIf="!currentVentaId" [disabled]="ventaForm.invalid" (click)="save()">Generar factura <mat-icon>save</mat-icon></button>
+    <button mat-raised-button color="primary" *ngIf="currentVentaId" [disabled]="ventaForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
     <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
   </div>
 </div>

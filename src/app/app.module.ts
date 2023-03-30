@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { MaterialModule } from './material.module';
 
 //formato de fechas
@@ -21,7 +22,8 @@ registerLocaleData(localeEsHn, 'es-Hn');
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    MaterialModule
+    MaterialModule,
+    NgxMatSelectSearchModule
   ],
   providers: [
     { provide: LOCALE_ID, useValue: 'es-Hn' },

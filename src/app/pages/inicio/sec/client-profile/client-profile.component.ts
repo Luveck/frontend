@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 
 import { UsuariosService } from 'src/app/services/usuarios.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-client-profile',
@@ -27,6 +28,7 @@ export class ClientProfileComponent implements OnInit {
   })
 
   constructor(
+    private _authServ:AuthService,
     private _usersServ:UsuariosService,
     public dialogo: MatDialogRef<ClientProfileComponent>,
     @Inject(MAT_DIALOG_DATA) public data: string) {
@@ -91,6 +93,8 @@ export class ClientProfileComponent implements OnInit {
     const peticion = this._usersServ.UpdateUsuario(tempData, (chageState != undefined) ?chageState :this.userData.userEntity.state)
     peticion.subscribe(()=>{
       this._usersServ.notify('Registro actualizado', 'success')
+      this._authServ.userData.UserName = this.perfilForm.get('name')?.value
+      this._authServ.userData.LastName = this.perfilForm.get('lastName')?.value
       this.dialogo.close(true);
     },err => {
       console.log(err)

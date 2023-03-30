@@ -8,6 +8,7 @@ import { DataService } from './data.service';
 })
 export class UsuariosService {
   localRoles:any[] = []
+  usersGlobal:any[] = []
   headers: any
 
   constructor(

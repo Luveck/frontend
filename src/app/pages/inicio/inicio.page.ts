@@ -7,14 +7,13 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ClientProfileComponent } from './sec/client-profile/client-profile.component';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 
-
 @Component({
   selector: 'app-inicio',
   templateUrl: './inicio.page.html',
   styleUrls: ['./inicio.page.scss']
 })
 
-export class InicioPage {
+export class InicioPage{
   localTheme:boolean = true
   darkClassName:string = 'theme-dark';
   SectionSelect:string = 'inicio'
@@ -22,32 +21,12 @@ export class InicioPage {
 
   @HostBinding('class') className = '';
 
-  displayedColumns = [
-    'fecha',
-    'numProds',
-    'nomProds',
-    'farmacia'
-  ];
-
-  dataSource = [
-    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
-    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
-    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
-    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
-    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
-    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
-    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
-    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
-    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
-    {fecha: '20/12/2022', numProds: 1, nomProds: 'Loratadina 10 mg', farmacia: 'Farmacity, tegucigalpa. 1era Ave.'},
-  ];
-
-
   constructor(
     private _overlay: OverlayContainer,
     private _dialog: MatDialog,
     public dataServ: DataService,
-    public authServ:AuthService
+    public authServ:AuthService,
+
   ){
     let theme = this.dataServ.getTheme()
     if(theme === 'dark'){

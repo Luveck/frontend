@@ -95,14 +95,16 @@ export class InventarioService {
 
   addProducto(formData:any, files:FilesToProduct[]){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    console.log(files)
 
+    console.log(files)
     let dataProd:Producto = {
       ...formData,
-      state: true,
-      file: files
+      "state": true,
+      "file": files
     }
+
     console.log(dataProd)
+
     console.log(JSON.stringify(dataProd))
     return this._http.post(`${this._dataServ.baseURL}/Administration/CreateProduct`, dataProd,
       this.headers

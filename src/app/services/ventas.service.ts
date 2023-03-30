@@ -36,13 +36,15 @@ export class VentasService {
     )
   }
 
-  addVenta(formData:any){
+  addVenta(formData:any, userId:string){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     let dataVenta:Venta = {
       ...formData,
-      "userId": this._authServ.userData.UserId,
-      "reviewed": false
+      "userId": userId,
+      "reviewed": this._authServ.userData.Role != 'Cliente' ?true :false,
+      "dateShiped": new Date()
     }
+    console.log(dataVenta)
     return this._http.post(`${this._dataServ.baseURL}/Purchase/CreatePurchase`, dataVenta, {
       headers: this.headers
     })
@@ -67,5 +69,9 @@ export class VentasService {
     return this._http.get<any>(`${this._dataServ.baseURL}/ProductPurchase/GetProductByPurchase?purchaseId=${id}`,
       {headers: this.headers}
     )
+  }
+
+  addProducToVenta(){
+
   }
 }

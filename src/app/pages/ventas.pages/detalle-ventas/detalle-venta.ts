@@ -1,11 +1,15 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { MatSelect as MatSelect } from '@angular/material/select';
+import { ReplaySubject, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
-import { Venta, Producto, Farmacia } from 'src/app/interfaces/models'
+import { Venta, Farmacia } from 'src/app/interfaces/models'
 import { VentasService } from 'src/app/services/ventas.service';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { FarmaciasService } from 'src/app/services/farmacias.service';
+import { UsuariosService } from 'src/app/services/usuarios.service';
 
 @Component({
   selector: 'app-detalle-venta',
@@ -13,11 +17,14 @@ import { FarmaciasService } from 'src/app/services/farmacias.service';
   styleUrls: ['./detalle-venta.scss'],
 })
 
-export class DetalleVenta implements OnInit {
+export class DetalleVenta implements OnInit, OnDestroy {
   currentVenta!: Venta | any
-  productsOnCurrentVenta!: any[]
-  productos!: Producto[]
+  currentVentaId:any
+  productsOnCurrentVenta: any[] = []
+  productos!: any[]
   farmacias!: Farmacia[]
+  usuarios: any[] = []
+  userId!:string
   isLoadingResults!:boolean
 
   public ventaForm = new FormGroup({
@@ -25,17 +32,29 @@ export class DetalleVenta implements OnInit {
     noPurchase: new FormControl('', Validators.required)
   })
 
+  public userCtrl: FormControl<any> = new FormControl<any>(null);
+  public userFilterCtrl: FormControl<string|null> = new FormControl<string|null>('');
+  public filteredUsers: ReplaySubject<any[]> = new ReplaySubject<any[]>(1);
+
+  @ViewChild('singleSelect', { static: true }) singleSelect!: MatSelect;
+
+  /** Subject that emits when the component has been destroyed. */
+  protected _onDestroy = new Subject<void>();
+
   constructor(
     private _ventasServ:VentasService,
     private _inveServ:InventarioService,
     private _farmaServ:FarmaciasService,
+    private _usersServ:UsuariosService,
     public dialogo: MatDialogRef<DetalleVenta>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){}
 
   ngOnInit(): void {
     if(this.data.ventaId){
+      this.currentVentaId = this.data.ventaId
       this.currentVenta = this.data.currentVenta
+      console.log(this.currentVenta)
       this.initValores()
       this.isLoadingResults = true
       const products = this._ventasServ.getProductosOfVenta(this.data.ventaId)
@@ -51,6 +70,39 @@ export class DetalleVenta implements OnInit {
     }
     this.farmacias = this._farmaServ.listFarmacias
     this.productos = this._inveServ.listProducts
+    this.usuarios = this._usersServ.usersGlobal
+
+    this.userCtrl.setValue(this.usuarios[1])
+    this.filteredUsers.next(this.usuarios.slice());
+
+    this.userFilterCtrl.valueChanges
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterUsers();
+      });
+  }
+
+  ngOnDestroy() {
+    this._onDestroy.next();
+    this._onDestroy.complete();
+  }
+
+  protected filterUsers() {
+    if (!this.usuarios) {
+      return;
+    }
+    // get the search keyword
+    let search = this.userFilterCtrl.value;
+    if (!search) {
+      this.filteredUsers.next(this.usuarios.slice());
+      return;
+    } else {
+      search = search;
+    }
+    // filter the banks
+    this.filteredUsers.next(
+      this.usuarios.filter(user => user.userName.indexOf(search) > -1)
+    );
   }
 
   initValores(){
@@ -75,14 +127,39 @@ export class DetalleVenta implements OnInit {
         this._ventasServ.notify('Ocurrio un error con el proceso', 'error')
       }))
     }else{
-      const peticion = this._ventasServ.addVenta(this.ventaForm.value)
-      peticion.subscribe(() => {
-        this._inveServ.notify('Venta registrada', 'success')
-        this.dialogo.close(true);
+      console.log(this.ventaForm.value)
+      console.log(this.singleSelect.value)
+      const peticionOne = this._usersServ.getUserByDNI(this.singleSelect.value)
+      peticionOne.subscribe((resultOfUser:any) => {
+        console.log(resultOfUser.result)
+        let userId = resultOfUser.result.userEntity.id
+        const peticionTwo = this._ventasServ.addVenta(this.ventaForm.value, userId)
+        peticionTwo.subscribe((resultOfVenta:any) => {
+          this.currentVentaId = resultOfVenta.result.id
+          this.currentVenta = resultOfVenta.result
+          this._inveServ.notify('Factura registrada.', 'success')
+          this.addProd()
+          //this.dialogo.close(true);
+        })
       }, (err => {
         console.log(err)
         this._ventasServ.notify('Ocurrio un error con el proceso', 'error')
       }))
     }
+  }
+
+  addProd(){
+    this.productsOnCurrentVenta.push(
+      {
+        "productId": 1,
+        "quantityShiped": 0,
+        "dateShiped": "2023-03-29T16:51:02.562Z"
+      }
+    )
+    console.log(this.productsOnCurrentVenta)
+  }
+
+  eliminarProd(index:number){
+    this.productsOnCurrentVenta.splice(index, 1)
   }
 }

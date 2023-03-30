@@ -52,7 +52,10 @@ export class HomePage implements AfterViewInit {
         this._farmaServ.listFarmacias = res.result
       })
 
-      this._usersServ.getUsers().subscribe((res:any) => this.counterUsers = res.result.length)
+      this._usersServ.getUsers().subscribe((res:any) =>{
+        this.counterUsers = res.result.length
+        this._usersServ.usersGlobal = res.result
+      })
 
       this._MedicServ.getMedicos().subscribe(res => this.counterMedicos = res.result.length)
 

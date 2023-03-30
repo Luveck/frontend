@@ -15,6 +15,7 @@ import { ProdsComponent } from './sec/prods/prods.component';
 import { RegisComponent } from './sec/regis/regis.component';
 import { ModalProdIniComponent } from './sec/modal-prod-ini/modal-prod-ini.component';
 import { ClientProfileComponent } from './sec/client-profile/client-profile.component';
+import { CanjeComponent } from './sec/canje/canje.component';
 
 const routes: Routes = [
   {
@@ -41,7 +42,8 @@ const routes: Routes = [
     ProdsComponent,
     RegisComponent,
     ModalProdIniComponent,
-    ClientProfileComponent
+    ClientProfileComponent,
+    CanjeComponent
   ]
 })
 export class InicioPageModule {}

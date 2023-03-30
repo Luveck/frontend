@@ -42,7 +42,7 @@ export class DetalleProducto implements OnInit {
 
   files: File[] = [];
   isOverDrop = false;
-  filesFormated: FilesToProduct[] = []
+  filesFormated:FilesToProduct[] = []
 
   public prodForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -114,12 +114,12 @@ export class DetalleProducto implements OnInit {
     reader.readAsDataURL(file);
     reader.onload = () => {
       let fileStringBase64: any = reader.result;
-      let element:FilesToProduct = {
-        fileBase64: fileStringBase64.split(',')[1],
-        name: file.name,
-        typeFile: file.type
+      this.filesFormated[this.filesFormated.length] =
+      {
+        "fileBase64": fileStringBase64.split(',')[1],
+        "name": file.name,
+        "typeFile": file.type
       }
-      this.filesFormated.push(element)
     };
   }
 

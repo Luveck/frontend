@@ -24,7 +24,7 @@ export class ModalReportComponent implements OnInit {
   body:any[] = []
   row:any = {}
   columsExcluded: string[] = [
-    'id', 'status', 'state', 'isDeleted', 'createBy', 'creationDate', 'updateBy', 'updateDate', 'countryId', 'departymentId', 'cityId', 'idCategory', 'productId', 'patologyId', 'idCityPharmacy', 'idPharmacy', 'reviewed', 'urlOficial'
+    'id', 'status', 'state', 'isDeleted', 'createBy', 'creationDate', 'updateBy', 'updateDate', 'countryId', 'departymentId', 'cityId', 'idCategory', 'productId', 'patologyId', 'idCityPharmacy', 'idPharmacy', 'reviewed', 'urlOficial','statusUploadImage','urlImgs'
   ]
 
   constructor(public dataServ:DataService, public dialogo: MatDialogRef<ModalReportComponent>,

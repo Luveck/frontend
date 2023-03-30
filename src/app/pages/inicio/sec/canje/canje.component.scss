@@ -1,0 +1,51 @@
+.canjes{
+  width: 90%;
+  margin: 2rem auto;
+  h1 {
+    margin: 1rem 0;
+    width: 100%;
+    font-size: 2rem;
+    text-align: center;
+  }
+  p{
+    text-align: center;
+  }
+  .contentRegistroCanje{
+    padding: 2rem 1rem;
+    text-align: center;
+    .wrapForm{
+      width: 80%;
+      margin: 0 auto;
+      padding: 10px 0;
+      .inputs{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        &.ver2{
+          grid-template-columns: auto 1fr 1fr;
+          button{
+            margin-top: 6px;
+          }
+        }
+        mat-form-field{
+          width: 90%;
+          margin: auto;
+          align-content: center;
+        }
+      }
+    }
+  }
+}
+
+.btns{
+  border-top: 1px solid gray;
+  padding-top: 1rem;
+  button{
+    margin: 0 0.5rem;
+  }
+}
+
+@media (max-width: 560px){
+  .canjes{
+    height: 100%;
+  }
+}

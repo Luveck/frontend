@@ -17,9 +17,12 @@ main{
       padding: .5rem;
       display: flex;
       align-items: center;
-      img{
-        width: 150px;
-        height: 150px;
+      .avatarImg{
+        border: 1px solid gray;
+        img{
+          width: 150px;
+          height: 150px;
+        }
       }
       .datos{
         width: 250px;
@@ -141,6 +144,28 @@ main{
     mat-card-actions{
       padding: 0;
       text-align: center;
+    }
+  }
+
+  .listImgs{
+    width: 90%;
+    margin: 2rem auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    .imgItem{
+      width: 220px;
+      height: 220px;
+      padding: 10px;
+      border: 1px solid gray;
+      .mat-mini-fab{
+        position: absolute;
+        margin: 3px;
+      }
+      img{
+        height: 100%;
+      }
     }
   }
 

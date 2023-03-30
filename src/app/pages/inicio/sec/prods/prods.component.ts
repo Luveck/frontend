@@ -1,5 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+
+import { RulesService } from 'src/app/services/rules.service';
 import { ModalProdIniComponent } from '../modal-prod-ini/modal-prod-ini.component';
 
 @Component({
@@ -10,6 +12,7 @@ import { ModalProdIniComponent } from '../modal-prod-ini/modal-prod-ini.componen
 export class ProdsComponent implements OnInit {
   @Input() color!:boolean
   selectedCategory:number = 0
+  prods:any[] = []
   prodsCanje:any[] = [
     {
       nameFamily:'Olcarveck',
@@ -47,10 +50,14 @@ export class ProdsComponent implements OnInit {
     },
   ]
 
-  constructor(private _dialog: MatDialog,) { }
+  constructor(private _dialog: MatDialog, public rulesServ:RulesService) { }
 
   ngOnInit(): void {
-
+    const peticion = this.rulesServ.getProdConRules()
+    peticion.subscribe((res:any) => {
+      console.log(res)
+      this.prods = res.result
+    })
   }
 
   selectCategory(index:number){

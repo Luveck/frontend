@@ -83,6 +83,7 @@ export class VentasPage implements AfterViewInit {
 
   on(row?:Venta){
     const config = {
+      //disableClose: true,
       data: {
         title: row?.id ?'Editar Venta' :'Agregar Venta',
         ventaId: row?.id,

@@ -86,7 +86,7 @@ export interface Producto{
   idCategory: number
   nameCategory: string
   state:boolean
-  file: FilesToProduct[]
+  file: any
   createBy?: string
   creationDate?: string
   updateBy?: string
@@ -95,7 +95,7 @@ export interface Producto{
 
 export interface FilesToProduct{
   name: string
-  fileBase64: string
+  fileBase64?: string
   typeFile: string
 }
 

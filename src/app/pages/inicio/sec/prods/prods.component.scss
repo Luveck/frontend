@@ -37,6 +37,9 @@
       cursor: pointer;
       img{
         width: 100%;
+        &.imgProv{
+          width: 50%;
+        }
       }
       span{
         font-weight: 600;

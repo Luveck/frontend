@@ -60,4 +60,10 @@ export class RulesService {
       headers: this.headers
     })
   }
+
+  getProdConRules(){
+    return this._http.get<any>(`${this._dataServ.baseURL}/RuleChange/GetProductsLanding`,
+      {headers: this.headers}
+    )
+  }
 }
