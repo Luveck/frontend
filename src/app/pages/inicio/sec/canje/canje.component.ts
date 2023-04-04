@@ -59,6 +59,10 @@ export class CanjeComponent implements OnInit {
     })
   }
 
+  saveProds(){
+    this._inveServ.notify('Factura actualizada.', 'success')
+  }
+
   addProd(){
     this.productsOnCurrentVenta.push(
       {

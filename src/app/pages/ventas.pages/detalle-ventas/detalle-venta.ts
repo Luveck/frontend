@@ -148,6 +148,10 @@ export class DetalleVenta implements OnInit, OnDestroy {
     }
   }
 
+  saveProds(){
+    this._inveServ.notify('Factura actualizada.', 'success')
+  }
+
   addProd(){
     this.productsOnCurrentVenta.push(
       {

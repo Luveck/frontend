@@ -61,7 +61,7 @@
           </div>
           <div class="btns">
             <button mat-raised-button color="primary" *ngIf="!currentVentaId" [disabled]="ventaForm.invalid" (click)="save()">Ingresar factura <mat-icon>save</mat-icon></button>
-            <button mat-raised-button color="primary" *ngIf="currentVentaId" [disabled]="ventaForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
+            <button mat-raised-button color="primary" *ngIf="currentVentaId" [disabled]="ventaForm.invalid" (click)="saveProds()">Guardar <mat-icon>save</mat-icon></button>
             <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
           </div>
         </div>
