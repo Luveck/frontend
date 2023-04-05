@@ -94,8 +94,9 @@ export interface Producto{
 }
 
 export interface FilesToProduct{
+  productId?: number
   name: string
-  fileBase64?: string
+  fileBase64: string
   typeFile: string
 }
 

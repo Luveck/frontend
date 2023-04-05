@@ -46,6 +46,12 @@
             *ngIf="registerForm.get('dni')?.invalid && (registerForm.get('dni')?.dirty || registerForm.get('dni')?.touched) && registerForm.get('dni')?.errors?.['required']">
             DNI requerido
           </mat-error>
+          <mat-error *ngIf="!registerForm.get('dni')?.errors?.['required'] && (registerForm.get('dni')?.errors?.['pattern'])">
+            DNI invalido
+          </mat-error>
+          <mat-error *ngIf="!registerForm.get('dni')?.errors?.['minlength']">
+            DNI debe tener minimo 13 digitos.
+          </mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline">
@@ -87,6 +93,9 @@
           <mat-error
             *ngIf="registerForm.get('phone')?.invalid && (registerForm.get('phone')?.dirty || registerForm.get('phone')?.touched) && registerForm.get('phone')?.errors?.['required']">
             Teléfono requerido
+          </mat-error>
+          <mat-error *ngIf="!registerForm.get('phone')?.errors?.['minLength']">
+            Teléfono debe tener minimo 8 digitos.
           </mat-error>
         </mat-form-field>
 

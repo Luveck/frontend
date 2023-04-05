@@ -22,7 +22,7 @@ export class RegisComponent {
   })
 
   public registerForm = new FormGroup({
-    dni : new FormControl('', [Validators.required]),
+    dni : new FormControl('', [Validators.required, Validators.pattern('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$'), Validators.minLength(13)]),
     email: new FormControl('', [Validators.required, Validators.email, Validators.pattern(
       '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,63}$',
     ),]),

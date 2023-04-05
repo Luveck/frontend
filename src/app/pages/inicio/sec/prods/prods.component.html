@@ -17,13 +17,13 @@
         style="margin: 0 1rem;font-weight: 600;">
       Filtrar por familia</span>
       <button mat-menu-item *ngFor="let cate of prodsCanje; index as i" (click)="selectCategory(i)">
-        <span>{{cate.nameFamily}}</span>
+        <span>{{cate?.nameFamily}}</span>
       </button>
     </mat-menu>
   </div>
 
   <div class="prod_content">
-    <mat-card class="mat-elevation-z8" *ngFor="let prod of prods" (click)="openModalProd(prod)">
+    <mat-card class="mat-elevation-z8" *ngFor="let prod of prodsCanje" (click)="openModalProd(prod)">
       <img *ngIf="prod.nameProduct != 'Producto09'" src="https://luveck.com/wp-content/uploads/2022/02/Olcarveck-20.png">
       <img *ngIf="prod.nameProduct == 'Producto09'" class="imgProv" src="assets/images/prov/01.png">
       <h2>{{prod.nameProduct}}</h2>

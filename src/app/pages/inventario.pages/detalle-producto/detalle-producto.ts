@@ -35,8 +35,8 @@ export class DetalleProducto implements OnInit {
     ]
   }
 
-  prodId!:string
   currentProd!: Producto | any
+  currentProdId:any
   cats!: Categoria[]
   isLoadingResults!:boolean
 
@@ -63,16 +63,16 @@ export class DetalleProducto implements OnInit {
   ){}
 
   ngOnInit(): void {
-    this.prodId = this._route.snapshot.params['id']
+    this.currentProdId = this._route.snapshot.params['id']
     if(!this._inveServ.categorias){
       const res = this._inveServ.getCategories()
       res.subscribe((res:any) => this.cats = res.result)
     }else{
       this.cats = this._inveServ.categorias
     }
-    if(this.prodId != 'new'){
+    if(this.currentProdId != 'new'){
       this.isLoadingResults = true
-      const prod = this._inveServ.getProductoById(this.prodId)
+      const prod = this._inveServ.getProductoById(this.currentProdId)
       prod.subscribe((res:any) => {
         console.log(res)
         this.currentProd = res.result
@@ -103,44 +103,24 @@ export class DetalleProducto implements OnInit {
     this.prodForm.reset()
   }
 
-  generateImg(){
-    this.files.forEach(file => {
-      this.convertFileToBase64(file)
-    })
-  }
-
-  convertFileToBase64(file:File): void {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      let fileStringBase64: any = reader.result;
-      this.filesFormated[this.filesFormated.length] =
-      {
-        "fileBase64": fileStringBase64.split(',')[1],
-        "name": file.name,
-        "typeFile": file.type
-      }
-    };
-  }
-
   save(){
-    if(this.files.length == 0){
-      this._inveServ.notify('El registro del producto debe temer por lo menos una imágen.', 'info')
-      return
-    }
-    if(this.prodId != 'new'){
-      this.generateImg()
-      const peticion = this._inveServ.updateProd(this.prodForm.value, parseInt(this.prodId), this.currentProd.state)
-      peticion.subscribe(() => {
+    if(this.currentProdId != 'new'){
+      const peticion = this._inveServ.updateProd(this.prodForm.value, parseInt(this.currentProdId), this.currentProd.state)
+      peticion.subscribe((resultOfPrd:any) => {
+        console.log(resultOfPrd)
+        this.currentProdId = resultOfPrd.result.id
+        this.currentProd = resultOfPrd.result
         this._inveServ.notify('Registro actualizado', 'success')
       }, err => {
         console.log(err)
         this._inveServ.notify('Ocurrio un error', 'error')
       })
     }else{
-      this.generateImg()
-      const peticion = this._inveServ.addProducto(this.prodForm.value, this.filesFormated)
-      peticion.subscribe(() => {
+      const peticionOne = this._inveServ.addProducto(this.prodForm.value)
+      peticionOne.subscribe((resultOfPrd:any) => {
+        console.log(resultOfPrd)
+        this.currentProdId = resultOfPrd.result.id
+        this.currentProd = resultOfPrd.result
         this._inveServ.notify('Producto registrado', 'success')
       }, err => {
         console.log(err)
@@ -160,5 +140,45 @@ export class DetalleProducto implements OnInit {
         this.files.push(newFile);
       }
     }
+  }
+
+  saveImages(){
+    if(this.files.length == 0){
+      this._inveServ.notify('El registro del producto debe temer por lo menos una imágen.', 'info')
+      return
+    }
+    this.generateImg()
+  }
+
+  generateImg(){
+    this.files.forEach(file => {
+      this.convertFileToBase64(file)
+    })
+  }
+
+  convertFileToBase64(file:File): void {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      let fileStringBase64: any = reader.result;
+      let imgPrd:FilesToProduct = {
+        "productId": this.currentProdId,
+        "fileBase64": fileStringBase64.split(',')[1],
+        "name": file.name,
+        "typeFile": file.type
+      }
+      const uploadPeticion = this._inveServ.uploadImage(imgPrd)
+      uploadPeticion.subscribe((res:any) => {
+        console.log(res)
+      },
+      err => {
+        console.log(err)
+        this._inveServ.notify('Ocurrio un error', 'error')
+      })
+    };
+  }
+
+  deleteOneFile(nameFile:string){
+    console.log(nameFile)
   }
 }

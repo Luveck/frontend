@@ -27,19 +27,44 @@
     <div class="inputs">
       <mat-form-field appearance="fill">
         <mat-label>DNI</mat-label>
-        <input matInput placeholder="DNI" maxlength="13" formControlName="dni" [readonly]="data.userEmail">
+        <input matInput placeholder="DNI" maxlength="13" formControlName="dni">
+        <mat-error
+          *ngIf="newUserForm.get('dni')?.invalid && (newUserForm.get('dni')?.dirty || newUserForm.get('dni')?.touched) && newUserForm.get('dni')?.errors?.['required']">
+          DNI requerido
+        </mat-error>
+        <mat-error *ngIf="!newUserForm.get('dni')?.errors?.['required'] && (newUserForm.get('dni')?.errors?.['pattern'])">
+          DNI invalido
+        </mat-error>
+        <mat-error *ngIf="newUserForm.get('dni')?.errors?.['minlength']">
+          DNI debe tener minimo 13 digitos.
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Nombre</mat-label>
         <input matInput placeholder="Nombre" formControlName="name">
+        <mat-error
+          *ngIf="newUserForm.get('name')?.invalid && (newUserForm.get('name')?.dirty || newUserForm.get('name')?.touched) && newUserForm.get('name')?.errors?.['required']">
+          Nombre requerido
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Apellido</mat-label>
         <input matInput placeholder="Apellido" formControlName="lastName">
+        <mat-error
+          *ngIf="newUserForm.get('lastName')?.invalid && (newUserForm.get('lastName')?.dirty || newUserForm.get('lastName')?.touched) && newUserForm.get('lastName')?.errors?.['required']">
+          Apellido requerido
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Email</mat-label>
         <input matInput placeholder="Email" formControlName="email">
+        <mat-error *ngIf="!newUserForm.get('email')?.errors?.['required'] && (newUserForm.get('email')?.errors?.['pattern'])">
+          Correo invalido
+        </mat-error>
+        <mat-error
+          *ngIf="newUserForm.get('email')?.invalid && (newUserForm.get('email')?.dirty || newUserForm.get('email')?.touched) && newUserForm.get('email')?.errors?.['required']">
+          Correo requerido
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Rol</mat-label>
@@ -50,12 +75,20 @@
             </mat-option>
           </div>
         </mat-select>
+        <mat-error
+          *ngIf="newUserForm.get('role')?.invalid && (newUserForm.get('role')?.dirty || newUserForm.get('role')?.touched) && newUserForm.get('role')?.errors?.['required']">
+          Nombre requerido
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Fecha de nacimiento</mat-label>
         <input matInput [matDatepicker]="picker" formControlName="bornDate">
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
+        <mat-error
+          *ngIf="newUserForm.get('bornDate')?.invalid && (newUserForm.get('bornDate')?.dirty || newUserForm.get('bornDate')?.touched) && newUserForm.get('bornDate')?.errors?.['required']">
+          Fecha de nacimiento requerida
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Género</mat-label>
@@ -64,14 +97,32 @@
           <mat-option value="mujer">Mujer</mat-option>
           <mat-option value="otro">Otro</mat-option>
         </mat-select>
+        <mat-error
+          *ngIf="newUserForm.get('sex')?.invalid && (newUserForm.get('sex')?.dirty || newUserForm.get('sex')?.touched) && newUserForm.get('sex')?.errors?.['required']">
+          Género requerido
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Teléfono</mat-label>
         <input matInput placeholder="Teléfono" formControlName="phone">
+        <mat-error *ngIf="!newUserForm.get('phone')?.errors?.['required'] && (newUserForm.get('phone')?.errors?.['pattern'])">
+          Teléfono invalido
+        </mat-error>
+        <mat-error
+          *ngIf="newUserForm.get('phone')?.invalid && (newUserForm.get('phone')?.dirty || newUserForm.get('phone')?.touched) && newUserForm.get('phone')?.errors?.['required']">
+          Teléfono requerido
+        </mat-error>
+        <mat-error *ngIf="newUserForm.get('phone')?.errors?.['minlength']">
+          Teléfono debe tener minimo 8 digitos.
+        </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Dirección</mat-label>
         <input matInput placeholder="Dirección" formControlName="address">
+        <mat-error
+          *ngIf="newUserForm.get('address')?.invalid && (newUserForm.get('address')?.dirty || newUserForm.get('address')?.touched) && newUserForm.get('address')?.errors?.['required']">
+          Dirección requerida
+        </mat-error>
       </mat-form-field>
     </div>
   </form>

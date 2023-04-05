@@ -1,16 +1,13 @@
 <main>
-  <h1 *ngIf="prodId == 'new'">Nuevo producto</h1>
-  <h1 *ngIf="prodId != 'new'">Editar producto</h1>
+  <h1 *ngIf="currentProdId == 'new'">Nuevo producto</h1>
+  <h1 *ngIf="currentProdId != 'new'">Editar producto</h1>
   <div class="loading-shade" *ngIf="isLoadingResults">
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
   </div>
   <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
 
-  <div class="fm_header" *ngIf="prodId != 'new'">
+  <div class="fm_header" *ngIf="currentProdId != 'new'">
     <section class="avatar">
-      <div class="avatarImg">
-        <img src="assets/images/prov/01.png">
-      </div>
       <div class="datos">
         <p>{{currentProd?.name}}</p>
         <div class="bots">
@@ -69,11 +66,16 @@
         <textarea matInput placeholder="Descripción del producto" formControlName="description" rows="2" matTooltip="Descripción general del producto"></textarea>
       </mat-form-field>
     </div>
+
+    <div class="container-btn">
+      <button mat-raised-button color="primary" [disabled]="prodForm.invalid" (click)="save()">Guardar Producto<mat-icon>save</mat-icon></button>
+      <button mat-raised-button color="warn" (click)="resetForm()">Limpiar formulario</button>
+    </div>
   </form>
 
-  <mat-divider></mat-divider>
+  <mat-divider *ngIf="currentProdId != 'new'"></mat-divider>
 
-  <div class="contentImgs">
+  <div class="contentImgs" *ngIf="currentProdId != 'new'">
     <mat-card class="drop">
       <mat-card-header>
         <mat-card-title>Archivos</mat-card-title>
@@ -120,28 +122,18 @@
         </table>
       </mat-card-content>
       <mat-card-actions *ngIf="files.length > 0">
+        <button mat-raised-button color="primary" (click)="saveImages()">Guardar Imágenes</button>
         <button mat-raised-button color="warn" (click)="files = []">Limpiar imágenes</button>
       </mat-card-actions>
     </mat-card>
   </div>
 
-  <div class="listImgs" *ngIf="prodId != 'new'">
-    <div class="imgItem">
-      <button mat-mini-fab color="warn">
+  <div class="listImgs" *ngIf="currentProdId != 'new'">
+    <div class="imgItem" *ngFor="let img of currentProd?.urlImgs">
+      <button mat-mini-fab color="warn" (click)="deleteOneFile(img.imgName)">
         <mat-icon>delete</mat-icon>
       </button>
-      <img src="assets/images/prov/01.png" alt="">
+      <img [src]="img.url" alt="">
     </div>
-    <div class="imgItem">
-      <button mat-mini-fab color="warn">
-        <mat-icon>delete</mat-icon>
-      </button>
-      <img src="assets/images/prov/02.png" alt="">
-    </div>
-  </div>
-
-  <div class="container-btn">
-    <button mat-raised-button color="primary" [disabled]="prodForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
-    <button mat-raised-button color="warn" (click)="generateImg()">Limpiar formulario</button>
   </div>
 </main>

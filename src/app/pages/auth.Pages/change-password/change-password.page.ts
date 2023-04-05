@@ -59,7 +59,7 @@ export class ChangePasswordPage implements OnInit {
       peticion.subscribe((res:any)=>{
         console.log(res)
         this.dataServ.progress = false
-        this.dataServ.fir(`${res.messages}. Ya puede iniciar sesión con su nueva contraseña.`, 'success', 5000)
+        this.dataServ.fir(`${res.messages} Ya puede iniciar sesión con su nueva contraseña.`, 'success', 5000)
         this._authServ.logOut(this._authServ.userData.Role)
       }, err => {
         console.log(err)

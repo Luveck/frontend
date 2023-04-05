@@ -1,5 +1,5 @@
 mat-dialog-container{
-  height: 463px;
+  height: 470px;
 }
 .mat-dialog-title{
   text-align: center;
@@ -58,9 +58,9 @@ main{
     .inputs{
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
       mat-form-field{
-        width: 90%;
-        margin: auto;
+        width: 100%;
         align-content: center;
       }
     }

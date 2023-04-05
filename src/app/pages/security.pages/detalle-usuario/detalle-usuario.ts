@@ -17,7 +17,7 @@ export class DetalleUsuario implements OnInit {
   isLoadingResults?:boolean
 
   public newUserForm = new FormGroup({
-    dni: new FormControl('', Validators.required),
+    dni : new FormControl('', [Validators.required, Validators.pattern('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$'), Validators.minLength(13)]),
     password: new FormControl(''),
     name: new FormControl('', Validators.required),
     lastName: new FormControl('', Validators.required),
@@ -25,7 +25,7 @@ export class DetalleUsuario implements OnInit {
     role: new FormControl('', Validators.required),
     bornDate: new FormControl('', Validators.required),
     sex: new FormControl('', Validators.required),
-    phone: new FormControl('', Validators.required),
+    phone: new FormControl('', [Validators.required, Validators.pattern('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$'), Validators.minLength(8)]),
     address: new FormControl('', Validators.required)
   })
 

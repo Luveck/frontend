@@ -93,19 +93,13 @@ export class InventarioService {
     )
   }
 
-  addProducto(formData:any, files:FilesToProduct[]){
+  addProducto(formData:any){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-
-    console.log(files)
     let dataProd:Producto = {
       ...formData,
       "state": true,
-      "file": files
     }
-
     console.log(dataProd)
-
-    console.log(JSON.stringify(dataProd))
     return this._http.post(`${this._dataServ.baseURL}/Administration/CreateProduct`, dataProd,
       this.headers
     )
@@ -127,5 +121,14 @@ export class InventarioService {
   deleteProd(id:number){
     (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
     return this._http.delete(`${this._dataServ.baseURL}/Administration/DeleteProduct?Id=${id}`, this.headers)
+  }
+
+  uploadImage(dataImg:FilesToProduct){
+    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    console.log(dataImg)
+
+    return this._http.post(`${this._dataServ.baseURL}/Administration/UploadImage`, dataImg,
+      this.headers
+    )
   }
 }

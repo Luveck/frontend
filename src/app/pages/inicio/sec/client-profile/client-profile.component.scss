@@ -57,10 +57,14 @@ main{
     .inputs{
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
       mat-form-field{
-        width: 90%;
-        margin: auto;
+        width: 100%;
         align-content: center;
+        &.area{
+          resize: none;
+          grid-column: 1 / span 3;
+        }
       }
     }
   }
