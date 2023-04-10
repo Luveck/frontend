@@ -9,6 +9,7 @@ import { Venta } from 'src/app/interfaces/models';
 import { DetalleVenta } from '../detalle-ventas/detalle-venta';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { VentasService } from 'src/app/services/ventas.service';
+import { DataService } from 'src/app/services/data.service';
 import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
 
 @Component({
@@ -44,6 +45,7 @@ export class VentasPage implements AfterViewInit {
     private _liveAnnouncer: LiveAnnouncer,
     private _dialog: MatDialog,
     private _ventasServ:VentasService,
+    private _dataServ:DataService
   ){}
 
   ngAfterViewInit(): void {
@@ -54,7 +56,7 @@ export class VentasPage implements AfterViewInit {
 
   getAllVentas() {
     const resp = this._ventasServ.getVentas()
-    resp.subscribe(ventas => {
+    resp?.subscribe(ventas => {
       this.dataSource.data = ventas.result as Venta[]
       this.isLoadingResults = false
       console.log(this.dataSource.data)
@@ -81,23 +83,8 @@ export class VentasPage implements AfterViewInit {
     }
   }
 
-  on(row?:Venta){
-    const config = {
-      //disableClose: true,
-      data: {
-        title: row?.id ?'Editar Venta' :'Agregar Venta',
-        ventaId: row?.id,
-        currentVenta: row
-      }
-    }
-    this._dialog.open(DetalleVenta, config)
-    .afterClosed()
-    .subscribe((confirm:boolean) => {
-      if(confirm){
-        this.isLoadingResults = true
-        this.getAllVentas()
-      }
-    })
+  on(noPurchase?:string, buyer?:string){
+    this._dataServ.goTo(`admin/ventas/venta-detalle/${noPurchase}/${buyer}`)
   }
 
   chageState(row:Venta){
@@ -120,7 +107,7 @@ export class VentasPage implements AfterViewInit {
       if(confirmado){
         row.reviewed = !row.reviewed
         const res = this._ventasServ.updateVenta(formData, row.id, row.reviewed)
-          res.subscribe(res => {
+          res?.subscribe(res => {
             if(res){
               this._ventasServ.notify('Venta validada', 'success')
               this.isLoadingResults = true

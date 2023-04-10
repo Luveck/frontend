@@ -24,21 +24,30 @@ export class FarmaciasService {
   }
 
   getFarmacias(){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get<any>(`${this._dataServ.baseURL}/Pharmacy/GetPharmacies`,
       {headers: this.headers}
     )
   }
 
   getFarmaciaById(id:string){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get<any>(`${this._dataServ.baseURL}/Pharmacy/GetPharmacy?id=${id}`,
       {headers: this.headers}
     )
   }
 
   addFarmacia(formData:any){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     let dataFarmacia:Farmacia = {
       ...formData,
       "isDeleted": true
@@ -49,7 +58,10 @@ export class FarmaciasService {
   }
 
   updateFarmacia(formData:any, idFarmacia:number, state:boolean){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     let dataFarmacia:Farmacia = {
       "id": idFarmacia,
       ...formData,

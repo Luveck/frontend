@@ -1,4 +1,4 @@
-import { Component, OnInit  } from '@angular/core'
+import { Component } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgPasswordValidatorOptions } from 'ng-password-validator';
 import { AuthService } from 'src/app/services/auth.service';
@@ -9,7 +9,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./register.page.scss'],
 })
 
-export class RegisterPage implements OnInit {
+export class RegisterPage {
   public registerForm = new FormGroup({
     dni : new FormControl('', [Validators.required]),
     email: new FormControl('', [Validators.required, Validators.email, Validators.pattern(
@@ -41,10 +41,6 @@ export class RegisterPage implements OnInit {
   }
 
   constructor(private _authServ:AuthService){}
-
-  ngOnInit(): void {
-
-  }
 
   onRegister(formData:any){
     this._authServ.register(formData)

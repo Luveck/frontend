@@ -36,7 +36,7 @@ export class DetalleReglas implements OnInit {
     if(this.data.ruleId){
       this.isLoadingResults = true
       const farmacia = this._rulesServ.getRuleById(this.data.ruleId)
-      farmacia.subscribe(res => {
+      farmacia?.subscribe(res => {
         console.log(res)
         this.currentRegla = res.result
         this.isLoadingResults = false
@@ -68,7 +68,7 @@ export class DetalleReglas implements OnInit {
   save(){
     if(this.data.ruleId){
       const peticion = this._rulesServ.updateRule(this.ruleForm.value, this.data.ruleId, this.currentRegla.state)
-       peticion.subscribe(() => {
+       peticion?.subscribe(() => {
         this._rulesServ.notify('Regla actualizada', 'success')
         this.dialogo.close(true);
       }, (err => {
@@ -77,7 +77,7 @@ export class DetalleReglas implements OnInit {
       }))
     }else{
       const peticion = this._rulesServ.addRule(this.ruleForm.value)
-      peticion.subscribe(() => {
+      peticion?.subscribe(() => {
         this._rulesServ.notify('Regla registrada', 'success')
         this.dialogo.close(true);
       }, (err => {

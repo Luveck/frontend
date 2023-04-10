@@ -8,7 +8,6 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Producto } from 'src/app/interfaces/models';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { DataService } from 'src/app/services/data.service';
-import { DetalleProducto } from '../detalle-producto/detalle-producto';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
 
@@ -56,7 +55,7 @@ export class ProductosPage implements AfterViewInit {
 
   getAllProduct(){
     let resp = this._inveServ.getProductos()
-    resp.subscribe((productos:any) => {
+    resp?.subscribe((productos:any) => {
       this.dataSource.data = productos.result as Producto[]
       this._inveServ.listProducts = productos.result
       this.isLoadingResults = false
@@ -86,20 +85,6 @@ export class ProductosPage implements AfterViewInit {
 
   on(id?:string){
     this._dataServ.goTo(`admin/inventario/producto-detalle/${id}`)
-/*     const config = {
-      data: {
-        title: id ?'Editar Producto' :'Agregar Producto',
-        productoId: id
-      }
-    }
-    this._dialog.open(DetalleProducto, config)
-    .afterClosed()
-    .subscribe((confim:boolean) => {
-      if(confim){
-        this.isLoadingResults = true
-        this.getAllProduct()
-      }
-    }) */
   }
 
   chageState(row:Producto){
@@ -127,7 +112,7 @@ export class ProductosPage implements AfterViewInit {
       if(confirmado){
         row.state = !row.state
         const res = this._inveServ.updateProd(formData, row.id, row.state)
-          res.subscribe(res => {
+          res?.subscribe(res => {
             if(res){
               this._inveServ.notify('Producto actualizado', 'success')
               this.isLoadingResults = true

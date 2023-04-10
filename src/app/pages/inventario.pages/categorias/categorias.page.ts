@@ -41,7 +41,7 @@ export class CategoriasPage implements OnInit {
 
   getAllCategories(){
     const catsAll = this.inveServ.getCategories()
-    catsAll.subscribe((res:any) => {
+    catsAll?.subscribe((res:any) => {
       this.isLoadingResults = false
       this.inveServ.categorias = res.result
       console.log(this.inveServ.categorias)
@@ -83,7 +83,7 @@ export class CategoriasPage implements OnInit {
       if(confirmado){
         row.isDeleted = !row.isDeleted
         const res = this.inveServ.updateCat(row.name, row.id, row.isDeleted)
-          res.subscribe(res => {
+          res?.subscribe(res => {
             if(res){
               this.inveServ.notify('Categoría actualizada', 'success')
               this.isLoadingResults = true

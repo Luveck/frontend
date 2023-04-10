@@ -1,4 +1,4 @@
-import { Component, OnInit  } from '@angular/core'
+import { Component  } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
@@ -9,7 +9,7 @@ import { DataService } from 'src/app/services/data.service';
   styleUrls: ['./login.page.scss'],
 })
 
-export class LoginPage implements OnInit {
+export class LoginPage {
   public loginForm = new FormGroup({
     dni : new FormControl('', [Validators.required]),
     password : new FormControl('', [Validators.required]),
@@ -18,10 +18,6 @@ export class LoginPage implements OnInit {
   hidePassword:boolean = true;
 
   constructor(public dataServ:DataService, private _authServ:AuthService){}
-
-  ngOnInit(): void {
-
-  }
 
   onLogin(formData:any){
     if(!this.dataServ.progress){
@@ -40,7 +36,7 @@ export class LoginPage implements OnInit {
           this.dataServ.progress = false
           console.log(error)
           let msgError = error.error.messages
-          msgError === 'Usuario bloqueado por intentos no validos.'
+          msgError === 'Usuario bloqueado por intentos no validos.' || 'El usuario se encuentra inactivo.'
             ?this.dataServ.fir(`${msgError}`, 'error')
             :this.dataServ.fir(`DNI o contraseña del usuario no válidos.`, 'error')
         })

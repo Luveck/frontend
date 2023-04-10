@@ -31,7 +31,7 @@ export class Detalledepartamento implements OnInit {
     if(this.data.departamentoId){
       this.isLoadingResults = true
       const departamento = this._zonasServ.getDepartamentoById(this.data.departamentoId)
-      departamento.subscribe(res => {
+      departamento?.subscribe(res => {
         console.log(res)
         this.currentDepartamento = res.result
         this.isLoadingResults = false
@@ -59,7 +59,7 @@ export class Detalledepartamento implements OnInit {
   save(){
     if(this.data.departamentoId){
       const peticion = this._zonasServ.updateDepartamento(this.departamentoForm.value, this.data.departamentoId, this.currentDepartamento.status)
-      peticion.subscribe(() => {
+      peticion?.subscribe(() => {
         this._zonasServ.notify('Registro actualizado', 'success')
         this.dialogo.close(true);
       }, (err => {
@@ -68,7 +68,7 @@ export class Detalledepartamento implements OnInit {
       }))
     }else{
       const peticion = this._zonasServ.addDepartamento(this.departamentoForm.value)
-      peticion.subscribe(() => {
+      peticion?.subscribe(() => {
         this._zonasServ.notify('Departamento registrado', 'success')
         this.dialogo.close(true);
       }, (err => {

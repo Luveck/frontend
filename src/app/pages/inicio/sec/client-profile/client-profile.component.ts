@@ -33,7 +33,7 @@ export class ClientProfileComponent implements OnInit {
     public dialogo: MatDialogRef<ClientProfileComponent>,
     @Inject(MAT_DIALOG_DATA) public data: string) {
       if(this._usersServ.localRoles.length === 0){
-        this._usersServ.getAllRoles().subscribe((res:any) => {
+        this._usersServ.getAllRoles()?.subscribe((res:any) => {
           this._usersServ.localRoles = res.result
         })
       }
@@ -42,7 +42,7 @@ export class ClientProfileComponent implements OnInit {
   ngOnInit(): void {
     this.isLoadingResults = true
     this._usersServ.getUserByID(this.data)
-      .subscribe((res:any) => {
+      ?.subscribe((res:any) => {
         console.log(res)
         this.userData = res.result
         this.isLoadingResults = false
@@ -91,8 +91,8 @@ export class ClientProfileComponent implements OnInit {
     tempData.idRole = id
     tempData.role = name
     const peticion = this._usersServ.UpdateUsuario(tempData, (chageState != undefined) ?chageState :this.userData.userEntity.state)
-    peticion.subscribe(()=>{
-      this._usersServ.notify('Registro actualizado', 'success')
+    peticion?.subscribe(()=>{
+      this._usersServ.notify('Perfil actualizado', 'success')
       this._authServ.userData.UserName = this.perfilForm.get('name')?.value
       this._authServ.userData.LastName = this.perfilForm.get('lastName')?.value
       this.dialogo.close(true);

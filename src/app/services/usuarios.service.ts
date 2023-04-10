@@ -25,28 +25,40 @@ export class UsuariosService {
   }
 
   public getUsers(){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get(`${this._dataServ.baseURLSec}/Security/GetUsers`,
       {headers: this.headers}
     )
   }
 
   public getUserByID(id:string){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get(`${this._dataServ.baseURLSec}/Security/getUserByID?Id=${id}`,
       {headers: this.headers}
     )
   }
 
   public getUserByDNI(dni:string){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get(`${this._dataServ.baseURLSec}/Security/getUserByDNI?DNI=${dni}`,
       {headers: this.headers}
     )
   }
 
   addUsuario(formData:any){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     console.log(formData)
     let dataUser:any
     dataUser = {
@@ -59,7 +71,10 @@ export class UsuariosService {
   }
 
   UpdateUsuario(formData:any, state:boolean){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     console.log(formData)
     let dataUser:any
     dataUser = {
@@ -73,7 +88,10 @@ export class UsuariosService {
   }
 
   changePassword(formData:any){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     console.log(formData)
     return this._http.post(`${this._dataServ.baseURLSec}/Security/ChangePassword`, formData,
       {headers: this.headers}
@@ -83,14 +101,20 @@ export class UsuariosService {
   /* Endpoints de Roles */
 
   public getAllRoles(){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get(`${this._dataServ.baseURLSec}/Roles/GetRoles`,
       {headers: this.headers}
     )
   }
 
   public createRole(nameRole:string){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.post(`${this._dataServ.baseURLSec}/Roles/CreateRole?role=${nameRole}`, {},
       {headers: this.headers}
     )

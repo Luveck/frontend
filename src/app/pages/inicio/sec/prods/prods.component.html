@@ -24,8 +24,7 @@
 
   <div class="prod_content">
     <mat-card class="mat-elevation-z8" *ngFor="let prod of prodsCanje" (click)="openModalProd(prod)">
-      <img *ngIf="prod.nameProduct != 'Producto09'" src="https://luveck.com/wp-content/uploads/2022/02/Olcarveck-20.png">
-      <img *ngIf="prod.nameProduct == 'Producto09'" class="imgProv" src="assets/images/prov/01.png">
+      <img [src]="prod.urlImages[0].url">
       <h2>{{prod.nameProduct}}</h2>
       <span>Ver más</span>
     </mat-card>

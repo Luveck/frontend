@@ -54,7 +54,7 @@ export class FarmaciasPage implements AfterViewInit {
 
   getAllFarmacias(){
     const resp = this._farmaServ.getFarmacias()
-    resp.subscribe(farmas => {
+    resp?.subscribe(farmas => {
       this.dataSource.data = farmas.result as Farmacia[]
       this._farmaServ.listFarmacias = farmas.result
       this.isLoadingResults = false
@@ -119,7 +119,7 @@ export class FarmaciasPage implements AfterViewInit {
       if(confirmado){
         row.isDeleted = !row.isDeleted
         const res = this._farmaServ.updateFarmacia(formData, row.id, row.isDeleted)
-          res.subscribe(res => {
+          res?.subscribe(res => {
             if(res){
               this._farmaServ.notify('Farmacia actualizada', 'success')
               this.isLoadingResults = true

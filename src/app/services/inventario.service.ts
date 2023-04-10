@@ -34,21 +34,30 @@ export class InventarioService {
 
   /* ******endpoints de Categorias****** */
   getCategories(){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCategories`,
       this.headers
     )
   }
 
   getCategoriaById(id:string){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCategoryById?Id=${id}`,
       this.headers
     )
   }
 
   addCategoria(name:string){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     let dataCat:Categoria = {
       "name": name,
       "isDeleted": false,
@@ -59,14 +68,20 @@ export class InventarioService {
   }
 
   deleteCat(id:number){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.delete(`${this._dataServ.baseURL}/Administration/DeleteCategory?Id=${id}`,
       this.headers
     )
   }
 
   updateCat(name:string, catId:number|undefined, state:boolean){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     let dataCat:Categoria = {
       "id": catId,
       "name": name,
@@ -80,21 +95,30 @@ export class InventarioService {
 
   /* ******endpoints de Productos****** */
   getProductos(){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetProducts`,
       this.headers
     )
   }
 
   getProductoById(id:string){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetProductById?Id=${id}`,
       this.headers
     )
   }
 
   addProducto(formData:any){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     let dataProd:Producto = {
       ...formData,
       "state": true,
@@ -106,7 +130,10 @@ export class InventarioService {
   }
 
   updateProd(formData:any, prodId:number, state:boolean){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     let dataProd:Producto = {
       "id": prodId,
       ...formData,
@@ -119,15 +146,32 @@ export class InventarioService {
   }
 
   deleteProd(id:number){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.delete(`${this._dataServ.baseURL}/Administration/DeleteProduct?Id=${id}`, this.headers)
   }
 
   uploadImage(dataImg:FilesToProduct){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     console.log(dataImg)
 
     return this._http.post(`${this._dataServ.baseURL}/Administration/UploadImage`, dataImg,
+      this.headers
+    )
+  }
+
+  deleteImage(fileName:string){
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
+
+    return this._http.delete(`${this._dataServ.baseURL}/Administration/DeleteImg?fileName=${fileName}`,
       this.headers
     )
   }

@@ -1,5 +1,4 @@
-import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 import { MatSelect as MatSelect } from '@angular/material/select';
 import { ReplaySubject, Subject } from 'rxjs';
@@ -10,6 +9,7 @@ import { VentasService } from 'src/app/services/ventas.service';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-detalle-venta',
@@ -18,6 +18,25 @@ import { UsuariosService } from 'src/app/services/usuarios.service';
 })
 
 export class DetalleVenta implements OnInit, OnDestroy {
+  public breadcrumb = {
+    links: [
+      {
+        name: 'Inicio',
+        isLink: true,
+        link: '/admin/home'
+      },
+      {
+        name: 'Gestión de Ventas',
+        isLink: true,
+        link: '/admin/ventas/ventas'
+      },
+      {
+        name: 'Detalles de la venta',
+        isLink: false,
+      }
+    ]
+  }
+
   currentVenta!: Venta | any
   currentVentaId:any
   productsOnCurrentVenta: any[] = []
@@ -38,31 +57,35 @@ export class DetalleVenta implements OnInit, OnDestroy {
 
   @ViewChild('singleSelect', { static: true }) singleSelect!: MatSelect;
 
-  /** Subject that emits when the component has been destroyed. */
   protected _onDestroy = new Subject<void>();
 
   constructor(
+    private _route: ActivatedRoute,
     private _ventasServ:VentasService,
     private _inveServ:InventarioService,
     private _farmaServ:FarmaciasService,
-    private _usersServ:UsuariosService,
-    public dialogo: MatDialogRef<DetalleVenta>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    private _usersServ:UsuariosService
   ){}
 
   ngOnInit(): void {
-    if(this.data.ventaId){
-      this.currentVentaId = this.data.ventaId
-      this.currentVenta = this.data.currentVenta
-      console.log(this.currentVenta)
-      this.initValores()
+    const noPurchase = this._route.snapshot.params['noPurchase']
+    const buyer = this._route.snapshot.params['buyer']
+
+    if(noPurchase != 'new'){
       this.isLoadingResults = true
-      const products = this._ventasServ.getProductosOfVenta(this.data.ventaId)
-      products.subscribe(res => {
-        console.log(res)
-        this.productsOnCurrentVenta = res.result
-        this.isLoadingResults = false
-      }, (err => {
+      const peticion = this._ventasServ.getVentaByNoPurchaseAndIdUser(noPurchase, buyer)
+      peticion?.subscribe((res:any) => {
+        console.log(res.result)
+        this.currentVentaId = res.result[0].id
+        this.currentVenta = res.result[0]
+        this.initValores()
+        const products = this._ventasServ.getProductosOfVenta(this.currentVentaId)
+        products?.subscribe(res => {
+          console.log(res)
+          this.initProds(res.result)
+          this.isLoadingResults = false
+        })
+      },(err => {
         console.log(err)
         this.isLoadingResults = false
         this._ventasServ.notify('Ocurrio un error con la petición', 'error')
@@ -117,11 +140,10 @@ export class DetalleVenta implements OnInit, OnDestroy {
   }
 
   save(){
-    if(this.data.ventaId){
-      const peticion = this._ventasServ.updateVenta(this.ventaForm.value, this.data.ventaId, this.currentVenta.reviewed)
-      peticion.subscribe(() => {
+    if(this.currentVentaId){
+      const peticion = this._ventasServ.updateVenta(this.ventaForm.value, this.currentVentaId, this.currentVenta.reviewed)
+      peticion?.subscribe(() => {
         this._ventasServ.notify('Registro actualizado', 'success')
-        this.dialogo.close(true);
       }, (err => {
         console.log(err)
         this._ventasServ.notify('Ocurrio un error con el proceso', 'error')
@@ -130,16 +152,15 @@ export class DetalleVenta implements OnInit, OnDestroy {
       console.log(this.ventaForm.value)
       console.log(this.singleSelect.value)
       const peticionOne = this._usersServ.getUserByDNI(this.singleSelect.value)
-      peticionOne.subscribe((resultOfUser:any) => {
+      peticionOne?.subscribe((resultOfUser:any) => {
         console.log(resultOfUser.result)
         let userId = resultOfUser.result.userEntity.id
         const peticionTwo = this._ventasServ.addVenta(this.ventaForm.value, userId)
-        peticionTwo.subscribe((resultOfVenta:any) => {
+        peticionTwo?.subscribe((resultOfVenta:any) => {
           this.currentVentaId = resultOfVenta.result.id
           this.currentVenta = resultOfVenta.result
           this._inveServ.notify('Factura registrada.', 'success')
           this.addProd()
-          //this.dialogo.close(true);
         })
       }, (err => {
         console.log(err)
@@ -148,15 +169,36 @@ export class DetalleVenta implements OnInit, OnDestroy {
     }
   }
 
+  initProds(resultProds:any[]){
+    console.log(resultProds)
+    resultProds.map(prod => {
+      this.productsOnCurrentVenta.push(
+        {
+          "productId": prod.productId,
+          "quantityShiped": prod.quantityShiped,
+          "dateShiped": prod.dateShiped
+        }
+      )
+    })
+  }
+
   saveProds(){
-    this._inveServ.notify('Factura actualizada.', 'success')
+    if(this.productsOnCurrentVenta.length === 0){
+      this._inveServ.notify('La factura debe tener al menos un producto.', 'info')
+      return
+    }
+    const peticion = this._ventasServ.addProducToVenta(this.currentVentaId, this.productsOnCurrentVenta)
+    peticion?.subscribe((res:any)=>{
+      this._inveServ.notify('Factura actualizada.', 'success')
+      console.log(res)
+    })
   }
 
   addProd(){
     this.productsOnCurrentVenta.push(
       {
         "productId": 1,
-        "quantityShiped": 0,
+        "quantityShiped": 1,
         "dateShiped": "2023-03-29T16:51:02.562Z"
       }
     )
@@ -165,5 +207,14 @@ export class DetalleVenta implements OnInit, OnDestroy {
 
   eliminarProd(index:number){
     this.productsOnCurrentVenta.splice(index, 1)
+  }
+
+  checkProdInArray(idprod:number):boolean{
+    this.productsOnCurrentVenta.map(prod => {
+      console.log(prod.productId)
+      prod.productId != idprod
+      return true
+    })
+    return false
   }
 }

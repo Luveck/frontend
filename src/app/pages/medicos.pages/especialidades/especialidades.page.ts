@@ -41,7 +41,7 @@ export class EspecialidadesPage implements OnInit {
 
   getAllEspecials(){
     const catsAll = this.medicServ.getEspecialidades()
-    catsAll.subscribe(res => {
+    catsAll?.subscribe(res => {
       this.isLoadingResults = false
       this.medicServ.especialidades = res.result
       console.log(this.medicServ.especialidades)
@@ -83,7 +83,7 @@ export class EspecialidadesPage implements OnInit {
       if(confirmado){
         row.isDeleted = !row.isDeleted
         const res = this.medicServ.updateEspecial(row.name, row.id, row.isDeleted)
-          res.subscribe(res => {
+          res?.subscribe(res => {
             if(res){
               this.medicServ.notify('Especilidad actualizada', 'success')
               this.isLoadingResults = true

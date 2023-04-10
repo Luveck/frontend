@@ -56,7 +56,7 @@ export class ChangePasswordPage implements OnInit {
     if(!this.dataServ.progress){
       this.dataServ.progress = true
       const peticion = this._usersServ.changePassword(formData)
-      peticion.subscribe((res:any)=>{
+      peticion?.subscribe((res:any)=>{
         console.log(res)
         this.dataServ.progress = false
         this.dataServ.fir(`${res.messages} Ya puede iniciar sesión con su nueva contraseña.`, 'success', 5000)

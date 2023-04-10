@@ -55,7 +55,7 @@
 
   <app-regis *ngIf="SectionSelect == 'registro' && !authServ.userToken" class="animated fadeIn" (sectionEvent)="selectSection($event)"></app-regis>
 
-  <app-canje *ngIf="SectionSelect == 'canjes' && authServ.userToken" class="animated fadeIn"></app-canje>
+  <app-canje *ngIf="SectionSelect == 'canjes' && authServ.userToken" class="animated fadeIn" (sectionEvent)="selectSection($event)"></app-canje>
 
   <footer>
     <p>&copy; 2022</p> &nbsp;

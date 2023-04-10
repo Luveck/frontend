@@ -27,21 +27,30 @@ export class ZonasService{
 
   /* Endpoints de Paies */
   getPaises() {
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCountries`,
       {headers: this.headers}
     )
   }
 
   getPaisById(id:string){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCountryById?Id=${id}`,
       {headers: this.headers}
     )
   }
 
   addPais(formData:any){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     let dataPais:Pais = {
       ...formData,
       "status": true
@@ -52,7 +61,10 @@ export class ZonasService{
   }
 
   updatePais(formData:any, idPais:number, status:boolean){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     let dataPais:Pais = {
       "id": idPais,
       ...formData,
@@ -66,21 +78,30 @@ export class ZonasService{
 
   /* Endpoints de Departamentos */
   getDepartamentos(){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetDepartments`,
       {headers: this.headers}
     )
   }
 
   getDepartamentoById(id:string){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetDepartmentById?Id=${id}`,
       {headers: this.headers}
     )
   }
 
   addDepartamento(formData:any){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     let dataDepartamento:Departamento = {
       ...formData,
       "status": true
@@ -92,7 +113,10 @@ export class ZonasService{
   }
 
   updateDepartamento(formData:any, idDepartamento:number, status:boolean){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     let dataDepartamento:Departamento = {
       "id": idDepartamento,
       ...formData,
@@ -106,21 +130,30 @@ export class ZonasService{
 
   /* Endpoints de Ciudades */
   getCiudades(){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCities`,
       {headers: this.headers}
     )
   }
 
   getCiudadById(id:string){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetCityById?Id=${id}`,
       {headers: this.headers}
     )
   }
 
   addCiudad(formData:any){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     let dataCiudad:Ciudad = {
       ...formData,
       "state": true
@@ -132,7 +165,10 @@ export class ZonasService{
   }
 
   updateCiudad(formData:any, idCity:number, state:boolean){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     let dataCiudad:Ciudad = {
       "id": idCity,
       ...formData,

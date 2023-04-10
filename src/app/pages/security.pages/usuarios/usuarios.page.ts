@@ -51,7 +51,7 @@ export class UsuariosPage implements AfterViewInit {
   }
 
   getAllUsers(){
-    this._usuariosServ.getUsers().subscribe((res:any) => {
+    this._usuariosServ.getUsers()?.subscribe((res:any) => {
       console.log(res)
       this.dataSource.data = res.result as any[]
       this.isLoadingResults = false

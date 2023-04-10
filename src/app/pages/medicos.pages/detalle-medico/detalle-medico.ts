@@ -31,7 +31,7 @@ export class DetalleMedico implements OnInit {
   ngOnInit(): void {
     if(!this._medicServ.especialidades){
       const res = this._medicServ.getEspecialidades()
-      res.subscribe(res => this.especialidades = res.result)
+      res?.subscribe(res => this.especialidades = res.result)
     }else{
       this.especialidades = this._medicServ.especialidades
     }
@@ -39,7 +39,7 @@ export class DetalleMedico implements OnInit {
     if(this.data.medicoId){
       this.isLoadingResults = true
       const pais = this._medicServ.getMedicoById(this.data.medicoId)
-      pais.subscribe(res => {
+      pais?.subscribe(res => {
         console.log(res)
         this.currentMedic = res.result
         this.isLoadingResults = false
@@ -67,7 +67,7 @@ export class DetalleMedico implements OnInit {
   save(){
     if(this.data.medicoId){
       const peticion = this._medicServ.updateMedico(this.medicForm.value, this.data.medicoId, this.currentMedic.isDeleted)
-       peticion.subscribe(() => {
+       peticion?.subscribe(() => {
         this._medicServ.notify('Médico actualizado', 'success')
         this.dialogo.close(true);
       }, err => {
@@ -76,7 +76,7 @@ export class DetalleMedico implements OnInit {
       })
     }else{
       const peticion = this._medicServ.addMedico(this.medicForm.value)
-      peticion.subscribe(() => {
+      peticion?.subscribe(() => {
         this._medicServ.notify('Médico registrado', 'success')
         this.dialogo.close(true);
       }, (err => {

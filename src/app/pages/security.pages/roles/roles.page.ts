@@ -19,7 +19,7 @@ export class RolesPage implements OnInit {
 
   ngOnInit(): void {
     this.isLoadingResults = true
-    this.usuariosServ.getAllRoles().subscribe((res:any) => {
+    this.usuariosServ.getAllRoles()?.subscribe((res:any) => {
       console.log(res)
       this.isLoadingResults = false
       this.usuariosServ.localRoles = res.result

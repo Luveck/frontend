@@ -1,26 +1,20 @@
-mat-dialog-container{
-  height: 463px;
-}
-.mat-dialog-title{
-  text-align: center;
-  margin: 0;
-}
-.mat-dialog-content{
-  height: auto;
-}
 main{
+  width: 90%;
+  padding-top: 6rem;
+  margin: 0 auto;
+  h1{
+    text-align: center;
+    margin: 0;
+  }
   .fm_header{
-    width: 100%;
+    width: 80%;
+    margin: 0 auto;
     display: flex;
     justify-content: center;
     section.avatar{
       padding: .5rem;
       display: flex;
       align-items: center;
-      img{
-        width: 130px;
-        max-height: 100px;
-      }
       .datos{
         margin: 0.5rem;
         text-align: center;
@@ -53,6 +47,13 @@ main{
   .wrapForm{
     width: 100%;
     padding: 10px 0;
+    &.ver2{
+      width: 70%;
+      margin: 0 auto;
+      h2{
+        text-align: center;
+      }
+    }
     .inputs{
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -70,10 +71,10 @@ main{
     }
   }
 }
-.mat-dialog-actions{
-  border-top: 1px solid gray;
+.container-btn{
+  width: 90%;
+  display: flex;
   justify-content: center;
-  button{
-    margin: 0 0.5rem;
-  }
+  align-items: center;
+  gap: 2rem;
 }

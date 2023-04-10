@@ -62,8 +62,10 @@ main{
         width: 100%;
         align-content: center;
         &.area{
-          resize: none;
           grid-column: 1 / span 3;
+          textarea {
+            resize: none;
+          }
         }
       }
     }

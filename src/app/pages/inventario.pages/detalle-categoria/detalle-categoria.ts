@@ -25,7 +25,7 @@ export class DetalleCategoria implements OnInit {
     if(this.data.catId){
       this.isLoadingResults = true
       const cat = this._inveServ.getCategoriaById(this.data.catId)
-      cat.subscribe((res:any) => {
+      cat?.subscribe((res:any) => {
         console.log(res)
         this.currentCategoria = res.result
         this.isLoadingResults = false
@@ -41,7 +41,7 @@ export class DetalleCategoria implements OnInit {
   save(){
     if(this.data.catId){
       const peticion = this._inveServ.updateCat(this.name, this.data.catId, this.currentCategoria.isDeleted)
-      peticion.subscribe(res => {
+      peticion?.subscribe(res => {
         if(res){
           this._inveServ.notify('Categoría actualizada', 'success')
           this.dialogo.close(true)
@@ -52,7 +52,7 @@ export class DetalleCategoria implements OnInit {
       }))
     }else{
       const peticion = this._inveServ.addCategoria(this.name)
-      peticion.subscribe(res => {
+      peticion?.subscribe(res => {
         if(res){
           this._inveServ.notify('Categoría registrada', 'success')
           this.dialogo.close(true)

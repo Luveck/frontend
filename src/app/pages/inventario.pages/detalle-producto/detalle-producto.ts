@@ -58,7 +58,7 @@ export class DetalleProducto implements OnInit {
   constructor(
     private _inveServ: InventarioService,
     private _route: ActivatedRoute,
-    private _dialogo: MatDialog,
+    private _dialog: MatDialog,
     private _validate:ImageValidator,
   ){}
 
@@ -66,14 +66,14 @@ export class DetalleProducto implements OnInit {
     this.currentProdId = this._route.snapshot.params['id']
     if(!this._inveServ.categorias){
       const res = this._inveServ.getCategories()
-      res.subscribe((res:any) => this.cats = res.result)
+      res?.subscribe((res:any) => this.cats = res.result)
     }else{
       this.cats = this._inveServ.categorias
     }
     if(this.currentProdId != 'new'){
       this.isLoadingResults = true
       const prod = this._inveServ.getProductoById(this.currentProdId)
-      prod.subscribe((res:any) => {
+      prod?.subscribe((res:any) => {
         console.log(res)
         this.currentProd = res.result
         this.isLoadingResults = false
@@ -106,7 +106,7 @@ export class DetalleProducto implements OnInit {
   save(){
     if(this.currentProdId != 'new'){
       const peticion = this._inveServ.updateProd(this.prodForm.value, parseInt(this.currentProdId), this.currentProd.state)
-      peticion.subscribe((resultOfPrd:any) => {
+      peticion?.subscribe((resultOfPrd:any) => {
         console.log(resultOfPrd)
         this.currentProdId = resultOfPrd.result.id
         this.currentProd = resultOfPrd.result
@@ -117,7 +117,7 @@ export class DetalleProducto implements OnInit {
       })
     }else{
       const peticionOne = this._inveServ.addProducto(this.prodForm.value)
-      peticionOne.subscribe((resultOfPrd:any) => {
+      peticionOne?.subscribe((resultOfPrd:any) => {
         console.log(resultOfPrd)
         this.currentProdId = resultOfPrd.result.id
         this.currentProd = resultOfPrd.result
@@ -168,8 +168,8 @@ export class DetalleProducto implements OnInit {
         "typeFile": file.type
       }
       const uploadPeticion = this._inveServ.uploadImage(imgPrd)
-      uploadPeticion.subscribe((res:any) => {
-        console.log(res)
+      uploadPeticion?.subscribe(() => {
+        this._inveServ.notify('Imágen registrada', 'success')
       },
       err => {
         console.log(err)
@@ -180,5 +180,17 @@ export class DetalleProducto implements OnInit {
 
   deleteOneFile(nameFile:string){
     console.log(nameFile)
+    this._dialog.open(DialogConfComponent, {
+      data: '¿Está seguro de querer eliminar esta imágen?'
+    })
+    .afterClosed()
+    .subscribe((confirmado:boolean)=>{
+      if(confirmado){
+        const peticion = this._inveServ.deleteImage(nameFile)
+        peticion?.subscribe((res:any)=>{
+          this._inveServ.notify('Imágen eliminada', 'success')
+        })
+      }
+    })
   }
 }

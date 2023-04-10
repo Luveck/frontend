@@ -24,21 +24,30 @@ export class RulesService {
   }
 
   getRules(){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get<any>(`${this._dataServ.baseURL}/RuleChange/GetRules`,
       {headers: this.headers}
     )
   }
 
   getRuleById(id:string){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get<any>(`${this._dataServ.baseURL}/RuleChange/GetRuleById?Id=${id}`,
       {headers: this.headers}
     )
   }
 
   addRule(formData:any){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     let dataRule:Rule = {
       ...formData
     }
@@ -49,7 +58,10 @@ export class RulesService {
   }
 
   updateRule(formData:any, ruleId:number|undefined, state:boolean){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     let dataRule:Rule = {
       "id": ruleId,
       ...formData,

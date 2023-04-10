@@ -54,7 +54,7 @@ export class PaisesPage implements AfterViewInit {
 
   getAllCountries() {
     const resp = this._zonasServ.getPaises()
-    resp.subscribe(paises => {
+    resp?.subscribe(paises => {
       this.dataSource.data = paises.result as Pais[]
       this._zonasServ.listPaises = paises.result
       this.isLoadingResults = false
@@ -122,7 +122,7 @@ export class PaisesPage implements AfterViewInit {
       if(confirmado){
         row.status = !row.status
         const res = this._zonasServ.updatePais(formData, row.id, row.status)
-          res.subscribe(res => {
+          res?.subscribe(res => {
             if(res){
               this._zonasServ.notify('País actualizado', 'success')
               this.isLoadingResults = true

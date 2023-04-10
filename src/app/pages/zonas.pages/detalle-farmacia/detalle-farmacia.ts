@@ -34,7 +34,7 @@ export class DetalleFarmacia implements OnInit {
     if(this.data.farmaId){
       this.isLoadingResults = true
       const farmacia = this._farmaServ.getFarmaciaById(this.data.farmaId)
-      farmacia.subscribe(res => {
+      farmacia?.subscribe(res => {
         console.log(res)
         this.currentFarmacia = res.result
         this.isLoadingResults = false
@@ -63,7 +63,7 @@ export class DetalleFarmacia implements OnInit {
   save(){
     if(this.data.farmaId){
       const peticion = this._farmaServ.updateFarmacia(this.farmaForm.value, this.data.farmaId, this.currentFarmacia.isDeleted)
-       peticion.subscribe(() => {
+       peticion?.subscribe(() => {
         this._zonasServ.notify('Farmacia actualizada', 'success')
         this.dialogo.close(true);
       }, (err => {
@@ -72,7 +72,7 @@ export class DetalleFarmacia implements OnInit {
       }))
     }else{
       const peticion = this._farmaServ.addFarmacia(this.farmaForm.value)
-      peticion.subscribe(() => {
+      peticion?.subscribe(() => {
         this._zonasServ.notify('Farmacia registrada', 'success')
         this.dialogo.close(true);
       }, (err => {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 
 import { VentasService } from 'src/app/services/ventas.service';
@@ -13,6 +13,7 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./canje.component.scss']
 })
 export class CanjeComponent implements OnInit {
+  @Output() sectionEvent = new EventEmitter<string>();
   productsOnCurrentVenta: any[] = []
   productos!: any[]
   farmacias!: Farmacia[]
@@ -33,12 +34,17 @@ export class CanjeComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    if(!this.authServ.checkTokenDate(this.authServ.expToken)){
+      this.authServ.showSesionEndModal()
+      this.sectionEvent.emit('inicio')
+      return
+    }
     const peticion1 = this._farmaServ.getFarmacias()
-    peticion1.subscribe((res:any) => {
+    peticion1?.subscribe((res:any) => {
       this.farmacias = res.result
     })
     const peticion2 = this._inveServ.getProductos()
-    peticion2.subscribe((res:any) => {
+    peticion2?.subscribe((res:any) => {
       this.productos = res.result
     })
   }
@@ -50,12 +56,11 @@ export class CanjeComponent implements OnInit {
   save(){
     console.log(this.ventaForm.value)
     const peticionFact = this._ventasServ.addVenta(this.ventaForm.value, this.authServ.userData.UserId)
-    peticionFact.subscribe((resultOfVenta:any) => {
+    peticionFact?.subscribe((resultOfVenta:any) => {
       this.currentVentaId = resultOfVenta.result.id
       this.currentVenta = resultOfVenta.result
       this._inveServ.notify('Factura registrada.', 'success')
       this.addProd()
-      //this.dialogo.close(true);
     })
   }
 

@@ -31,13 +31,13 @@ export class DetalleUsuario implements OnInit {
 
   constructor(
     public usersServ:UsuariosService,
-    public authServ:AuthService,
+    private _authServ:AuthService,
     private _dialog:MatDialog,
     public dialogo: MatDialogRef<DetalleUsuario>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){
     if(this.usersServ.localRoles.length === 0){
-      this.usersServ.getAllRoles().subscribe((res:any) => {
+      this.usersServ.getAllRoles()?.subscribe((res:any) => {
         console.log(res)
         this.usersServ.localRoles = res.result
       })
@@ -48,7 +48,7 @@ export class DetalleUsuario implements OnInit {
     if(this.data.userDni){
       this.isLoadingResults = true
       this.usersServ.getUserByDNI(this.data.userDni)
-        .subscribe((res:any) => {
+        ?.subscribe((res:any) => {
           console.log(res)
           this.currentUser = res.result
           this.isLoadingResults = false
@@ -93,7 +93,7 @@ export class DetalleUsuario implements OnInit {
     tempData.role = name
     if(this.data.userDni){
       const peticion = this.usersServ.UpdateUsuario(tempData, (chageState != undefined) ?chageState :this.currentUser.userEntity.state)
-      peticion.subscribe(()=>{
+      peticion?.subscribe(()=>{
         this.usersServ.notify('Registro actualizado', 'success')
         this.dialogo.close(true);
       },err => {
@@ -102,7 +102,7 @@ export class DetalleUsuario implements OnInit {
       })
     }else{
       const peticion = this.usersServ.addUsuario(tempData)
-      peticion.subscribe(() => {
+      peticion?.subscribe(() => {
         this.usersServ.notify('Usuario registrado', 'success')
         this.dialogo.close(true);
       },err => {
@@ -112,7 +112,11 @@ export class DetalleUsuario implements OnInit {
     }
   }
 
-  changeUserState(state:boolean){
+  changeUserState(state:boolean, idUser:string){
+    if(this._authServ.userData.UserId === idUser){
+      this.usersServ.notify('No es posible inhabilitar su propia cuenta.', 'info')
+      return
+    }
     let msg = state ? '¿Seguro de querer inhabilitar esta cuenta?' : '¿Seguro de querer habilitar esta cuenta?'
     this._dialog.open(DialogConfComponent, {
       data: `${msg}`

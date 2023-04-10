@@ -54,7 +54,7 @@ export class CiudadesPage implements AfterViewInit {
 
   getAllCities() {
     const resp = this._zonasServ.getCiudades()
-    resp.subscribe(cities => {
+    resp?.subscribe(cities => {
       this.dataSource.data = cities.result as Ciudad[]
       this._zonasServ.listCiudades = cities.result
       this.isLoadingResults = false
@@ -118,7 +118,7 @@ export class CiudadesPage implements AfterViewInit {
       if(confirmado){
         row.state = !row.state
         const res = this._zonasServ.updateCiudad(formData, row.id, row.state)
-          res.subscribe(res => {
+          res?.subscribe(res => {
             if(res){
               this._zonasServ.notify('Ciudad actualizada', 'success')
               this.isLoadingResults = true

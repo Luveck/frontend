@@ -1,4 +1,4 @@
-import { Component, OnInit  } from '@angular/core'
+import { Component } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from 'src/app/services/auth.service';
@@ -10,7 +10,7 @@ import { DataService } from 'src/app/services/data.service';
   styleUrls: ['./forgot-password.page.scss'],
 })
 
-export class ForgotPasswordPage implements OnInit {
+export class ForgotPasswordPage {
   resetEmailSendMsg:string = ''
 
   public forgotPassForm = new FormGroup({
@@ -20,10 +20,6 @@ export class ForgotPasswordPage implements OnInit {
   })
 
   constructor(public dataServ: DataService, private _authServ:AuthService){}
-
-  ngOnInit(): void {
-
-  }
 
   onForgot(formData:any){
     console.log(formData)

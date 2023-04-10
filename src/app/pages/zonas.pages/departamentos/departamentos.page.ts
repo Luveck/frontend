@@ -54,7 +54,7 @@ export class DepartamentosPage implements AfterViewInit {
 
   getAllDepartamentos() {
     const resp = this._zonasServ.getDepartamentos()
-    resp.subscribe(departamentos => {
+    resp?.subscribe(departamentos => {
       this.dataSource.data = departamentos.result as Departamento[]
       this._zonasServ.listDepartamentos = departamentos.result
       this.isLoadingResults = false
@@ -118,7 +118,7 @@ export class DepartamentosPage implements AfterViewInit {
       if(confirmado){
         row.status = !row.status
         const res = this._zonasServ.updateDepartamento(formData, row.id, row.status)
-          res.subscribe(res => {
+          res?.subscribe(res => {
             if(res){
               this._zonasServ.notify('Departamento actualizado', 'success')
               this.isLoadingResults = true

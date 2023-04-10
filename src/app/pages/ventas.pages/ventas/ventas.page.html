@@ -3,7 +3,7 @@
 
   <header>
     <div>
-      <button mat-raised-button color="primary" (click)="on()">
+      <button mat-raised-button color="primary" (click)="on('new')">
         <mat-icon>add</mat-icon>
         Agregar Venta
       </button>
@@ -53,7 +53,7 @@
       <ng-container matColumnDef="acctions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
         <td mat-cell *matCellDef="let row">
-          <button mat-stroked-button (click)="on(row)">
+          <button mat-stroked-button (click)="on(row.noPurchase, row.buyer)">
             Ver detalles
             <mat-icon color="accent">arrow_forward</mat-icon>
           </button>

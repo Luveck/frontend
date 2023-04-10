@@ -25,7 +25,7 @@ export class DetalleEspacialidad implements OnInit {
     if(this.data.especialId){
       this.isLoadingResults = true
       const especial = this._medicServ.getEspecialidadById(this.data.especialId)
-      especial.subscribe(res => {
+      especial?.subscribe(res => {
         console.log(res)
         this.currentEspecialidad = res.result
         this.isLoadingResults = false
@@ -41,7 +41,7 @@ export class DetalleEspacialidad implements OnInit {
   save(){
     if(this.data.especialId){
       const peticion = this._medicServ.updateEspecial(this.name, this.data.especialId, this.currentEspecialidad.isDeleted)
-      peticion.subscribe(res => {
+      peticion?.subscribe(res => {
         if(res){
           this._medicServ.notify('Especialidad actualizada', 'success')
           this.dialogo.close(true)
@@ -52,7 +52,7 @@ export class DetalleEspacialidad implements OnInit {
       }))
     }else{
       const peticion = this._medicServ.addEspecialidad(this.name)
-      peticion.subscribe(res => {
+      peticion?.subscribe(res => {
         if(res){
           this._medicServ.notify('Espedialidad registrada', 'success')
           this.dialogo.close(true)

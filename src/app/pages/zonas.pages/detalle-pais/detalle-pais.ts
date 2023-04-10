@@ -35,7 +35,7 @@ export class DetallePais implements OnInit {
     if(this.data.paisId){
       this.isLoadingResults = true
       const pais = this._zonasServ.getPaisById(this.data.paisId)
-      pais.subscribe(res => {
+      pais?.subscribe(res => {
         console.log(res)
         this.currentPais = res.result
         this.isLoadingResults = false
@@ -67,7 +67,7 @@ export class DetallePais implements OnInit {
   save(){
     if(this.data.paisId){
       let peticion = this._zonasServ.updatePais(this.paisForm.value, this.data.paisId, this.currentPais?.status)
-      peticion.subscribe(res => {
+      peticion?.subscribe(res => {
         this._zonasServ.notify('Registro actualizado', 'success')
         this.dialogo.close(true)
       }, err => {
@@ -76,7 +76,7 @@ export class DetallePais implements OnInit {
       })
     }else{
       const peticion = this._zonasServ.addPais(this.paisForm.value)
-      peticion.subscribe(res => {
+      peticion?.subscribe(res => {
         this._zonasServ.notify('País registrado', 'success')
         this.dialogo.close(true)
       }, err => {

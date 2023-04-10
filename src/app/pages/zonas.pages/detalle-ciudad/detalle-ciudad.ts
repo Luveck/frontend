@@ -31,7 +31,7 @@ export class DetalleCiudad implements OnInit {
     if(this.data.ciudadId){
       this.isLoadingResults = true
       const ciudad = this._zonasServ.getCiudadById(this.data.ciudadId)
-      ciudad.subscribe(res => {
+      ciudad?.subscribe(res => {
         console.log(res)
         this.currentCiudad = res.result
         this.isLoadingResults = false
@@ -59,7 +59,7 @@ export class DetalleCiudad implements OnInit {
   save(){
     if(this.data.ciudadId){
       const peticion = this._zonasServ.updateCiudad(this.ciudadForm.value, this.data.ciudadId, this.currentCiudad.state)
-      peticion.subscribe(() => {
+      peticion?.subscribe(() => {
         this._zonasServ.notify('Registro actualizado', 'success')
         this.dialogo.close(true);
       }, (err => {
@@ -68,7 +68,7 @@ export class DetalleCiudad implements OnInit {
       }))
     }else{
       const peticion = this._zonasServ.addCiudad(this.ciudadForm.value)
-      peticion.subscribe(() => {
+      peticion?.subscribe(() => {
         this._zonasServ.notify('Ciudad registrada', 'success')
         this.dialogo.close(true);
       }, (err => {

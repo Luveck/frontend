@@ -81,7 +81,7 @@ export class RegisComponent {
           this.dataServ.progress = false
           console.log(error)
           let msgError = error.error.messages
-          msgError === 'Usuario bloqueado por intentos no validos.'
+          msgError === 'Usuario bloqueado por intentos no validos.' || 'El usuario se encuentra inactivo.'
             ?this.dataServ.fir(`${msgError}`, 'error')
             :this.dataServ.fir(`DNI o contraseña del usuario no válidos.`, 'error')
         })

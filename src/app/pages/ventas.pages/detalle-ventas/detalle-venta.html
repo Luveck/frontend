@@ -1,8 +1,10 @@
-<h2 mat-dialog-title>{{data.title}}</h2>
-<main mat-dialog-content>
+<main>
+  <h1>{{currentVentaId ?'Factura detalle' :'Nueva factura'}}</h1>
   <div class="loading-shade" *ngIf="isLoadingResults">
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
   </div>
+
+  <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
 
   <div class="fm_header" *ngIf="currentVentaId">
     <section class="avatar">
@@ -60,7 +62,7 @@
 
   <mat-divider *ngIf="currentVentaId"></mat-divider>
 
-  <section class="wrapForm" *ngIf="currentVentaId">
+  <section class="wrapForm ver2" *ngIf="currentVentaId">
     <h2>Productos</h2>
     <div class="inputs ver2" *ngFor="let p of productsOnCurrentVenta ; index as i">
       <button mat-icon-button color="warn" (click)="eliminarProd(i)">
@@ -68,7 +70,7 @@
       </button>
       <mat-form-field appearance="fill">
         <mat-label>Producto</mat-label>
-        <mat-select>
+        <mat-select [(ngModel)]="productsOnCurrentVenta[i].productId">
           <div *ngFor="let prod of productos">
             <mat-option *ngIf="prod.state" [value]="prod.id">
               {{prod.name}}
@@ -79,17 +81,18 @@
 
       <mat-form-field appearance="fill">
         <mat-label>Cantidad</mat-label>
-        <input matInput type="number" placeholder="Cantidad comprada">
+        <input matInput type="number" placeholder="Cantidad comprada" [(ngModel)]="productsOnCurrentVenta[i].quantityShiped">
       </mat-form-field>
     </div>
 
     <button mat-raised-button color="accent" (click)="addProd()">Agregar producto <mat-icon>add</mat-icon></button>
   </section>
-</main>
-<div mat-dialog-actions>
-  <div class="btns">
+
+  <div class="container-btn">
     <button mat-raised-button color="primary" *ngIf="!currentVentaId" [disabled]="ventaForm.invalid" (click)="save()">Generar factura <mat-icon>save</mat-icon></button>
     <button mat-raised-button color="primary" *ngIf="currentVentaId" [disabled]="ventaForm.invalid" (click)="saveProds()">Guardar <mat-icon>save</mat-icon></button>
     <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
   </div>
-</div>
+</main>
+
+

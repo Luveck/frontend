@@ -23,21 +23,31 @@ export class VentasService {
   }
 
   getVentas(){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get<any>(`${this._dataServ.baseURL}/Purchase/GetPurchases`,
       {headers: this.headers}
     )
   }
 
-  getVentaByNoPurchase(noPurchase:string){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
-    return this._http.get<any>(`${this._dataServ.baseURL}/Purchase/GetPurchaseByNoPurchase?PurchaseNo=${noPurchase}`,
+  getVentaByNoPurchaseAndIdUser(noPurchase:string, idUser:string){
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
+
+    return this._http.get<any>(`${this._dataServ.baseURL}/Purchase/GetPurchaseByNoPurchaseById?PurchaseNo=${noPurchase}&user=${idUser}`,
       {headers: this.headers}
     )
   }
 
   addVenta(formData:any, userId:string){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     let dataVenta:Venta = {
       ...formData,
       "userId": userId,
@@ -51,7 +61,10 @@ export class VentasService {
   }
 
   updateVenta(formData:any, idVenta:number, state:boolean){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     let dataVenta:Venta = {
       "id": idVenta,
       ...formData,
@@ -65,13 +78,28 @@ export class VentasService {
   }
 
   getProductosOfVenta(id:string){
-    (!this._authServ.checkTokenDate(this._authServ.expToken)) ? this._authServ.showSesionEndModal() :null
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
     return this._http.get<any>(`${this._dataServ.baseURL}/ProductPurchase/GetProductByPurchase?purchaseId=${id}`,
       {headers: this.headers}
     )
   }
 
-  addProducToVenta(){
+  addProducToVenta(idVenta:number, prods:any[]){
+    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
+      this._authServ.showSesionEndModal()
+      return
+    }
+    let dataProds = {
+      "purchaseId": idVenta,
+      "productPurchase": prods
+    }
 
+    console.log(dataProds)
+    return this._http.post(`${this._dataServ.baseURL}/ProductPurchase/AddUpdateProduct`, dataProds, {
+      headers: this.headers
+    })
   }
 }

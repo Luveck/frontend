@@ -54,7 +54,7 @@ export class MedicosPage implements AfterViewInit {
 
   getAllMedics(){
     let resp = this._medicServ.getMedicos()
-    resp.subscribe(medicos => {
+    resp?.subscribe(medicos => {
       console.log(medicos)
       this.dataSource.data = medicos.result as Medico[]
       this.isLoadingResults = false
@@ -118,7 +118,7 @@ export class MedicosPage implements AfterViewInit {
       if(confirmado){
         row.isDeleted = !row.isDeleted
         const res = this._medicServ.updateMedico(formData, row.id, row.isDeleted)
-          res.subscribe(res => {
+          res?.subscribe(res => {
             if(res){
               this._medicServ.notify('Médico actualizado', 'success')
               this.isLoadingResults = true

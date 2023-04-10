@@ -9,7 +9,7 @@
       <div class="datos">
         <p>{{currentUser?.userEntity.name}} {{currentUser?.userEntity.lastName}}</p>
         <div class="bots">
-          <span class="chip" (click)="changeUserState(currentUser?.userEntity.state)" style="cursor: pointer;" matTooltip="Cambiar estado" [ngClass]="{'active': currentUser?.userEntity.state == true, 'inactive': currentUser?.userEntity.state == false}">Estado de cuenta: {{currentUser?.userEntity.state ?'activa' :'inactiva'}}</span>
+          <span class="chip" (click)="changeUserState(currentUser?.userEntity.state, currentUser.userEntity.id)" style="cursor: pointer;" matTooltip="Cambiar estado" [ngClass]="{'active': currentUser?.userEntity.state == true, 'inactive': currentUser?.userEntity.state == false}">Estado de cuenta: {{currentUser?.userEntity.state ?'activa' :'inactiva'}}</span>
         </div>
       </div>
     </section>
@@ -93,8 +93,8 @@
       <mat-form-field appearance="fill">
         <mat-label>Género</mat-label>
         <mat-select formControlName="sex">
-          <mat-option value="hombre">Hombre</mat-option>
-          <mat-option value="mujer">Mujer</mat-option>
+          <mat-option value="hombre">Masculino</mat-option>
+          <mat-option value="mujer">Femenino</mat-option>
           <mat-option value="otro">Otro</mat-option>
         </mat-select>
         <mat-error

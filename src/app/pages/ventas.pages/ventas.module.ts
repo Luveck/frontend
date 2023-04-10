@@ -16,6 +16,10 @@ const routes: Routes = [
   {
     path: 'ventas',
     component: VentasPage
+  },
+  {
+    path: 'venta-detalle/:noPurchase/:buyer',
+    component: DetalleVenta
   }
 ];
 

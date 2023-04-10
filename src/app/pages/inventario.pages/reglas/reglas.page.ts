@@ -41,7 +41,7 @@ export class ReglasPage implements OnInit {
 
   getAllRules(){
     const rules = this.rulesServ.getRules()
-    rules.subscribe(res => {
+    rules?.subscribe(res => {
       this.isLoadingResults = false
       this.rulesServ.reglas = res.result
       console.log(this.rulesServ.reglas)
@@ -91,7 +91,7 @@ export class ReglasPage implements OnInit {
       if(confirmado){
         row.state = !row.state
         const res = this.rulesServ.updateRule(formData, row.id, row.state)
-          res.subscribe(res => {
+          res?.subscribe(res => {
             if(res){
               this.rulesServ.notify('Regla actualizada', 'success')
               this.isLoadingResults = true
