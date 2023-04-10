@@ -23,7 +23,7 @@
         &.ver2{
           grid-template-columns: auto 1fr 1fr;
           button{
-            margin-top: 6px;
+            margin: 1rem 0;
           }
         }
         mat-form-field{
@@ -37,8 +37,8 @@
 }
 
 .btns{
-  border-top: 1px solid gray;
-  padding-top: 1rem;
+  padding-top: 2rem;
+  text-align: center;
   button{
     margin: 0 0.5rem;
   }

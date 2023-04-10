@@ -65,14 +65,22 @@ export class CanjeComponent implements OnInit {
   }
 
   saveProds(){
-    this._inveServ.notify('Factura actualizada.', 'success')
+    if(this.productsOnCurrentVenta.length === 0){
+      this._inveServ.notify('La factura debe tener al menos un producto.', 'info')
+      return
+    }
+    const peticion = this._ventasServ.addProducToVenta(this.currentVentaId, this.productsOnCurrentVenta)
+    peticion?.subscribe((res:any)=>{
+      this._inveServ.notify('Factura actualizada.', 'success')
+      console.log(res)
+    })
   }
 
   addProd(){
     this.productsOnCurrentVenta.push(
       {
         "productId": 1,
-        "quantityShiped": 0,
+        "quantityShiped": 1,
         "dateShiped": "2023-03-29T16:51:02.562Z"
       }
     )

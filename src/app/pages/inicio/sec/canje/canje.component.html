@@ -36,7 +36,7 @@
             <section class="wrapForm" *ngIf="currentVentaId">
               <h2>Productos</h2>
               <div class="inputs ver2" *ngFor="let p of productsOnCurrentVenta ; index as i">
-                <button mat-icon-button color="warn" (click)="eliminarProd(i)">
+                <button mat-icon-button color="warn" (click)="eliminarProd(i)" matTooltip="Eliminar producto">
                   <mat-icon>close</mat-icon>
                 </button>
                 <mat-form-field appearance="fill">
@@ -59,6 +59,9 @@
               <button mat-raised-button color="accent" (click)="addProd()">Agregar producto <mat-icon>add</mat-icon></button>
             </section>
           </div>
+
+          <mat-divider></mat-divider>
+
           <div class="btns">
             <button mat-raised-button color="primary" *ngIf="!currentVentaId" [disabled]="ventaForm.invalid" (click)="save()">Ingresar factura <mat-icon>save</mat-icon></button>
             <button mat-raised-button color="primary" *ngIf="currentVentaId" [disabled]="ventaForm.invalid" (click)="saveProds()">Guardar <mat-icon>save</mat-icon></button>

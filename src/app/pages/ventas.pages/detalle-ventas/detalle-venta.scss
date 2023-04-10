@@ -60,7 +60,7 @@ main{
       &.ver2{
         grid-template-columns: auto 1fr 1fr;
         button{
-          margin-top: 6px;
+          margin: 1rem 0;
         }
       }
       mat-form-field{
@@ -71,10 +71,10 @@ main{
     }
   }
 }
-.container-btn{
-  width: 90%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
+.btns{
+  padding-top: 2rem;
+  text-align: center;
+  button{
+    margin: 0 0.5rem;
+  }
 }
