@@ -51,7 +51,7 @@
           </mat-option>
 
           <div *ngFor="let user of filteredUsers | async">
-            <mat-option *ngIf="user.state" [value]="user.userName">
+            <mat-option *ngIf="user.state" [value]="user.id">
               {{user.userName}}
             </mat-option>
           </div>

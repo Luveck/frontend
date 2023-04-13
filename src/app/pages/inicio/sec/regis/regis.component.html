@@ -13,6 +13,12 @@
           <mat-error>
             DNI requerido
           </mat-error>
+          <mat-error *ngIf="!loginForm.get('dni')?.errors?.['required'] && (loginForm.get('dni')?.errors?.['pattern'])">
+            DNI invalido
+          </mat-error>
+          <mat-error *ngIf="!loginForm.get('dni')?.errors?.['minlength']">
+            DNI debe tener minimo 13 digitos.
+          </mat-error>
         </mat-form-field>
 
         <p style="text-align: end;"><span (click)="typeForm = 'forgot'">Olvide mi contraseña</span></p>

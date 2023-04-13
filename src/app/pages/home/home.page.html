@@ -17,7 +17,7 @@
 
     <mat-card class="mat-elevation-z8">
       <div class="texto">
-        <span>{{counterProductos}}</span>
+        <span>{{counterProductos || 0}}</span>
         <h2>Productos registrados</h2>
         <button mat-stroked-button routerLink="/admin/inventario/productos">
           Ver detalles
@@ -29,7 +29,7 @@
 
     <mat-card class="mat-elevation-z8">
       <div class="texto">
-        <span>{{counterRules}}</span>
+        <span>{{counterRules || 0}}</span>
         <h2>Reglas de Canje</h2>
         <button mat-stroked-button routerLink="/admin/inventario/reglas">
           Ver detalles
@@ -41,7 +41,7 @@
 
     <mat-card class="mat-elevation-z8">
       <div class="texto">
-        <span>{{counterFarmacias}}</span>
+        <span>{{counterFarmacias || 0}}</span>
         <h2>Farmacias registradas</h2>
         <button mat-stroked-button routerLink="/admin/zonas/farmacias">
           Ver detalles
@@ -53,7 +53,7 @@
 
     <mat-card class="mat-elevation-z8">
       <div class="texto">
-        <span>{{counterUsers}}</span>
+        <span>{{counterUsers || 0}}</span>
         <h2>Usuarios registrados</h2>
         <button mat-stroked-button routerLink="/admin/security/usuarios">
           Ver detalles
@@ -65,7 +65,7 @@
 
     <mat-card class="mat-elevation-z8">
       <div class="texto">
-        <span>{{counterMedicos}}</span>
+        <span>{{counterMedicos || 0}}</span>
         <h2>Médicos registrados</h2>
         <button mat-stroked-button routerLink="/admin/medicos/medicos">
           Ver detalles
@@ -77,7 +77,7 @@
 
     <mat-card class="mat-elevation-z8">
       <div class="texto">
-        <span>{{counterPaises}}</span>
+        <span>{{counterPaises || 0}}</span>
         <h2>Paises Registrados</h2>
         <button mat-stroked-button routerLink="/admin/zonas/paises">
           Ver detalles
@@ -89,7 +89,7 @@
 
     <mat-card class="mat-elevation-z8">
       <div class="texto">
-        <span>{{counterDepartamentos}}</span>
+        <span>{{counterDepartamentos || 0}}</span>
         <h2>Departamentos Registrados</h2>
         <button mat-stroked-button routerLink="/admin/zonas/departamentos">
           Ver detalles
@@ -101,7 +101,7 @@
 
     <mat-card class="mat-elevation-z8">
       <div class="texto">
-        <span>{{counterCiudades}}</span>
+        <span>{{counterCiudades || 0}}</span>
         <h2>Ciudades Registradas</h2>
         <button mat-stroked-button routerLink="/admin/zonas/ciudades">
           Ver detalles

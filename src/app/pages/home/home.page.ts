@@ -37,42 +37,44 @@ export class HomePage implements AfterViewInit {
   ){}
 
   ngAfterViewInit(): void {
-    if(this._authServ.checkTokenDate(this._authServ.expToken) && this._authServ.userToken){
-      this._ventasServ.getVentas()?.subscribe(res => this.counterVentas = res.result.length)
+    setTimeout(() => {
+      if(this._authServ.checkTokenDate(this._authServ.expToken) && this._authServ.userToken){
+        this._ventasServ.getVentas()?.subscribe(res => this.counterVentas = res.result.length)
 
-      this._inveServ.getProductos()?.subscribe((res:any) => {
-        this.counterProductos = res.result.length
-        this._inveServ.listProducts = res.result
-      })
+        this._inveServ.getProductos()?.subscribe((res:any) => {
+          this.counterProductos = res.result.length
+          this._inveServ.listProducts = res.result
+        })
 
-      this._rulesServ.getRules()?.subscribe(res => this.counterRules = res.result.length)
+        this._rulesServ.getRules()?.subscribe(res => this.counterRules = res.result.length)
 
-      this._farmaServ.getFarmacias()?.subscribe(res => {
-        this.counterFarmacias = res.result.length
-        this._farmaServ.listFarmacias = res.result
-      })
+        this._farmaServ.getFarmacias()?.subscribe(res => {
+          this.counterFarmacias = res.result.length
+          this._farmaServ.listFarmacias = res.result
+        })
 
-      this._usersServ.getUsers()?.subscribe((res:any) =>{
-        this.counterUsers = res.result.length
-        this._usersServ.usersGlobal = res.result
-      })
+        this._usersServ.getUsers()?.subscribe((res:any) =>{
+          this.counterUsers = res.result.length
+          this._usersServ.usersGlobal = res.result
+        })
 
-      this._MedicServ.getMedicos()?.subscribe(res => this.counterMedicos = res.result.length)
+        this._MedicServ.getMedicos()?.subscribe(res => this.counterMedicos = res.result.length)
 
-      this._zonasServ.getPaises()?.subscribe(res =>  {
-        this.counterPaises = res.result.length
-        this._zonasServ.listPaises = res.result
-      })
+        this._zonasServ.getPaises()?.subscribe(res =>  {
+          this.counterPaises = res.result.length
+          this._zonasServ.listPaises = res.result
+        })
 
-      this._zonasServ.getDepartamentos()?.subscribe(res =>  {
-        this.counterDepartamentos = res.result.length
-        this._zonasServ.listDepartamentos = res.result
-      })
+        this._zonasServ.getDepartamentos()?.subscribe(res =>  {
+          this.counterDepartamentos = res.result.length
+          this._zonasServ.listDepartamentos = res.result
+        })
 
-      this._zonasServ.getCiudades()?.subscribe(res =>  {
-        this.counterCiudades = res.result.length
-        this._zonasServ.listCiudades = res.result
-      })
-    }
+        this._zonasServ.getCiudades()?.subscribe(res =>  {
+          this.counterCiudades = res.result.length
+          this._zonasServ.listCiudades = res.result
+        })
+      }
+    }, 2000);
   }
 }

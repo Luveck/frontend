@@ -16,7 +16,7 @@ export class RegisComponent {
   resetEmailSendMsg:string = ''
 
   public loginForm = new FormGroup({
-    dni : new FormControl('', [Validators.required]),
+    dni : new FormControl('', [Validators.required, Validators.pattern('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$'), Validators.minLength(13)]),
     password : new FormControl('', [Validators.required]),
     remember: new FormControl(false, [Validators.required])
   })

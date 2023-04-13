@@ -149,20 +149,13 @@ export class DetalleVenta implements OnInit, OnDestroy {
         this._ventasServ.notify('Ocurrio un error con el proceso', 'error')
       }))
     }else{
-      console.log(this.ventaForm.value)
-      console.log(this.singleSelect.value)
-      const peticionOne = this._usersServ.getUserByDNI(this.singleSelect.value)
-      peticionOne?.subscribe((resultOfUser:any) => {
-        console.log(resultOfUser.result)
-        let userId = resultOfUser.result.userEntity.id
-        const peticionTwo = this._ventasServ.addVenta(this.ventaForm.value, userId)
-        peticionTwo?.subscribe((resultOfVenta:any) => {
-          this.currentVentaId = resultOfVenta.result.id
-          this.currentVenta = resultOfVenta.result
-          this._inveServ.notify('Factura registrada.', 'success')
-          this.addProd()
-        })
-      }, (err => {
+      const peticion = this._ventasServ.addVenta(this.ventaForm.value, this.singleSelect.value)
+      peticion?.subscribe((resultOfVenta:any) => {
+        this.currentVentaId = resultOfVenta.result.id
+        this.currentVenta = resultOfVenta.result
+        this._inveServ.notify('Factura registrada.', 'success')
+        this.addProd()
+      },(err => {
         console.log(err)
         this._ventasServ.notify('Ocurrio un error con el proceso', 'error')
       }))

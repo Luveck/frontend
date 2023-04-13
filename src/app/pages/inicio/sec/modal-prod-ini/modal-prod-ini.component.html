@@ -5,19 +5,23 @@
     <ul>
       <li>
         <span>Presentación: </span>
-        {{prodData.presentacion}}
+        {{prodData.presentation}}
       </li>
       <li>
         <span>Regla de Canje: </span>
-        {{prodData.regla}}
+        {{prodData.quantityBuy}} / {{prodData.quantityBuy}}
       </li>
       <li>
         <span>Canje máximo anual: </span>
-        {{prodData.maximoAnual}}
+        {{prodData.maxYear}}
       </li>
       <li>
-        <a [href]="prodData.urlDatos" target="_blank">Leer más</a>
+        <span>Descripción: </span>
+        {{prodData.description}}
       </li>
+<!--       <li>
+        <a [href]="prodData.urlDatos" target="_blank">Leer más</a>
+      </li> -->
     </ul>
   </div>
 </main>
