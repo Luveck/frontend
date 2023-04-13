@@ -178,7 +178,7 @@ export class DetalleProducto implements OnInit {
     };
   }
 
-  deleteOneFile(nameFile:string){
+  deleteOneFile(nameFile:string, indexImgProd:number){
     console.log(nameFile)
     this._dialog.open(DialogConfComponent, {
       data: '¿Está seguro de querer eliminar esta imágen?'
@@ -189,6 +189,7 @@ export class DetalleProducto implements OnInit {
         const peticion = this._inveServ.deleteImage(nameFile)
         peticion?.subscribe((res:any)=>{
           this._inveServ.notify('Imágen eliminada', 'success')
+          this.currentProd?.urlImgs.splice(indexImgProd, 1)
         })
       }
     })

@@ -129,8 +129,8 @@
   </div>
 
   <div class="listImgs" *ngIf="currentProdId != 'new'">
-    <div class="imgItem" *ngFor="let img of currentProd?.urlImgs">
-      <button mat-mini-fab color="warn" (click)="deleteOneFile(img.imgName)">
+    <div class="imgItem" *ngFor="let img of currentProd?.urlImgs ; index as i">
+      <button mat-mini-fab color="warn" (click)="deleteOneFile(img.imgName, i)">
         <mat-icon>delete</mat-icon>
       </button>
       <img [src]="img.url" alt="">
