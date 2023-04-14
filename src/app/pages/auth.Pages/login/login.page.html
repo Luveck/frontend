@@ -9,8 +9,15 @@
         <mat-label>DNI</mat-label>
         <input matInput placeholder="DNI de usuario" formControlName="dni" maxlength="13">
         <mat-icon matPrefix>person</mat-icon>
-        <mat-error>
+        <mat-error
+          *ngIf="loginForm.get('dni')?.invalid && (loginForm.get('dni')?.dirty || loginForm.get('dni')?.touched) && loginForm.get('dni')?.errors?.['required']">
           DNI requerido
+        </mat-error>
+        <mat-error *ngIf="!loginForm.get('dni')?.errors?.['required'] && (loginForm.get('dni')?.errors?.['pattern'])">
+          DNI invalido
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('dni')?.errors?.['minlength']">
+          DNI debe tener minimo 13 digitos.
         </mat-error>
       </mat-form-field>
 

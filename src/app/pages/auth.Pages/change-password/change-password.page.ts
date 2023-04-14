@@ -1,4 +1,4 @@
-import { Component, OnInit  } from '@angular/core'
+import { Component } from '@angular/core'
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgPasswordValidatorOptions } from 'ng-password-validator';
 import { AuthService } from 'src/app/services/auth.service';
@@ -12,7 +12,7 @@ import { UsuariosService } from 'src/app/services/usuarios.service';
   styleUrls: ['./change-password.page.scss'],
 })
 
-export class ChangePasswordPage implements OnInit {
+export class ChangePasswordPage {
   public changePassForm = new FormGroup({
     mail: new FormControl('', [Validators.required, Validators.email, Validators.pattern(
       '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,63}$',
@@ -42,10 +42,6 @@ export class ChangePasswordPage implements OnInit {
   }
 
   constructor(public dataServ: DataService, private _usersServ:UsuariosService, private _authServ:AuthService){}
-
-  ngOnInit(): void {
-
-  }
 
   chagePass(formData:any){
     if(this.changePassForm.get('newPassword')?.value != this.changePassForm.get('confirmPassword')?.value){
