@@ -2,26 +2,6 @@
   <h1>Productos canjeables</h1>
   <p>Ponemos al alcance de nuestros consumidores productos farmacéuticos diferenciadores con estándares de calidad mundial.</p>
 
-  <div class="prod_header">
-    <mat-form-field class="searchBar" appearance="outline">
-      <mat-label>Buscar producto</mat-label>
-      <input matInput  #input>
-    </mat-form-field>
-
-    <button style="margin-bottom:1.5rem;" mat-icon-button [matMenuTriggerFor]="filter" matTooltip="Filtrar por categoria">
-      <mat-icon>tune</mat-icon>
-    </button>
-    <mat-menu #filter="matMenu">
-      <span
-        [ngStyle]="{'color': color ?'#000' :'#fff'}"
-        style="margin: 0 1rem;font-weight: 600;">
-      Filtrar por familia</span>
-      <button mat-menu-item *ngFor="let cate of prodsCanje; index as i" (click)="selectCategory(i)">
-        <span>{{cate?.nameFamily}}</span>
-      </button>
-    </mat-menu>
-  </div>
-
   <div class="prod_content">
     <mat-card class="mat-elevation-z8" *ngFor="let prod of prodsCanje" (click)="openModalProd(prod)">
       <img [src]="prod.urlImages[0].url">

@@ -60,6 +60,7 @@ export class CanjeComponent implements OnInit {
       this.currentVentaId = resultOfVenta.result.id
       this.currentVenta = resultOfVenta.result
       this._inveServ.notify('Factura registrada.', 'success')
+      this.ventaForm.disable()
       this.addProd()
     })
   }
@@ -72,6 +73,9 @@ export class CanjeComponent implements OnInit {
     const peticion = this._ventasServ.addProducToVenta(this.currentVentaId, this.productsOnCurrentVenta)
     peticion?.subscribe((res:any)=>{
       this._inveServ.notify('Factura actualizada.', 'success')
+      this.ventaForm.reset();
+      this.ventaForm.enable()
+      this.productsOnCurrentVenta = []
       console.log(res)
     })
   }
@@ -84,7 +88,6 @@ export class CanjeComponent implements OnInit {
         "dateShiped": "2023-03-29T16:51:02.562Z"
       }
     )
-    console.log(this.productsOnCurrentVenta)
   }
 
   eliminarProd(index:number){

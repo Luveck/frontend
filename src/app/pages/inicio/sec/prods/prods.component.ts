@@ -24,10 +24,6 @@ export class ProdsComponent implements OnInit {
     })
   }
 
-  selectCategory(index:number){
-    this.selectedCategory = index
-  }
-
   openModalProd(prod:any){
     const config:MatDialogConfig = {
       data: prod

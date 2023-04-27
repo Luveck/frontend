@@ -180,6 +180,11 @@ export class DetalleProducto implements OnInit {
 
   deleteOneFile(nameFile:string, indexImgProd:number){
     console.log(nameFile)
+    if(this.currentProd?.urlImgs.length == 1){
+      this._inveServ.notify('El registro del producto debe temer por lo menos una imágen.', 'info')
+      return
+    }
+
     this._dialog.open(DialogConfComponent, {
       data: '¿Está seguro de querer eliminar esta imágen?'
     })

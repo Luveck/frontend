@@ -13,18 +13,8 @@
     font-size: 1.2rem;
     line-height: 1.5;
   }
-  .prod_header{
-    width: 80%;
-    margin: 2rem auto;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    .searchBar{
-      width: 70%;
-    }
-  }
   .prod_content{
-    margin-bottom: 3rem;
+    margin: 3rem 0;
     width: 100%;
     display: flex;
     flex-wrap: wrap;
@@ -52,12 +42,5 @@
 @media (max-width: 560px){
   .productos{
     margin-top: 1.5rem;
-    .prod_header{
-      width: 100%;
-      margin: 1rem auto;
-      .mat-form-field {
-        width: 80%;
-      }
-    }
   }
 }

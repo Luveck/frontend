@@ -40,6 +40,7 @@ export class DetalleVenta implements OnInit, OnDestroy {
   currentVenta!: Venta | any
   currentVentaId:any
   productsOnCurrentVenta: any[] = []
+  //productsExcludedCurrentVenta: any[] = []
   productos!: any[]
   farmacias!: Farmacia[]
   usuarios: any[] = []
@@ -84,6 +85,8 @@ export class DetalleVenta implements OnInit, OnDestroy {
           console.log(res)
           this.initProds(res.result)
           this.isLoadingResults = false
+          this.ventaForm.disable()
+          this.userCtrl.disable()
         })
       },(err => {
         console.log(err)
@@ -154,6 +157,8 @@ export class DetalleVenta implements OnInit, OnDestroy {
         this.currentVentaId = resultOfVenta.result.id
         this.currentVenta = resultOfVenta.result
         this._inveServ.notify('Factura registrada.', 'success')
+        this.ventaForm.disable()
+        this.userCtrl.disable()
         this.addProd()
       },(err => {
         console.log(err)
@@ -163,7 +168,6 @@ export class DetalleVenta implements OnInit, OnDestroy {
   }
 
   initProds(resultProds:any[]){
-    console.log(resultProds)
     resultProds.map(prod => {
       this.productsOnCurrentVenta.push(
         {
@@ -188,14 +192,19 @@ export class DetalleVenta implements OnInit, OnDestroy {
   }
 
   addProd(){
+/*     this.productsExcludedCurrentVenta = this.productsOnCurrentVenta.map(prod => {
+      let prodTem = this.productos.find(product => product.id === prod.productId)
+      return prodTem.id
+    })
+
+    console.log(this.productsExcludedCurrentVenta) */
+
     this.productsOnCurrentVenta.push(
       {
-        "productId": 1,
         "quantityShiped": 1,
         "dateShiped": "2023-03-29T16:51:02.562Z"
       }
     )
-    console.log(this.productsOnCurrentVenta)
   }
 
   eliminarProd(index:number){
