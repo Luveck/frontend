@@ -3,11 +3,11 @@
     <mat-sidenav #sidenav class="sidenav-body mat-elevation-z8" mode="side" opened
        [fixedTopGap]="56" [fixedBottomGap]="1">
       <header>
-        <img [src]="localTheme ?'assets/icons/logo_light.png' :'assets/icons/logo_dark.png'">
+        <img [src]="localTheme ?'assets/icons/logo_light.png' :'assets/icons/logo_dark.png'"  alt="Logo"/>
       </header>
 
       <mat-nav-list class="side-navnar">
-        <ng-container *ngFor="let menu of menuList | async; index as i;">
+        <ng-container *ngFor="let menu of menuList; index as i;">
           <ng-container [ngTemplateOutlet]="menu.children ?  childMenu : parentMenu"
             [ngTemplateOutletContext]="{menu:menu}">
           </ng-container>
@@ -38,7 +38,7 @@
 
       <footer>
         <p color="dark">Powered by</p>
-        <img src="assets/icons/logo-appland.png">
+        <img src="assets/icons/logo-appland.png" alt="logo-appland">
       </footer>
     </mat-sidenav>
 
@@ -54,7 +54,7 @@
         <button mat-button (click)="openProfile()">
           <div class="nameDate">
             <div class="imgCont">
-              <img appNotImage [src]="img">
+              <img appNotImage [src]="img" alt="imagen">
             </div>
             <div class="nam">
               <span>{{authServ.userData.UserName}} {{authServ.userData.LastName}}</span>

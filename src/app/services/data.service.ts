@@ -2,13 +2,17 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common'
 import Swal from 'sweetalert2';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  baseURL:string = 'https://luveckserviceadministrationapi.azurewebsites.net/api'
-  baseURLSec:string = 'https://luveckservicesecurityapi.azurewebsites.net/api/'
+  //baseURL:string = 'https://localhost:44316/api'
+  //baseURLSec:string = 'https://appluvecksecurity.azurewebsites.net/api'
+
+  baseURL:string = environment.urlAdminSevice;
+  baseURLSec:string = environment.urlSecuritySevice;
 
   progress:boolean = false
 

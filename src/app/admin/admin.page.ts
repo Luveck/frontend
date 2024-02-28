@@ -10,6 +10,7 @@ import { DialogConfComponent } from '../components/dialog-conf/dialog-conf.compo
 import { ClientProfileComponent } from '../pages/inicio/sec/client-profile/client-profile.component';
 import { AuthService } from '../services/auth.service';
 import { DataService } from '../services/data.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-admin',
@@ -20,7 +21,8 @@ import { DataService } from '../services/data.service';
 
 export class AdminPage implements OnInit {
   img:String = 'assets/icons/user.png'
-  menuList:Observable<any[]> | undefined
+  //menuList:Observable<any[]> | undefined
+  menuList = environment.menu;
   localTheme:boolean = true
   darkClassName:string = 'theme-dark';
 
@@ -54,7 +56,7 @@ export class AdminPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.menuList = this._http.get<[]>("/assets/menu.json")
+    //this.menuList = this._http.get<[]>("/assets/menu.json")
   }
 
   onLogout(){
