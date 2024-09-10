@@ -7,6 +7,32 @@ export interface User {
   token: string
 }
 
+export interface Role {
+  name: string
+  state: boolean
+  ip: string
+  device: string
+  id: string
+}
+
+export interface Module {
+  name: string
+  ip: string
+  device: string
+  id: string
+}
+
+export interface RoleModule{
+  idRole: string,
+  roleName: string,
+  idModule: number,
+  moduleName: string
+}
+export interface ModuleRole {
+  name: string
+  id: string
+  selected: boolean
+}
 /* modulo zonas */
 export interface Pais{
   id: number
@@ -17,10 +43,6 @@ export interface Pais{
   currencyName: string
   currencySymbol: string
   status: boolean
-  createBy?: string
-  creationDate?: string
-  updateBy?: string
-  updateDate?: string
 }
 
 export interface Departamento{
@@ -30,10 +52,6 @@ export interface Departamento{
   countryCode: string
   countryName: string
   status: boolean
-  createBy?: string
-  creationDate?: string
-  updateBy?: string
-  updateDate?: string
 }
 
 export interface Ciudad{
@@ -44,34 +62,26 @@ export interface Ciudad{
   departmentName: string
   countryId: number
   countryName: string
-  createBy?: string
-  creationDate?: string
-  updateBy?: string
-  updateDate?: string
 }
 
 export interface Farmacia{
   id: number
   name: string
   adress: string
-  isDeleted: boolean
+  isActive: boolean
   cityId: number
   city: string
-  createBy?: string
-  creationDate?: string
-  updateBy?: string
-  updateDate?: string
+  ip: string
+  device: string
 }
 
 /* modulo inventario */
 export interface Categoria{
   id?: number
   name: string
-  isDeleted: boolean
-  createBy?: string
-  creationDate?: string
-  updateBy?: string
-  updateDate?: string
+  isActive: boolean
+  ip: string
+  device: string
 }
 
 export interface Producto{
@@ -87,10 +97,6 @@ export interface Producto{
   nameCategory: string
   state:boolean
   file: any
-  createBy?: string
-  creationDate?: string
-  updateBy?: string
-  updateDate?: string
 }
 
 export interface FilesToProduct{
@@ -111,34 +117,24 @@ export interface Rule{
   productName: string
   barcode: string
   state: boolean
-  createBy?: string
-  creationDate?: string
-  updateBy?: string
-  updateDate?: string
 }
 
 /* Modulo de medicos */
 export interface Especialidad{
   id?: number
   name: string
-  isDeleted: boolean
-  createBy?: string
-  creationDate?: string
-  updateBy?: string
-  updateDate?: string
+  isActive: boolean
+  ip: string
+  device: string
 }
 
 export interface Medico{
   id: number
   name: string
   register: string
-  isDeleted: boolean
+  isActive: boolean
   patologyId: number
   patologyName: string
-  createBy?: string
-  creationDate?: string
-  updateBy?: string
-  updateDate?: string
 }
 
 /* Modulo de ventas */
@@ -152,10 +148,6 @@ export interface Venta{
   noPurchase: string
   reviewed: boolean
   dateShiped: string
-  createBy?: string
-  creationDate?: string
-  updateBy?: string
-  updateDate?: string
 }
 
 export interface ProductOnVenta{
@@ -163,8 +155,4 @@ export interface ProductOnVenta{
   productId: number
   quantityShiped: number
   dateShiped: string
-  createBy?: string
-  creationDate?: string
-  updateBy?: string
-  updateDate?: string
 }

@@ -35,7 +35,7 @@ export class MedicosPage implements AfterViewInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:Medico[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['name', 'patologyName', 'isDeleted', 'creationDate', 'acctions'];
+  displayedColumns: string[] = ['name', 'patologyName', 'isDeleted', 'acctions'];
   dataSource = new MatTableDataSource<Medico>(this.ELEMENT_DATA);
 
   isLoadingResults:boolean = true;
@@ -55,12 +55,10 @@ export class MedicosPage implements AfterViewInit {
   getAllMedics(){
     let resp = this._medicServ.getMedicos()
     resp?.subscribe(medicos => {
-      console.log(medicos)
       this.dataSource.data = medicos.result as Medico[]
       this.isLoadingResults = false
     }, (err => {
       this.isLoadingResults = false
-      console.log(err)
     }))
   }
 
@@ -105,7 +103,7 @@ export class MedicosPage implements AfterViewInit {
       "patologyId": row.patologyId
     }
     let msgDialog:string
-    if(!row.isDeleted){
+    if(row.isActive){
       msgDialog = '¿Seguro de querer inhabilitar el registro de este médico?'
     }else{
       msgDialog = '¿Seguro de querer habilitar el registro de este médico?'
@@ -116,8 +114,8 @@ export class MedicosPage implements AfterViewInit {
     .afterClosed()
     .subscribe((confirmado:boolean)=>{
       if(confirmado){
-        row.isDeleted = !row.isDeleted
-        const res = this._medicServ.updateMedico(formData, row.id, row.isDeleted)
+        row.isActive = !row.isActive
+        const res = this._medicServ.updateMedico(formData, row.id, row.isActive)
           res?.subscribe(res => {
             if(res){
               this._medicServ.notify('Médico actualizado', 'success')

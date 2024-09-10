@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
 import { AuthService } from './auth.service';
 import { Especialidad, Medico } from '../interfaces/models';
+import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class MedicosService {
   constructor(
     private _http:HttpClient,
     private _authServ:AuthService,
-    private _dataServ:DataService
+    private _dataServ:DataService,
+    private sharedService: SharedService
   ) {
     this.headers = {'Authorization':`Bearer ${this._authServ.userToken}`}
   }
@@ -52,7 +54,9 @@ export class MedicosService {
     }
     let dataEspecial:Especialidad = {
       "name": name,
-      "isDeleted": false,
+      "isActive": true,
+      "ip": this.sharedService.userIP,
+      "device": this.sharedService.userDevice
     }
     return this._http.post(`${this._dataServ.baseURL}/Administration/CreatePatology`, dataEspecial,
       {headers: this.headers}
@@ -77,7 +81,9 @@ export class MedicosService {
     let dataEspecial:Especialidad = {
       "id": especialId,
       "name": name,
-      "isDeleted": state,
+      "isActive": state,
+      "ip": this.sharedService.userIP,
+      "device": this.sharedService.userDevice
     }
     console.log(dataEspecial)
     return this._http.post(`${this._dataServ.baseURL}/Administration/UpdatePatology`, dataEspecial,
@@ -123,7 +129,9 @@ export class MedicosService {
     }
     let dataMedico:Medico = {
       ...formData,
-      "isDeleted": false
+      "isActive": true,
+      "ip": this.sharedService.userIP,
+      "device": this.sharedService.userDevice
     }
     console.log(dataMedico)
     return this._http.post(`${this._dataServ.baseURL}/Medical/CreateMedical`, dataMedico,
@@ -149,7 +157,9 @@ export class MedicosService {
     let dataMedico:Medico = {
       "id": medicoId,
       ...formData,
-      "isDeleted": state
+      "isActive": state,
+      "ip": this.sharedService.userIP,
+      "device": this.sharedService.userDevice
     }
     console.log(dataMedico)
     return this._http.post(`${this._dataServ.baseURL}/Medical/UpdateMedical`, dataMedico,

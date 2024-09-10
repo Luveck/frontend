@@ -36,13 +36,11 @@ export class DetallePais implements OnInit {
       this.isLoadingResults = true
       const pais = this._zonasServ.getPaisById(this.data.paisId)
       pais?.subscribe(res => {
-        console.log(res)
         this.currentPais = res.result
         this.isLoadingResults = false
         this.initValores()
       }, (err => {
         this.isLoadingResults = false
-        console.log(err)
         this._zonasServ.notify('Ocurrio un error con la petición', 'error')
       }))
     }

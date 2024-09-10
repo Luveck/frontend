@@ -1,11 +1,12 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, HostBinding } from '@angular/core'
+import { Component, HostBinding, OnInit } from '@angular/core'
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 import { DataService } from 'src/app/services/data.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { ClientProfileComponent } from './sec/client-profile/client-profile.component';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-inicio',
@@ -13,7 +14,7 @@ import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.
   styleUrls: ['./inicio.page.scss']
 })
 
-export class InicioPage{
+export class InicioPage implements OnInit{
   localTheme:boolean = true
   darkClassName:string = 'theme-dark';
   SectionSelect:string = 'inicio'
@@ -26,7 +27,7 @@ export class InicioPage{
     private _dialog: MatDialog,
     public dataServ: DataService,
     public authServ:AuthService,
-
+    private info: SharedService
   ){
     let theme = this.dataServ.getTheme()
     if(theme === 'dark'){
@@ -40,6 +41,10 @@ export class InicioPage{
       this.dataServ.setTheme('light')
       this._overlay.getContainerElement().classList.remove(this.darkClassName);
     }
+  }
+  ngOnInit(): void {
+    this.info.getUserIP()
+    this.info.getUserDevice()
   }
 
   setTheme(){

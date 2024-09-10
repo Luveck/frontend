@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Farmacia } from '../interfaces/models';
 import { AuthService } from './auth.service';
 import { DataService } from './data.service';
+import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,8 @@ export class FarmaciasService {
   constructor(
     private _http:HttpClient,
     private _dataServ:DataService,
-    private _authServ:AuthService
+    private _authServ:AuthService,
+    private sharedService: SharedService
   ) {
     this.headers = {'Authorization':`Bearer ${this._authServ.userToken}`}
   }
@@ -50,7 +52,9 @@ export class FarmaciasService {
     }
     let dataFarmacia:Farmacia = {
       ...formData,
-      "isDeleted": true
+      "IsActive": true,
+      "ip": this.sharedService.userIP,
+      "device": this.sharedService.userDevice
     }
     return this._http.post(`${this._dataServ.baseURL}/Pharmacy/CreatePharmacy`, dataFarmacia, {
       headers: this.headers
@@ -65,7 +69,9 @@ export class FarmaciasService {
     let dataFarmacia:Farmacia = {
       "id": idFarmacia,
       ...formData,
-      "isDeleted": state,
+      "IsActive": state,
+      "ip": this.sharedService.userIP,
+      "device": this.sharedService.userDevice
     }
     console.log(dataFarmacia)
     return this._http.post(`${this._dataServ.baseURL}/Pharmacy/UpdatePharmacy`, dataFarmacia, {

@@ -70,7 +70,7 @@ export class CategoriasPage implements OnInit {
 
   chageState(row:Categoria){
     let msgDialog:string
-    if(!row.isDeleted){
+    if(row.isActive){
       msgDialog = '¿Seguro de querer inhabilitar esta categoría?'
     }else{
       msgDialog = '¿Seguro de querer habilitar esta categoría?'
@@ -81,8 +81,8 @@ export class CategoriasPage implements OnInit {
     .afterClosed()
     .subscribe((confirmado:boolean)=>{
       if(confirmado){
-        row.isDeleted = !row.isDeleted
-        const res = this.inveServ.updateCat(row.name, row.id, row.isDeleted)
+        row.isActive = !row.isActive
+        const res = this.inveServ.updateCat(row.name, row.id, row.isActive)
           res?.subscribe(res => {
             if(res){
               this.inveServ.notify('Categoría actualizada', 'success')

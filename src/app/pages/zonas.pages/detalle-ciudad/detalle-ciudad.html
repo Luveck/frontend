@@ -13,14 +13,6 @@
         </div>
       </div>
     </section>
-    <section class="resumen">
-      <ul>
-        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentCiudad?.createBy}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de creación: {{currentCiudad?.creationDate |date: 'd/M/yy'}}</li>
-        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentCiudad?.updateBy}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentCiudad?.updateDate |date: 'd/M/yy'}}</li>
-      </ul>
-    </section>
   </div>
 
   <form class="wrapForm" [formGroup]="ciudadForm" autocomplete="off">

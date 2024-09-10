@@ -38,7 +38,6 @@ export class DetalleUsuario implements OnInit {
   ){
     if(this.usersServ.localRoles.length === 0){
       this.usersServ.getAllRoles()?.subscribe((res:any) => {
-        console.log(res)
         this.usersServ.localRoles = res.result
       })
     }
@@ -47,7 +46,7 @@ export class DetalleUsuario implements OnInit {
   ngOnInit(): void {
     if(this.data.userDni){
       this.isLoadingResults = true
-      this.usersServ.getUserByDNI(this.data.userDni)
+      this.usersServ.getUserInfo(this.data.userDni)
         ?.subscribe((res:any) => {
           console.log(res)
           this.currentUser = res.result
@@ -64,15 +63,15 @@ export class DetalleUsuario implements OnInit {
 
   initValues(){
     this.newUserForm.patchValue({
-      dni: this.currentUser.userEntity.userName,
-      name: this.currentUser.userEntity.name,
-      lastName: this.currentUser.userEntity.lastName,
-      email: this.currentUser.userEntity.email,
+      dni: this.currentUser.dni,
+      name: this.currentUser.name,
+      lastName: this.currentUser.lastName,
+      email: this.currentUser.email,
       role: this.currentUser.role,
-      bornDate: this.currentUser.userEntity.bornDate,
-      sex: this.currentUser.userEntity.sex,
-      phone: this.currentUser.userEntity.phoneNumber,
-      address: this.currentUser.userEntity.address
+      bornDate: this.currentUser.bornDate,
+      sex: this.currentUser.sex,
+      phone: this.currentUser.phone,
+      address: this.currentUser.address
     })
   }
 
@@ -92,7 +91,7 @@ export class DetalleUsuario implements OnInit {
     tempData.idRole = id
     tempData.role = name
     if(this.data.userDni){
-      const peticion = this.usersServ.UpdateUsuario(tempData, (chageState != undefined) ?chageState :this.currentUser.userEntity.state)
+      const peticion = this.usersServ.UpdateUsuario(tempData, (chageState != undefined) ?chageState :this.currentUser.state)
       peticion?.subscribe(()=>{
         this.usersServ.notify('Registro actualizado', 'success')
         this.dialogo.close(true);

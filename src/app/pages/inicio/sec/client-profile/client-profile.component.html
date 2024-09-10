@@ -7,8 +7,12 @@
   <div class="perfil_header">
     <section class="avatar">
       <div class="datos">
-        <p>{{userData?.userEntity.name}} {{userData?.userEntity.lastName}}</p>
+        <p>{{userData?.name}} {{userData?.lastName}}</p>
         <div class="bots">
+          <button mat-raised-button color="primary" style="margin-bottom: 3px;" (click)="onChangePwd()">
+            <mat-icon>security</mat-icon>
+            Cambiar contraseña
+          </button>
           <button mat-raised-button color="accent" (click)="onEdit()">
             <mat-icon>edit</mat-icon>
             Editar información
@@ -18,10 +22,9 @@
     </section>
     <section class="resumen">
       <ul>
-        <li> <mat-icon class="example-tab-icon">fingerprint</mat-icon> DNI: {{userData?.userEntity.userName}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de nacimiento: {{userData?.userEntity.bornDate |date: 'dd/MM/yyyy'}}</li>
+        <li> <mat-icon class="example-tab-icon">fingerprint</mat-icon> DNI: {{userData?.dni}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de nacimiento: {{userData?.bornDate |date: 'dd/MM/yyyy'}}</li>
         <li> <mat-icon class="example-tab-icon">badge</mat-icon> Rol: {{userData?.role}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de registro: {{userData?.userEntity.createDate |date: 'dd/MM/yyyy'}}</li>
       </ul>
     </section>
   </div>

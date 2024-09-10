@@ -35,7 +35,7 @@ export class DepartamentosPage implements AfterViewInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:Departamento[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns:string[] = ['name', 'countryName', 'countryCode', 'status', 'creationDate', 'acctions'];
+  displayedColumns:string[] = ['name', 'countryName', 'countryCode', 'status', 'acctions'];
   dataSource = new MatTableDataSource<Departamento>(this.ELEMENT_DATA);
 
   isLoadingResults:boolean = true

@@ -55,7 +55,7 @@
         <mat-label>Categoría</mat-label>
         <mat-select formControlName="idCategory" matTooltip="Categoría a la que pertenece">
           <div *ngFor="let cat of cats">
-            <mat-option *ngIf="!cat.isDeleted" [value]="cat.id">
+            <mat-option *ngIf="cat.isActive" [value]="cat.id">
               {{cat.name}}
             </mat-option>
           </div>

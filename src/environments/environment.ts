@@ -4,61 +4,90 @@
 
 export const environment = {
   production: false,
-  urlSecuritySevice: 'https://appluvecksecurity.azurewebsites.net/api',
-  urlAdminSevice: 'https://appluveckadmin.azurewebsites.net/api',
+  urlSecuritySevice: 'https://localhost:7066/api/',
+  //urlSecuritySevice: 'https://appluvecksecurity.azurewebsites.net/api',
+  //urlAdminSevice: 'https://appluveckadmin.azurewebsites.net/api',
+  urlAdminSevice: 'https://localhost:7294/api',
   menu: [
     {
       text: "Inicio",
       subText: "Vista General",
       icon: "house",
-      routerLink: "home"
+      routerLink: "home",
     },
     {
       text: "Farmacias",
       subText: "Gestión de paises",
       icon: "add_business",
       routerLink: "zonas/farmacias",
-      rol: "Admin"
+      rol: "Admin",
+      module: 'Farmacias'
     },
     {
       text: "Reglas de canje",
       subText: "Gestión de reglas",
       icon: "rule",
       routerLink: "inventario/reglas",
-      rol: "Admin"
+      rol: "Admin",
+      module: 'Reglas-Canje'
     },
     {
       text: "Registro de ventas",
       subText: "Gestión de ventas",
       icon: "point_of_sale",
       routerLink: "ventas/ventas",
-      rol: "Admin"
+      rol: "Admin",
+      module: 'Registro-ventas'
     },
     {
       text: "Seguridad",
       subText: "Gestión de seguridad",
       icon: "admin_panel_settings",
-      rol: "Admin",
+      rol: "Admin",      
       children: [
         {
           text: "Países",
           icon: "flag",
-          routerLink: "zonas/paises"
+          routerLink: "zonas/paises",
+          module: 'Paises',
         },
         {
           text: "Departamentos",
           icon: "signpost",
-          routerLink: "zonas/departamentos"
+          routerLink: "zonas/departamentos",
+          module: 'Departamentos',
         },
         {
           text: "Ciudades",
           icon: "apartment",
-          routerLink: "zonas/ciudades"
+          routerLink: "zonas/ciudades",
+          module: 'Ciudades',
         },
         {
           text: "Usuarios",
           icon: "group",
-          routerLink: "security/usuarios"
+          routerLink: "security/usuarios",
+          module: 'Usuarios',
+        }
+      ]
+    },
+    {
+      text: "Accesibilidad",
+      subText: "Gestión de seguridad",
+      icon: "account_box",
+      rol: "Admin",
+      children: [
+        {
+          text: "Roles",
+          icon: "perm_identity",
+          routerLink: "security/roles",
+          module: 'Roles',
+        },
+        {
+          text: "Modulos por Role",
+          icon: "accessibility",
+          routerLink: "security/moduleRoles",
+          module: 'Modulos-Role',
         }
       ]
     },
@@ -70,12 +99,14 @@ export const environment = {
         {
           text: "Categorías",
           icon: "bookmarks",
-          routerLink: "inventario/categorias"
+          routerLink: "inventario/categorias",
+          module: 'Categorías',
         },
         {
           text: "Productos",
           icon: "shopping_basket",
-          routerLink: "inventario/productos"
+          routerLink: "inventario/productos",
+          module: 'Productos',
         }
       ]
     },
@@ -87,10 +118,12 @@ export const environment = {
         {
           text: "Especialidades",
           icon: "workspace_premium",
+          module: 'Especialidades',
           routerLink: "medicos/especialidades"
         },
         {
           text: "Médicos",
+          module: 'Medicos',
           icon: "group_add",
           routerLink: "medicos/medicos"
         }

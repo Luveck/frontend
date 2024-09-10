@@ -26,7 +26,6 @@
         <p><span>Cantidad a comprar: </span>{{rule.quantityBuy}}</p>
         <p><span>Cantidad a entregar: </span>{{rule.quantityGive}}</p>
         <p><span>Estado: </span><span class="chip" [ngClass]="{'inactive': rule.state == false, 'active': rule.state == true}">{{rule.state ?'Activo' :'Inactivo'}}</span></p>
-        <p><span>Fecha de creación: </span>{{rule.creationDate |date: 'd/M/yy'}}</p>
       </div>
       <div class="cat_actions">
         <button mat-stroked-button (click)="on(rule.id)">

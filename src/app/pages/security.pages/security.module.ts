@@ -11,11 +11,21 @@ import { ComponentsModule } from 'src/app/components/components.module';
 import { UsuariosPage } from './usuarios/usuarios.page';
 import { DetalleUsuario } from './detalle-usuario/detalle-usuario';
 import { RolesPage } from './roles/roles.page';
+import { DetalleRole } from './detalle-role/detalle-role';
+import { RolesModulePage } from './roles-module/roles-module.page';
 
 const routes: Routes = [
   {
     path: 'usuarios',
     component: UsuariosPage
+  },
+  {
+    path: 'roles',
+    component: RolesPage
+  },
+  {
+    path: 'moduleRoles',
+    component: RolesModulePage  
   }
 ];
 
@@ -23,7 +33,9 @@ const routes: Routes = [
   declarations: [
     UsuariosPage,
     DetalleUsuario,
-    RolesPage
+    RolesPage,
+    DetalleRole,
+    RolesModulePage
   ],
   imports: [
     CommonModule,

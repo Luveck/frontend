@@ -35,7 +35,7 @@ export class CiudadesPage implements AfterViewInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:Ciudad[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns:string[] = ['name', 'departmentName', 'countryName', 'state', 'creationDate', 'acctions'];
+  displayedColumns:string[] = ['name', 'departmentName', 'countryName', 'state', 'acctions'];
   dataSource = new MatTableDataSource<Ciudad>(this.ELEMENT_DATA);
 
   isLoadingResults:boolean = true;
@@ -58,10 +58,8 @@ export class CiudadesPage implements AfterViewInit {
       this.dataSource.data = cities.result as Ciudad[]
       this._zonasServ.listCiudades = cities.result
       this.isLoadingResults = false
-      console.log(this.dataSource.data)
     }, (err => {
       this.isLoadingResults = false
-      console.log(err)
     }))
   }
 

@@ -62,7 +62,7 @@ export class DetalleFarmacia implements OnInit {
 
   save(){
     if(this.data.farmaId){
-      const peticion = this._farmaServ.updateFarmacia(this.farmaForm.value, this.data.farmaId, this.currentFarmacia.isDeleted)
+      const peticion = this._farmaServ.updateFarmacia(this.farmaForm.value, this.data.farmaId, this.currentFarmacia.isActive)
        peticion?.subscribe(() => {
         this._zonasServ.notify('Farmacia actualizada', 'success')
         this.dialogo.close(true);

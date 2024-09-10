@@ -6,14 +6,18 @@ import { AdminPageRoutingModule } from './admin-routing.module';
 
 import { AdminPage } from './admin.page';
 import { MaterialModule } from '../material.module';
+import { InicioPageModule } from '../pages/inicio/inicio.module';
 
 @NgModule({
   imports: [
     CommonModule,
     ReactiveFormsModule,
     AdminPageRoutingModule,
-    MaterialModule
+    MaterialModule,
+    InicioPageModule
   ],
-  declarations: [AdminPage]
+  declarations: [AdminPage],  
+  providers : [
+  ]
 })
 export class AdminModule {}

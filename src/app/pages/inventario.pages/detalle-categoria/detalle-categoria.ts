@@ -26,12 +26,10 @@ export class DetalleCategoria implements OnInit {
       this.isLoadingResults = true
       const cat = this._inveServ.getCategoriaById(this.data.catId)
       cat?.subscribe((res:any) => {
-        console.log(res)
         this.currentCategoria = res.result
         this.isLoadingResults = false
         this.name = this.currentCategoria.name
       }, (err => {
-        console.log(err)
         this.isLoadingResults = false
         this._inveServ.notify('Ocurrio un error', 'error')
       }))
@@ -40,14 +38,13 @@ export class DetalleCategoria implements OnInit {
 
   save(){
     if(this.data.catId){
-      const peticion = this._inveServ.updateCat(this.name, this.data.catId, this.currentCategoria.isDeleted)
+      const peticion = this._inveServ.updateCat(this.name, this.data.catId, this.currentCategoria.isActive)
       peticion?.subscribe(res => {
         if(res){
           this._inveServ.notify('Categoría actualizada', 'success')
           this.dialogo.close(true)
         }
       }, (err => {
-        console.log(err)
         this._inveServ.notify('Ocurrio un error', 'error')
       }))
     }else{
@@ -58,7 +55,6 @@ export class DetalleCategoria implements OnInit {
           this.dialogo.close(true)
         }
       }, (err => {
-        console.log(err)
         let msgError = err.error.messages
         this._inveServ.notify(`${msgError}`, 'error')
       }))

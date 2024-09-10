@@ -17,7 +17,7 @@
                   <mat-label>Farmacia</mat-label>
                   <mat-select formControlName="pharmacyId">
                     <div *ngFor="let farma of farmacias">
-                      <mat-option *ngIf="!farma.isDeleted" [value]="farma.id">
+                      <mat-option *ngIf="!farma.isActive" [value]="farma.id">
                         {{farma.name}}
                       </mat-option>
                     </div>

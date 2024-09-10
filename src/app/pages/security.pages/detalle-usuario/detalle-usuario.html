@@ -7,18 +7,17 @@
   <div class="perfil_header" *ngIf="data.userDni">
     <section class="avatar">
       <div class="datos">
-        <p>{{currentUser?.userEntity.name}} {{currentUser?.userEntity.lastName}}</p>
+        <p>{{currentUser?.name}} {{currentUser?.lastName}}</p>
         <div class="bots">
-          <span class="chip" (click)="changeUserState(currentUser?.userEntity.state, currentUser.userEntity.id)" style="cursor: pointer;" matTooltip="Cambiar estado" [ngClass]="{'active': currentUser?.userEntity.state == true, 'inactive': currentUser?.userEntity.state == false}">Estado de cuenta: {{currentUser?.userEntity.state ?'activa' :'inactiva'}}</span>
+          <span class="chip" (click)="changeUserState(currentUser?.state, currentUser.id)" style="cursor: pointer;" matTooltip="Cambiar estado" [ngClass]="{'active': currentUser?.state == true, 'inactive': currentUser?.state == false}">Estado de cuenta: {{currentUser?.state ?'activa' :'inactiva'}}</span>
         </div>
       </div>
     </section>
     <section class="resumen">
       <ul>
-        <li> <mat-icon class="example-tab-icon">fingerprint</mat-icon> DNI: {{currentUser?.userEntity.userName}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de nacimiento: {{currentUser?.userEntity.bornDate |date: 'dd/MM/yyyy'}}</li>
+        <li> <mat-icon class="example-tab-icon">fingerprint</mat-icon> DNI: {{currentUser?.dni }} </li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de nacimiento: {{currentUser?.bornDate |date: 'dd/MM/yyyy'}}</li>
         <li> <mat-icon class="example-tab-icon">badge</mat-icon> Rol: {{currentUser?.role}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de registro: {{currentUser?.userEntity.createDate |date: 'dd/MM/yyyy'}}</li>
       </ul>
     </section>
   </div>

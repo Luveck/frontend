@@ -23,8 +23,7 @@
     <mat-card class="cat mat-elevation-z8" *ngFor="let cat of inveServ.categorias">
       <div class="cat_body">
         <p><span>Nombre: </span>{{cat.name}}</p>
-        <p><span>Estado: </span><span class="chip" [ngClass]="{'inactive': cat.isDeleted == true, 'active': cat.isDeleted == false}">{{cat.isDeleted ?'Inactivo' :'Activo'}}</span></p>
-        <p><span>Fecha de creación: </span>{{cat.creationDate |date:'M/d/yy'}}</p>
+        <p><span>Estado: </span><span class="chip" [ngClass]="{'inactive': cat.isActive == false, 'active': cat.isActive == true}">{{cat.isActive ? 'Activo' : 'Inactivo'}}</span></p>
       </div>
       <div class="cat_actions">
         <button mat-stroked-button (click)="on(cat.id)">

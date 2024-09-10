@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Categoria, FilesToProduct, Producto } from '../interfaces/models';
 import { DataService } from './data.service';
 import { AuthService } from './auth.service';
+import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class InventarioService {
   constructor(
     private _http:HttpClient,
     private _authServ:AuthService,
-    private _dataServ:DataService
+    private _dataServ:DataService,
+    private sharedService: SharedService
   ) {
     this.headers = {
       headers: new HttpHeaders(
@@ -60,7 +62,9 @@ export class InventarioService {
     }
     let dataCat:Categoria = {
       "name": name,
-      "isDeleted": false,
+      "isActive": true,
+      "ip": this.sharedService.userIP,
+      "device": this.sharedService.userDevice
     }
     return this._http.post(`${this._dataServ.baseURL}/Administration/CreateCategory`, dataCat,
       this.headers
@@ -85,7 +89,9 @@ export class InventarioService {
     let dataCat:Categoria = {
       "id": catId,
       "name": name,
-      "isDeleted": state
+      "isActive": state,
+      "ip": this.sharedService.userIP,
+      "device": this.sharedService.userDevice
     }
     console.log(dataCat)
     return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCategory`, dataCat,
@@ -122,8 +128,11 @@ export class InventarioService {
     let dataProd:Producto = {
       ...formData,
       "state": true,
+      "ip": this.sharedService.userIP,
+      "device": this.sharedService.userDevice,
+      "file": [],
+      "urlOficial": ''
     }
-    console.log(dataProd)
     return this._http.post(`${this._dataServ.baseURL}/Administration/CreateProduct`, dataProd,
       this.headers
     )

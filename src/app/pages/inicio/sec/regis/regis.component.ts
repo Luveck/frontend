@@ -92,17 +92,15 @@ export class RegisComponent {
     if(!this.dataServ.progress){
       this.dataServ.progress = true
       this.authServ.register(formData)
-        .then((res:any) => {
-          console.log(res)
+        .then((res:any) => {          
           this.dataServ.progress = false
-          this.authServ.userToken = res.result.token
+          this.authServ.userToken = res.token
           localStorage.setItem('LuveckUserToken', this.authServ.userToken)
           this.authServ.decodeToken(this.authServ.userToken)
           this.sectionEvent.emit('inicio')
         })
         .catch ((error:any)=>{
           this.dataServ.progress = false
-          console.log(error)
           let msgError = error.error.messages
           this.dataServ.fir(`${msgError}`, 'error')
         })
@@ -110,19 +108,16 @@ export class RegisComponent {
   }
 
   onForgot(formData:any){
-    console.log(formData)
     if(!this.dataServ.progress){
       this.dataServ.progress = true
-      this.authServ.forgotPass(formData)
+      this.authServ.forgotPass(formData.email)
         .then((res:any) => {
-          console.log(res)
           this.dataServ.progress = false
           this.dataServ.fir(`${res.messages}`, 'success')
           this.resetEmailSendMsg = res.messages
         })
         .catch ((error:any)=>{
           this.dataServ.progress = false
-          console.log(error)
           let msgError = error.error.messages
           this.dataServ.fir(`${msgError}`, 'error')
         })

@@ -35,7 +35,7 @@ export class PaisesPage implements AfterViewInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:Pais[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['name', 'currency', 'phoneCode', 'status', 'creationDate', 'acctions'];
+  displayedColumns: string[] = ['name', 'currency', 'phoneCode', 'status', 'acctions'];
   dataSource = new MatTableDataSource<Pais>(this.ELEMENT_DATA);
 
   isLoadingResults:boolean = true;

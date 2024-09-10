@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Pais, Departamento, Ciudad } from '../interfaces/models';
 import { AuthService } from './auth.service';
 import { DataService } from './data.service';
+import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,7 @@ export class ZonasService{
     private _http:HttpClient,
     private _authServ:AuthService,
     private _dataServ:DataService,
+    private sharedService: SharedService
   ) {
     this.headers = {'Authorization':`Bearer ${this._authServ.userToken}`}
   }
@@ -53,7 +55,9 @@ export class ZonasService{
     }
     let dataPais:Pais = {
       ...formData,
-      "status": true
+      "status": true,
+      "ip": this.sharedService.userIP,
+      "device": this.sharedService.userDevice
     }
     return this._http.post(`${this._dataServ.baseURL}/Administration/CreateCountry`, dataPais, {
       headers: this.headers
@@ -68,7 +72,9 @@ export class ZonasService{
     let dataPais:Pais = {
       "id": idPais,
       ...formData,
-      "status": status
+      "status": status,
+      "ip": this.sharedService.userIP,
+      "device": this.sharedService.userDevice
     }
     console.log(dataPais)
     return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCountry`, dataPais,
@@ -104,9 +110,10 @@ export class ZonasService{
     }
     let dataDepartamento:Departamento = {
       ...formData,
-      "status": true
+      "status": true,
+      "ip": this.sharedService.userIP,
+      "device": this.sharedService.userDevice
     }
-    console.log(dataDepartamento)
     return this._http.post(`${this._dataServ.baseURL}/Administration/CreateDepartment`, dataDepartamento, {
       headers: this.headers
     })
@@ -120,9 +127,10 @@ export class ZonasService{
     let dataDepartamento:Departamento = {
       "id": idDepartamento,
       ...formData,
-      "status": status
+      "status": status,
+      "ip": this.sharedService.userIP,
+      "device": this.sharedService.userDevice
     }
-    console.log(dataDepartamento)
     return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateDepartment`, dataDepartamento,
       {headers: this.headers}
     )
@@ -156,7 +164,9 @@ export class ZonasService{
     }
     let dataCiudad:Ciudad = {
       ...formData,
-      "state": true
+      "state": true,
+      "ip": this.sharedService.userIP,
+      "device": this.sharedService.userDevice
     }
     console.log(dataCiudad)
     return this._http.post(`${this._dataServ.baseURL}/Administration/CreateCity`, dataCiudad, {
@@ -173,6 +183,8 @@ export class ZonasService{
       "id": idCity,
       ...formData,
       "state": state,
+      "ip": this.sharedService.userIP,
+      "device": this.sharedService.userDevice
     }
     console.log(dataCiudad)
     return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCity`, dataCiudad, {

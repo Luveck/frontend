@@ -70,7 +70,7 @@ export class EspecialidadesPage implements OnInit {
 
   chageState(row:Especialidad){
     let msgDialog:string
-    if(!row.isDeleted){
+    if(row.isActive){
       msgDialog = '¿Seguro de querer inhabilitar esta Especialidad?'
     }else{
       msgDialog = '¿Seguro de querer habilitar esta Especialidad?'
@@ -81,8 +81,8 @@ export class EspecialidadesPage implements OnInit {
     .afterClosed()
     .subscribe((confirmado:boolean)=>{
       if(confirmado){
-        row.isDeleted = !row.isDeleted
-        const res = this.medicServ.updateEspecial(row.name, row.id, row.isDeleted)
+        row.isActive = !row.isActive
+        const res = this.medicServ.updateEspecial(row.name, row.id, row.isActive)
           res?.subscribe(res => {
             if(res){
               this.medicServ.notify('Especilidad actualizada', 'success')

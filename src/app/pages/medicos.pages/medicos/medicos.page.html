@@ -41,13 +41,8 @@
       <ng-container matColumnDef="isDeleted">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Cuenta </th>
         <td mat-cell *matCellDef="let row">
-          <span class="chip" [ngClass]="{'active': row.isDeleted == false, 'inactive': row.isDeleted == true}">{{row.isDeleted ?'Inactivo' :'Activo'}}</span>
+          <span class="chip" [ngClass]="{'active': row.isActive == true, 'inactive': row.isActive == false}">{{row.isActive ? 'Activo' : 'Inactivo'}}</span>
         </td>
-      </ng-container>
-
-      <ng-container matColumnDef="creationDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de creación </th>
-        <td mat-cell *matCellDef="let row"> {{row.creationDate |date:'M/d/yy'}} </td>
       </ng-container>
 
       <ng-container matColumnDef="acctions">

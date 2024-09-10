@@ -35,7 +35,7 @@ export class FarmaciasPage implements AfterViewInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:Farmacia[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['name', 'city', 'isDeleted', 'creationDate', 'acctions'];
+  displayedColumns: string[] = ['name', 'city', 'isDeleted', 'acctions'];
   dataSource = new MatTableDataSource<Farmacia>(this.ELEMENT_DATA);
 
   isLoadingResults:boolean = true;
@@ -58,7 +58,6 @@ export class FarmaciasPage implements AfterViewInit {
       this.dataSource.data = farmas.result as Farmacia[]
       this._farmaServ.listFarmacias = farmas.result
       this.isLoadingResults = false
-      console.log(this.dataSource.data)
     }, (err => {
       this.isLoadingResults = false
       console.log(err)
@@ -106,7 +105,7 @@ export class FarmaciasPage implements AfterViewInit {
       "cityId": row.cityId
     }
     let msgDialog:string
-    if(!row.isDeleted){
+    if(row.isActive){
       msgDialog = '¿Seguro de querer inhabilitar esta farmacia?'
     }else{
       msgDialog = '¿Seguro de querer habilitar esta farmacia?'
@@ -117,8 +116,8 @@ export class FarmaciasPage implements AfterViewInit {
     .afterClosed()
     .subscribe((confirmado:boolean)=>{
       if(confirmado){
-        row.isDeleted = !row.isDeleted
-        const res = this._farmaServ.updateFarmacia(formData, row.id, row.isDeleted)
+        row.isActive = !row.isActive
+        const res = this._farmaServ.updateFarmacia(formData, row.id, row.isActive)
           res?.subscribe(res => {
             if(res){
               this._farmaServ.notify('Farmacia actualizada', 'success')

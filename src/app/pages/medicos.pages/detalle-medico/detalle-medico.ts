@@ -66,7 +66,7 @@ export class DetalleMedico implements OnInit {
 
   save(){
     if(this.data.medicoId){
-      const peticion = this._medicServ.updateMedico(this.medicForm.value, this.data.medicoId, this.currentMedic.isDeleted)
+      const peticion = this._medicServ.updateMedico(this.medicForm.value, this.data.medicoId, this.currentMedic.isActive)
        peticion?.subscribe(() => {
         this._medicServ.notify('Médico actualizado', 'success')
         this.dialogo.close(true);

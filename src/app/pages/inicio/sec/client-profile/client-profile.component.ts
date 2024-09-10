@@ -1,9 +1,11 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms'
 
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { DataService } from 'src/app/services/data.service';
+import { ChangePasswordComponent } from '../change-password/change-password.component';
 
 @Component({
   selector: 'app-client-profile',
@@ -31,6 +33,8 @@ export class ClientProfileComponent implements OnInit {
     private _authServ:AuthService,
     private _usersServ:UsuariosService,
     public dialogo: MatDialogRef<ClientProfileComponent>,
+    private _dataServ:DataService,
+    private _dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: string) {
       if(this._usersServ.localRoles.length === 0){
         this._usersServ.getAllRoles()?.subscribe((res:any) => {
@@ -41,15 +45,13 @@ export class ClientProfileComponent implements OnInit {
 
   ngOnInit(): void {
     this.isLoadingResults = true
-    this._usersServ.getUserByID(this.data)
-      ?.subscribe((res:any) => {
-        console.log(res)
+    this._usersServ.getUserInfo(this.data)
+      ?.subscribe((res:any) => {        
         this.userData = res.result
         this.isLoadingResults = false
         this.initValues()
       }, (error:any) => {
         this.isLoadingResults = false
-        console.log(error)
         let msgError = error.error.messages
         this._usersServ.notify(`${msgError}`, 'error')
       })
@@ -57,15 +59,15 @@ export class ClientProfileComponent implements OnInit {
 
   initValues(){
     this.perfilForm.patchValue({
-      dni: this.userData.userEntity.userName,
-      name: this.userData.userEntity.name,
-      lastName: this.userData.userEntity.lastName,
-      email: this.userData.userEntity.email,
+      dni: this.userData.dni,
+      name: this.userData.name,
+      lastName: this.userData.lastName,
+      email: this.userData.email,
       role: this.userData.role,
-      bornDate: this.userData.userEntity.bornDate,
-      sex: this.userData.userEntity.sex,
-      phone: this.userData.userEntity.phoneNumber,
-      address: this.userData.userEntity.address
+      bornDate: this.userData.bornDate,
+      sex: this.userData.sex,
+      phone: this.userData.phone,
+      address: this.userData.address
     })
     this.perfilForm.disable()
   }
@@ -73,6 +75,14 @@ export class ClientProfileComponent implements OnInit {
   onEdit(){
     this.enabledEdit = true
     this.perfilForm.enable()
+  }
+
+  onChangePwd() {
+    this._dialog.closeAll();
+    const config:MatDialogConfig = {
+      data: this.data
+    }
+    this._dialog.open(ChangePasswordComponent, config);
   }
 
   cancelEdit(){
@@ -90,7 +100,7 @@ export class ClientProfileComponent implements OnInit {
     let {id, name} = this.selectRole(tempData.role)
     tempData.idRole = id
     tempData.role = name
-    const peticion = this._usersServ.UpdateUsuario(tempData, (chageState != undefined) ?chageState :this.userData.userEntity.state)
+    const peticion = this._usersServ.UpdateUsuario(tempData, (chageState != undefined) ?chageState :this.userData.state)
     peticion?.subscribe(()=>{
       this._usersServ.notify('Perfil actualizado', 'success')
       this._authServ.userData.UserName = this.perfilForm.get('name')?.value
