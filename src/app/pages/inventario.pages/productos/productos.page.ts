@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core'
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -10,6 +10,8 @@ import { InventarioService } from 'src/app/services/inventario.service';
 import { DataService } from 'src/app/services/data.service';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
+import { SharedService } from 'src/app/services/shared.service';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-productos',
@@ -17,7 +19,7 @@ import { ModalReportComponent } from 'src/app/components/modal-report/modal-repo
   styleUrls: ['./productos.page.scss'],
 })
 
-export class ProductosPage implements AfterViewInit {
+export class ProductosPage implements OnInit {
   public breadcrumb = {
     links: [
       {
@@ -35,35 +37,36 @@ export class ProductosPage implements AfterViewInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:Producto[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['name', 'cost', 'nameCategory', 'state', 'creationDate', 'acctions'];
+  displayedColumns: string[] = ['name', 'nameCategory', 'country', 'isActive', 'acctions'];
   dataSource = new MatTableDataSource<Producto>(this.ELEMENT_DATA);
 
   isLoadingResults:boolean = true;
 
   constructor(
-    private _liveAnnouncer: LiveAnnouncer,
-    private _dialog:MatDialog,
-    public _inveServ:InventarioService,
-    private _dataServ:DataService
+    private readonly _liveAnnouncer: LiveAnnouncer,
+    private readonly _dialog:MatDialog,
+    public readonly inveServ:InventarioService,
+    public readonly sharedService: SharedService,
+    public readonly apiService: ApiService,
+    private readonly _dataServ:DataService
   ){}
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void{
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort;
-    this.getAllProduct()
+    this.getProducts()
   }
 
-  getAllProduct(){
-    let resp = this._inveServ.getProductos()
-    resp?.subscribe((productos:any) => {
-      this.dataSource.data = productos.result as Producto[]
-      this._inveServ.listProducts = productos.result
-      this.isLoadingResults = false
-      console.log(this.dataSource.data)
-    }, (err => {
-      this.isLoadingResults = false
-      console.log(err)
-    }))
+  public async getProducts() {
+    try {
+      this.isLoadingResults = true;
+      await this.inveServ.setProducts();
+      this.dataSource.data = this.inveServ.getProducts();
+    } catch (err) {
+      this.sharedService.notify('Ocurrio un error consultando los productos.', 'error');
+    } finally {
+      this.isLoadingResults = false;
+    }
   }
 
   applyFilter(event: Event) {
@@ -87,19 +90,27 @@ export class ProductosPage implements AfterViewInit {
     this._dataServ.goTo(`admin/inventario/producto-detalle/${id}`)
   }
 
-  chageState(row:Producto){
-    const formData = {
-      "name": row.name,
-      "barcode": row.barcode,
-      "description": row.description,
-      "presentation": row.presentation,
-      "quantity": row.quantity,
-      "typeSell": row.typeSell,
-      "cost": row.cost,
-      "idCategory": row.idCategory
+  chageState(row:any){
+    this.isLoadingResults = true;
+    let product: any = {
+      name: row.name,
+      barcode: row.barcode,
+      description: row.description,
+      presentation: row.presentation,
+      quantity: row.quantity,
+      typeSell: row.typeSell,
+      cost: row.cost,
+      descuento: '',
+      urlOficial: '',
+      categoryId: row.category.id,
+      countryId : '1',
+      Ip: this.sharedService.userIP,
+      Device: this.sharedService.userDevice,
+      isActive : !row.isActive,
+      id: row.id
     }
     let msgDialog:string
-    if(row.state){
+    if(row.isActive){
       msgDialog = '¿Seguro de querer inhabilitar este producto?'
     }else{
       msgDialog = '¿Seguro de querer habilitar este producto?'
@@ -110,20 +121,21 @@ export class ProductosPage implements AfterViewInit {
     .afterClosed()
     .subscribe((confirmado:boolean)=>{
       if(confirmado){
-        row.state = !row.state
-        const res = this._inveServ.updateProd(formData, row.id, row.state)
-          res?.subscribe(res => {
-            if(res){
-              this._inveServ.notify('Producto actualizado', 'success')
-              this.isLoadingResults = true
-              this.getAllProduct()
-            }
-          }, (err => {
-            console.log(err)
-            this._inveServ.notify('Ocurrio un error con el proceso.', 'error')
-          }))
+        this.changeState(product)
       }
     })
+  }
+
+  private async changeState(product: any){
+    try {
+      await this.apiService.put('Product', product);
+      this.sharedService.notify('Producto actualizado', 'success');
+      this.getProducts();
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con la petición', 'error')
+    } finally {
+      this.isLoadingResults = false;
+    }
   }
 
   generateReport(){

@@ -9,17 +9,9 @@
       <div class="datos">
         <p>{{currentRegla?.productName}}</p>
         <div class="bots">
-          <span class="chip" [ngClass]="{'inactive': currentRegla?.state == false, 'active': currentRegla?.state == true}">Estado: {{currentRegla?.state ?'Activo' :'Inactivo'}}</span>
+          <span class="chip" [ngClass]="{'inactive': currentRegla?.isActive == false, 'active': currentRegla?.isActive == true}">Estado: {{currentRegla?.isActive ?'Activo' :'Inactivo'}}</span>
         </div>
       </div>
-    </section>
-    <section class="resumen">
-      <ul>
-        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentRegla?.createBy}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de creación: {{currentRegla?.creationDate |date: 'd/M/yy'}}</li>
-        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentRegla?.updateBy}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentRegla?.updateDate |date: 'd/M/yy'}}</li>
-      </ul>
     </section>
   </div>
 
@@ -49,8 +41,18 @@
         <mat-label>Producto</mat-label>
         <mat-select formControlName="productId" matTooltip="Producto asociado a la regla.">
           <div *ngFor="let prod of prods">
-            <mat-option *ngIf="prod.state" [value]="prod.id">
+            <mat-option *ngIf="prod.isActive" [value]="prod.id">
               {{prod.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" >
+        <mat-label>Pais</mat-label>
+        <mat-select formControlName="countryId">
+          <div *ngFor="let country of countries">
+            <mat-option *ngIf="country.isActive" [value]="country.id">
+              {{country.name}}
             </mat-option>
           </div>
         </mat-select>

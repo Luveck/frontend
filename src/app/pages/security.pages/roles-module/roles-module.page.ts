@@ -3,7 +3,9 @@ import { MatCheckboxChange } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
 import { Module, ModuleRole, Role, RoleModule } from 'src/app/interfaces/models';
+import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
+import { SharedService } from 'src/app/services/shared.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 
 @Component({
@@ -29,68 +31,75 @@ export class RolesModulePage implements OnInit{
 
   selected = '';
   isLoadingResults:boolean = true;
-  roles : Role[] = [];
-  modules : Module[] = [];
+  roles : any[] = [];
+  modules : any[] = [];
   modulesRole : RoleModule[] = [];
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:ModuleRole[];
   displayedColumns: string[] = ['name', 'access'];
   dataSource = new MatTableDataSource<ModuleRole>(this.ELEMENT_DATA);
 
   constructor(
-    private _dataServ:DataService,
-    public usuariosServ:UsuariosService,
-    private _dialog:MatDialog,
+    private readonly _dataServ:DataService,
+    private readonly _dialog:MatDialog,
+    private readonly usuariosServ:UsuariosService,
+    private readonly apiService: ApiService,
+    private readonly sharedService: SharedService,
   ){}
-  
+
   ngOnInit(): void {
     this.getAllRoles();
     this.getAllModules();
   }
 
-  getAllRoles() {
-    let resp = this.usuariosServ.getAllRoles()
-    resp?.subscribe(roles => {
-      this.roles = roles.result as Role[]
-      this.isLoadingResults = false
-    }, (err => {
-      this.isLoadingResults = false
-    }))
+  private async getAllRoles() {
+    try {
+      this.isLoadingResults = true;
+      await this.usuariosServ.setRoles();
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error realizando la consulta.', 'error')
+    } finally {
+      this.roles = this.usuariosServ.getRoles();
+      this.isLoadingResults = false;
+    }
   }
 
   onRoleSelected() {
     this.getAllModulesById(this.selected);
-    
   }
 
   modulesToLoad(): ModuleRole[] {
     const listModule: ModuleRole[] = [];
     this.modules.forEach( module => {
-      const foundItem = this.modulesRole.filter(x => x.idModule.toString() == module.id);
+      const foundItem = this.modulesRole.filter(x => x.moduleId.toString() == module.id);
       const selected = Object.keys(foundItem).length !== 0;
       listModule.push({ ...module, selected });
     })
     return listModule;
   }
 
-  getAllModulesById(id : string) {
-    let resp = this.usuariosServ.getModulesByRole(id)
-    resp?.subscribe(modules => {
-      this.modulesRole = modules.result as RoleModule[]
-      this.isLoadingResults = false
+  private async getAllModulesById(id : string) {
+    try {
+      this.modulesRole = await this.apiService.get(`ModuleRole/ByRole/${id}`)
       this.dataSource.data = this.modulesToLoad();
-    }, (err => {
+
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error realizando la consulta.', 'error')
+
+    } finally {
       this.isLoadingResults = false
-    }))
+    }
   }
 
-  getAllModules() {
-    let resp = this.usuariosServ.getAllModules()
-    resp?.subscribe(modules => {
-      this.modules = modules.result as Module[]
-      this.isLoadingResults = false
-    }, (err => {
-      this.isLoadingResults = false
-    }))
+  private async getAllModules() {
+    try {
+      this.isLoadingResults = true;
+      await this.usuariosServ.setModules();
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error realizando la consulta.', 'error')
+    } finally {
+      this.modules = this.usuariosServ.getModules();
+      this.isLoadingResults = false;
+    }
   }
 
   onUpdateAccess(){

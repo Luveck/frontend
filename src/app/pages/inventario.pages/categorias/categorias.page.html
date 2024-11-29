@@ -13,6 +13,12 @@
         Generar reporte
       </button>
     </div>
+
+    <mat-form-field appearance="standard">
+      <mat-icon matPrefix>search</mat-icon>
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Buscar por nombre" #input autocomplete="off">
+    </mat-form-field>
   </header>
 
   <div class="loading-shade" *ngIf="isLoadingResults">
@@ -20,7 +26,7 @@
   </div>
 
   <div class="catesCont">
-    <mat-card class="cat mat-elevation-z8" *ngFor="let cat of inveServ.categorias">
+    <mat-card class="cat mat-elevation-z8" *ngFor="let cat of categories">
       <div class="cat_body">
         <p><span>Nombre: </span>{{cat.name}}</p>
         <p><span>Estado: </span><span class="chip" [ngClass]="{'inactive': cat.isActive == false, 'active': cat.isActive == true}">{{cat.isActive ? 'Activo' : 'Inactivo'}}</span></p>

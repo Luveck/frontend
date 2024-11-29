@@ -12,4 +12,8 @@ export class ModalProdIniComponent {
     public dialogo: MatDialogRef<ModalProdIniComponent>,
     @Inject(MAT_DIALOG_DATA) public prodData: any
   ) { }
+
+  onClose(): void {
+    this.dialogo.close();
+  }
 }

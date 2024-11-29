@@ -9,7 +9,7 @@
       <div class="datos">
         <p>{{currentEspecialidad?.name}}</p>
         <div class="bots">
-          <span class="chip" [ngClass]="{'inactive': currentEspecialidad?.isDeleted == true, 'active': currentEspecialidad?.isDeleted == false}">Estado: {{currentEspecialidad?.isDeleted ?'Inactivo' :'Activo'}}</span>
+          <span class="chip" [ngClass]="{'inactive': currentEspecialidad?.isActive == true, 'active': currentEspecialidad?.isActive == false}">Estado: {{currentEspecialidad?.isActive ?'Inactivo' :'Activo'}}</span>
         </div>
       </div>
     </section>
@@ -19,7 +19,7 @@
     <div class="inputs">
     <mat-form-field appearance="outline">
       <mat-label>Nombre</mat-label>
-      <input matInput [(ngModel)]="name" placeholder="Nombre" autocomplete="off">
+      <input matInput [(ngModel)]="name" placeholder="Nombre" autocomplete="off" maxlength="30">
     </mat-form-field>
     </div>
   </div>

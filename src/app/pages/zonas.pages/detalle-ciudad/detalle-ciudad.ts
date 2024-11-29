@@ -4,6 +4,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms'
 
 import { Ciudad, Departamento } from 'src/app/interfaces/models'
 import { ZonasService } from 'src/app/services/zonas.service'
+import { ApiService } from 'src/app/services/api.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-detalle-ciudad',
@@ -22,7 +24,8 @@ export class DetalleCiudad implements OnInit {
   })
 
   constructor(
-    private _zonasServ:ZonasService,
+    private readonly sharedService: SharedService,
+    private readonly apiService: ApiService,
     public dialogo: MatDialogRef<DetalleCiudad>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){}
@@ -30,24 +33,33 @@ export class DetalleCiudad implements OnInit {
   ngOnInit(): void {
     if(this.data.ciudadId){
       this.isLoadingResults = true
-      const ciudad = this._zonasServ.getCiudadById(this.data.ciudadId)
-      ciudad?.subscribe(res => {
-        console.log(res)
-        this.currentCiudad = res.result
-        this.isLoadingResults = false
-        this.initValores()
-      }, (err => {
-        console.log(err)
-        this.isLoadingResults = false
-        this._zonasServ.notify('Ocurrio un error con la petición', 'error')
-      }))
+      this.getCity()
     }
-    this.departamentos = this._zonasServ.listDepartamentos
+    this.comboDepartment();
+  }
+
+  public async getCity() {
+    try {
+      this.currentCiudad = await this.apiService.get(`City/${this.data.ciudadId}`);
+      this.initValores();
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con la petición', 'error');
+    } finally {
+      this.isLoadingResults = false;
+    }
+  }
+
+
+  public async comboDepartment(){
+    if (this.sharedService.getDepartmentList().length == 0){
+      await this.sharedService.setDepartments();
+    }
+    this.departamentos = this.sharedService.getDepartmentList();
   }
 
   initValores(){
     this.ciudadForm.patchValue({
-      departymentId: this.currentCiudad.departymentId,
+      departymentId: this.currentCiudad.departmentId,
       name: this.currentCiudad.name,
     })
   }
@@ -57,24 +69,45 @@ export class DetalleCiudad implements OnInit {
   }
 
   save(){
+    let city: any = {
+      name: this.ciudadForm.value.name,
+      DepartmentId: this.ciudadForm.value.departymentId,
+    }
     if(this.data.ciudadId){
-      const peticion = this._zonasServ.updateCiudad(this.ciudadForm.value, this.data.ciudadId, this.currentCiudad.state)
-      peticion?.subscribe(() => {
-        this._zonasServ.notify('Registro actualizado', 'success')
-        this.dialogo.close(true);
-      }, (err => {
-        console.log(err)
-        this._zonasServ.notify('Ocurrio un error con el proceso', 'error')
-      }))
+      city = {
+        ...city,
+        id: this.currentCiudad.id,
+        isActive: this.currentCiudad.isActive,
+      }
+      this.updatedCity(city);
     }else{
-      const peticion = this._zonasServ.addCiudad(this.ciudadForm.value)
-      peticion?.subscribe(() => {
-        this._zonasServ.notify('Ciudad registrada', 'success')
-        this.dialogo.close(true);
-      }, (err => {
-        console.log(err)
-        this._zonasServ.notify('Ocurrio un error con el proceso', 'error')
-      }))
+      city = {
+        ...city,
+        isActive: true,
+      }
+      this.addCity(city);
+    }
+    this.dialogo.close(true);
+  }
+  public async addCity (city: any) {
+    try {
+      await this.apiService.post('City', city);
+      this.sharedService.notify('Ciudad registrada', 'success');
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con el proceso', 'error')
+    } finally {
+      this.isLoadingResults = false;
+    }
+  }
+
+  public async updatedCity (city: any) {
+    try {
+      await this.apiService.put('City', city);
+      this.sharedService.notify('Ciudad actualizada', 'success');
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con el proceso', 'error')
+    } finally {
+      this.isLoadingResults = false;
     }
   }
 }

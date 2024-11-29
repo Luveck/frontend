@@ -11,6 +11,8 @@ import { ComponentsModule } from 'src/app/components/components.module';
 
 import { VentasPage } from './ventas/ventas.page';
 import { DetalleVenta } from './detalle-ventas/detalle-venta';
+import { PharmacySearchComponent } from './pharmacy-search/pharmacy-search.component';
+import { FilesDirective } from './detalle-ventas/files.directive';
 
 const routes: Routes = [
   {
@@ -26,7 +28,9 @@ const routes: Routes = [
 @NgModule({
   declarations:[
     VentasPage,
-    DetalleVenta
+    DetalleVenta,
+    PharmacySearchComponent,
+    FilesDirective
   ],
   imports: [
     CommonModule,

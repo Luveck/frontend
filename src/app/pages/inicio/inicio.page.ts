@@ -69,7 +69,7 @@ export class InicioPage implements OnInit{
 
   showProfile(){
     const config:MatDialogConfig = {
-      data: this.authServ.userData.UserId
+      data: this.authServ.dataUser().UserId
     }
     this._dialog.open(ClientProfileComponent, config)
   }
@@ -82,8 +82,12 @@ export class InicioPage implements OnInit{
     .subscribe((confirmado: Boolean) => {
       if (confirmado) {
         this.SectionSelect = 'inicio'
-        this.authServ.logOut(this.authServ.userData.Role)
+        this.authServ.logOut(this.authServ.dataUser().Role)
       }
     })
+  }
+
+  onLogin(){
+    this.dataServ.goTo('/authentication/login')
   }
 }

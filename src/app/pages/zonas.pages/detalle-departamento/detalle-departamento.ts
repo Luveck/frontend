@@ -4,6 +4,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms'
 
 import { Departamento, Pais } from 'src/app/interfaces/models'
 import { ZonasService } from 'src/app/services/zonas.service'
+import { SharedService } from 'src/app/services/shared.service';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-detalle-departamento',
@@ -22,29 +24,35 @@ export class Detalledepartamento implements OnInit {
   })
 
   constructor(
-    private _zonasServ:ZonasService,
     public dialogo: MatDialogRef<Detalledepartamento>,
+    private sharedService: SharedService,
+    private apiService: ApiService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){}
 
   ngOnInit(): void {
     if(this.data.departamentoId){
-      this.isLoadingResults = true
-      const departamento = this._zonasServ.getDepartamentoById(this.data.departamentoId)
-      departamento?.subscribe(res => {
-        console.log(res)
-        this.currentDepartamento = res.result
-        this.isLoadingResults = false
-        this.initValores()
-      }, (err => {
-        console.log(err)
-        this.isLoadingResults = false
-        this._zonasServ.notify('Ocurrio un error con la petición', 'error')
-      }))
+      this.getDepartement();
     }
-    this.paises = this._zonasServ.listPaises
+    this.comboCountry();
   }
 
+  public async comboCountry(){
+    if (this.sharedService.getCountryList().length == 0){
+      await this.sharedService.setCountry();
+    }
+    this.paises = this.sharedService.getCountryList();
+  }
+  public async getDepartement(){
+    try {
+      this.currentDepartamento = await this.apiService.get(`Department/${this.data.departamentoId}`);
+      this.initValores();
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con la petición', 'error');
+    } finally {
+      this.isLoadingResults = false;
+    }
+  }
   initValores(){
     this.departamentoForm.patchValue({
       idCountry: this.currentDepartamento.countryId,
@@ -57,24 +65,48 @@ export class Detalledepartamento implements OnInit {
   }
 
   save(){
+    let department: any = {
+      countryId: this.departamentoForm.value.idCountry,
+      name: this.departamentoForm.value.name,
+      Ip: this.sharedService.userIP,
+      Device: this.sharedService.userDevice,
+    }
     if(this.data.departamentoId){
-      const peticion = this._zonasServ.updateDepartamento(this.departamentoForm.value, this.data.departamentoId, this.currentDepartamento.status)
-      peticion?.subscribe(() => {
-        this._zonasServ.notify('Registro actualizado', 'success')
-        this.dialogo.close(true);
-      }, (err => {
-        console.log(err)
-        this._zonasServ.notify('Ocurrio un error con el proceso', 'error')
-      }))
+      department = {
+        ...department,
+        id: this.data.departamentoId,
+        isActive: this.currentDepartamento.isActive
+      }
+      this.updatedDepartment(department);
     }else{
-      const peticion = this._zonasServ.addDepartamento(this.departamentoForm.value)
-      peticion?.subscribe(() => {
-        this._zonasServ.notify('Departamento registrado', 'success')
-        this.dialogo.close(true);
-      }, (err => {
-        console.log(err)
-        this._zonasServ.notify('Ocurrio un error con el proceso', 'error')
-      }))
+      department = {
+        ...department,
+        isActive: true,
+      }
+      this.addDepartment(department);
+    }
+    this.dialogo.close(true);
+  }
+
+  public async addDepartment (department: any) {
+    try {
+      await this.apiService.post('Department', department);
+      this.sharedService.notify('Departamento registrado', 'success');
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con el proceso', 'error')
+    } finally {
+      this.isLoadingResults = false;
+    }
+  }
+
+  public async updatedDepartment (department: any) {
+    try {
+      await this.apiService.put('Department', department);
+      this.sharedService.notify('Departamento actualizado', 'success');
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con el proceso', 'error')
+    } finally {
+      this.isLoadingResults = false;
     }
   }
 }

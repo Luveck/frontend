@@ -20,6 +20,7 @@ export class ZonasService{
     private _dataServ:DataService,
     private sharedService: SharedService
   ) {
+    this._authServ.getCurrentUser();
     this.headers = {'Authorization':`Bearer ${this._authServ.userToken}`}
   }
 
@@ -168,7 +169,6 @@ export class ZonasService{
       "ip": this.sharedService.userIP,
       "device": this.sharedService.userDevice
     }
-    console.log(dataCiudad)
     return this._http.post(`${this._dataServ.baseURL}/Administration/CreateCity`, dataCiudad, {
       headers: this.headers
     })
@@ -186,9 +186,14 @@ export class ZonasService{
       "ip": this.sharedService.userIP,
       "device": this.sharedService.userDevice
     }
-    console.log(dataCiudad)
     return this._http.post(`${this._dataServ.baseURL}/Administration/UpdateCity`, dataCiudad, {
       headers: this.headers
     })
+  }
+
+  getAll(){
+    this.getCiudades();
+    this.getDepartamentos();
+    this.getPaises();
   }
 }

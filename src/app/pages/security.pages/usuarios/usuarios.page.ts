@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core'
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -8,57 +8,72 @@ import { MatTableDataSource } from '@angular/material/table';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { DetalleUsuario } from '../detalle-usuario/detalle-usuario';
 import { RolesPage } from '../roles/roles.page';
+import { SharedService } from 'src/app/services/shared.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { UserRoles } from 'src/app/shared/enums/roles.enum';
+import { FarmaciasService } from 'src/app/services/farmacias.service';
 
 @Component({
   selector: 'app-usuarios',
   templateUrl: './usuarios.page.html',
   styleUrls: ['./usuarios.page.scss'],
 })
-
-export class UsuariosPage implements AfterViewInit {
+export class UsuariosPage implements OnInit {
   public breadcrumb = {
     links: [
       {
         name: 'Inicio',
         isLink: true,
-        link: '/admin/home'
+        link: '/admin/home',
       },
       {
         name: 'Gestión de usuarios',
         isLink: false,
-      }
-    ]
-  }
+      },
+    ],
+  };
 
-  @Input('ELEMENT_DATA')  ELEMENT_DATA!:any[];
-  @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['dni', 'name', 'state', 'acctions'];
+  @Input('ELEMENT_DATA') ELEMENT_DATA!: any[];
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort | null;
+  displayedColumns: string[] = ['dni', 'name', 'role', 'state', 'acctions'];
   dataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
 
-  isLoadingResults:boolean = true;
+  isLoadingResults: boolean = true;
 
   constructor(
-    private _liveAnnouncer: LiveAnnouncer,
-    private _dialog: MatDialog,
-    private _usuariosServ:UsuariosService
-  ){}
+    private readonly _liveAnnouncer: LiveAnnouncer,
+    private readonly _dialog: MatDialog,
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator
+    private readonly usuariosServ: UsuariosService,
+    private readonly sharedService: SharedService,
+    private readonly authService: AuthService,
+    private readonly pharmacyService : FarmaciasService
+  ) {}
+  ngOnInit(): void {
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.getAllUsers()
+    this.getUsers();
   }
 
-  getAllUsers(){
-    this._usuariosServ.getUsers()?.subscribe((res:any) => {
-      console.log(res)
-      this.dataSource.data = res.result as any[]
-      this.isLoadingResults = false
-    }, (err => {
-      this.isLoadingResults = false
-      console.log(err)
-    }))
+  private async getUsers() {
+    try {
+      await this.usuariosServ.setUsers();
+    } catch (error) {
+      this.sharedService.notify(
+        'Se presento un error consultando la informacion',
+        'error'
+      );
+    } finally {
+      this.isLoadingResults = false;
+      if (this.authService.dataUser().Role !== UserRoles.Admin) {
+        this.dataSource.data = this.usuariosServ.getUsersList().filter((x) => {
+          x.roles.includes(UserRoles.Cliente)
+        });
+      } else {
+        this.dataSource.data = this.usuariosServ.getUsersList();
+      }
+    }
   }
 
   applyFilter(event: Event) {
@@ -78,29 +93,31 @@ export class UsuariosPage implements AfterViewInit {
     }
   }
 
-  on(dni?:string){
+  on(dni?: string) {
     const config = {
       data: {
-        title: dni ?'Editar Usuario' :'Agregar Usuario',
-        userDni: dni
-      }
-    }
-    this._dialog.open(DetalleUsuario, config)
-    .afterClosed()
-    .subscribe((confirmado:boolean) => {
-      if(confirmado){
-        this.isLoadingResults = true
-        this.getAllUsers()
-      }
-    })
+        title: dni ? 'Editar Usuario' : 'Agregar Usuario',
+        userDni: dni,
+      },
+    };
+    this._dialog
+      .open(DetalleUsuario, config)
+      .afterClosed()
+      .subscribe((confirmado: boolean) => {
+        if (confirmado) {
+          this.isLoadingResults = true;
+          this.getUsers();
+        }
+      });
   }
 
-  onModalRoles(){
-    this._dialog.open(RolesPage)
-    .afterClosed()
-    .subscribe(() => {
-      this.isLoadingResults = true
-      this.getAllUsers()
-    })
+  onModalRoles() {
+    this._dialog
+      .open(RolesPage)
+      .afterClosed()
+      .subscribe(() => {
+        this.isLoadingResults = true;
+        this.getUsers();
+      });
   }
 }

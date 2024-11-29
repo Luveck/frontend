@@ -33,7 +33,12 @@
 
       <ng-container matColumnDef="city">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Ciudad </th>
-        <td mat-cell *matCellDef="let row"> {{row.city}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.city.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="chain">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Cadena </th>
+        <td mat-cell *matCellDef="let row"> {{row.chain.name}} </td>
       </ng-container>
 
       <ng-container matColumnDef="isDeleted">

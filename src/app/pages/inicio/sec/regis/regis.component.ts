@@ -16,13 +16,13 @@ export class RegisComponent {
   resetEmailSendMsg:string = ''
 
   public loginForm = new FormGroup({
-    dni : new FormControl('', [Validators.required, Validators.pattern('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$'), Validators.minLength(13)]),
+    dni : new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9]+$'), Validators.minLength(2)]),
     password : new FormControl('', [Validators.required]),
     remember: new FormControl(false, [Validators.required])
   })
 
   public registerForm = new FormGroup({
-    dni : new FormControl('', [Validators.required, Validators.pattern('^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-s./0-9]*$'), Validators.minLength(13)]),
+    dni : new FormControl('', [Validators.required, Validators.pattern('^[a-zA-Z0-9]+$'), Validators.minLength(2)]),
     email: new FormControl('', [Validators.required, Validators.email, Validators.pattern(
       '[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,63}$',
     ),]),
@@ -68,20 +68,18 @@ export class RegisComponent {
       this.dataServ.progress = true
       this.authServ.login(formData)
         .then((res:any) => {
-          console.log(res)
           this.dataServ.progress = false
           this.authServ.userToken = res.result.token
-          if(formData.remember){
-            localStorage.setItem('LuveckUserToken', this.authServ.userToken)
-          }
+          this.authServ.setPermissions(res.result.moduleRoleResponse);
+          localStorage.setItem('LuveckUserToken', this.authServ.userToken);
+
           this.authServ.decodeToken(this.authServ.userToken, res.result.changePass)
           this.sectionEvent.emit('inicio')
         })
         .catch ((error:any)=>{
           this.dataServ.progress = false
-          console.log(error)
           let msgError = error.error.messages
-          msgError === 'Usuario bloqueado por intentos no validos.' || 'El usuario se encuentra inactivo.'
+          msgError === 'Usuario bloqueado por intentos no validos. Por favor restablecer la contraseña.' || 'El usuario se encuentra inactivo. Por favor contactarse con soporte'
             ?this.dataServ.fir(`${msgError}`, 'error')
             :this.dataServ.fir(`DNI o contraseña del usuario no válidos.`, 'error')
         })
@@ -92,10 +90,12 @@ export class RegisComponent {
     if(!this.dataServ.progress){
       this.dataServ.progress = true
       this.authServ.register(formData)
-        .then((res:any) => {          
+        .then((res:any) => {
           this.dataServ.progress = false
           this.authServ.userToken = res.token
-          localStorage.setItem('LuveckUserToken', this.authServ.userToken)
+          this.authServ.setPermissions(res.result.moduleRoleResponse);
+          localStorage.setItem('LuveckUserToken', this.authServ.userToken);
+
           this.authServ.decodeToken(this.authServ.userToken)
           this.sectionEvent.emit('inicio')
         })

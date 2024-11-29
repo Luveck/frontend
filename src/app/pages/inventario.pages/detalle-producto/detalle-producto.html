@@ -11,17 +11,32 @@
       <div class="datos">
         <p>{{currentProd?.name}}</p>
         <div class="bots">
-          <span class="chip" [ngClass]="{'active': currentProd?.state == true, 'inactive': currentProd?.state == false}">Estado: {{currentProd?.state ?'Activo' :'Inactivo'}}</span>
+          <span
+            class="chip"
+            [ngClass]="{'active': currentProd?.isActive == true, 'inactive': currentProd?.isActive == false}"
+            >Estado: {{currentProd?.isActive ?'Activo' :'Inactivo'}}</span
+          >
         </div>
       </div>
     </section>
     <section class="resumen">
-      <ul>
-        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentProd?.createBy}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de creación: {{currentProd?.creationDate |date: 'd/M/yy'}}</li>
-        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentProd?.updateBy}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentProd?.updateDate |date: 'd/M/yy'}}</li>
-      </ul>
+      <div class="listImgs" *ngIf="currentProdId != 'new';  else noImgs">
+        <div class="imgItem" *ngIf="currentProd?.productImages.length>0">
+          <img
+            [src]="currentProd?.productImages[0].image"
+            alt=""
+            style="width: 220px; height: 220px"
+          />
+        </div>
+      </div>
+      <ng-template #noImgs>
+        <div>
+          <img
+            src="assets/images/medicine.jpg"
+            alt=""
+            style="width: 220px; height: 220px"
+          /></div
+      ></ng-template>
     </section>
   </div>
 
@@ -29,31 +44,64 @@
     <div class="inputs">
       <mat-form-field appearance="fill">
         <mat-label>Nombre</mat-label>
-        <input matInput placeholder="Nombre" formControlName="name" matTooltip="Nombre del producto">
+        <input
+          matInput
+          placeholder="Nombre"
+          formControlName="name"
+          matTooltip="Nombre del producto"
+        />
       </mat-form-field>
       <mat-form-field appearance="fill" class="barCode">
         <mat-label>Código de barras</mat-label>
-        <input matInput placeholder="Código de barras" formControlName="barcode" matTooltip="Código de barras">
+        <input
+          matInput
+          placeholder="Código de barras"
+          formControlName="barcode"
+          matTooltip="Código de barras"
+        />
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Presentación</mat-label>
-        <input matInput placeholder="Presentación" formControlName="presentation" matTooltip="Tipo de Presentación, Ej: Caja">
+        <input
+          matInput
+          placeholder="Presentación"
+          formControlName="presentation"
+          matTooltip="Tipo de Presentación, Ej: Caja"
+        />
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Cantidad</mat-label>
-        <input matInput formControlName="quantity" matTooltip="Cantidad contenida. Ej: 10 cartones">
+        <input
+          matInput
+          formControlName="quantity"
+          matTooltip="Cantidad contenida. Ej: 10 cartones"
+        />
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Tipo de venta</mat-label>
-        <input matInput placeholder="Tipo venta" formControlName="typeSell" matTooltip="Tipo de venta, Ej: Unidad">
+        <input
+          matInput
+          placeholder="Tipo venta"
+          formControlName="typeSell"
+          matTooltip="Tipo de venta, Ej: Unidad"
+        />
       </mat-form-field>
       <mat-form-field appearance="fill">
-        <mat-label>Costo</mat-label>
-        <input matInput type="number" formControlName="cost" matTooltip="Costo del producto">
+        <mat-label>Pais</mat-label>
+        <mat-select formControlName="countryId">
+          <div *ngFor="let country of countries">
+            <mat-option *ngIf="country.isActive" [value]="country.id">
+              {{country.name}}
+            </mat-option>
+          </div>
+        </mat-select>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Categoría</mat-label>
-        <mat-select formControlName="idCategory" matTooltip="Categoría a la que pertenece">
+        <mat-select
+          formControlName="idCategory"
+          matTooltip="Categoría a la que pertenece"
+        >
           <div *ngFor="let cat of cats">
             <mat-option *ngIf="cat.isActive" [value]="cat.id">
               {{cat.name}}
@@ -63,13 +111,28 @@
       </mat-form-field>
       <mat-form-field appearance="fill" class="area">
         <mat-label>Descripción del producto</mat-label>
-        <textarea matInput placeholder="Descripción del producto" formControlName="description" rows="2" matTooltip="Descripción general del producto"></textarea>
+        <textarea
+          matInput
+          placeholder="Descripción del producto"
+          formControlName="description"
+          rows="2"
+          matTooltip="Descripción general del producto"
+        ></textarea>
       </mat-form-field>
     </div>
 
     <div class="container-btn">
-      <button mat-raised-button color="primary" [disabled]="prodForm.invalid" (click)="save()">Guardar Producto<mat-icon>save</mat-icon></button>
-      <button mat-raised-button color="warn" (click)="resetForm()">Limpiar formulario</button>
+      <button
+        mat-raised-button
+        color="primary"
+        [disabled]="prodForm.invalid"
+        (click)="save()"
+      >
+        Guardar Producto<mat-icon>save</mat-icon>
+      </button>
+      <button mat-raised-button color="warn" (click)="resetForm()">
+        Limpiar formulario
+      </button>
     </div>
   </form>
 
@@ -86,11 +149,17 @@
           [files]="files"
           (mouseOver)="isOverDrop = $event"
           [ngClass]="{'file-over': isOverDrop}"
-          class="drop-zone">
+          class="drop-zone"
+        >
           <label class="custon-file">
             <h4>Arrastre y suelte aquí las imágenes</h4>
             <mat-icon>cloud_upload</mat-icon>
-            <input type="file" accept="image/*" multiple (change)="onSelectFile($event)">
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              (change)="onSelectFile($event)"
+            />
           </label>
         </div>
       </mat-card-content>
@@ -122,18 +191,22 @@
         </table>
       </mat-card-content>
       <mat-card-actions *ngIf="files.length > 0">
-        <button mat-raised-button color="primary" (click)="saveImages()">Guardar Imágenes</button>
-        <button mat-raised-button color="warn" (click)="files = []">Limpiar imágenes</button>
+        <button mat-raised-button color="primary" (click)="saveImages()">
+          Guardar Imágenes
+        </button>
+        <button mat-raised-button color="warn" (click)="files = []">
+          Limpiar imágenes
+        </button>
       </mat-card-actions>
     </mat-card>
   </div>
 
   <div class="listImgs" *ngIf="currentProdId != 'new'">
-    <div class="imgItem" *ngFor="let img of currentProd?.urlImgs ; index as i">
-      <button mat-mini-fab color="warn" (click)="deleteOneFile(img.imgName, i)">
+    <div class="imgItem" *ngFor="let img of currentProd?.productImages ; index as i">
+      <button mat-mini-fab color="warn" (click)="deleteOneFile(img.image, i)">
         <mat-icon>delete</mat-icon>
       </button>
-      <img [src]="img.url" alt="">
+      <img [src]="img.image" alt="" style="width: 220px; height: 220px" />
     </div>
   </div>
 </main>

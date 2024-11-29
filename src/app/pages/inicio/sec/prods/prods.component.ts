@@ -17,11 +17,11 @@ export class ProdsComponent implements OnInit {
   constructor(private _dialog: MatDialog, public rulesServ:RulesService) { }
 
   ngOnInit(): void {
-    const peticion = this.rulesServ.getProdConRules()
-    peticion.subscribe((res:any) => {
-      console.log(res)
-      this.prodsCanje = res.result
-    })
+    // const peticion = this.rulesServ.getProdConRules()
+    // peticion.subscribe((res:any) => {
+    //   console.log(res)
+    //   this.prodsCanje = res.result
+    // })
   }
 
   openModalProd(prod:any){

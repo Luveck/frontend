@@ -6,7 +6,7 @@
       <mat-label>Role</mat-label>
       <mat-select (selectionChange)="onRoleSelected()" [(value)]="selected">
         <div *ngFor="let role of roles">
-          <mat-option *ngIf="role.state" [value]="role.id">
+          <mat-option [value]="role.id">
             {{role.name}}
           </mat-option>
         </div>

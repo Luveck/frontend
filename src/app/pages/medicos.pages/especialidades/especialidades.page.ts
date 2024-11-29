@@ -6,6 +6,8 @@ import { DetalleEspacialidad } from '../detalle-especialidad/detalle-espacialida
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { Especialidad } from 'src/app/interfaces/models';
 import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
+import { ApiService } from 'src/app/services/api.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-especialidades',
@@ -29,26 +31,32 @@ export class EspecialidadesPage implements OnInit {
   }
 
   isLoadingResults:boolean = true;
+  filteredEspecialidad: Especialidad[] = [];
+  public specialtyList: any[] = [];
+
 
   constructor(
     private _dialog:MatDialog,
-    public medicServ:MedicosService
+    public medicServ:MedicosService,
+    public sharedService: SharedService,
+    public apiService: ApiService
   ){}
 
   ngOnInit(): void {
-    this.getAllEspecials()
+    this.getSpecialties()
   }
 
-  getAllEspecials(){
-    const catsAll = this.medicServ.getEspecialidades()
-    catsAll?.subscribe(res => {
-      this.isLoadingResults = false
-      this.medicServ.especialidades = res.result
-      console.log(this.medicServ.especialidades)
-    }, (err => {
-      this.isLoadingResults = false
-      console.log(err)
-    }))
+  public async getSpecialties(){
+    try {
+      this.isLoadingResults = true;
+      await this.medicServ.setSpecialties();
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con el proceso.', 'error');
+    } finally {
+      this.isLoadingResults = false;
+      this.filteredEspecialidad = this.medicServ.getSpecialties();
+      this.specialtyList = this.medicServ.getSpecialties();
+    }
   }
 
   on(id?:number){
@@ -63,7 +71,7 @@ export class EspecialidadesPage implements OnInit {
     .subscribe((confirm:boolean) => {
       if(confirm){
         this.isLoadingResults = true
-        this.getAllEspecials()
+        this.getSpecialties()
       }
     })
   }
@@ -81,30 +89,44 @@ export class EspecialidadesPage implements OnInit {
     .afterClosed()
     .subscribe((confirmado:boolean)=>{
       if(confirmado){
-        row.isActive = !row.isActive
-        const res = this.medicServ.updateEspecial(row.name, row.id, row.isActive)
-          res?.subscribe(res => {
-            if(res){
-              this.medicServ.notify('Especilidad actualizada', 'success')
-              this.isLoadingResults = true
-              this.getAllEspecials()
-            }
-          }, (err => {
-            console.log(err)
-            this.getAllEspecials()
-            this.medicServ.notify('Ocurrio un error con el proceso.', 'error')
-          }))
+        const specialty = {
+          id: row.id,
+          name: row.name,
+          isActive:!row.isActive,
+          Ip: this.sharedService.userIP,
+          Device: this.sharedService.userDevice,
+        }
+        this.updateStatus(specialty);
       }
     })
   }
-
+  public async updateStatus(specialty: any) {
+    try {
+      this.isLoadingResults = true;
+      await this.apiService.put('Discipline', specialty);
+      this.sharedService.notify('Especialidad actualizada', 'success');
+      this.getSpecialties();
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con el proceso.', 'error');
+    } finally {
+      this.isLoadingResults = false;
+    }
+  }
   generateReport(){
     this._dialog.open(ModalReportComponent, {
       disableClose: true,
       data: {
         'title': 'Reporte General de Especialidades Médicas',
-        'body': this.medicServ.especialidades
+        'body': this.specialtyList
       }
     })
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.toLowerCase().trim();
+
+    this.specialtyList= this.filteredEspecialidad.filter(x =>
+      x.name.toLowerCase().includes(filterValue)
+    );
   }
 }

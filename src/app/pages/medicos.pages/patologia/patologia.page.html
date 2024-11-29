@@ -1,0 +1,51 @@
+<main>
+  <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
+
+  <header>
+    <div>
+      <button mat-raised-button color="primary" (click)="on()">
+        <mat-icon>add</mat-icon>
+        Agregar Patología
+      </button>
+      &nbsp;
+      <button mat-raised-button color="primary" (click)="generateReport()">
+        <mat-icon>task</mat-icon>
+        Generar reporte
+      </button>
+    </div>
+  </header>
+
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+
+  <div class="catesCont">
+    <mat-card
+      class="cat mat-elevation-z8"
+      *ngFor="let patology of patologyList"
+    >
+      <div class="cat_body">
+        <p><span>Nombre: </span>{{patology.name}}</p>
+        <p>
+          <span>Estado: </span
+          ><span
+            class="chip"
+            [ngClass]="{'inactive': !patology.isActive == true, 'active': !patology.isActive == false}"
+            >{{ patology.isActive ?'Activa' : 'Inactiva'}}</span
+          >
+        </p>
+      </div>
+      <div class="cat_actions">
+        <button mat-stroked-button (click)="on(patology.id)">
+          Ver detalles
+          <mat-icon color="accent">arrow_forward</mat-icon>
+        </button>
+
+        <button mat-stroked-button (click)="chageState(patology)">
+          Cambiar estado
+          <mat-icon color="warn">published_with_changes</mat-icon>
+        </button>
+      </div>
+    </mat-card>
+  </div>
+</main>

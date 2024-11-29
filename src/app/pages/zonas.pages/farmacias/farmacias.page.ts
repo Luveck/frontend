@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core'
+import { Component, Input, OnInit, ViewChild } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -10,6 +10,8 @@ import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { DetalleFarmacia } from '../detalle-farmacia/detalle-farmacia';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
+import { SharedService } from 'src/app/services/shared.service';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-farmacias',
@@ -17,7 +19,7 @@ import { ModalReportComponent } from 'src/app/components/modal-report/modal-repo
   styleUrls: ['./farmacias.page.scss'],
 })
 
-export class FarmaciasPage implements AfterViewInit {
+export class FarmaciasPage implements OnInit {
   public breadcrumb = {
     links: [
       {
@@ -35,33 +37,33 @@ export class FarmaciasPage implements AfterViewInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:Farmacia[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['name', 'city', 'isDeleted', 'acctions'];
+  displayedColumns: string[] = ['name', 'city','chain', 'isDeleted', 'acctions'];
   dataSource = new MatTableDataSource<Farmacia>(this.ELEMENT_DATA);
 
   isLoadingResults:boolean = true;
 
   constructor(
-    private _liveAnnouncer: LiveAnnouncer,
-    private _dialog: MatDialog,
-    private _farmaServ:FarmaciasService
+    private readonly _liveAnnouncer: LiveAnnouncer,
+    private readonly _dialog: MatDialog,
+    private readonly farmaServ:FarmaciasService,
+    private readonly sharedService: SharedService,
+    private readonly apiService: ApiService,
   ){}
-
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort;
-    this.getAllFarmacias()
+    this.getPharmacies()
   }
 
-  getAllFarmacias(){
-    const resp = this._farmaServ.getFarmacias()
-    resp?.subscribe(farmas => {
-      this.dataSource.data = farmas.result as Farmacia[]
-      this._farmaServ.listFarmacias = farmas.result
-      this.isLoadingResults = false
-    }, (err => {
-      this.isLoadingResults = false
-      console.log(err)
-    }))
+  private async getPharmacies() {
+    try {
+      await this.farmaServ.setPharmacies();
+    } catch (error) {
+      this.sharedService.notify('Se presento un error consultando la información', 'error');
+    } finally {
+      this.dataSource.data = this.farmaServ.getPharmacies();
+      this.isLoadingResults = false;
+    }
   }
 
   applyFilter(event: Event) {
@@ -93,17 +95,21 @@ export class FarmaciasPage implements AfterViewInit {
     .subscribe((confirm:boolean) => {
       if(confirm){
         this.isLoadingResults = true
-        this.getAllFarmacias()
+        this.getPharmacies()
       }
     })
   }
 
-  chageState(row:Farmacia){
-    const formData = {
-      "name": row.name,
-      "adress": row.adress,
-      "cityId": row.cityId
+  chageState(row:any){
+    let pharmacy = {
+      id: row.id,
+      name: row.name,
+      adress: row.adress,
+      isActive: !row.isActive,
+      cityId: row.cityId,
+      chainId: row.chainId
     }
+    pharmacy = this.sharedService.addIpDevice(pharmacy);
     let msgDialog:string
     if(row.isActive){
       msgDialog = '¿Seguro de querer inhabilitar esta farmacia?'
@@ -116,21 +122,22 @@ export class FarmaciasPage implements AfterViewInit {
     .afterClosed()
     .subscribe((confirmado:boolean)=>{
       if(confirmado){
-        row.isActive = !row.isActive
-        const res = this._farmaServ.updateFarmacia(formData, row.id, row.isActive)
-          res?.subscribe(res => {
-            if(res){
-              this._farmaServ.notify('Farmacia actualizada', 'success')
-              this.isLoadingResults = true
-              this.getAllFarmacias()
-            }
-          }, (err => {
-            console.log(err)
-            this.getAllFarmacias()
-            this._farmaServ.notify('Ocurrio un error con el proceso.', 'error')
-          }))
+        this.updatePharmacy(pharmacy);
       }
     })
+  }
+
+  private async updatePharmacy( pharmacy: any ) {
+    try {
+      this.isLoadingResults = true;
+      await this.apiService.put('Pharmacy', pharmacy);
+      this.sharedService.notify('Farmacia actualizada', 'success');
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con el proceso.', 'error');
+    } finally {
+      this.isLoadingResults = false;
+      this.getPharmacies();
+    }
   }
 
   generateReport() {

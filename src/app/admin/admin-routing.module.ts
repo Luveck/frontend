@@ -8,6 +8,10 @@ const routes: Routes = [
     component: AdminPage,
     children: [
       {
+        path: 'panelControl',
+        loadChildren: () => import('../pages/panel-control/panel-control.module').then( m => m.PanelControlPageModule)
+      },
+      {
         path: 'home',
         loadChildren: () => import('../pages/home/home.module').then( m => m.HomePageModule)
       },

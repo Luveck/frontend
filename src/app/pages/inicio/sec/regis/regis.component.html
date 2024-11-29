@@ -1,5 +1,5 @@
 <section class="registro">
-  <h1>Registrarme para obtener canjes</h1>
+  <h1>Iniciar sesión para obtener canjes</h1>
   <p>Inscríbete a través de este formulario para ser parte del proyecto "Pasión por Vivir".</p>
 
   <div class="regis_content">
@@ -8,7 +8,7 @@
       <form [formGroup]="loginForm" autocomplete="off" *ngIf="typeForm == 'login'">
         <mat-form-field appearance="outline">
           <mat-label>DNI</mat-label>
-          <input matInput placeholder="DNI de usuario" formControlName="dni" maxlength="13">
+          <input matInput placeholder="DNI de usuario" formControlName="dni" maxlength="20">
           <mat-icon matPrefix>person</mat-icon>
           <mat-error
             *ngIf="loginForm.get('dni')?.invalid && (loginForm.get('dni')?.dirty || loginForm.get('dni')?.touched) && loginForm.get('dni')?.errors?.['required']">
@@ -18,7 +18,7 @@
             DNI invalido
           </mat-error>
           <mat-error *ngIf="loginForm.get('dni')?.errors?.['minlength']">
-            DNI debe tener minimo 13 digitos.
+            DNI debe tener minimo 2 caracteres.
           </mat-error>
         </mat-form-field>
 
@@ -48,7 +48,7 @@
       <form [formGroup]="registerForm" autocomplete="off" *ngIf="typeForm == 'register'">
         <mat-form-field appearance="outline">
           <mat-label>DNI</mat-label>
-          <input matInput placeholder="DNI de usuario" formControlName="dni" maxlength="13">
+          <input matInput placeholder="DNI de usuario" formControlName="dni" maxlength="20">
           <mat-error
             *ngIf="registerForm.get('dni')?.invalid && (registerForm.get('dni')?.dirty || registerForm.get('dni')?.touched) && registerForm.get('dni')?.errors?.['required']">
             DNI requerido
@@ -57,7 +57,7 @@
             DNI invalido
           </mat-error>
           <mat-error *ngIf="registerForm.get('dni')?.errors?.['minlength']">
-            DNI debe tener minimo 13 digitos.
+            DNI debe tener minimo 2 digitos.
           </mat-error>
         </mat-form-field>
 

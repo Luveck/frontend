@@ -2,7 +2,9 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { Role } from 'src/app/interfaces/models';
+import { ApiService } from 'src/app/services/api.service';
 import { MedicosService } from 'src/app/services/medicos.service';
+import { SharedService } from 'src/app/services/shared.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 
 @Component({
@@ -19,48 +21,57 @@ export class DetalleRole implements OnInit {
   constructor(
     public usuariosServ:UsuariosService,
     public dialogo: MatDialogRef<DetalleRole>,
+    private readonly apiService: ApiService,
+    private readonly sharedService: SharedService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
   ngOnInit(): void {
     if(this.data.roleId){
+      this.getRole();
+    }
+  }
+
+  private async getRole() {
+    try {
       this.isLoadingResults = true
-      const especial = this.usuariosServ.getRole(this.data.roleId)
-      especial?.subscribe(res => {
-        this.role = res.result
-        this.isLoadingResults = false
-        this.name = this.role.name
-        console.log(this.role)
-      },(err => {
-        this.isLoadingResults = false
-        this.usuariosServ.notify('Ocurrio un error', 'error')
-      }))
+      this.role = await this.apiService.get(`Role?id=${this.data.roleId}`);
+      this.name = this.role.name;
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error', 'error');
+    } finally {
+      this.isLoadingResults = false;
     }
   }
 
   save(){
     if(this.data.roleId){
-      const peticion = this.usuariosServ.updateRole(this.name, this.data.roleId, this.role.state)
-      peticion?.subscribe(res => {
-        if(res){
-          this.usuariosServ.notify('Role actualizado', 'success')
-          this.dialogo.close(true)
-        }
-      }, (err => {
-        console.log(err)
-        this.usuariosServ.notify('Ocurrio un error', 'error')
-      }))
+      this.updateRole(this.name, this.data.roleId);
     }else{
-      const peticion = this.usuariosServ.createRole(this.name)
-      peticion?.subscribe(res => {
-        if(res){
-          this.usuariosServ.notify('Role registrado', 'success')
-          this.dialogo.close(true)
-        }
-      }, (err => {
-        console.log(err)
-        this.usuariosServ.notify('Ocurrio un error', 'error')
-      }))
+      this.addRole(this.name);
+    }
+    this.dialogo.close(true);
+  }
+
+  private async addRole(role: string){
+    try {
+      await this.apiService.post(`Role?name=${role}`,{});
+      this.sharedService.notify('Role registrado', 'success');
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error', 'error')
+    } finally {
+      this.isLoadingResults = false;
+    }
+  }
+
+  private async updateRole(role: string, id: string){
+    try {
+      await this.apiService.put(`Role?id=${id}&name=${role}`,{});
+      this.sharedService.notify('Role actualizado', 'success');
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error', 'error')
+    } finally {
+      this.isLoadingResults = false;
     }
   }
 }

@@ -13,6 +13,13 @@
         Generar reporte
       </button>
     </div>
+
+    <mat-form-field appearance="standard">
+      <mat-icon matPrefix>search</mat-icon>
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Buscar por nombre" #input autocomplete="off">
+    </mat-form-field>
+
   </header>
 
   <div class="loading-shade" *ngIf="isLoadingResults">
@@ -20,7 +27,7 @@
   </div>
 
   <div class="catesCont">
-    <mat-card class="cat mat-elevation-z8" *ngFor="let especial of medicServ.especialidades">
+    <mat-card class="cat mat-elevation-z8" *ngFor="let especial of specialtyList">
       <div class="cat_body">
         <p><span>Nombre: </span>{{especial.name}}</p>
         <p><span>Estado: </span><span class="chip" [ngClass]="{'inactive': especial.isActive == false, 'active': especial.isActive == true}">{{especial.isActive ?'Activa' : 'Inactiva'}}</span></p>

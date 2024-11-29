@@ -26,10 +26,40 @@
         <input matInput placeholder="Presentación" formControlName="adress">
       </mat-form-field>
       <mat-form-field appearance="fill">
+        <mat-label>Cadena</mat-label>
+        <mat-select formControlName="cadenaId">
+          <div *ngFor="let cadena of cadenas">
+            <mat-option *ngIf="cadena.isActive" [value]="cadena.id">
+              {{cadena.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" >
+        <mat-label>Pais</mat-label>
+        <mat-select formControlName="countryId" (selectionChange)="onCountryChange($event.value)">
+          <div *ngFor="let paise of paises">
+            <mat-option *ngIf="paise.isActive" [value]="paise.id">
+              {{paise.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" *ngIf="filteredDepartments.length > 0">
+        <mat-label>Departamento</mat-label>
+        <mat-select formControlName="departmentId" (selectionChange)="onDepartmentChange($event.value)">
+          <div *ngFor="let departamento of filteredDepartments">
+            <mat-option *ngIf="departamento.isActive" [value]="departamento.id">
+              {{departamento.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill"  *ngIf="filteredDepartments.length > 0 && filteredCities.length > 0">
         <mat-label>Ciudad</mat-label>
         <mat-select formControlName="cityId">
-          <div *ngFor="let ciudad of ciudades">
-            <mat-option *ngIf="ciudad.state" [value]="ciudad.id">
+          <div *ngFor="let ciudad of filteredCities">
+            <mat-option *ngIf="ciudad.isActive" [value]="ciudad.id">
               {{ciudad.name}}
             </mat-option>
           </div>

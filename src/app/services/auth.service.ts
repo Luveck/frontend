@@ -10,8 +10,9 @@ import { SharedService } from './shared.service';
 })
 export class AuthService {
   userToken: any = null;
-  userData: any = null;
+  private userData: DataUser = {} as DataUser;
   expToken: number | any = null;
+  private userPermissions: string[] = [];
 
   constructor(
     private _dataServ: DataService,
@@ -19,7 +20,29 @@ export class AuthService {
     private _dialog: MatDialog,
     private sharedService: SharedService
   ) {
+    this.getPermissions();
     this.getCurrentUser();
+  }
+
+  public dataUser() {
+    return this.userData;
+  }
+  setPermissions(permissions: string[]) {
+    localStorage.setItem('userPermissions', JSON.stringify(permissions));
+    this.userPermissions = permissions;
+  }
+
+  getPermissions() {
+    const permissions = localStorage.getItem('userPermissions');
+    if (permissions) {
+      this.userPermissions = JSON.parse(permissions);
+    }
+    return this.userPermissions;
+  }
+
+  hasPermission(moduleName: string): boolean {
+    var pass = localStorage.getItem('userPermissions')?.includes(moduleName);
+    return pass == true;
   }
 
   getCurrentUser() {
@@ -54,10 +77,11 @@ export class AuthService {
 
   public async forgotPass(data: any) {
     let info = {
-      emailDni: data,
+      emailDni: data.dni,
       ip: this.sharedService.userIP,
       device: this.sharedService.userDevice,
     };
+
     return this._http
       .post(`${this._dataServ.baseURLSec}Security/Forgot`, info)
       .toPromise();
@@ -76,7 +100,7 @@ export class AuthService {
       .post(`${this._dataServ.baseURLSec}Security/Reset`, info)
       .toPromise();
   }
-
+// no borrar
   public decodeToken(token: string, changePass?: boolean) {
     var base64Url = token.split('.')[1];
     var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -107,7 +131,7 @@ export class AuthService {
   redirectSegunDate(exp: any) {
     if (this.checkTokenDate(exp)) {
       if (this.userData.Role != 'Cliente') {
-        this._dataServ.goTo('/admin/home');
+        this._dataServ.goTo('/admin/panelControl');
       } else {
         this._dataServ.goTo('/inicio');
       }
@@ -128,9 +152,10 @@ export class AuthService {
 
   public logOut(role: string) {
     this.userToken = null;
-    this.userData = null;
+    this.userData = {} as DataUser;;
     localStorage.removeItem('LuveckUserToken');
-    role === 'Admin' || role === 'Dependiente'
+    localStorage.removeItem('LuveckUserMenu');
+    role === 'Admin'
       ? this._dataServ.goTo('/authentication/login')
       : this._dataServ.goTo('/inicio');
   }
@@ -147,4 +172,12 @@ export class AuthService {
         this.logOut(this.userData.Role);
       });
   }
+}
+
+export interface DataUser {
+  UserId: string;
+  UserName: string;
+  LastName: string;
+  Role: string;
+  Email: string;
 }

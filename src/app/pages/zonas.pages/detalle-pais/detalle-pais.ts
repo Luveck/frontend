@@ -4,6 +4,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms'
 
 import { Pais } from 'src/app/interfaces/models'
 import { ZonasService } from 'src/app/services/zonas.service'
+import { SharedService } from 'src/app/services/shared.service';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-detalle-pais',
@@ -26,26 +28,30 @@ export class DetallePais implements OnInit {
   })
 
   constructor(
-    private _zonasServ:ZonasService,
     public dialogo: MatDialogRef<DetallePais>,
+    public sharedService: SharedService,
+    public apiService: ApiService,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){}
 
   ngOnInit(): void {
     if(this.data.paisId){
-      this.isLoadingResults = true
-      const pais = this._zonasServ.getPaisById(this.data.paisId)
-      pais?.subscribe(res => {
-        this.currentPais = res.result
-        this.isLoadingResults = false
-        this.initValores()
-      }, (err => {
-        this.isLoadingResults = false
-        this._zonasServ.notify('Ocurrio un error con la petición', 'error')
-      }))
+      this.getCountry();
     }
   }
 
+  public async getCountry(){
+    try {
+      this.currentPais = await this.apiService.get<Pais>(`Country/${this.data.paisId}`);
+      this.initValores()
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con la petición', 'error')
+
+    } finally {
+      this.isLoadingResults = false
+
+    }
+  }
   initValores(){
     this.urlFlag = `https://flagcdn.com/${this.currentPais.iso3.toLowerCase()}.svg`
     this.paisForm.patchValue({
@@ -63,24 +69,53 @@ export class DetallePais implements OnInit {
   }
 
   save(){
+    let country: any = {
+      name: this.paisForm.value.name,
+      iso3: this.paisForm.value.iso3,
+      phoneCode: this.paisForm.value.phoneCode,
+      currency: this.paisForm.value.currency,
+      currencyName: this.paisForm.value.currencyName,
+      currencySymbol: this.paisForm.value.currencySymbol,
+      Ip: this.sharedService.userIP,
+      Device: this.sharedService.userDevice,
+    }
     if(this.data.paisId){
-      let peticion = this._zonasServ.updatePais(this.paisForm.value, this.data.paisId, this.currentPais?.status)
-      peticion?.subscribe(res => {
-        this._zonasServ.notify('Registro actualizado', 'success')
-        this.dialogo.close(true)
-      }, err => {
-        console.log(err)
-        this._zonasServ.notify('Ocurrio un error con el proceso.', 'error')
-      })
+      country = {
+        ...country,
+        id: this.data.paisId,
+        IsActive: this.currentPais.isActive
+      }
+      this.updateCountry(country);
     }else{
-      const peticion = this._zonasServ.addPais(this.paisForm.value)
-      peticion?.subscribe(res => {
-        this._zonasServ.notify('País registrado', 'success')
-        this.dialogo.close(true)
-      }, err => {
-        console.log(err)
-        this._zonasServ.notify('Ocurrio un error con el proceso.', 'error')
-      })
+      country = {
+        ...country,
+        IsActive: true,
+      }
+      this.saveCountry(country);
+    }
+  }
+
+  public async saveCountry(counrty : any) {
+    try {
+      const res = await this.apiService.post(`Country`, counrty)
+      this.sharedService.notify('País actualizado', 'success')
+      this.dialogo.close(true)
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con la petición', 'error')
+    } finally {
+      this.isLoadingResults = false
+    }
+  }
+
+  public async updateCountry(counrty : any){
+    try {
+      const res = await this.apiService.put(`Country`, counrty)
+      this.sharedService.notify('País actualizado', 'success')
+      this.dialogo.close(true)
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con la petición', 'error')
+    } finally {
+      this.isLoadingResults = false
     }
   }
 }

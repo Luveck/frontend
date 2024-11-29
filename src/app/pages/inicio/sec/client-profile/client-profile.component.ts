@@ -46,7 +46,7 @@ export class ClientProfileComponent implements OnInit {
   ngOnInit(): void {
     this.isLoadingResults = true
     this._usersServ.getUserInfo(this.data)
-      ?.subscribe((res:any) => {        
+      ?.subscribe((res:any) => {
         this.userData = res.result
         this.isLoadingResults = false
         this.initValues()
@@ -103,8 +103,8 @@ export class ClientProfileComponent implements OnInit {
     const peticion = this._usersServ.UpdateUsuario(tempData, (chageState != undefined) ?chageState :this.userData.state)
     peticion?.subscribe(()=>{
       this._usersServ.notify('Perfil actualizado', 'success')
-      this._authServ.userData.UserName = this.perfilForm.get('name')?.value
-      this._authServ.userData.LastName = this.perfilForm.get('lastName')?.value
+      // this._authServ.userData.UserName = this.perfilForm.get('name')?.value
+      // this._authServ.userData.LastName = this.perfilForm.get('lastName')?.value
       this.dialogo.close(true);
     },err => {
       console.log(err)

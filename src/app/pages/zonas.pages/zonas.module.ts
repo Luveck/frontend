@@ -16,6 +16,8 @@ import { PaisesPage } from './paises/paises.page';
 import { DepartamentosPage } from './departamentos/departamentos.page';
 import { CiudadesPage } from './ciudades/ciudades.page';
 import { FarmaciasPage } from './farmacias/farmacias.page';
+import { CadenasPage } from './cadenas/cadenas.page';
+import { DetalleCadena } from './detalle-cadena/detalle-cadena';
 
 const routes: Routes = [
   {
@@ -34,6 +36,10 @@ const routes: Routes = [
     path: 'farmacias',
     component: FarmaciasPage
   },
+  {
+    path: 'cadenas',
+    component: CadenasPage
+  }
 ];
 
 @NgModule({
@@ -45,7 +51,9 @@ const routes: Routes = [
     PaisesPage,
     DepartamentosPage,
     CiudadesPage,
-    FarmaciasPage
+    FarmaciasPage,
+    CadenasPage,
+    DetalleCadena
   ],
   imports: [
     CommonModule,

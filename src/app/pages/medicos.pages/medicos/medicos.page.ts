@@ -10,6 +10,8 @@ import { MedicosService } from 'src/app/services/medicos.service';
 import { DetalleMedico } from '../detalle-medico/detalle-medico';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
+import { ApiService } from 'src/app/services/api.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-medicos',
@@ -43,23 +45,26 @@ export class MedicosPage implements AfterViewInit {
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
     private _dialog:MatDialog,
-    public _medicServ:MedicosService
+    public medicServ:MedicosService,
+    private readonly apiService: ApiService,
+    private readonly sharedservice : SharedService
   ){}
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort;
-    this.getAllMedics()
+    this.getMedicals();
   }
 
-  getAllMedics(){
-    let resp = this._medicServ.getMedicos()
-    resp?.subscribe(medicos => {
-      this.dataSource.data = medicos.result as Medico[]
-      this.isLoadingResults = false
-    }, (err => {
-      this.isLoadingResults = false
-    }))
+  private async getMedicals() {
+    try {
+      await this.medicServ.setMedicos();
+    } catch (err) {
+      this.sharedservice.notify('Ocurrio un error consultando los médicos.', 'error');
+    } finally {
+      this.dataSource.data = this.medicServ.getMedicos();
+      this.isLoadingResults = false;
+    }
   }
 
   applyFilter(event: Event) {
@@ -91,17 +96,31 @@ export class MedicosPage implements AfterViewInit {
     .subscribe((confirm:boolean) => {
       if(confirm){
         this.isLoadingResults = true
-        this.getAllMedics()
+        this.getMedicals()
       }
     })
   }
 
-  chageState(row:Medico){
-    const formData = {
-      "name": row.name,
-      "register": row.register,
-      "patologyId": row.patologyId
+  private async updateMedical(medical : any) {
+    try {
+      await this.apiService.put(`Medical`, medical);
+      this.sharedservice.notify('Médico actualizado', 'success');
+    } catch (error) {
+      this.sharedservice.notify('Ocurrio un error con el proceso.', 'error');
+    } finally {
+      this.isLoadingResults = false;
     }
+  }
+  chageState(row:any){
+    let medical = {
+      id: row.id,
+      isActive:!row.isActive,
+      name: row.name,
+      disciplineId : row.disciplineId,
+      register: row.register,
+      countryId :'1'
+    }
+    this.sharedservice.addIpDevice(medical);
     let msgDialog:string
     if(row.isActive){
       msgDialog = '¿Seguro de querer inhabilitar el registro de este médico?'
@@ -113,21 +132,7 @@ export class MedicosPage implements AfterViewInit {
     })
     .afterClosed()
     .subscribe((confirmado:boolean)=>{
-      if(confirmado){
-        row.isActive = !row.isActive
-        const res = this._medicServ.updateMedico(formData, row.id, row.isActive)
-          res?.subscribe(res => {
-            if(res){
-              this._medicServ.notify('Médico actualizado', 'success')
-              this.isLoadingResults = true
-              this.getAllMedics()
-            }
-          }, (err => {
-            console.log(err)
-            this.getAllMedics()
-            this._medicServ.notify('Ocurrio un error con el proceso.', 'error')
-          }))
-      }
+      this.updateMedical(medical);
     })
   }
 

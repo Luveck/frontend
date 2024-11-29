@@ -4,13 +4,17 @@
       <button class="btnMenu" mat-icon-button (click)="showMenu = !showMenu">
         <mat-icon>menu</mat-icon>
       </button>
-      <img class="nav_logo" (click)="selectSection('inicio')" [src]="localTheme ?'assets/icons/logo_light.png' :'assets/icons/logo_dark.png'">
+      <img alt class="nav_logo" (click)="selectSection('inicio')" [src]="localTheme ?'assets/icons/logo_light.png' :'assets/icons/logo_dark.png'">
     </div>
     <div class="btnsHeader">
+      <div *ngIf="!authServ.userToken">
+        <button mat-raised-button color="primary" (click)="onLogin()">
+          Iniciar Sesión
+        </button>
+      </div>
       <button style="color: #ffc409;" mat-icon-button matTooltip="Cambiar tema" (click)="setTheme()">
         <mat-icon>{{localTheme ?'light_mode' :'brightness_3'}}</mat-icon>
       </button>
-
       <button mat-icon-button [matMenuTriggerFor]="perfil" matTooltip="Mi Perfil" *ngIf="authServ.userToken">
         <mat-icon>manage_accounts</mat-icon>
       </button>

@@ -7,7 +7,7 @@
     <form [formGroup]="loginForm" autocomplete="off">
       <mat-form-field appearance="outline">
         <mat-label>DNI</mat-label>
-        <input matInput placeholder="DNI de usuario" formControlName="dni" maxlength="13">
+        <input matInput placeholder="DNI de usuario" formControlName="dni" maxlength="20">
         <mat-icon matPrefix>person</mat-icon>
         <mat-error
           *ngIf="loginForm.get('dni')?.invalid && (loginForm.get('dni')?.dirty || loginForm.get('dni')?.touched) && loginForm.get('dni')?.errors?.['required']">
@@ -17,7 +17,7 @@
           DNI invalido
         </mat-error>
         <mat-error *ngIf="loginForm.get('dni')?.errors?.['minlength']">
-          DNI debe tener minimo 13 digitos.
+          DNI debe tener minimo 2 digitos.
         </mat-error>
       </mat-form-field>
 

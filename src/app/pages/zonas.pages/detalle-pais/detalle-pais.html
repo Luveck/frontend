@@ -6,7 +6,7 @@
 
   <div class="fm_header" *ngIf="data.paisId">
     <section class="avatar">
-      <img [src]="urlFlag">
+      <img [src]="urlFlag" alt>
       <div class="datos">
         <p>{{currentPais?.name}}</p>
         <div class="bots">
@@ -20,15 +20,15 @@
     <div class="inputs">
       <mat-form-field appearance="fill">
         <mat-label>Nombre</mat-label>
-        <input matInput placeholder="Nombre" formControlName="name">
+        <input matInput placeholder="Nombre" formControlName="name" maxlength="30">
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Código Iso</mat-label>
-        <input matInput placeholder="HN" formControlName="iso3">
+        <input matInput placeholder="HN" formControlName="iso3" maxlength="30">
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Código de área</mat-label>
-        <input matInput placeholder=" +504" formControlName="phoneCode">
+        <input matInput placeholder=" +504" formControlName="phoneCode" maxlength="30">
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Divisa</mat-label>
@@ -36,11 +36,11 @@
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Nombre divisa</mat-label>
-        <input matInput placeholder="Lempira" formControlName="currencyName">
+        <input matInput placeholder="Lempira" formControlName="currencyName" maxlength="30">
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Símbolo divisa</mat-label>
-        <input matInput placeholder=" L" formControlName="currencySymbol">
+        <input matInput placeholder=" L" formControlName="currencySymbol" maxlength="30">
       </mat-form-field>
     </div>
   </form>

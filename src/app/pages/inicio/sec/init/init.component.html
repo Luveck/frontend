@@ -1,6 +1,6 @@
 <div class="inicio">
   <h1 *ngIf="!authServ.userToken">Programa Pasión por vivir</h1>
-  <h1 *ngIf="authServ.userToken">Bienvenido {{authServ.userData.UserName}} {{authServ.userData.LastName}} al programa Pasión por Vivir</h1>
+  <!-- <h1 *ngIf="authServ.userToken">Bienvenido {{authServ.userData.UserName}} {{authServ.userData.LastName}} al programa Pasión por Vivir</h1> -->
   <swiper [config]="swipperConfig" >
     <ng-template swiperSlide>
       <div class="sItem reverse">

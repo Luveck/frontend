@@ -6,11 +6,11 @@ import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 import { Venta } from 'src/app/interfaces/models';
-import { DetalleVenta } from '../detalle-ventas/detalle-venta';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { VentasService } from 'src/app/services/ventas.service';
 import { DataService } from 'src/app/services/data.service';
 import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-ventas',
@@ -43,28 +43,44 @@ export class VentasPage implements AfterViewInit {
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
+    private _dataServ:DataService,
     private _dialog: MatDialog,
-    private _ventasServ:VentasService,
-    private _dataServ:DataService
+
+    private readonly ventasServ:VentasService,
+    private readonly sharedService: SharedService
   ){}
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort;
-    this.getAllVentas()
+    this.getPurchases();
   }
 
-  getAllVentas() {
-    const resp = this._ventasServ.getVentas()
-    resp?.subscribe(ventas => {
-      this.dataSource.data = ventas.result as Venta[]
-      this.isLoadingResults = false
-      console.log(this.dataSource.data)
-    }, (err => {
-      this.isLoadingResults = false
-      console.log(err)
-    }))
+  private async getPurchases(){
+    try {
+      await this.ventasServ.setPurchase();
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error consultando la informacion.', 'error')
+    } finally {
+      this.isLoadingResults = false;
+      this.dataSource.data = this.ventasServ.getPurchases();
+      this.dataSource.data = this.dataSource.data.sort((a) => {
+        if (a.reviewed) return 0;
+        else return 1;
+      });
+    }
   }
+  // getAllVentas() {
+  //   const resp = this._ventasServ.getVentas()
+  //   resp?.subscribe(ventas => {
+  //     this.dataSource.data = ventas.result as Venta[]
+
+  //     this.isLoadingResults = false
+  //   }, (err => {
+  //     this.isLoadingResults = false
+  //     console.log(err)
+  //   }))
+  // }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
@@ -90,7 +106,7 @@ export class VentasPage implements AfterViewInit {
   chageState(row:Venta){
     const formData = {
       "pharmacyId": row.idPharmacy,
-      "userId": row.buyer,
+      "userId": row.userId,
       "noPurchase": row.noPurchase
     }
     let msgDialog:string
@@ -105,18 +121,18 @@ export class VentasPage implements AfterViewInit {
     .afterClosed()
     .subscribe((confirmado:boolean)=>{
       if(confirmado){
-        row.reviewed = !row.reviewed
-        const res = this._ventasServ.updateVenta(formData, row.id, row.reviewed)
-          res?.subscribe(res => {
-            if(res){
-              this._ventasServ.notify('Venta validada', 'success')
-              this.isLoadingResults = true
-              this.getAllVentas()
-            }
-          }, (err => {
-            console.log(err)
-            this._ventasServ.notify('Ocurrio un error con el proceso.', 'error')
-          }))
+        // row.reviewed = !row.reviewed
+        // const res = this._ventasServ.checkVenta(formData, row.id, row.reviewed)
+        //   res?.subscribe(res => {
+        //     if(res){
+        //       this._ventasServ.notify('Venta validada', 'success')
+        //       this.isLoadingResults = true
+        //       this.getAllVentas()
+        //     }
+        //   }, (err => {
+        //     console.log(err)
+        //     this._ventasServ.notify('Ocurrio un error con el proceso.', 'error')
+        //   }))
       }
     })
   }

@@ -1,15 +1,16 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core'
+import { Component, Input, OnInit, ViewChild } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 import { Departamento } from 'src/app/interfaces/models';
-import { ZonasService } from 'src/app/services/zonas.service';
 import { Detalledepartamento } from '../detalle-departamento/detalle-departamento';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
+import { SharedService } from 'src/app/services/shared.service';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-departamentos',
@@ -17,7 +18,7 @@ import { ModalReportComponent } from 'src/app/components/modal-report/modal-repo
   styleUrls: ['./departamentos.page.scss'],
 })
 
-export class DepartamentosPage implements AfterViewInit {
+export class DepartamentosPage implements OnInit {
   public breadcrumb = {
     links: [
       {
@@ -41,28 +42,31 @@ export class DepartamentosPage implements AfterViewInit {
   isLoadingResults:boolean = true
 
   constructor(
-    private _liveAnnouncer: LiveAnnouncer,
-    private _dialog: MatDialog,
-    private _zonasServ:ZonasService,
+    private readonly _liveAnnouncer: LiveAnnouncer,
+    private readonly _dialog: MatDialog,
+    private readonly sharedService: SharedService,
+    private readonly apiService: ApiService,
   ){}
 
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
     this.dataSource.paginator = this.paginator
     this.dataSource.sort = this.sort;
-    this.getAllDepartamentos()
+    this.dataSource.data = this.sharedService.getDepartmentList();
+    if (this.sharedService.getDepartmentList().length == 0)(
+      this.getDepartments()
+    )
+    this.isLoadingResults = false
   }
 
-  getAllDepartamentos() {
-    const resp = this._zonasServ.getDepartamentos()
-    resp?.subscribe(departamentos => {
-      this.dataSource.data = departamentos.result as Departamento[]
-      this._zonasServ.listDepartamentos = departamentos.result
+  public async getDepartments() {
+    try {
+      await this.sharedService.setDepartments();
+      this.dataSource.data = this.sharedService.getDepartmentList();
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con el proceso.', 'error')
+    } finally {
       this.isLoadingResults = false
-      console.log(this.dataSource.data)
-    }, (err => {
-      this.isLoadingResults = false
-      console.log(err)
-    }))
+    }
   }
 
   applyFilter(event: Event) {
@@ -94,18 +98,14 @@ export class DepartamentosPage implements AfterViewInit {
     .subscribe((confirm:boolean) => {
       if(confirm){
         this.isLoadingResults = true
-        this.getAllDepartamentos()
+        this.getDepartments()
       }
     })
   }
 
   chageState(row:Departamento){
-    const formData = {
-      "name": row.name,
-      "idCountry": row.countryId
-    }
     let msgDialog:string
-    if(row.status){
+    if(row.isActive){
       msgDialog = '¿Seguro de querer inhabilitar este departamento?'
     }else{
       msgDialog = '¿Seguro de querer habilitar este departamento?'
@@ -116,18 +116,16 @@ export class DepartamentosPage implements AfterViewInit {
     .afterClosed()
     .subscribe((confirmado:boolean)=>{
       if(confirmado){
-        row.status = !row.status
-        const res = this._zonasServ.updateDepartamento(formData, row.id, row.status)
-          res?.subscribe(res => {
-            if(res){
-              this._zonasServ.notify('Departamento actualizado', 'success')
-              this.isLoadingResults = true
-              this.getAllDepartamentos()
-            }
-          }, (err => {
-            console.log(err)
-            this._zonasServ.notify('Ocurrio un error con el proceso.', 'error')
-          }))
+        const department = {
+          'id': row.id,
+          'name': row.name,
+          'countryId': row.countryId,
+          'isActive': !row.isActive,
+          'Ip': this.sharedService.userIP,
+          'Device': this.sharedService.getUserDevice
+        }
+        this.isLoadingResults = true
+        this.updateState(department);
       }
     })
   }
@@ -140,5 +138,17 @@ export class DepartamentosPage implements AfterViewInit {
         'body': this.dataSource.data
       }
     })
+  }
+
+  public async updateState(departement: any) {
+    try {
+      await this.apiService.put('Department',departement)
+      this.getDepartments();
+      this.sharedService.notify('Departamento actualizado', 'success')
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con el proceso.', 'error')
+    } finally {
+      this.isLoadingResults = false
+    }
   }
 }

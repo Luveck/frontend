@@ -67,6 +67,10 @@ main{
         width: 90%;
         margin: auto;
         align-content: center;
+        &.area{
+          resize: none;
+          grid-column: 1 / span 2;
+        }
       }
     }
   }
@@ -76,5 +80,50 @@ main{
   text-align: center;
   button{
     margin: 0 0.5rem;
+  }
+}
+
+
+.contentImgs{
+  width: 80%;
+  margin: 1rem auto;
+  display: grid;
+  mat-card.drop{
+    height: 120px;
+  }
+  mat-card mat-card-header{
+    justify-content: center;
+  }
+  mat-card mat-card-content{
+    .drop-zone {
+      border: dotted 3px lightgray;
+      .custon-file{
+        cursor: pointer;
+        input[type='file']{
+          display: none;
+        }
+        height: 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        mat-icon{
+          color: #2190f0;
+          font-size: 2rem;
+          overflow: visible;
+          text-align: center;
+        }
+      }
+    }
+
+    .file-over {
+      border: solid 3px #22dc80;
+    }
+  }
+
+  mat-card-actions{
+    padding: 0;
+    text-align: center;
   }
 }

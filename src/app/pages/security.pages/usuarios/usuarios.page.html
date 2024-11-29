@@ -30,31 +30,31 @@
 
       <ng-container matColumnDef="dni">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> DNI </th>
-        <td mat-cell *matCellDef="let row"> {{row.userName}} </td>
+        <td mat-cell *matCellDef="let row"> {{row.user.dni}} </td>
       </ng-container>
 
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
-        <td mat-cell *matCellDef="let row"> {{row.name}} {{row.lastName}}</td>
+        <td mat-cell *matCellDef="let row"> {{row.user.name}} {{row.user.lastName}}</td>
       </ng-container>
 
-<!--       <ng-container matColumnDef="role">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Rol </th>
-        <td mat-cell *matCellDef="let row"> {{row.role}} </td>
-      </ng-container> -->
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
+        <td mat-cell *matCellDef="let row"> {{row.roles[0]}} </td>
+      </ng-container>
 
       <ng-container matColumnDef="state">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
         <td mat-cell *matCellDef="let row">
-          <span class="chip" [ngClass]="{'active': row.state == true, 'inactive': row.state == false}">{{row.state ?'Activo' :'Inactivo'}}</span>
+          <span class="chip" [ngClass]="{'active': row.user.isActive == true, 'inactive': row.user.isActive == false}">{{row.user.isActive ?'Activo' :'Inactivo'}}</span>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="acctions">
         <th mat-header-cell *matHeaderCellDef> Acciones </th>
         <td mat-cell *matCellDef="let row">
-          <button mat-stroked-button (click)="on(row.userName)">
-            Ver detalles
+          <button mat-stroked-button (click)="on(row.user.id)">
+            Editar
             <mat-icon color="accent">arrow_forward</mat-icon>
           </button>
         </td>

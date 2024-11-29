@@ -4,6 +4,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms'
 
 import { Especialidad, Medico } from 'src/app/interfaces/models'
 import { MedicosService } from 'src/app/services/medicos.service'
+import { ApiService } from 'src/app/services/api.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-detalle-medico',
@@ -23,40 +25,49 @@ export class DetalleMedico implements OnInit {
   })
 
   constructor(
-    private _medicServ: MedicosService,
+    private readonly medicServ: MedicosService,
+    private readonly apiService: ApiService,
+    private readonly sharedService: SharedService,
     public dialogo: MatDialogRef<DetalleMedico>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ){}
 
   ngOnInit(): void {
-    if(!this._medicServ.especialidades){
-      const res = this._medicServ.getEspecialidades()
-      res?.subscribe(res => this.especialidades = res.result)
-    }else{
-      this.especialidades = this._medicServ.especialidades
-    }
+    this.isLoadingResults = true;
+    this.getSpecialist();
 
     if(this.data.medicoId){
-      this.isLoadingResults = true
-      const pais = this._medicServ.getMedicoById(this.data.medicoId)
-      pais?.subscribe(res => {
-        console.log(res)
-        this.currentMedic = res.result
-        this.isLoadingResults = false
-        this.initValores()
-      }, (err => {
-        console.log(err)
-        this.isLoadingResults = false
-        this._medicServ.notify('Ocurrio un error con la petición', 'error')
-      }))
+      this.getMedical();
     }
   }
+
+  private async getSpecialist(){
+    try {
+      await this.medicServ.setSpecialties();
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con la petición', 'error');
+    } finally {
+      this.isLoadingResults = false;
+      this.especialidades = this.medicServ.getSpecialties();
+    }
+  }
+
+  private async getMedical() {
+    try {
+      this.currentMedic = await this.apiService.get(`Medical/${this.data.medicoId}`);
+      this.initValores();
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error consultando el medico' , 'error');
+    } finally {
+      this.isLoadingResults = false;
+    }
+ }
 
   initValores(){
     this.medicForm.patchValue({
       name: this.currentMedic.name,
       register: this.currentMedic.register,
-      patologyId: this.currentMedic.patologyId
+      patologyId: this.currentMedic.patologyId,
     })
   }
 
@@ -64,25 +75,49 @@ export class DetalleMedico implements OnInit {
     this.medicForm.reset()
   }
 
-  save(){
-    if(this.data.medicoId){
-      const peticion = this._medicServ.updateMedico(this.medicForm.value, this.data.medicoId, this.currentMedic.isActive)
-       peticion?.subscribe(() => {
-        this._medicServ.notify('Médico actualizado', 'success')
-        this.dialogo.close(true);
-      }, err => {
-        console.log(err)
-        this._medicServ.notify('Ocurrio un error con el proceso', 'error')
-      })
-    }else{
-      const peticion = this._medicServ.addMedico(this.medicForm.value)
-      peticion?.subscribe(() => {
-        this._medicServ.notify('Médico registrado', 'success')
-        this.dialogo.close(true);
-      }, (err => {
-        console.log(err)
-        this._medicServ.notify('Ocurrio un error con el proceso', 'error')
-      }))
+  private async addMedical(medical : any){
+    try {
+      await this.apiService.post('Medical', medical);
+      this.sharedService.notify('Médico registrado', 'success');
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con el proceso', 'error');
+    } finally {
+      this.isLoadingResults = false;
     }
+  }
+
+  private async updateMedical(medical : any){
+    try {
+      await this.apiService.put('Medical', medical);
+      this.sharedService.notify('Médico actualizado', 'success');
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error con el proceso', 'error');
+    } finally {
+      this.isLoadingResults = false;
+    }
+  }
+  save(){
+    let medical: any = {
+      name: this.medicForm.value.name,
+      register: this.medicForm.value.register,
+      disciplineId: this.medicForm.value.patologyId,
+      countryId: 1
+    }
+    medical = this.sharedService.addIpDevice(medical);
+    if(this.data.medicoId){
+      medical = {
+       ...medical,
+        id: this.data.medicoId,
+        isActive: this.currentMedic.isActive,
+      }
+      this.updateMedical(medical);
+    }else{
+      medical = {
+        ...medical,
+        isActive: true,
+      }
+      this.addMedical(medical);
+    }
+    this.dialogo.close(true);
   }
 }

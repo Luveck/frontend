@@ -56,7 +56,7 @@ export class ChangePasswordPage {
         console.log(res)
         this.dataServ.progress = false
         this.dataServ.fir(`${res.messages} Ya puede iniciar sesión con su nueva contraseña.`, 'success', 5000)
-        this._authServ.logOut(this._authServ.userData.Role)
+        this._authServ.logOut(this._authServ.dataUser().Role)
       }, err => {
         console.log(err)
         this.dataServ.progress = false

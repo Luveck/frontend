@@ -25,7 +25,7 @@ export interface Module {
 export interface RoleModule{
   idRole: string,
   roleName: string,
-  idModule: number,
+  moduleId: number,
   moduleName: string
 }
 export interface ModuleRole {
@@ -42,26 +42,23 @@ export interface Pais{
   currency: string
   currencyName: string
   currencySymbol: string
-  status: boolean
+  isActive: boolean
 }
 
 export interface Departamento{
   id: 0
   name: string
-  countryId: 0
+  countryId: number
   countryCode: string
   countryName: string
-  status: boolean
+  isActive: boolean
 }
 
 export interface Ciudad{
   id: number
   name: string
-  state: boolean
-  departymentId: number
-  departmentName: string
-  countryId: number
-  countryName: string
+  isActive: boolean
+  departmentId: number
 }
 
 export interface Farmacia{
@@ -73,6 +70,13 @@ export interface Farmacia{
   city: string
   ip: string
   device: string
+}
+
+export interface Cadena {
+  id: number
+  name: string
+  isActive: boolean,
+  pharmacy?: Farmacia[]
 }
 
 /* modulo inventario */
@@ -95,7 +99,7 @@ export interface Producto{
   cost: number
   idCategory: number
   nameCategory: string
-  state:boolean
+  isActive:boolean
   file: any
 }
 
@@ -116,7 +120,7 @@ export interface Rule{
   productId: number
   productName: string
   barcode: string
-  state: boolean
+  isActive: boolean
 }
 
 /* Modulo de medicos */
@@ -133,7 +137,7 @@ export interface Medico{
   name: string
   register: string
   isActive: boolean
-  patologyId: number
+  specialtyId: number
   patologyName: string
 }
 
@@ -144,7 +148,7 @@ export interface Venta{
   idPharmacy: number
   cityPharmacy: string
   namePharmacy: string
-  buyer: string
+  userId: string
   noPurchase: string
   reviewed: boolean
   dateShiped: string
@@ -155,4 +159,11 @@ export interface ProductOnVenta{
   productId: number
   quantityShiped: number
   dateShiped: string
+}
+
+
+export interface Patology {
+  id?: string,
+  name: string,
+  isActive: boolean,
 }

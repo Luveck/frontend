@@ -3,26 +3,66 @@ import { Injectable } from '@angular/core';
 import { AuthService } from './auth.service';
 import { DataService } from './data.service';
 import { SharedService } from './shared.service';
+import { ApiService } from './api.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuariosService {
+  private roleList = [];
+  private modulesList = [];
+  private usersList: any[] = []
+  private usersCombo: any[] = []
   localRoles:any[] = []
   usersGlobal:any[] = []
   headers: any
 
   constructor(
+    private readonly apiService: ApiService,
+    private readonly sharedService: SharedService,
+
     private _http:HttpClient,
     private _authServ:AuthService,
     private _dataServ:DataService,
-    private sharedService: SharedService
+
   ) {
+    this._authServ.getCurrentUser();
     this.headers = {'Authorization':`Bearer ${this._authServ.userToken}`}
     this.sharedService.getUserDevice();
     this.sharedService.getUserIP();
   }
 
+  public async setUserCombo() {
+    this.usersCombo = await this.apiService.get('User/GetUsersCombo')
+  }
+
+  public getUserCombo() {
+    return this.usersCombo;
+  }
+
+  public async setModules(){
+    this.modulesList = await this.apiService.get('Module');
+  }
+
+  public getModules() {
+    return this.modulesList;
+  }
+  public async setRoles(){
+    this.roleList = await this.apiService.get('Role');
+  }
+
+  public getRoles() {
+    return this.roleList;
+  }
+
+  public async setUsers(){
+    this.usersList = await this.apiService.get('User/GetUsersRole');
+  }
+
+  public getUsersList() {
+    return this.usersList;
+  }
+  ////////////////////////BORRAR //////////////////////////////////
 
   notify(msg:string, icon:any){
     this._dataServ.fir(msg, icon)

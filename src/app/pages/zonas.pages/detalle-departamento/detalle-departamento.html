@@ -9,7 +9,7 @@
       <div class="datos">
         <p>{{currentDepartamento?.name}}</p>
         <div class="bots">
-          <span class="chip" [ngClass]="{'active': currentDepartamento?.status == true, 'inactive': currentDepartamento?.status == false}">Estado: {{currentDepartamento?.status ?'Activo' :'Inactivo'}}</span>
+          <span class="chip" [ngClass]="{'active': currentDepartamento?.isActive == true, 'inactive': currentDepartamento?.isActive == false}">Estado: {{currentDepartamento?.isActive ?'Activo' :'Inactivo'}}</span>
         </div>
       </div>
     </section>
@@ -21,7 +21,7 @@
         <mat-label>País</mat-label>
         <mat-select formControlName="idCountry">
           <div *ngFor="let pais of paises">
-            <mat-option *ngIf="pais.status" [value]="pais.id">
+            <mat-option *ngIf="pais.isActive" [value]="pais.id">
               {{pais.name}}
             </mat-option>
           </div>

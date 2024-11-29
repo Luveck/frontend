@@ -9,15 +9,32 @@
       <div class="datos">
         <p>{{currentUser?.name}} {{currentUser?.lastName}}</p>
         <div class="bots">
-          <span class="chip" (click)="changeUserState(currentUser?.state, currentUser.id)" style="cursor: pointer;" matTooltip="Cambiar estado" [ngClass]="{'active': currentUser?.state == true, 'inactive': currentUser?.state == false}">Estado de cuenta: {{currentUser?.state ?'activa' :'inactiva'}}</span>
+          <span
+            class="chip"
+            (click)="changeUserState(currentUser?.isActive, currentUser.id)"
+            style="cursor: pointer"
+            matTooltip="Cambiar estado"
+            [ngClass]="{'active': currentUser?.isActive == true, 'inactive': currentUser?.isActive == false}"
+            >Estado de cuenta: {{currentUser?.isActive ?'activa'
+            :'inactiva'}}</span
+          >
         </div>
       </div>
     </section>
     <section class="resumen">
       <ul>
-        <li> <mat-icon class="example-tab-icon">fingerprint</mat-icon> DNI: {{currentUser?.dni }} </li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de nacimiento: {{currentUser?.bornDate |date: 'dd/MM/yyyy'}}</li>
-        <li> <mat-icon class="example-tab-icon">badge</mat-icon> Rol: {{currentUser?.role}}</li>
+        <li>
+          <mat-icon class="example-tab-icon">fingerprint</mat-icon> DNI:
+          {{currentUser?.dni }}
+        </li>
+        <li>
+          <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de
+          nacimiento: {{currentUser?.bornDate |date: 'dd/MM/yyyy'}}
+        </li>
+        <li>
+          <mat-icon class="example-tab-icon">badge</mat-icon> Rol:
+          {{currentUser?.roles[0]}}
+        </li>
       </ul>
     </section>
   </div>
@@ -26,66 +43,82 @@
     <div class="inputs">
       <mat-form-field appearance="fill">
         <mat-label>DNI</mat-label>
-        <input matInput placeholder="DNI" maxlength="13" formControlName="dni">
+        <input
+          matInput
+          placeholder="DNI"
+          maxlength="20"
+          formControlName="dni"
+        />
         <mat-error
-          *ngIf="newUserForm.get('dni')?.invalid && (newUserForm.get('dni')?.dirty || newUserForm.get('dni')?.touched) && newUserForm.get('dni')?.errors?.['required']">
+          *ngIf="newUserForm.get('dni')?.invalid && (newUserForm.get('dni')?.dirty || newUserForm.get('dni')?.touched) && newUserForm.get('dni')?.errors?.['required']"
+        >
           DNI requerido
         </mat-error>
-        <mat-error *ngIf="!newUserForm.get('dni')?.errors?.['required'] && (newUserForm.get('dni')?.errors?.['pattern'])">
+        <mat-error
+          *ngIf="!newUserForm.get('dni')?.errors?.['required'] && (newUserForm.get('dni')?.errors?.['pattern'])"
+        >
           DNI invalido
         </mat-error>
         <mat-error *ngIf="newUserForm.get('dni')?.errors?.['minlength']">
-          DNI debe tener minimo 13 digitos.
+          DNI debe tener minimo 2 digitos.
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Nombre</mat-label>
-        <input matInput placeholder="Nombre" formControlName="name">
+        <input matInput placeholder="Nombre" formControlName="name" />
         <mat-error
-          *ngIf="newUserForm.get('name')?.invalid && (newUserForm.get('name')?.dirty || newUserForm.get('name')?.touched) && newUserForm.get('name')?.errors?.['required']">
+          *ngIf="newUserForm.get('name')?.invalid && (newUserForm.get('name')?.dirty || newUserForm.get('name')?.touched) && newUserForm.get('name')?.errors?.['required']"
+        >
           Nombre requerido
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Apellido</mat-label>
-        <input matInput placeholder="Apellido" formControlName="lastName">
+        <input matInput placeholder="Apellido" formControlName="lastName" />
         <mat-error
-          *ngIf="newUserForm.get('lastName')?.invalid && (newUserForm.get('lastName')?.dirty || newUserForm.get('lastName')?.touched) && newUserForm.get('lastName')?.errors?.['required']">
+          *ngIf="newUserForm.get('lastName')?.invalid && (newUserForm.get('lastName')?.dirty || newUserForm.get('lastName')?.touched) && newUserForm.get('lastName')?.errors?.['required']"
+        >
           Apellido requerido
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Email</mat-label>
-        <input matInput placeholder="Email" formControlName="email">
-        <mat-error *ngIf="!newUserForm.get('email')?.errors?.['required'] && (newUserForm.get('email')?.errors?.['pattern'])">
+        <input matInput placeholder="Email" formControlName="email" />
+        <mat-error
+          *ngIf="!newUserForm.get('email')?.errors?.['required'] && (newUserForm.get('email')?.errors?.['pattern'])"
+        >
           Correo invalido
         </mat-error>
         <mat-error
-          *ngIf="newUserForm.get('email')?.invalid && (newUserForm.get('email')?.dirty || newUserForm.get('email')?.touched) && newUserForm.get('email')?.errors?.['required']">
+          *ngIf="newUserForm.get('email')?.invalid && (newUserForm.get('email')?.dirty || newUserForm.get('email')?.touched) && newUserForm.get('email')?.errors?.['required']"
+        >
           Correo requerido
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Rol</mat-label>
-        <mat-select formControlName="role">
-          <div *ngFor="let rol of usersServ.localRoles">
-            <mat-option [value]="rol.name">
-              {{rol.name}}
-            </mat-option>
+        <mat-select
+          formControlName="role"
+          (selectionChange)="onRoleChange($event)"
+        >
+          <div *ngFor="let rol of roles">
+            <mat-option [value]="rol.name"> {{rol.name}} </mat-option>
           </div>
         </mat-select>
         <mat-error
-          *ngIf="newUserForm.get('role')?.invalid && (newUserForm.get('role')?.dirty || newUserForm.get('role')?.touched) && newUserForm.get('role')?.errors?.['required']">
+          *ngIf="newUserForm.get('role')?.invalid && (newUserForm.get('role')?.dirty || newUserForm.get('role')?.touched) && newUserForm.get('role')?.errors?.['required']"
+        >
           Nombre requerido
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Fecha de nacimiento</mat-label>
-        <input matInput [matDatepicker]="picker" formControlName="bornDate">
+        <input matInput [matDatepicker]="picker" formControlName="bornDate" />
         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
         <mat-error
-          *ngIf="newUserForm.get('bornDate')?.invalid && (newUserForm.get('bornDate')?.dirty || newUserForm.get('bornDate')?.touched) && newUserForm.get('bornDate')?.errors?.['required']">
+          *ngIf="newUserForm.get('bornDate')?.invalid && (newUserForm.get('bornDate')?.dirty || newUserForm.get('bornDate')?.touched) && newUserForm.get('bornDate')?.errors?.['required']"
+        >
           Fecha de nacimiento requerida
         </mat-error>
       </mat-form-field>
@@ -97,18 +130,22 @@
           <mat-option value="otro">Otro</mat-option>
         </mat-select>
         <mat-error
-          *ngIf="newUserForm.get('sex')?.invalid && (newUserForm.get('sex')?.dirty || newUserForm.get('sex')?.touched) && newUserForm.get('sex')?.errors?.['required']">
+          *ngIf="newUserForm.get('sex')?.invalid && (newUserForm.get('sex')?.dirty || newUserForm.get('sex')?.touched) && newUserForm.get('sex')?.errors?.['required']"
+        >
           Género requerido
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Teléfono</mat-label>
-        <input matInput placeholder="Teléfono" formControlName="phone">
-        <mat-error *ngIf="!newUserForm.get('phone')?.errors?.['required'] && (newUserForm.get('phone')?.errors?.['pattern'])">
+        <input matInput placeholder="Teléfono" formControlName="phone" />
+        <mat-error
+          *ngIf="!newUserForm.get('phone')?.errors?.['required'] && (newUserForm.get('phone')?.errors?.['pattern'])"
+        >
           Teléfono invalido
         </mat-error>
         <mat-error
-          *ngIf="newUserForm.get('phone')?.invalid && (newUserForm.get('phone')?.dirty || newUserForm.get('phone')?.touched) && newUserForm.get('phone')?.errors?.['required']">
+          *ngIf="newUserForm.get('phone')?.invalid && (newUserForm.get('phone')?.dirty || newUserForm.get('phone')?.touched) && newUserForm.get('phone')?.errors?.['required']"
+        >
           Teléfono requerido
         </mat-error>
         <mat-error *ngIf="newUserForm.get('phone')?.errors?.['minlength']">
@@ -117,18 +154,51 @@
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Dirección</mat-label>
-        <input matInput placeholder="Dirección" formControlName="address">
+        <input matInput placeholder="Dirección" formControlName="address" />
         <mat-error
-          *ngIf="newUserForm.get('address')?.invalid && (newUserForm.get('address')?.dirty || newUserForm.get('address')?.touched) && newUserForm.get('address')?.errors?.['required']">
+          *ngIf="newUserForm.get('address')?.invalid && (newUserForm.get('address')?.dirty || newUserForm.get('address')?.touched) && newUserForm.get('address')?.errors?.['required']"
+        >
           Dirección requerida
         </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Pais</mat-label>
+        <mat-select formControlName="countryId">
+          <div *ngFor="let country of countries">
+            <mat-option *ngIf="country.isActive" [value]="country.id">
+              {{country.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" *ngIf="showPharmacy">
+        <mat-label>Farmacia</mat-label>
+        <mat-select formControlName="pharmacyId">
+          <div *ngFor="let farma of farmacias">
+            <mat-option *ngIf="farma.isActive" [value]="farma.id">
+              {{farma.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+        <button mat-icon-button matSuffix (click)="filterFharmacy($event)">
+          <mat-icon>search</mat-icon>
+        </button>
       </mat-form-field>
     </div>
   </form>
 </main>
 <div mat-dialog-actions>
   <div class="btns">
-    <button mat-raised-button color="primary" [disabled]="newUserForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
-    <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="newUserForm.invalid"
+      (click)="save()"
+    >
+      Guardar <mat-icon>save</mat-icon>
+    </button>
+    <button mat-raised-button color="warn" (click)="resetForm()">
+      Limpiar datos
+    </button>
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core'
+import { Component, Input, OnInit, ViewChild } from '@angular/core'
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -8,6 +8,8 @@ import { Role } from 'src/app/interfaces/models';
 import { DataService } from 'src/app/services/data.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { DetalleRole } from '../detalle-role/detalle-role';
+import { SharedService } from 'src/app/services/shared.service';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-roles',
@@ -15,7 +17,7 @@ import { DetalleRole } from '../detalle-role/detalle-role';
   styleUrls: ['./roles.page.scss'],
 })
 
-export class RolesPage {
+export class RolesPage implements OnInit {
   public breadcrumb = {
     links: [
       {
@@ -33,60 +35,56 @@ export class RolesPage {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:Role[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['name', 'isDeleted', 'acctions'];
+  displayedColumns: string[] = ['name', 'acctions'];
   dataSource = new MatTableDataSource<Role>(this.ELEMENT_DATA);
   isLoadingResults:boolean = true;
 
   constructor(
-    private _dataServ:DataService,
-    public usuariosServ:UsuariosService,
-    private _dialog:MatDialog,
+    private readonly _dataServ:DataService,
+    private readonly _dialog:MatDialog,
+    public readonly usuariosServ:UsuariosService,
+    private readonly sharedService:SharedService,
+    private readonly apiService: ApiService
   ){}
+  ngOnInit(): void {
+    this.dataSource.paginator = this.paginator
+    this.dataSource.sort = this.sort;
+    this.getRoles()
+  }
 
   chageState(row:any){
-    let msgDialog:string
-    if(row.state){
-      msgDialog = '¿Seguro de querer inhabilitar el role?'
-    }else{
-      msgDialog = '¿Seguro de querer habilitar el role?'
-    }
+    let msgDialog:string  = '¿Seguro de querer eliminar el role?'
     this._dialog.open(DialogConfComponent, {
       data: msgDialog
     })
     .afterClosed()
     .subscribe((confirmado:boolean)=>{
       if(confirmado){
-        row.isActive = !row.isActive
-        const res = this.usuariosServ.deletRole(row.name, row.id, row.state)
-          res?.subscribe(res => {
-            if(res){
-              this.usuariosServ.notify('Role actualizado', 'success')
-              this.isLoadingResults = true
-              this.getAllRoles()
-            }
-          }, (err => {
-            console.log(err)
-            this.getAllRoles()
-            this.usuariosServ.notify('Ocurrio un error con el proceso.', 'error')
-          }))
+        this.deleteRole(row.id);
       }
     })
   }
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator
-    this.dataSource.sort = this.sort;
-    this.getAllRoles()
+  private async deleteRole(role: any){
+    try {
+      await this.apiService.delete(`Role?id=${role}`)
+      this.sharedService.notify('Role eliminado.', 'success')
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error eliminando el role.', 'error')
+    } finally {
+      this.isLoadingResults = false;
+      this.getRoles();
+    }
   }
-
-  getAllRoles() {
-    let resp = this.usuariosServ.getAllRoles()
-    resp?.subscribe(roles => {
-      this.dataSource.data = roles.result as Role[]
-      this.isLoadingResults = false
-    }, (err => {
-      this.isLoadingResults = false
-    }))
+  private async getRoles() {
+    try {
+      await this.usuariosServ.setRoles();
+    } catch (error) {
+      this.sharedService.notify('Ocurrio un error realizando la consulta.', 'error')
+    } finally {
+      this.dataSource.data = this.usuariosServ.getRoles();
+      this.isLoadingResults = false;
+    }
   }
 
   on(id?:string){
@@ -100,8 +98,7 @@ export class RolesPage {
     .afterClosed()
     .subscribe((confirm:boolean) => {
       if(confirm){
-        this.isLoadingResults = true
-        this.getAllRoles()
+        this.getRoles()
       }
     })
   }

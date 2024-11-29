@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { DetalleReglas } from 'src/app/pages/inventario.pages/detalle-reglas/detalle-reglas';
@@ -6,113 +6,138 @@ import { RulesService } from 'src/app/services/rules.service';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { Rule } from 'src/app/interfaces/models';
 import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
+import { SharedService } from 'src/app/services/shared.service';
+import { ApiService } from 'src/app/services/api.service';
 
 @Component({
   selector: 'app-reglas',
   templateUrl: './reglas.page.html',
   styleUrls: ['./reglas.page.scss'],
 })
-
 export class ReglasPage implements OnInit {
   public breadcrumb = {
     links: [
       {
         name: 'Inicio',
         isLink: true,
-        link: '/admin/home'
+        link: '/admin/home',
       },
       {
         name: 'Gestión de reglas de canje',
         isLink: false,
-      }
-    ]
-  }
+      },
+    ],
+  };
 
-  isLoadingResults:boolean = true;
+  isLoadingResults: boolean = true;
+  filterRules: Rule[] = [];
+  public rules: any[] = [];
 
   constructor(
-    private _dialog:MatDialog,
-    public rulesServ:RulesService
-  ){}
+    private readonly dialog: MatDialog,
+    private readonly rulesServ: RulesService,
+    private readonly sharedService: SharedService,
+    private readonly apiService: ApiService
+  ) {}
 
   ngOnInit(): void {
-    this.getAllRules()
+    this.getRules();
   }
 
-  getAllRules(){
-    const rules = this.rulesServ.getRules()
-    rules?.subscribe(res => {
-      this.isLoadingResults = false
-      this.rulesServ.reglas = res.result
-      console.log(this.rulesServ.reglas)
-    }, (err => {
-      this.isLoadingResults = false
-      console.log(err)
-    }))
+  private async getRules() {
+    try {
+      await this.rulesServ.setRules();
+    } catch (error) {
+      this.sharedService.notify(
+        'Ocurrio un error cargando la informacion',
+        'error'
+      );
+    } finally {
+      this.filterRules = this.rulesServ.getRules();
+      this.rules = this.rulesServ.getRules();
+      this.isLoadingResults = false;
+    }
   }
 
-  on(id?:number){
+  on(id?: number) {
     const config = {
       data: {
-        title: id ?'Editar regla de canje' :'Agregar regla de canje',
-        ruleId: id
-      }
-    }
-    this._dialog.open(DetalleReglas, config)
-    .afterClosed()
-    .subscribe((confirm:boolean) => {
-      if(confirm){
-        this.isLoadingResults = true
-        this.getAllRules()
-      }
-    })
+        title: id ? 'Editar regla de canje' : 'Agregar regla de canje',
+        ruleId: id,
+      },
+    };
+    this.dialog
+      .open(DetalleReglas, config)
+      .afterClosed()
+      .subscribe((confirm: boolean) => {
+        if (confirm) {
+          this.isLoadingResults = true;
+          this.getRules();
+        }
+      });
   }
 
-  chageState(row:Rule){
-    const formData = {
-      "daysAround": row.daysAround,
-      "periodicity": row.periodicity,
-      "quantityBuy": row.quantityBuy,
-      "quantityGive": row.quantityGive,
-      "maxChangeYear": row.maxChangeYear,
-      "productId": row.productId
+  chageState(row: any) {
+    let rule: any = {
+      daysAround: row.daysAround,
+      periodicity: row.periodicity,
+      quantityBuy: row.quantityBuy,
+      quantityGive: row.quantityGive,
+      maxChangeYear: row.maxChangeYear,
+      productId: row.productId,
+      countryId: row.countryId,
+      id: row.id,
+      isActive: !row.isActive,
+    };
+    let msgDialog: string;
+    if (row.isActive) {
+      msgDialog = '¿Seguro de querer inhabilitar esta regla de canje?';
+    } else {
+      msgDialog = '¿Seguro de querer habilitar esta regla de canje?';
     }
-    let msgDialog:string
-    if(row.state){
-      msgDialog = '¿Seguro de querer inhabilitar esta regla de canje?'
-    }else{
-      msgDialog = '¿Seguro de querer habilitar esta regla de canje?'
-    }
-    this._dialog.open(DialogConfComponent, {
-      data: msgDialog
-    })
-    .afterClosed()
-    .subscribe((confirmado:boolean)=>{
-      if(confirmado){
-        row.state = !row.state
-        const res = this.rulesServ.updateRule(formData, row.id, row.state)
-          res?.subscribe(res => {
-            if(res){
-              this.rulesServ.notify('Regla actualizada', 'success')
-              this.isLoadingResults = true
-              this.getAllRules()
-            }
-          }, (err => {
-            console.log(err)
-            this.getAllRules()
-            this.rulesServ.notify('Ocurrio un error con el proceso.', 'error')
-          }))
-      }
-    })
+    this.dialog
+      .open(DialogConfComponent, {
+        data: msgDialog,
+      })
+      .afterClosed()
+      .subscribe((confirmado: boolean) => {
+        if (confirmado) {
+          this.chageStatus(rule);
+        }
+      });
   }
 
-  generateReport(){
-    this._dialog.open(ModalReportComponent, {
+  private async chageStatus(rule: any) {
+    try {
+      rule = this.sharedService.addIpDevice(rule);
+      this.isLoadingResults = true;
+      await this.apiService.put('ProductChangeRule', rule);
+      this.sharedService.notify('Regla actualizada', 'success');
+    } catch (err) {
+      this.sharedService.notify('Ocurrio un error con el proceso.', 'error');
+    } finally {
+      this.isLoadingResults = false;
+      this.getRules();
+    }
+  }
+
+  generateReport() {
+    this.dialog.open(ModalReportComponent, {
       disableClose: true,
       data: {
-        'title': 'Reporte General de Reglas de Canje',
-        'body': this.rulesServ.reglas
-      }
-    })
+        title: 'Reporte General de Reglas de Canje',
+        body: this.rules,
+      },
+    });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value
+      .toLowerCase()
+      .trim();
+
+    this.rules = this.filterRules.filter((a) =>
+      a.productName.toLowerCase().includes(filterValue)
+    );
   }
 }

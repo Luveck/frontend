@@ -28,6 +28,11 @@
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
 
+      <ng-container matColumnDef="id" style="display: none;">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
+        <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+      </ng-container>
+
       <ng-container matColumnDef="noPurchase">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> No. Factura </th>
         <td mat-cell *matCellDef="let row"> {{row.noPurchase}} </td>
@@ -41,24 +46,29 @@
       <ng-container matColumnDef="reviewed">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Verificación </th>
         <td mat-cell *matCellDef="let row">
-          <span class="chip" [ngClass]="{'active': row.reviewed == true, 'inactive': row.reviewed == false}">{{row.reviewed ?'Verificado' :'Sin verificar'}}</span>
+          <span class="chip" [ngClass]="{'active': row.purchaseReviewed == true, 'inactive': row.purchaseReviewed == false}">{{row.purchaseReviewed ?'Verificado' :'Sin verificar'}}</span>
         </td>
       </ng-container>
 
       <ng-container matColumnDef="creationDate">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de creación </th>
-        <td mat-cell *matCellDef="let row"> {{row.creationDate |date:'M/d/yy'}} </td>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de venta </th>
+        <td mat-cell *matCellDef="let row"> {{row.dateShiped |date:'M/d/yy'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="userId" style="display: none;">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</th>
+        <td mat-cell *matCellDef="let row"> {{row.userId }} </td>
       </ng-container>
 
       <ng-container matColumnDef="acctions">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
         <td mat-cell *matCellDef="let row">
-          <button mat-stroked-button (click)="on(row.noPurchase, row.buyer)">
+          <button mat-stroked-button (click)="on(row.id)">
             Ver detalles
             <mat-icon color="accent">arrow_forward</mat-icon>
           </button>
 
-          <button mat-stroked-button (click)="chageState(row)" *ngIf="!row.reviewed">
+          <button mat-stroked-button (click)="chageState(row)" *ngIf="!row.purchaseReviewed">
             Verificar venta
             <mat-icon color="warn">published_with_changes</mat-icon>
           </button>

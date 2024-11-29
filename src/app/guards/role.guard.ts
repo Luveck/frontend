@@ -11,7 +11,7 @@ export class RoleGuard implements CanActivate {
 
   canActivate() {
     if(this.authServ.userToken){
-      if(this.authServ.userData.Role == 'Admin' || this.authServ.userData.Role == 'Dependiente'){
+      if(this.authServ.dataUser().Role == 'Admin' || this.authServ.dataUser().Role == 'Dependiente'){
         this.router.navigate(['admin/home']);
         return false
       }
