@@ -7,6 +7,7 @@ import { ApiService } from './api.service';
 })
 export class RulesService {
   private rules: any[] = [];
+  private productsRuleByCountry: any[] = [];
 
   constructor(
     private readonly sharedService: SharedService,
@@ -19,5 +20,13 @@ export class RulesService {
 
   public getRules() {
     return this.rules;
+  }
+
+  public async setProductsRuleByCountry(countryId: string) {
+    this.productsRuleByCountry = await this.apiService.get(`ProductChangeRule/GetProductsLandingByCountry/${ countryId }`);
+  }
+
+  public getProductsRuleByCountry() {
+    return this.productsRuleByCountry;
   }
 }

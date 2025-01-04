@@ -36,7 +36,7 @@ export class VentasPage implements AfterViewInit {
   @Input('ELEMENT_DATA')  ELEMENT_DATA!:Venta[];
   @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns:string[] = ['noPurchase', 'namePharmacy', 'reviewed', 'creationDate', 'acctions'];
+  displayedColumns:string[] = ['noPurchase', 'country', 'namePharmacy', 'reviewed', 'creationDate', 'acctions'];
   dataSource = new MatTableDataSource<Venta>(this.ELEMENT_DATA);
 
   isLoadingResults:boolean = true
@@ -70,17 +70,6 @@ export class VentasPage implements AfterViewInit {
       });
     }
   }
-  // getAllVentas() {
-  //   const resp = this._ventasServ.getVentas()
-  //   resp?.subscribe(ventas => {
-  //     this.dataSource.data = ventas.result as Venta[]
-
-  //     this.isLoadingResults = false
-  //   }, (err => {
-  //     this.isLoadingResults = false
-  //     console.log(err)
-  //   }))
-  // }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

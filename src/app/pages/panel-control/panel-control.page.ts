@@ -33,7 +33,6 @@ export class PanelControlPage implements AfterViewInit {
 
     private _authServ: AuthService,
 
-
     // Revisar si con esto funciona y borar lo otro
     private readonly apiService: ApiService,
     private readonly sharedService: SharedService,
@@ -42,10 +41,7 @@ export class PanelControlPage implements AfterViewInit {
     private readonly medicServ: MedicosService,
     private readonly usersServ: UsuariosService,
     private readonly rulesServ: RulesService,
-    private readonly ventasServ: VentasService,
-
-
-
+    private readonly ventasServ: VentasService
   ) {}
 
   viewInfoPanel(module: string) {
@@ -61,82 +57,24 @@ export class PanelControlPage implements AfterViewInit {
         this._authServ.checkTokenDate(this._authServ.expToken) &&
         this._authServ.userToken
       ) {
-        // if (this._authServ.hasPermission('Registro-ventas')) {
-        //   // this._ventasServ
-        //   //   .getVentas()
-        //   //   ?.subscribe((res) => (this.counterVentas = res.result.length));
-        // }
-
-        // if (this._authServ.hasPermission('Productos')) {
-          // this._inveServ.getProductos()?.subscribe((res: any) => {
-          //   this.counterProductos = res.result.length;
-          //   this._inveServ.listProducts = res.result;
-          // });
-        // }
-
-        // if (this._authServ.hasPermission('Reglas-Canje')) {
-        //   // this._rulesServ
-        //   //   .getRules()
-        //   //   ?.subscribe((res: any) => (this.counterRules = res.result?.length));
-        // }
-
-        // if (this._authServ.hasPermission('Farmacias')) {
-        //   // this._farmaServ.getFarmacias()?.subscribe((res) => {
-        //   //   this.counterFarmacias = res.result.length;
-        //   //   this._farmaServ.listFarmacias = res.result;
-        //   // });
-        // }
-
-        // if (this._authServ.hasPermission('Usuarios')) {
-        //   // this._usersServ.getUsers()?.subscribe((res: any) => {
-        //   //   this.counterUsers = res.result.length;
-        //   //   this._usersServ.usersGlobal = res.result;
-        //   // });
-        // }
-
-        // if (this._authServ.hasPermission('Medicos')) {
-        //   // this._MedicServ
-        //   //   .getMedicos()
-        //   //   ?.subscribe((res) => (this.counterMedicos = res.result.length));
-        // }
-
-        // if (this._authServ.hasPermission('Paises')) {
-        //   this.sharedService.setCountry();
-        //   console.log(this.sharedService.getCountryList())
-        //   this.counterPaises = (this.sharedService.getCountryList()).length;
-        // }
-
-        // if (this._authServ.hasPermission('Departamentos')) {
-        //   this._zonasServ.getDepartamentos()?.subscribe((res) => {
-        //     this.counterDepartamentos = res.result.length;
-        //     this._zonasServ.listDepartamentos = res.result;
-        //   });
-        // }
-
-        // if (this._authServ.hasPermission('Ciudades')) {
-        //   this._zonasServ.getCiudades()?.subscribe((res) => {
-        //     this.counterCiudades = res.result.length;
-        //     this._zonasServ.listCiudades = res.result;
-        //   });
-        // }
       }
     }, 2000);
   }
 
-  public async getData(){
+  public async getData() {
     if (this._authServ.hasPermission('Paises')) {
       await this.sharedService.setCountry();
-      this.counterPaises = (this.sharedService.getCountryList()).length;
+      this.counterPaises = this.sharedService.getCountryList().length;
     }
 
     if (this._authServ.hasPermission('Departamentos')) {
       await this.sharedService.setDepartments();
-      this.counterDepartamentos = (this.sharedService.getDepartmentList()).length;
+      this.counterDepartamentos = this.sharedService.getDepartmentList().length;
     }
 
     if (this._authServ.hasPermission('Ciudades')) {
       await this.sharedService.setCities();
-      this.counterCiudades = (this.sharedService.getCityList()).length;
+      this.counterCiudades = this.sharedService.getCityList().length;
     }
 
     if (this._authServ.hasPermission('Productos')) {

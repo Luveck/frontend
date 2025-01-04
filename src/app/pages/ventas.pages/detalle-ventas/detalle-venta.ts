@@ -50,7 +50,7 @@ export class DetalleVenta implements OnInit, OnDestroy {
   usuarios: any[] = [];
   userId!: string;
   isLoadingResults!: boolean;
-  files: File[] = [];
+  files: Array<{ base64: string; extension: string; name: string; type: string }> = [];
   isOverDrop = false;
 
   public ventaForm = new FormGroup({
@@ -93,10 +93,22 @@ export class DetalleVenta implements OnInit, OnDestroy {
     });
 
     if (noPurchase != 'new') {
-
+      this.getPurchase(noPurchase);
     }
   }
 
+  private async getPurchase(noPurchase: any) {
+    try {
+      this.currentVenta = await this.apiService.get(`Purchase/id/${noPurchase}`)
+      console.log(this.currentVenta)
+      this.initValores();
+
+    } catch (error) {
+      this.sharedService.notify('Error consultando la informacion', 'error');
+    } finally {
+      this.isLoadingResults = false;
+    }
+  }
   onQuantityChange(index: number) {
     const currentProduct = this.productsOnCurrentVenta[index];
     if (currentProduct.Quantity > 20) {
@@ -105,14 +117,22 @@ export class DetalleVenta implements OnInit, OnDestroy {
   }
 
   public onSelectFile(event:any){
-    console.log(this.validator.validateType(event.type))
-    for(const item of event.target.files){
-      if(this.validator.validateType(item.type)){
-        this.files.push(item);
+    for(const file of event.target.files){
+      if(this.validator.validateType(file.type)){
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          const base64String = e.target.result.split(',')[1];
+          const extension = file.name.split('.').pop();
+          this.files.push({
+            base64: base64String,
+            extension: extension,
+            name: file.name,
+            type: file.type
+          });
+        };
+        reader.readAsDataURL(file);
       }
     }
-    console.log(event)
-    console.log(this.files.length)
   }
   private async loadConfig() {
     try {
@@ -206,23 +226,64 @@ export class DetalleVenta implements OnInit, OnDestroy {
     }
 
     if (this.currentVentaId) {
-
+      console.log("Editar factura")
     } else {
-
+      this.addPurchase();
     }
   }
 
-  initProds(resultProds: any[]) {
-    resultProds.map((prod) => {
-      this.productsOnCurrentVenta.push({
-        productId: prod.productId,
-        Quantity: prod.quantity,
-      });
+  private createPurchase(){
+    var products: any =  [];
+
+    this.productsOnCurrentVenta.forEach(element => {
+      products.push({
+        productId: element.productId,
+        Quantity: element.quantity
+      })
     });
+    var purchase: any = {
+      pharmacyId: this.ventaForm.value.pharmacyId,
+      userId: this.selectedUser.id,
+      noPurchase: this.ventaForm.value.noPurchase,
+      purchaseReviewed: false,
+      dateShiped: new Date().toISOString(),
+      countryId: '1',
+      observation: this.ventaForm.value.observation,
+      file: this.files[0].base64.toString(),
+      fileExtension: this.files[0].extension,
+      products: products
+    }
+
+    purchase = this.sharedService.addIpDevice(purchase);
+    return purchase;
   }
+  private async addPurchase(){
+    try {
+      let purchase = this.createPurchase();
+      purchase = {
+        ...purchase,
+        isActive: true,
+      }
+      await this.apiService.post('Purchase/CreatePruchase', purchase);
+      this.sharedService.notify('Factura agregado', 'success');
+    } catch (error) {
+      this.sharedService.notify('Error agregado la factura', 'error');
+    } finally {
+      this.isLoadingResults = false;
+    }
+  }
+  // initProds(resultProds: any[]) {
+  //   resultProds.map((prod) => {
+  //     this.productsOnCurrentVenta.push({
+  //       productId: prod.productId,
+  //       Quantity: prod.quantity,
+  //     });
+  //   });
+  // }
 
   addProd() {
     this.productsOnCurrentVenta.push({
+      productId: null,
       Quantity: 1,
     });
   }
@@ -231,11 +292,37 @@ export class DetalleVenta implements OnInit, OnDestroy {
     this.productsOnCurrentVenta.splice(index, 1);
   }
 
-  checkProdInArray(idprod: number): boolean {
-    this.productsOnCurrentVenta.map((prod) => {
-      prod.productId != idprod;
-      return true;
-    });
-    return false;
+  availableProducts(index: number) {
+    const selectedProducts = this.productsOnCurrentVenta
+      .filter((_, i) => i !== index)
+      .map((p) => p.productId);
+    return this.productos.filter((prod) => !selectedProducts.includes(prod.id));
+  }
+
+  canAddProduct(): boolean {
+    if (this.productsOnCurrentVenta.length === 0) return true;
+    const lastProduct = this.productsOnCurrentVenta[this.productsOnCurrentVenta.length - 1];
+    return lastProduct.productId && lastProduct.Quantity > 0;
+  }
+
+  onProductChange(index: number) {
+    const currentProduct = this.productsOnCurrentVenta[index];
+    if (!currentProduct.Quantity) {
+      currentProduct.Quantity = 1;
+    }
+  }
+
+  isProductsValid(): boolean {
+    if (this.productsOnCurrentVenta.length === 0) {
+      return false;
+    }
+
+    return this.productsOnCurrentVenta.every(
+      (product) =>
+        product.productId !== null &&
+        product.productId !== undefined &&
+        product.Quantity > 0 &&
+        product.Quantity <= 20
+    );
   }
 }

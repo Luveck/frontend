@@ -19,7 +19,8 @@ export class InicioPage implements OnInit{
   darkClassName:string = 'theme-dark';
   SectionSelect:string = 'inicio'
   showMenu:boolean = false
-
+  countryCombo : any[] = [];
+  selectedCountry : string = 'hn';
   @HostBinding('class') className = '';
 
   constructor(
@@ -27,7 +28,8 @@ export class InicioPage implements OnInit{
     private _dialog: MatDialog,
     public dataServ: DataService,
     public authServ:AuthService,
-    private info: SharedService
+    private info: SharedService,
+    private readonly sharedService:SharedService
   ){
     let theme = this.dataServ.getTheme()
     if(theme === 'dark'){
@@ -43,10 +45,15 @@ export class InicioPage implements OnInit{
     }
   }
   ngOnInit(): void {
-    this.info.getUserIP()
-    this.info.getUserDevice()
+    this.getInformation();
   }
 
+  private checkUserRegistration(): void {
+    if (this.authServ.userToken) {
+      this.selectedCountry = this.countryCombo.find(c => c.id === Number(this.authServ.dataUser().countryId))?.iso3;
+      this.changeCountry();
+    }
+  }
   setTheme(){
     this.localTheme = !this.localTheme
     if(!this.localTheme){
@@ -89,5 +96,27 @@ export class InicioPage implements OnInit{
 
   onLogin(){
     this.dataServ.goTo('/authentication/login')
+  }
+
+  private async getInformation() {
+    try {
+      await this.sharedService.setCountryCombo();
+      this.info.getUserIP();
+      this.info.getUserDevice();
+    } catch (error) {
+
+    } finally {
+      this.countryCombo = this.sharedService.getCountryCombo();
+      this.selectedCountry = this.countryCombo.find(c => c.iso3 === this.dataServ.getCountry()).iso3;
+      this.checkUserRegistration();
+    }
+  }
+
+  public getFlag(flag: string) {
+    return `https://flagcdn.com/${flag.toLowerCase()}.svg`
+  }
+
+  public changeCountry() {
+    this.dataServ.setCountry(this.countryCombo.find(c => c.iso3 ===this.selectedCountry));
   }
 }

@@ -13,20 +13,25 @@ import { DetalleUsuario } from './detalle-usuario/detalle-usuario';
 import { RolesPage } from './roles/roles.page';
 import { DetalleRole } from './detalle-role/detalle-role';
 import { RolesModulePage } from './roles-module/roles-module.page';
+import { RolesPermissionsPage } from './roles-permissions/roles-permissions.page';
 
 const routes: Routes = [
   {
     path: 'usuarios',
-    component: UsuariosPage
+    component: UsuariosPage,
   },
   {
     path: 'roles',
-    component: RolesPage
+    component: RolesPage,
   },
   {
     path: 'moduleRoles',
-    component: RolesModulePage  
-  }
+    component: RolesModulePage,
+  },
+  {
+    path: 'rolesPermissions',
+    component: RolesPermissionsPage,
+  },
 ];
 
 @NgModule({
@@ -35,7 +40,8 @@ const routes: Routes = [
     DetalleUsuario,
     RolesPage,
     DetalleRole,
-    RolesModulePage
+    RolesModulePage,
+    RolesPermissionsPage,
   ],
   imports: [
     CommonModule,
@@ -43,14 +49,13 @@ const routes: Routes = [
     ReactiveFormsModule,
     MaterialModule,
     ComponentsModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
   ],
   providers: [
     {
       provide: MatPaginatorIntl,
-      useClass: CustomMatPaginatorIntl
-    }
-  ]
+      useClass: CustomMatPaginatorIntl,
+    },
+  ],
 })
-
 export class SecurityModule {}

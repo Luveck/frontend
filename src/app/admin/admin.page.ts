@@ -11,6 +11,8 @@ import { ClientProfileComponent } from '../pages/inicio/sec/client-profile/clien
 import { AuthService } from '../services/auth.service';
 import { DataService } from '../services/data.service';
 import { environment } from 'src/environments/environment';
+import { SharedService } from '../services/shared.service';
+import { UserRoles } from '../shared/enums/roles.enum';
 
 @Component({
   selector: 'app-admin',
@@ -23,6 +25,9 @@ export class AdminPage implements OnInit {
   menuList = environment.menu;
   localTheme: boolean = true;
   darkClassName: string = 'theme-dark';
+  countryCombo : any[] = [];
+  selectedCountry : string = 'hn';
+  isAdmin : boolean = false;
 
   @HostBinding('class') className = '';
 
@@ -31,7 +36,9 @@ export class AdminPage implements OnInit {
     private _overlay: OverlayContainer,
     private _dialogo: MatDialog,
     private _dataServ: DataService,
-    public authServ: AuthService
+    public authServ: AuthService,
+    public dataServ: DataService,
+    private readonly sharedService:SharedService
   ) {
     let theme = this._dataServ.getTheme();
     if (theme === 'dark') {
@@ -52,7 +59,6 @@ export class AdminPage implements OnInit {
 
   // Función para actualizar el menú
   updateMenu(menu: any[], moduleRoleResponse: any[]) {
-
     var start = true;
     menu.forEach((menuItem) => {
       const hasAccess = moduleRoleResponse.some(
@@ -116,6 +122,20 @@ export class AdminPage implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getInformation();
+  }
+
+  private async getInformation() {
+    try {
+      await this.sharedService.setCountryCombo()
+    } catch (error) {
+
+    } finally {
+      this.countryCombo = this.sharedService.getCountryCombo();
+      this.countryCombo = this.sharedService.getCountryCombo();
+      this.selectedCountry = this.countryCombo.find(c => c.iso3 === this.dataServ.getCountry()).iso3;
+      this.isAdmin = this.authServ.dataUser().Role === UserRoles.Admin.toString();
+    }
   }
 
   onLogout() {
@@ -151,5 +171,13 @@ export class AdminPage implements OnInit {
       data: this.authServ.dataUser().UserId,
     };
     this._dialogo.open(ClientProfileComponent, config);
+  }
+
+  public changeCountry() {
+    this.dataServ.setCountry(this.countryCombo.find(c => c.iso3 ===this.selectedCountry));
+  }
+
+  public getFlag(flag: string) {
+    return `https://flagcdn.com/${flag.toLowerCase()}.svg`
   }
 }

@@ -39,6 +39,32 @@ export class DataService {
     return themeState
   }
 
+  setCountry(country?: any) {
+    if (country) {
+      localStorage.setItem('countryLuveckIso', country.iso3);
+      localStorage.setItem('countryLuveckId', country.id);
+    } else {
+      localStorage.setItem('countryLuveckIso', 'HN');
+      localStorage.setItem('countryLuveckId', '1');
+    }
+  }
+
+  getCountry(){
+    let country = localStorage.getItem('countryLuveckIso');
+    if(!country){
+      return 'HN';
+    }
+    return country
+  }
+
+  getCountryId(){
+    let country = localStorage.getItem('countryLuveckId');
+    if(!country){
+      return '1';
+    }
+    return country
+  }
+
   public fir(title:string, icono:any, timeOut?:number){
     const Toast = Swal.mixin({
       toast: true,

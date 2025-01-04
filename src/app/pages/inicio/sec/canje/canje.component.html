@@ -1,11 +1,11 @@
 <section class="canjes">
-  <h1>Registro de canjes</h1>
+  <!-- <h1>Informa de canjes</h1>
   <p>
     Llevamos un control del registro de canjes obtenidos en el proyecto "Pasión
     por Vivir".
-  </p>
+  </p> -->
   <mat-tab-group mat-align-tabs="center">
-    <mat-tab>
+    <!-- <mat-tab>
       <ng-template mat-tab-label> Ingresar Canje </ng-template>
       <div class="contentRegistroCanje">
         <h1>Registrar factura</h1>
@@ -99,12 +99,13 @@
           </div>
         </div>
       </div>
-    </mat-tab>
+    </mat-tab> -->
     <mat-tab>
-      <ng-template mat-tab-label> Completados </ng-template>
+      <ng-template mat-tab-label> Facturas Registradas </ng-template>
       <div class="contentRegistroCanje">
         <h1>Canjes Completados</h1>
         <p>Aun no tiene canjes procesados.</p>
+        <app-products-purchase></app-products-purchase>
       </div>
     </mat-tab>
   </mat-tab-group>

@@ -106,3 +106,41 @@
     }
   }
 }
+
+.country-selector {
+  width: 100px;
+
+  mat-select-trigger {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    .flag-icon {
+      width: 24px;
+      height: 18px;
+      border-radius: 2px;
+      box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  mat-select {
+    .mat-select-value {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+  }
+}
+
+.flag-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  .flag-icon {
+    width: 24px;
+    height: 18px;
+    border-radius: 2px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+  }
+}

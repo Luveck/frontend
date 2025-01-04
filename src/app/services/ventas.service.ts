@@ -11,6 +11,7 @@ import { ApiService } from './api.service';
 })
 export class VentasService {
   private purchases: any[] = [];
+  private productsPurchases: any[] = [];
   headers:any
 
   constructor(
@@ -24,6 +25,14 @@ export class VentasService {
     this.sharedService.getUserIP();
     this._authServ.getCurrentUser();
     this.headers = {'Authorization':`Bearer ${this._authServ.userToken}`}
+  }
+
+  public async setProductsPurchases(){
+    this.productsPurchases = await this.apiService.get('productsPurchases')
+  }
+
+  public getProductsPurchases(){
+    return this.productsPurchases;
   }
 
   public async setPurchase(){

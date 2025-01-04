@@ -9,6 +9,8 @@ import { DialogConfComponent } from './dialog-conf/dialog-conf.component';
 import { ScrollToTopComponent } from './scroll-to-top/scroll-to-top.component';
 import { SesionEndComponent } from './sesion-end/sesion-end.component';
 import { ModalReportComponent } from './modal-report/modal-report.component';
+import { DialogcountryComponent } from './dialog-country/dialog-country.component';
+import { ProductsPurchaseComponent } from './products-purchase/products-purchase.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,9 @@ import { ModalReportComponent } from './modal-report/modal-report.component';
     DialogConfComponent,
     ScrollToTopComponent,
     SesionEndComponent,
-    ModalReportComponent
+    ModalReportComponent,
+    DialogcountryComponent,
+    ProductsPurchaseComponent
   ],
   imports: [
     RouterModule,
@@ -30,7 +34,9 @@ import { ModalReportComponent } from './modal-report/modal-report.component';
     DialogConfComponent,
     ScrollToTopComponent,
     SesionEndComponent,
-    ModalReportComponent
+    ModalReportComponent,
+    DialogcountryComponent,
+    ProductsPurchaseComponent
   ]
 })
 

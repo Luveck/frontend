@@ -12,6 +12,22 @@
           Iniciar Sesión
         </button>
       </div>
+      <mat-form-field appearance="outline" style="width: 90px; margin-left: 10px; margin-top: 20px;">
+        <mat-select [(ngModel)]="selectedCountry" (selectionChange)="changeCountry()" [disabled]="authServ.userToken">
+          <mat-select-trigger>
+            <div class="flag">
+              <img [src]="getFlag(selectedCountry)" alt="Flag" width="20" height="15" />
+              {{ selectedCountry }}
+            </div>
+          </mat-select-trigger>
+          <mat-option *ngFor="let country of countryCombo" [value]="country.iso3">
+            <div class="flag">
+              <img [src]="getFlag(country.iso3)" alt="Flag" width="20" height="15" />
+              {{ country.name }}
+            </div>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       <button style="color: #ffc409;" mat-icon-button matTooltip="Cambiar tema" (click)="setTheme()">
         <mat-icon>{{localTheme ?'light_mode' :'brightness_3'}}</mat-icon>
       </button>
@@ -46,7 +62,7 @@
         <button class="nav_link" [ngClass]="{'active': SectionSelect === 'registro'}" (click)="selectSection('registro')">Registrarme en el Programa</button>
       </li>
       <li class="nav_item" *ngIf="authServ.userToken">
-        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'canjes'}" (click)="selectSection('canjes')">Registro de Canjes</button>
+        <button class="nav_link" [ngClass]="{'active': SectionSelect === 'canjes'}" (click)="selectSection('canjes')">Información de Canjes</button>
       </li>
     </ul>
   </div>
@@ -64,7 +80,7 @@
   <footer>
     <p>&copy; 2022</p> &nbsp;
     <p>Powered by</p>
-    <img src="assets/icons/logo-appland.png">
+    <img src="assets/icons/logo-appland.png" alt>
   </footer>
 </main>
 

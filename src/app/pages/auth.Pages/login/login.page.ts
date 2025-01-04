@@ -50,8 +50,7 @@ export class LoginPage implements OnInit{
       }
       const login = await this.apiService.post('user/login', dataLogin) as any;
       this._authServ.userToken = login['token'].token;
-      this.apiService.setCustomHeader({
-        'Authorization': 'Bearer '+ this._authServ.userToken});
+      localStorage.setItem('LuveckUserToken', login['token'].token);
       this._authServ.setPermissions(login['moduleRoleResponse']);
       this._authServ.decodeToken(
                this._authServ.userToken,
@@ -62,30 +61,6 @@ export class LoginPage implements OnInit{
       } finally {
         this.dataServ.progress = false;
       }
-      // this._authServ
-      //   .login(formData)
-      //   .then((res: any) => {
-      //     this.dataServ.progress = false;
-      //     this._authServ.userToken = res.result.token;
-      //     this._authServ.setPermissions(res.result.moduleRoleResponse);
-      //     localStorage.setItem('LuveckUserToken', this._authServ.userToken);
-
-      //     this._authServ.decodeToken(
-      //       this._authServ.userToken,
-      //       res.result.changePass
-      //     );
-      //   })
-      //   .catch((error: any) => {
-      //     this.dataServ.progress = false;
-      //     let msgError = error.error.messages;
-      //     msgError === 'Usuario bloqueado por intentos no validos.' ||
-      //     'El usuario se encuentra inactivo.'
-      //       ? this.dataServ.fir(`${msgError}`, 'error')
-      //       : this.dataServ.fir(
-      //           `DNI o contraseña del usuario no válidos.`,
-      //           'error'
-      //         );
-      //   });
     }
   }
 }

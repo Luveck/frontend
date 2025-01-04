@@ -50,7 +50,22 @@
         <button style="color: #ffc409;" mat-icon-button matTooltip="Cambiar tema" (click)="setTheme()">
           <mat-icon>{{localTheme ?'light_mode' :'brightness_3'}}</mat-icon>
         </button>
-
+        <mat-form-field appearance="outline" style="width: 110px; margin-left: 5px; margin-top: 25px">
+          <mat-select [(ngModel)]="selectedCountry" (selectionChange)="changeCountry()" [disabled]="!isAdmin">
+            <mat-select-trigger>
+              <div class="flag" >
+                <img [src]="getFlag(selectedCountry)" alt="Flag" width="20" height="15" />
+                {{ selectedCountry }}
+              </div>
+            </mat-select-trigger>
+            <mat-option *ngFor="let country of countryCombo" [value]="country.iso3">
+              <div class="flag">
+                <img [src]="getFlag(country.iso3)" alt="Flag" width="20" height="15" />
+                {{ country.name }}
+              </div>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
         <button mat-button (click)="openProfile()">
           <div class="nameDate">
             <div class="imgCont">

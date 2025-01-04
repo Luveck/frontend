@@ -4,6 +4,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { DataService } from './data.service';
 import { SesionEndComponent } from '../components/sesion-end/sesion-end.component';
 import { SharedService } from './shared.service';
+import { UserRoles } from '../shared/enums/roles.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -100,37 +101,54 @@ export class AuthService {
       .post(`${this._dataServ.baseURLSec}Security/Reset`, info)
       .toPromise();
   }
-// no borrar
+  // no borrar
   public decodeToken(token: string, changePass?: boolean) {
-    var base64Url = token.split('.')[1];
-    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    var jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split('')
-        .map(function (c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-        })
-        .join('')
-    );
-    let tokenData = JSON.parse(jsonPayload);
-    this.userData = {
-      UserId: tokenData.UserId,
-      UserName: tokenData.UserName,
-      LastName: tokenData.LastName,
-      Role: tokenData.Role,
-      Email: tokenData.Email,
-    };
-    this.expToken = tokenData.exp;
-    if (changePass === true) {
-      this._dataServ.goTo('/authentication/changepassword');
-    } else {
-      this.redirectSegunDate(this.expToken);
+    try {
+      if (!token || token.split('.').length !== 3) {
+        throw new Error('El token no tiene un formato válido.');
+      }
+
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+
+      const tokenData = JSON.parse(jsonPayload);
+
+      // Validar las propiedades necesarias
+      if (!tokenData.UserId || !tokenData.UserName || !tokenData.exp) {
+        throw new Error('El token no contiene las propiedades requeridas.');
+      }
+
+      this.userData = {
+        UserId: tokenData.UserId,
+        UserName: tokenData.UserName,
+        LastName: tokenData.LastName || '', // Valores opcionales
+        Role: tokenData.Role || '',
+        Email: tokenData.Email || '',
+        countryId: tokenData.CountryId || '',
+      };
+
+      this.expToken = tokenData.exp;
+
+      if (changePass) {
+        this._dataServ.goTo('/authentication/changepassword');
+      } else {
+        this.redirectSegunDate(this.expToken);
+      }
+    } catch (error) {
+      console.error('Error al decodificar el token:', error);
+      this.logOut(''); // Opcional: cerrar sesión en caso de token inválido
     }
   }
 
   redirectSegunDate(exp: any) {
     if (this.checkTokenDate(exp)) {
-      if (this.userData.Role != 'Cliente') {
+      if (this.userData.Role != UserRoles.Cliente.toString()) {
         this._dataServ.goTo('/admin/panelControl');
       } else {
         this._dataServ.goTo('/inicio');
@@ -152,7 +170,7 @@ export class AuthService {
 
   public logOut(role: string) {
     this.userToken = null;
-    this.userData = {} as DataUser;;
+    this.userData = {} as DataUser;
     localStorage.removeItem('LuveckUserToken');
     localStorage.removeItem('LuveckUserMenu');
     role === 'Admin'
@@ -180,4 +198,5 @@ export interface DataUser {
   LastName: string;
   Role: string;
   Email: string;
+  countryId: string;
 }

@@ -3,6 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 
 import { RulesService } from 'src/app/services/rules.service';
 import { ModalProdIniComponent } from '../modal-prod-ini/modal-prod-ini.component';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-prods',
@@ -14,14 +15,24 @@ export class ProdsComponent implements OnInit {
   selectedCategory:number = 0
   prodsCanje:any[] = []
 
-  constructor(private _dialog: MatDialog, public rulesServ:RulesService) { }
+  constructor(
+    private _dialog: MatDialog,
+    private readonly rulesServ:RulesService,
+    private readonly dataServ: DataService,
+  ) { }
 
   ngOnInit(): void {
-    // const peticion = this.rulesServ.getProdConRules()
-    // peticion.subscribe((res:any) => {
-    //   console.log(res)
-    //   this.prodsCanje = res.result
-    // })
+    this.getProductsRules();
+  }
+
+  private async getProductsRules(){
+    try {
+      await this.rulesServ.setProductsRuleByCountry(this.dataServ.getCountryId());
+    } catch (error) {
+
+    } finally {
+      this.prodsCanje = this.rulesServ.getProductsRuleByCountry();
+    }
   }
 
   openModalProd(prod:any){

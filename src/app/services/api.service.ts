@@ -15,6 +15,8 @@ export class ApiService {
     private readonly http: HttpClient,
   ) {
     this.headers['Content-Type'] = 'application/json';
+    this.token = localStorage.getItem('LuveckUserToken') || '';
+    this.headers['Authorization'] = `Bearer ${this.token}`;
   }
 
 

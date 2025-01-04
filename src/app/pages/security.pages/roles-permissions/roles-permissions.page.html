@@ -1,0 +1,80 @@
+<main>
+  <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
+
+  <header>
+    <mat-form-field appearance="fill">
+      <mat-label>Role</mat-label>
+      <mat-select (selectionChange)="onRoleSelected()" [(value)]="selected">
+        <div *ngFor="let role of roles">
+          <mat-option [value]="role.id"> {{role.name}} </mat-option>
+        </div>
+      </mat-select>
+    </mat-form-field>
+    <div>
+      <button mat-raised-button color="primary" (click)="onUpdateAccess()">
+        <mat-icon>update</mat-icon>
+        Actualizar Accesos
+      </button>
+    </div>
+  </header>
+
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <ng-container matColumnDef="moduleName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Modulo</th>
+        <td mat-cell *matCellDef="let row">{{row.moduleName }}</td>
+      </ng-container>
+
+      <!-- Read -->
+      <ng-container matColumnDef="read">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Leer</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox
+            [checked]="isPermissionSelected(row.permissions, 'read')"
+            (change)="onCheckboxChange($event, row.moduleId, 'read')"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Create -->
+      <ng-container matColumnDef="create">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Crear</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox
+            [checked]="isPermissionSelected(row.permissions, 'Create')"
+            (change)="onCheckboxChange($event, row.moduleId, 'Create')"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Update -->
+      <ng-container matColumnDef="update">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Actualizar</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox
+            [checked]="isPermissionSelected(row.permissions, 'Update')"
+            (change)="onCheckboxChange($event, row.moduleId, 'Update')"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- Delete -->
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Borrar</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox
+            [checked]="isPermissionSelected(row.permissions, 'Delete')"
+            (change)="onCheckboxChange($event, row.moduleId, 'Delete')"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</main>
