@@ -10,6 +10,7 @@ import {
 } from 'src/app/interfaces/models';
 import { ApiService } from 'src/app/services/api.service';
 import { DataService } from 'src/app/services/data.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 
@@ -53,7 +54,8 @@ export class RolesPermissionsPage implements OnInit {
     private readonly _dialog: MatDialog,
     private readonly usuariosServ: UsuariosService,
     private readonly apiService: ApiService,
-    private readonly sharedService: SharedService
+    private readonly sharedService: SharedService,
+    private readonly errorHandlerService: ErrorHandlerService
   ) {}
 
   ngOnInit(): void {
@@ -61,18 +63,10 @@ export class RolesPermissionsPage implements OnInit {
   }
 
   private async getAllRoles() {
-    try {
-      this.isLoadingResults = true;
-      await this.usuariosServ.setRoles();
-    } catch (error) {
-      this.sharedService.notify(
-        'Ocurrio un error realizando la consulta.',
-        'error'
-      );
-    } finally {
-      this.roles = this.usuariosServ.getRoles();
-      this.isLoadingResults = false;
-    }
+    this.isLoadingResults = true;
+    await this.usuariosServ.setRoles();
+    this.roles = this.usuariosServ.getRoles();
+    this.isLoadingResults = false;
   }
 
   onRoleSelected() {
@@ -87,7 +81,7 @@ export class RolesPermissionsPage implements OnInit {
       );
     } catch (error) {
       this.sharedService.notify(
-        'Ocurrio un error realizando la consulta.',
+        this.errorHandlerService.handleError(error, 'Consultando permisos:'),
         'error'
       );
     } finally {
@@ -137,7 +131,7 @@ export class RolesPermissionsPage implements OnInit {
       );
     } catch (error) {
       this.sharedService.notify(
-        'Ocurrio un error realizando la consulta.',
+        this.errorHandlerService.handleError(error, 'Actualizando permisos:'),
         'error'
       );
     } finally {
@@ -154,25 +148,20 @@ export class RolesPermissionsPage implements OnInit {
 
   onCheckboxChange(event: any, moduleId: number, permissionName: string): void {
     const isChecked = event.checked;
-
-    // Encuentra el módulo correspondiente
     const module = this.dataSource.find((mod) => mod.moduleId === moduleId);
 
     if (module) {
-      // Verifica si el permiso ya existe
       const permissionIndex = module.permissions.findIndex(
         (perm: any) =>
           perm.permissionName.toLowerCase() === permissionName.toLowerCase()
       );
 
       if (isChecked && permissionIndex === -1) {
-        // Agregar permiso si no existe y está marcado
         module.permissions.push({
-          permissionId: Math.random().toString(36).substr(2, 9), // Generar un ID único
+          permissionId: Math.random().toString(36).substr(2, 9),
           permissionName: permissionName,
         });
       } else if (!isChecked && permissionIndex !== -1) {
-        // Eliminar permiso si existe y se desmarca
         module.permissions.splice(permissionIndex, 1);
       }
     }

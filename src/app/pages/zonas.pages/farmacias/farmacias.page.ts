@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { Component, Input, OnInit, ViewChild } from '@angular/core'
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -12,58 +12,60 @@ import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.
 import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
 import { SharedService } from 'src/app/services/shared.service';
 import { ApiService } from 'src/app/services/api.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 @Component({
   selector: 'app-farmacias',
   templateUrl: './farmacias.page.html',
   styleUrls: ['./farmacias.page.scss'],
 })
-
 export class FarmaciasPage implements OnInit {
   public breadcrumb = {
     links: [
       {
         name: 'Inicio',
         isLink: true,
-        link: '/admin/home'
+        link: '/admin/home',
       },
       {
         name: 'Gestión de Farmacias',
         isLink: false,
-      }
-    ]
-  }
+      },
+    ],
+  };
 
-  @Input('ELEMENT_DATA')  ELEMENT_DATA!:Farmacia[];
-  @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['name', 'city','chain', 'isDeleted', 'acctions'];
+  @Input('ELEMENT_DATA') ELEMENT_DATA!: Farmacia[];
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort | null;
+  displayedColumns: string[] = [
+    'name',
+    'city',
+    'chain',
+    'isDeleted',
+    'acctions',
+  ];
   dataSource = new MatTableDataSource<Farmacia>(this.ELEMENT_DATA);
 
-  isLoadingResults:boolean = true;
+  isLoadingResults: boolean = true;
 
   constructor(
     private readonly _liveAnnouncer: LiveAnnouncer,
     private readonly _dialog: MatDialog,
-    private readonly farmaServ:FarmaciasService,
+    private readonly farmaServ: FarmaciasService,
     private readonly sharedService: SharedService,
     private readonly apiService: ApiService,
-  ){}
+    private readonly errorHandlerService: ErrorHandlerService
+  ) {}
   ngOnInit(): void {
-    this.dataSource.paginator = this.paginator
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.getPharmacies()
+    this.getPharmacies();
   }
 
   private async getPharmacies() {
-    try {
-      await this.farmaServ.setPharmacies();
-    } catch (error) {
-      this.sharedService.notify('Se presento un error consultando la información', 'error');
-    } finally {
-      this.dataSource.data = this.farmaServ.getPharmacies();
-      this.isLoadingResults = false;
-    }
+    await this.farmaServ.setPharmacies();
+    this.dataSource.data = this.farmaServ.getPharmacies();
+    this.isLoadingResults = false;
   }
 
   applyFilter(event: Event) {
@@ -83,57 +85,62 @@ export class FarmaciasPage implements OnInit {
     }
   }
 
-  on(id?:string){
+  on(id?: string) {
     const config = {
       data: {
-        title: id ?'Editar Farmacia' :'Agregar Farmacia',
-        farmaId: id
-      }
-    }
-    this._dialog.open(DetalleFarmacia, config)
-    .afterClosed()
-    .subscribe((confirm:boolean) => {
-      if(confirm){
-        this.isLoadingResults = true
-        this.getPharmacies()
-      }
-    })
+        title: id ? 'Editar Farmacia' : 'Agregar Farmacia',
+        farmaId: id,
+      },
+    };
+    this._dialog
+      .open(DetalleFarmacia, config)
+      .afterClosed()
+      .subscribe((confirm: boolean) => {
+        if (confirm) {
+          this.isLoadingResults = true;
+          this.getPharmacies();
+        }
+      });
   }
 
-  chageState(row:any){
+  chageState(row: any) {
     let pharmacy = {
       id: row.id,
       name: row.name,
       adress: row.adress,
       isActive: !row.isActive,
       cityId: row.cityId,
-      chainId: row.chainId
-    }
+      chainId: row.chainId,
+    };
     pharmacy = this.sharedService.addIpDevice(pharmacy);
-    let msgDialog:string
-    if(row.isActive){
-      msgDialog = '¿Seguro de querer inhabilitar esta farmacia?'
-    }else{
-      msgDialog = '¿Seguro de querer habilitar esta farmacia?'
+    let msgDialog: string;
+    if (row.isActive) {
+      msgDialog = '¿Seguro de querer inhabilitar esta farmacia?';
+    } else {
+      msgDialog = '¿Seguro de querer habilitar esta farmacia?';
     }
-    this._dialog.open(DialogConfComponent, {
-      data: msgDialog
-    })
-    .afterClosed()
-    .subscribe((confirmado:boolean)=>{
-      if(confirmado){
-        this.updatePharmacy(pharmacy);
-      }
-    })
+    this._dialog
+      .open(DialogConfComponent, {
+        data: msgDialog,
+      })
+      .afterClosed()
+      .subscribe((confirmado: boolean) => {
+        if (confirmado) {
+          this.updatePharmacy(pharmacy);
+        }
+      });
   }
 
-  private async updatePharmacy( pharmacy: any ) {
+  private async updatePharmacy(pharmacy: any) {
     try {
       this.isLoadingResults = true;
       await this.apiService.put('Pharmacy', pharmacy);
       this.sharedService.notify('Farmacia actualizada', 'success');
     } catch (error) {
-      this.sharedService.notify('Ocurrio un error con el proceso.', 'error');
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Actualizando farmacia:'),
+        'error'
+      );
     } finally {
       this.isLoadingResults = false;
       this.getPharmacies();
@@ -144,9 +151,9 @@ export class FarmaciasPage implements OnInit {
     this._dialog.open(ModalReportComponent, {
       disableClose: true,
       data: {
-        'title': 'Reporte General de Farmacias',
-        'body': this.dataSource.data
-      }
-    })
+        title: 'Reporte General de Farmacias',
+        body: this.dataSource.data,
+      },
+    });
   }
 }

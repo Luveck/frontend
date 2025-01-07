@@ -3,7 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { Patology } from 'src/app/interfaces/models';
 import { ApiService } from 'src/app/services/api.service';
-import { MedicosService } from 'src/app/services/medicos.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
@@ -17,11 +17,11 @@ export class DetallePatologia implements OnInit {
   isLoadingResults!: boolean;
 
   constructor(
-    private _medicServ: MedicosService,
-    private apiService: ApiService,
-    private sharedService: SharedService,
+    private readonly apiService: ApiService,
+    private readonly sharedService: SharedService,
     public dialogo: MatDialogRef<DetallePatologia>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private readonly errorHandlerService: ErrorHandlerService
   ) {}
 
   ngOnInit(): void {
@@ -39,7 +39,10 @@ export class DetallePatologia implements OnInit {
       );
       this.name = this.currentPatology.name;
     } catch (error) {
-      this.sharedService.notify('Ocurrio un error con la petición', 'error');
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Consultando patologias:'),
+        'error'
+      );
     } finally {
       this.isLoadingResults = false;
     }
@@ -73,7 +76,10 @@ export class DetallePatologia implements OnInit {
       await this.apiService.put('Patology', patology);
       this.sharedService.notify('Patología actualizada', 'success');
     } catch (error) {
-      this.sharedService.notify('Ocurrio un error con la petición', 'error');
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Actualizar patologias:'),
+        'error'
+      );
     }
   }
 
@@ -82,7 +88,10 @@ export class DetallePatologia implements OnInit {
       await this.apiService.post('Patology', patology);
       this.sharedService.notify('Patología registrada', 'success');
     } catch (error) {
-      this.sharedService.notify('Ocurrio un error con la petición', 'error');
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Crear patologias:'),
+        'error'
+      );
     }
   }
 }

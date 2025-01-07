@@ -8,6 +8,7 @@ import { Rule } from 'src/app/interfaces/models';
 import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
 import { SharedService } from 'src/app/services/shared.service';
 import { ApiService } from 'src/app/services/api.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 @Component({
   selector: 'app-reglas',
@@ -37,7 +38,8 @@ export class ReglasPage implements OnInit {
     private readonly dialog: MatDialog,
     private readonly rulesServ: RulesService,
     private readonly sharedService: SharedService,
-    private readonly apiService: ApiService
+    private readonly apiService: ApiService,
+    private readonly errorHandlerService: ErrorHandlerService
   ) {}
 
   ngOnInit(): void {
@@ -45,18 +47,10 @@ export class ReglasPage implements OnInit {
   }
 
   private async getRules() {
-    try {
-      await this.rulesServ.setRules();
-    } catch (error) {
-      this.sharedService.notify(
-        'Ocurrio un error cargando la informacion',
-        'error'
-      );
-    } finally {
-      this.filterRules = this.rulesServ.getRules();
-      this.rules = this.rulesServ.getRules();
-      this.isLoadingResults = false;
-    }
+    await this.rulesServ.setRules();
+    this.filterRules = this.rulesServ.getRules();
+    this.rules = this.rulesServ.getRules();
+    this.isLoadingResults = false;
   }
 
   on(id?: number) {
@@ -113,8 +107,11 @@ export class ReglasPage implements OnInit {
       this.isLoadingResults = true;
       await this.apiService.put('ProductChangeRule', rule);
       this.sharedService.notify('Regla actualizada', 'success');
-    } catch (err) {
-      this.sharedService.notify('Ocurrio un error con el proceso.', 'error');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Actualizando reglas:'),
+        'error'
+      );
     } finally {
       this.isLoadingResults = false;
       this.getRules();

@@ -10,6 +10,7 @@ import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.
 import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
 import { ApiService } from 'src/app/services/api.service';
 import { SharedService } from 'src/app/services/shared.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 @Component({
   selector: 'app-ciudades',
@@ -49,7 +50,8 @@ export class CiudadesPage implements OnInit {
     private readonly _liveAnnouncer: LiveAnnouncer,
     private readonly _dialog: MatDialog,
     private readonly sharedService: SharedService,
-    private readonly apiService: ApiService
+    private readonly apiService: ApiService,
+    private readonly errorHandlerService: ErrorHandlerService
   ) {}
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
@@ -62,14 +64,9 @@ export class CiudadesPage implements OnInit {
   }
 
   public async getCitites() {
-    try {
-      await this.sharedService.setCities();
-      this.dataSource.data = this.sharedService.getCityList();
-    } catch (error) {
-      this.sharedService.notify('Ocurrio un error con el proceso.', 'error');
-    } finally {
-      this.isLoadingResults = false;
-    }
+    await this.sharedService.setCities();
+    this.dataSource.data = this.sharedService.getCityList();
+    this.isLoadingResults = false;
   }
 
   applyFilter(event: Event) {
@@ -148,7 +145,10 @@ export class CiudadesPage implements OnInit {
       this.getCitites();
       this.sharedService.notify('Ciudad actualizada', 'success');
     } catch (error) {
-      this.sharedService.notify('Ocurrio un error con el proceso.', 'error');
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Actualizando ciudades:'),
+        'error'
+      );
     } finally {
       this.isLoadingResults = false;
     }

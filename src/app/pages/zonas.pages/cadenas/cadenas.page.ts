@@ -54,16 +54,10 @@ export class CadenasPage implements AfterViewInit {
     this.getChains();
   }
 
-
   public async getChains() {
-    try {
-      await this.chainService.setChain();
-    } catch ( e ) {
-      this.sharedService.notify('Ocurrio un error consultando la informacion.', 'error');
-    } finally {
-      this.isLoadingResults = false;
-      this.dataSource.data = this.chainService.getChainList();
-    }
+    await this.chainService.setChain();
+    this.isLoadingResults = false;
+    this.dataSource.data = this.chainService.getChainList();
   }
 
   applyFilter(event: Event) {
@@ -107,7 +101,7 @@ export class CadenasPage implements AfterViewInit {
       isActive: !row.isActive,
       id: row.id,
       ip: this.sharedService.userIP,
-      device: this.sharedService.userDevice
+      device: this.sharedService.userDevice,
     };
     let msgDialog: string;
     if (row.isActive) {
@@ -127,7 +121,7 @@ export class CadenasPage implements AfterViewInit {
         }
       });
   }
-  private async updateChain(chain: any){
+  private async updateChain(chain: any) {
     try {
       await this.apiService.put(`Chain`, chain);
       this.sharedService.notify('Cadena actualizada', 'success');

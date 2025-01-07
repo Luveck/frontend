@@ -16,6 +16,7 @@ import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { MatSelectChange } from '@angular/material/select';
 import { UserRoles } from 'src/app/shared/enums/roles.enum';
 import { PharmacySearchComponent } from '../../ventas.pages/pharmacy-search/pharmacy-search.component';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 @Component({
   selector: 'app-detalle-usuario',
@@ -26,7 +27,7 @@ export class DetalleUsuario implements OnInit {
   currentUser!: any;
   isLoadingResults?: boolean;
   farmacias!: Farmacia[];
-  public countries: Pais[] = []
+  public countries: Pais[] = [];
 
   public newUserForm = new FormGroup({
     dni: new FormControl('', [
@@ -47,8 +48,8 @@ export class DetalleUsuario implements OnInit {
       Validators.minLength(8),
     ]),
     address: new FormControl('', Validators.required),
-    pharmacyId:  new FormControl(''),
-    countryId: new FormControl('', Validators.required)
+    pharmacyId: new FormControl(''),
+    countryId: new FormControl('', Validators.required),
   });
 
   public showPharmacy = false;
@@ -57,17 +58,15 @@ export class DetalleUsuario implements OnInit {
   constructor(
     private _dialog: MatDialog,
     public dialogo: MatDialogRef<DetalleUsuario>,
-
     private readonly apiService: ApiService,
     private readonly sharedService: SharedService,
     private readonly usersServ: UsuariosService,
     private readonly pharmaService: FarmaciasService,
     private readonly dialogPharmacy: MatDialog,
     private readonly authServ: AuthService,
-
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
-  }
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private readonly errorHandlerService: ErrorHandlerService
+  ) {}
 
   ngOnInit(): void {
     this.configuration();
@@ -76,29 +75,29 @@ export class DetalleUsuario implements OnInit {
     }
   }
 
-  private async getUser(){
+  private async getUser() {
     try {
       this.isLoadingResults = true;
-      this.currentUser = await this.apiService.get(`User/GetUserById/${this.data.userDni}`);
+      this.currentUser = await this.apiService.get(
+        `User/GetUserById/${this.data.userDni}`
+      );
       this.initValues();
     } catch (error) {
-      this.sharedService.notify('Error consultando el usuario', 'error');
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Consultando usuarios:'),
+        'error'
+      );
     } finally {
       this.isLoadingResults = false;
     }
   }
   private async configuration() {
-    try {
-      this.isLoadingResults = true;
-      await this.usersServ.setRoles();
-      await this.sharedService.setCountry();
-    } catch (error) {
-      this.sharedService.notify('Error consultando los roles', 'error');
-    } finally {
-      this.roles = this.usersServ.getRoles();
-      this.countries  = this.sharedService.getCountryList();
-      this.isLoadingResults = false;
-    }
+    this.isLoadingResults = true;
+    await this.usersServ.setRoles();
+    await this.sharedService.setCountry();
+    this.roles = this.usersServ.getRoles();
+    this.countries = this.sharedService.getCountryList();
+    this.isLoadingResults = false;
   }
   initValues() {
     this.newUserForm.patchValue({
@@ -111,14 +110,14 @@ export class DetalleUsuario implements OnInit {
       sex: this.currentUser.sex,
       phone: this.currentUser.phone,
       address: this.currentUser.address,
-      countryId: this.currentUser.countryId
+      countryId: this.currentUser.countryId,
     });
-    if (this.currentUser.roles[0] === UserRoles.PharmacyUser){
+    if (this.currentUser.roles[0] === UserRoles.PharmacyUser) {
       this.newUserForm.patchValue({
-        pharmacyId: this.currentUser.farmaciaId
+        pharmacyId: this.currentUser.farmaciaId,
       });
       this.showPharmacy = true;
-      const field = this.newUserForm.get('pharmacyId')
+      const field = this.newUserForm.get('pharmacyId');
       field?.setValidators([Validators.required]);
       field?.updateValueAndValidity();
     }
@@ -136,7 +135,10 @@ export class DetalleUsuario implements OnInit {
   }
 
   save(chageState?: boolean) {
-    let state = chageState != null ? !this.currentUser.isActive : this.currentUser.isActive;
+    let state =
+      chageState != null
+        ? !this.currentUser.isActive
+        : this.currentUser.isActive;
     if (this.data.userDni) {
       this.updateUser(state);
     } else {
@@ -147,7 +149,7 @@ export class DetalleUsuario implements OnInit {
 
   changeUserState(state: boolean, idUser: string) {
     if (this.authServ.dataUser().UserId === idUser) {
-       this.usersServ.notify(
+      this.usersServ.notify(
         'No es posible inhabilitar su propia cuenta.',
         'info'
       );
@@ -170,17 +172,20 @@ export class DetalleUsuario implements OnInit {
 
   private async addUser() {
     try {
-      let user : any = this.createModel();
+      let user: any = this.createModel();
       user = this.sharedService.addIpDevice(user);
       user = {
         ...user,
         isActive: true,
-        changePass: true
-      }
+        changePass: true,
+      };
       await this.apiService.post('User/CreateUser', user);
       this.sharedService.notify('Usuario registrado', 'success');
     } catch (error) {
-      this.sharedService.notify('Ocurrio un error', 'error');
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Creando usuarios:'),
+        'error'
+      );
     } finally {
       this.isLoadingResults = false;
     }
@@ -188,17 +193,20 @@ export class DetalleUsuario implements OnInit {
 
   private async updateUser(chageState: boolean) {
     try {
-      let user : any = this.createModel();
+      let user: any = this.createModel();
       user = this.sharedService.addIpDevice(user);
       user = {
         ...user,
-        IsActive:chageState,
+        IsActive: chageState,
         id: this.data.userDni,
-      }
+      };
       await this.apiService.put(`User`, user);
       this.sharedService.notify('Usuario actualizado', 'success');
     } catch (error) {
-      this.sharedService.notify('Ocurrio un error', 'error');
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Actualizando usuarios:'),
+        'error'
+      );
     } finally {
       this.isLoadingResults = false;
     }
@@ -226,19 +234,19 @@ export class DetalleUsuario implements OnInit {
       user = {
         ...user,
         pharmacyId: this.newUserForm.value.pharmacyId,
-      }
+      };
     } else {
       user = {
-       ...user,
+        ...user,
         pharmacyId: 0,
-      }
+      };
     }
     return user;
   }
 
   public onRoleChange(event: MatSelectChange) {
-    const field = this.newUserForm.get('pharmacyId')
-    if (event.value === UserRoles.PharmacyUser ) {
+    const field = this.newUserForm.get('pharmacyId');
+    if (event.value === UserRoles.PharmacyUser) {
       this.getPharmacies();
       this.showPharmacy = true;
       field?.setValidators([Validators.required]);
@@ -250,15 +258,10 @@ export class DetalleUsuario implements OnInit {
   }
 
   private async getPharmacies() {
-    try {
-      this.isLoadingResults = true;
-      await this.pharmaService.setPharmacies();
-    } catch (error) {
-      this.sharedService.notify('Error consultando las farmacias', 'error');
-    } finally {
-      this.isLoadingResults = false;
-      this.farmacias = this.pharmaService.getPharmacies();
-    }
+    this.isLoadingResults = true;
+    await this.pharmaService.setPharmacies();
+    this.isLoadingResults = false;
+    this.farmacias = this.pharmaService.getPharmacies();
   }
 
   filterFharmacy(event: MouseEvent) {

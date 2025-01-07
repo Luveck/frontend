@@ -8,6 +8,7 @@ import { ModalReportComponent } from 'src/app/components/modal-report/modal-repo
 import { SharedService } from 'src/app/services/shared.service';
 import { ApiService } from 'src/app/services/api.service';
 import { DetallePatologia } from '../detalle-patologia/detalle-patologia';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 @Component({
   selector: 'app-patologia',
@@ -32,10 +33,11 @@ export class PatologiaPage implements OnInit {
   isLoadingResults: boolean = true;
 
   constructor(
-    private _dialog: MatDialog,
-    public medicServ: MedicosService,
-    public sharedService: SharedService,
-    public apiService: ApiService
+    private readonly _dialog: MatDialog,
+    public readonly medicServ: MedicosService,
+    public readonly sharedService: SharedService,
+    public readonly apiService: ApiService,
+    private readonly errorHandlerService: ErrorHandlerService
   ) {}
 
   ngOnInit(): void {
@@ -44,15 +46,10 @@ export class PatologiaPage implements OnInit {
   }
 
   public async getPatologies() {
-    try {
-      this.isLoadingResults = true;
-      await this.medicServ.setPatology();
-      this.patologyList = this.medicServ.getPatology();
-    } catch (error) {
-      this.sharedService.notify('Ocurrio un error con el proceso.', 'error');
-    } finally {
-      this.isLoadingResults = false;
-    }
+    this.isLoadingResults = true;
+    await this.medicServ.setPatology();
+    this.patologyList = this.medicServ.getPatology();
+    this.isLoadingResults = false;
   }
 
   on(id?: number) {
@@ -116,7 +113,10 @@ export class PatologiaPage implements OnInit {
       this.sharedService.notify('Patología actualizada', 'success');
       this.getPatologies();
     } catch (error) {
-      this.sharedService.notify('Ocurrio un error con el proceso.', 'error');
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Actualizando patologias:'),
+        'error'
+      );
     } finally {
       this.isLoadingResults = false;
     }

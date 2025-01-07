@@ -12,6 +12,7 @@ import { SharedService } from 'src/app/services/shared.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserRoles } from 'src/app/shared/enums/roles.enum';
 import { FarmaciasService } from 'src/app/services/farmacias.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -44,11 +45,11 @@ export class UsuariosPage implements OnInit {
   constructor(
     private readonly _liveAnnouncer: LiveAnnouncer,
     private readonly _dialog: MatDialog,
-
+    private readonly errorHandlerService: ErrorHandlerService,
     private readonly usuariosServ: UsuariosService,
     private readonly sharedService: SharedService,
     private readonly authService: AuthService,
-    private readonly pharmacyService : FarmaciasService
+    private readonly pharmacyService: FarmaciasService
   ) {}
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
@@ -61,14 +62,14 @@ export class UsuariosPage implements OnInit {
       await this.usuariosServ.setUsers();
     } catch (error) {
       this.sharedService.notify(
-        'Se presento un error consultando la informacion',
+        this.errorHandlerService.handleError(error, 'Consultando usuarios:'),
         'error'
       );
     } finally {
       this.isLoadingResults = false;
       if (this.authService.dataUser().Role !== UserRoles.Admin) {
         this.dataSource.data = this.usuariosServ.getUsersList().filter((x) => {
-          x.roles.includes(UserRoles.Cliente)
+          x.roles.includes(UserRoles.Cliente);
         });
       } else {
         this.dataSource.data = this.usuariosServ.getUsersList();

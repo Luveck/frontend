@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Cadena, Farmacia } from '../interfaces/models';
 import { SharedService } from './shared.service';
 import { ApiService } from './api.service';
+import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable({
   providedIn: 'root',
@@ -14,11 +15,19 @@ export class FarmaciasService {
 
   constructor(
     private readonly apiService: ApiService,
+    private readonly errorHandlerService: ErrorHandlerService,
     private readonly sharedService: SharedService
   ) {}
 
   public async setPharmacies() {
-    this.pharmacyList = await this.apiService.get('Pharmacy');
+    try {
+      this.pharmacyList = await this.apiService.get('Pharmacy');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando farmacias:'),
+        'error'
+      );
+    }
   }
 
   public getPharmacies() {
@@ -26,7 +35,14 @@ export class FarmaciasService {
   }
 
   public async setChain() {
-    this.chainList = await this.apiService.get('Chain');
+    try {
+      this.chainList = await this.apiService.get('Chain');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando cadenas:'),
+        'error'
+      );
+    }
   }
 
   public getChainList() {

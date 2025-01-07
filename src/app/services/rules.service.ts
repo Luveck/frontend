@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { SharedService } from './shared.service';
 import { ApiService } from './api.service';
+import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable({
   providedIn: 'root',
@@ -11,11 +12,22 @@ export class RulesService {
 
   constructor(
     private readonly sharedService: SharedService,
-    private readonly apiService: ApiService
+    private readonly apiService: ApiService,
+    private readonly errorHandlerService: ErrorHandlerService
   ) {}
 
   public async setRules() {
-    this.rules = await this.apiService.get('ProductChangeRule')
+    try {
+      this.rules = await this.apiService.get('ProductChangeRule');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(
+          error,
+          'Listando reglas de canje:'
+        ),
+        'error'
+      );
+    }
   }
 
   public getRules() {
@@ -23,7 +35,16 @@ export class RulesService {
   }
 
   public async setProductsRuleByCountry(countryId: string) {
-    this.productsRuleByCountry = await this.apiService.get(`ProductChangeRule/GetProductsLandingByCountry/${ countryId }`);
+    try {
+      this.productsRuleByCountry = await this.apiService.get(
+        `ProductChangeRule/GetProductsLandingByCountry/${countryId}`
+      );
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando productos:'),
+        'error'
+      );
+    }
   }
 
   public getProductsRuleByCountry() {

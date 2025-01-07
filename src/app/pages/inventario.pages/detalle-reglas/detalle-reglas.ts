@@ -7,6 +7,7 @@ import { InventarioService } from 'src/app/services/inventario.service';
 import { RulesService } from 'src/app/services/rules.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { ApiService } from 'src/app/services/api.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 @Component({
   selector: 'app-detalle-reglas',
@@ -36,7 +37,8 @@ export class DetalleReglas implements OnInit {
     private readonly apiService: ApiService,
     private readonly sharedService: SharedService,
     private readonly rulesServ: RulesService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private readonly errorHandlerService: ErrorHandlerService
   ) {}
 
   ngOnInit(): void {
@@ -47,17 +49,12 @@ export class DetalleReglas implements OnInit {
   }
 
   private async loadData() {
-    try {
-      this.isLoadingResults = true;
-      await this.sharedService.setCountry();
-      await this.prodService.setProducts();
-    } catch (err) {
-      this.sharedService.notify('Ocurrio un error con la petición', 'error');
-    } finally {
-      this.isLoadingResults = false;
-      this.prods = this.prodService.getProducts();
-      this.countries = this.sharedService.getCountryList();
-    }
+    this.isLoadingResults = true;
+    await this.sharedService.setCountry();
+    await this.prodService.setProducts();
+    this.prods = this.prodService.getProducts();
+    this.countries = this.sharedService.getCountryList();
+    this.isLoadingResults = false;
   }
   private async getRule() {
     try {
@@ -67,7 +64,10 @@ export class DetalleReglas implements OnInit {
       );
       this.initValores();
     } catch (error) {
-      this.sharedService.notify('Ocurrio un error con la petición', 'error');
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Consultando reglas:'),
+        'error'
+      );
     } finally {
       this.isLoadingResults = false;
     }
@@ -123,7 +123,10 @@ export class DetalleReglas implements OnInit {
       await this.apiService.post('ProductChangeRule', rule);
       this.sharedService.notify('Regla registrada', 'success');
     } catch (error) {
-      this.sharedService.notify('Ocurrio un error con el proceso', 'error');
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Creando reglas:'),
+        'error'
+      );
     } finally {
       this.isLoadingResults = false;
     }
@@ -134,7 +137,10 @@ export class DetalleReglas implements OnInit {
       await this.apiService.put('ProductChangeRule', rule);
       this.sharedService.notify('Regla actualizada', 'success');
     } catch (error) {
-      this.sharedService.notify('Ocurrio un error con el proceso', 'error');
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Actualizando reglas:'),
+        'error'
+      );
     } finally {
       this.isLoadingResults = false;
     }

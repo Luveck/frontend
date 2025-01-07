@@ -1,5 +1,11 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core'
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -12,49 +18,56 @@ import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.
 import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
 import { SharedService } from 'src/app/services/shared.service';
 import { ApiService } from 'src/app/services/api.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 @Component({
   selector: 'app-productos',
   templateUrl: './productos.page.html',
   styleUrls: ['./productos.page.scss'],
 })
-
 export class ProductosPage implements OnInit {
   public breadcrumb = {
     links: [
       {
         name: 'Inicio',
         isLink: true,
-        link: '/admin/home'
+        link: '/admin/home',
       },
       {
         name: 'Gestión de productos',
         isLink: false,
-      }
-    ]
-  }
+      },
+    ],
+  };
 
-  @Input('ELEMENT_DATA')  ELEMENT_DATA!:Producto[];
-  @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['name', 'nameCategory', 'country', 'isActive', 'acctions'];
+  @Input('ELEMENT_DATA') ELEMENT_DATA!: Producto[];
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort | null;
+  displayedColumns: string[] = [
+    'name',
+    'nameCategory',
+    'country',
+    'isActive',
+    'acctions',
+  ];
   dataSource = new MatTableDataSource<Producto>(this.ELEMENT_DATA);
 
-  isLoadingResults:boolean = true;
+  isLoadingResults: boolean = true;
 
   constructor(
     private readonly _liveAnnouncer: LiveAnnouncer,
-    private readonly _dialog:MatDialog,
-    public readonly inveServ:InventarioService,
+    private readonly _dialog: MatDialog,
+    public readonly inveServ: InventarioService,
     public readonly sharedService: SharedService,
     public readonly apiService: ApiService,
-    private readonly _dataServ:DataService
-  ){}
+    private readonly _dataServ: DataService,
+    private readonly errorHandlerService: ErrorHandlerService
+  ) {}
 
-  ngOnInit(): void{
-    this.dataSource.paginator = this.paginator
+  ngOnInit(): void {
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.getProducts()
+    this.getProducts();
   }
 
   public async getProducts() {
@@ -62,8 +75,11 @@ export class ProductosPage implements OnInit {
       this.isLoadingResults = true;
       await this.inveServ.setProducts();
       this.dataSource.data = this.inveServ.getProducts();
-    } catch (err) {
-      this.sharedService.notify('Ocurrio un error consultando los productos.', 'error');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Consultando productos:'),
+        'error'
+      );
     } finally {
       this.isLoadingResults = false;
     }
@@ -86,11 +102,11 @@ export class ProductosPage implements OnInit {
     }
   }
 
-  on(id?:string){
-    this._dataServ.goTo(`admin/inventario/producto-detalle/${id}`)
+  on(id?: string) {
+    this._dataServ.goTo(`admin/inventario/producto-detalle/${id}`);
   }
 
-  chageState(row:any){
+  chageState(row: any) {
     this.isLoadingResults = true;
     let product: any = {
       name: row.name,
@@ -103,48 +119,52 @@ export class ProductosPage implements OnInit {
       descuento: '',
       urlOficial: '',
       categoryId: row.category.id,
-      countryId : '1',
+      countryId: '1',
       Ip: this.sharedService.userIP,
       Device: this.sharedService.userDevice,
-      isActive : !row.isActive,
-      id: row.id
+      isActive: !row.isActive,
+      id: row.id,
+    };
+    let msgDialog: string;
+    if (row.isActive) {
+      msgDialog = '¿Seguro de querer inhabilitar este producto?';
+    } else {
+      msgDialog = '¿Seguro de querer habilitar este producto?';
     }
-    let msgDialog:string
-    if(row.isActive){
-      msgDialog = '¿Seguro de querer inhabilitar este producto?'
-    }else{
-      msgDialog = '¿Seguro de querer habilitar este producto?'
-    }
-    this._dialog.open(DialogConfComponent, {
-      data: msgDialog
-    })
-    .afterClosed()
-    .subscribe((confirmado:boolean)=>{
-      if(confirmado){
-        this.changeState(product)
-      }
-    })
+    this._dialog
+      .open(DialogConfComponent, {
+        data: msgDialog,
+      })
+      .afterClosed()
+      .subscribe((confirmado: boolean) => {
+        if (confirmado) {
+          this.changeState(product);
+        }
+      });
   }
 
-  private async changeState(product: any){
+  private async changeState(product: any) {
     try {
       await this.apiService.put('Product', product);
       this.sharedService.notify('Producto actualizado', 'success');
       this.getProducts();
     } catch (error) {
-      this.sharedService.notify('Ocurrio un error con la petición', 'error')
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Actualizando productos:'),
+        'error'
+      );
     } finally {
       this.isLoadingResults = false;
     }
   }
 
-  generateReport(){
+  generateReport() {
     this._dialog.open(ModalReportComponent, {
       disableClose: true,
       data: {
-        'title': 'Reporte General de Productos',
-        'body': this.dataSource.data
-      }
-    })
+        title: 'Reporte General de Productos',
+        body: this.dataSource.data,
+      },
+    });
   }
 }
