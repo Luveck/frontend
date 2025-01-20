@@ -1,0 +1,212 @@
+<main>
+  <h1 *ngIf="currentProdId == 'new'">Nuevo producto</h1>
+  <h1 *ngIf="currentProdId != 'new'">Editar producto</h1>
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+  <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
+
+  <div class="fm_header" *ngIf="currentProdId != 'new'">
+    <section class="avatar">
+      <div class="datos">
+        <p>{{currentProd?.name}}</p>
+        <div class="bots">
+          <span
+            class="chip"
+            [ngClass]="{'active': currentProd?.isActive == true, 'inactive': currentProd?.isActive == false}"
+            >Estado: {{currentProd?.isActive ?'Activo' :'Inactivo'}}</span
+          >
+        </div>
+      </div>
+    </section>
+    <section class="resumen">
+      <div class="listImgs" *ngIf="currentProdId != 'new';  else noImgs">
+        <div class="imgItem" *ngIf="currentProd?.productImages.length>0">
+          <img
+            [src]="currentProd?.productImages[0].image"
+            alt=""
+            style="width: 220px; height: 220px"
+          />
+        </div>
+      </div>
+      <ng-template #noImgs>
+        <div>
+          <img
+            src="assets/images/medicine.jpg"
+            alt=""
+            style="width: 220px; height: 220px"
+          /></div
+      ></ng-template>
+    </section>
+  </div>
+
+  <form class="wrapForm" [formGroup]="prodForm" autocomplete="off">
+    <div class="inputs">
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input
+          matInput
+          placeholder="Nombre"
+          formControlName="name"
+          matTooltip="Nombre del producto"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="barCode">
+        <mat-label>Código de barras</mat-label>
+        <input
+          matInput
+          placeholder="Código de barras"
+          formControlName="barcode"
+          matTooltip="Código de barras"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Presentación</mat-label>
+        <input
+          matInput
+          placeholder="Presentación"
+          formControlName="presentation"
+          matTooltip="Tipo de Presentación, Ej: Caja"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Cantidad</mat-label>
+        <input
+          matInput
+          formControlName="quantity"
+          matTooltip="Cantidad contenida. Ej: 10 cartones"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Tipo de venta</mat-label>
+        <input
+          matInput
+          placeholder="Tipo venta"
+          formControlName="typeSell"
+          matTooltip="Tipo de venta, Ej: Unidad"
+        />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Pais</mat-label>
+        <mat-select formControlName="countryId">
+          <div *ngFor="let country of countries">
+            <mat-option *ngIf="country.isActive" [value]="country.id">
+              {{country.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Categoría</mat-label>
+        <mat-select
+          formControlName="idCategory"
+          matTooltip="Categoría a la que pertenece"
+        >
+          <div *ngFor="let cat of cats">
+            <mat-option *ngIf="cat.isActive" [value]="cat.id">
+              {{cat.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="area">
+        <mat-label>Descripción del producto</mat-label>
+        <textarea
+          matInput
+          placeholder="Descripción del producto"
+          formControlName="description"
+          rows="2"
+          matTooltip="Descripción general del producto"
+        ></textarea>
+      </mat-form-field>
+    </div>
+
+    <div class="container-btn">
+      <button
+        mat-raised-button
+        color="primary"
+        [disabled]="prodForm.invalid"
+        (click)="save()"
+      >
+        Guardar Producto<mat-icon>save</mat-icon>
+      </button>
+      <button mat-raised-button color="warn" (click)="resetForm()">
+        Limpiar formulario
+      </button>
+    </div>
+  </form>
+
+  <mat-divider *ngIf="currentProdId != 'new'"></mat-divider>
+
+  <div class="contentImgs" *ngIf="currentProdId != 'new'">
+    <mat-card class="drop">
+      <mat-card-header>
+        <mat-card-title>Archivos</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div
+          appFiles
+          [files]="files"
+          (mouseOver)="isOverDrop = $event"
+          [ngClass]="{'file-over': isOverDrop}"
+          class="drop-zone"
+        >
+          <label class="custon-file">
+            <h4>Arrastre y suelte aquí las imágenes</h4>
+            <mat-icon>cloud_upload</mat-icon>
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              (change)="onSelectFile($event)"
+            />
+          </label>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Imágenes por subir</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Tamaño</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let file of files; index as i">
+              <td class="name">
+                <button mat-icon-button color="warn" (click)="clear(i)">
+                  <mat-icon>clear</mat-icon>
+                </button>
+                {{file.name}}
+              </td>
+              <td>{{ file.size / 1024 | number }} KB</td>
+            </tr>
+          </tbody>
+        </table>
+      </mat-card-content>
+      <mat-card-actions *ngIf="files.length > 0">
+        <button mat-raised-button color="primary" (click)="saveImages()">
+          Guardar Imágenes
+        </button>
+        <button mat-raised-button color="warn" (click)="files = []">
+          Limpiar imágenes
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <div class="listImgs" *ngIf="currentProdId != 'new'">
+    <div class="imgItem" *ngFor="let img of currentProd?.productImages ; index as i">
+      <button mat-mini-fab color="warn" (click)="deleteOneFile(img.image, i)">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <img [src]="img.image" alt="" style="width: 220px; height: 220px" />
+    </div>
+  </div>
+</main>

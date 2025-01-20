@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>{{data.title}}</h2>
+<main mat-dialog-content>
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+
+  <div class="fm_header" *ngIf="data.catId">
+    <section class="avatar">
+      <div class="datos">
+        <p>{{currentCategoria?.name}}</p>
+        <div class="bots">
+          <span class="chip" [ngClass]="{'inactive': currentCategoria?.isActive == false, 'active': currentCategoria?.isActive == true}">Estado: {{currentCategoria?.isActive ? 'Activo' : 'Inactivo'}}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="wrapForm">
+    <div class="inputs">
+    <mat-form-field appearance="outline">
+      <mat-label>Nombre</mat-label>
+      <input matInput [(ngModel)]="name" placeholder="Nombre" autocomplete="off" maxlength="40">
+    </mat-form-field>
+    </div>
+  </div>
+</main>
+<div mat-dialog-actions>
+  <div class="btns">
+    <button mat-flat-button color="primary" [disabled]="!name" (click)="save()">Guardar datos <mat-icon>save</mat-icon></button>
+  </div>
+</div>

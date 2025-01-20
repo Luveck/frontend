@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Luveck</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="./assets/icons/luveck_logo.png">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="mat-typography">
+  <app-root>
+    <style>
+      main{
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+      .loader{
+        margin: 0 auto;
+        width: 120px;
+        aspect-ratio: 1;
+        display: grid;
+        mask: conic-gradient(from 22deg, #0003, #000);
+        -webkit-mask: conic-gradient(from 22deg, #0003, #000);
+        animation: load 1s steps(8) infinite;
+      }
+      .loader, .loader:before{
+        --_g: linear-gradient(#17177c 0 0) 50%;
+        background:
+          var(--_g)/34% 8% space no-repeat,
+          var(--_g)/8% 34%no-repeat space;
+      }
+      .loader:before{
+        content: "";
+        transform: rotate(45deg);
+      }
+      @keyframes load{
+        from{transform: rotate(0turn)}
+        to{transform: rotate(1turn)}
+      }
+
+      img{
+        width: 40%;
+        margin: 0 auto ;
+      }
+      @media (max-width: 560px){
+        main img{
+          width: 50%;
+        }
+      }
+    </style>
+
+    <main>
+      <img src="./assets/icons/logo_light.png">
+      <h1>Luveck - Pasión por vivir</h1>
+      <div class="loader"></div>
+    </main>
+  </app-root>
+</body>
+</html>

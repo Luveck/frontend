@@ -1,0 +1,47 @@
+<main class="login-section">
+  <div class="container-form">
+    <div class="titles">
+      <img src="assets/icons/luveck_logo.png">
+      <p>Programa Pasión por Vivir</p>
+    </div>
+    <form [formGroup]="loginForm" autocomplete="off">
+      <mat-form-field appearance="outline">
+        <mat-label>DNI</mat-label>
+        <input matInput placeholder="DNI de usuario" formControlName="dni" maxlength="20">
+        <mat-icon matPrefix>person</mat-icon>
+        <mat-error
+          *ngIf="loginForm.get('dni')?.invalid && (loginForm.get('dni')?.dirty || loginForm.get('dni')?.touched) && loginForm.get('dni')?.errors?.['required']">
+          DNI requerido
+        </mat-error>
+        <mat-error *ngIf="!loginForm.get('dni')?.errors?.['required'] && (loginForm.get('dni')?.errors?.['pattern'])">
+          DNI invalido
+        </mat-error>
+        <mat-error *ngIf="loginForm.get('dni')?.errors?.['minlength']">
+          DNI debe tener minimo 2 digitos.
+        </mat-error>
+      </mat-form-field>
+
+      <p style="text-align: end;"><span [routerLink]="['/authentication/forgotpassword']">Olvide mi contraseña</span></p>
+      <mat-form-field appearance="outline">
+        <mat-label>Contraseña</mat-label>
+        <input matInput [type]="hidePassword ?'password' :'text'" placeholder="Contraseña" formControlName="password" required>
+        <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+          <mat-icon>{{hidePassword ?'visibility_off' :'visibility'}}</mat-icon>
+        </button>
+        <mat-error>
+          Contraseña requerida
+        </mat-error>
+      </mat-form-field>
+
+      <mat-checkbox formControlName="remember">Recordar usuario</mat-checkbox>
+      <br>
+
+      <button mat-raised-button color="primary" [disabled]="!loginForm.valid"
+        (click)="onLogin(loginForm.value)">Iniciar Sesión
+        <mat-icon class="lod" *ngIf="dataServ.progress">cached</mat-icon>
+      </button>
+
+      <!-- <p>¿Nuevo en la plataforma?  <span [routerLink]="['/authentication/register']">Crea una cuenta</span></p> -->
+    </form>
+  </div>
+</main>

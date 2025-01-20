@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>{{data.title}}</h2>
+<main mat-dialog-content>
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+
+  <div class="fm_header" *ngIf="data.paisId">
+    <section class="avatar">
+      <img [src]="urlFlag" alt>
+      <div class="datos">
+        <p>{{currentPais?.name}}</p>
+        <div class="bots">
+          <span class="chip" [ngClass]="{'active': currentPais?.status == true, 'inactive': currentPais?.status == false}">Estado: {{currentPais?.status ?'Activo' :'Inactivo'}}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <form class="wrapForm" [formGroup]="paisForm" autocomplete="off">
+    <div class="inputs">
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Nombre" formControlName="name" maxlength="30">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Código Iso</mat-label>
+        <input matInput placeholder="HN" formControlName="iso3" maxlength="30">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Código de área</mat-label>
+        <input matInput placeholder=" +504" formControlName="phoneCode" maxlength="30">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Divisa</mat-label>
+        <input matInput placeholder="HNL" formControlName="currency">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre divisa</mat-label>
+        <input matInput placeholder="Lempira" formControlName="currencyName" maxlength="30">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Símbolo divisa</mat-label>
+        <input matInput placeholder=" L" formControlName="currencySymbol" maxlength="30">
+      </mat-form-field>
+    </div>
+  </form>
+</main>
+<div mat-dialog-actions>
+  <div class="btns">
+    <button mat-raised-button color="primary" [disabled]="paisForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
+    <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
+  </div>
+</div>

@@ -1,0 +1,95 @@
+.registro{
+  width: 100%;
+  margin: 2rem 0;
+  h1 {
+    margin: 1rem 0;
+    width: 100%;
+    font-size: 2rem;
+    text-align: center;
+  }
+  p{
+    text-align: center;
+    font-size: 1.2rem;
+    line-height: 1.5;
+  }
+  .regis_content{
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    .regisImg{
+      width: 50%;
+      padding: 2rem 2rem 0 2rem;
+      img{
+        width: 100%;
+        border-radius: 10px;
+      }
+    }
+    .regForm{
+      text-align: center;
+      box-shadow: rgba(67, 71, 85, 0.27) 0px 0px 0.25em, rgba(90, 125, 188, 0.05) 0px 0.25em 1em;
+      padding: 1.5rem;
+      width: 50%;
+      .mat-form-field {
+        width: 100%;
+        .inputPass{
+          border-bottom: 1px solid gray;
+        }
+        button {
+          border: none;
+        }
+      }
+      .mat-checkbox{
+        width: 100%;
+        text-align: start;
+      }
+      .btnReg{
+        width: 60%;
+      }
+      p{
+        margin-top: 1rem;
+        text-align: center;
+        span{
+          cursor: pointer;
+          color: #2f71ff;
+          font-weight: 600;
+        }
+      }
+      .sendMsg{
+        margin-top: 1rem;
+        padding: .5rem;
+        box-shadow: rgba(3, 102, 214, 0.3) 0px 0px 0px 3px;
+      }
+    }
+  }
+}
+
+@media (max-width: 1000px){
+  .registro .regis_content{
+    width: 90%;
+  }
+}
+
+@media (max-width: 560px){
+  .registro{
+    margin-top: 1.5rem;
+    h1, p{
+      width: 90%;
+      margin: 0 auto;
+    }
+    .regis_content{
+      width: 100%;
+      margin: 0;
+      flex-direction: column;
+      .regisImg{
+        width: 90%;
+      }
+      .regForm{
+        margin-top: 1rem;
+        width: 80%;
+      }
+    }
+  }
+}

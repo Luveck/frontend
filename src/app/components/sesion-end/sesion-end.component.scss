@@ -1,0 +1,15 @@
+mat-dialog-container{
+  height: 463px;
+}
+.mat-dialog-content{
+  height: auto;
+  margin: 0;
+  text-align: center;
+}
+.mat-dialog-actions{
+  border-top: 1px solid gray;
+  justify-content: center;
+  button{
+    margin: 0 0.5rem;
+  }
+}

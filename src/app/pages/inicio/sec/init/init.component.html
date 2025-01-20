@@ -1,0 +1,77 @@
+<div class="inicio">
+  <h1 *ngIf="!authServ.userToken">Programa Pasión por vivir</h1>
+  <!-- <h1 *ngIf="authServ.userToken">Bienvenido {{authServ.userData.UserName}} {{authServ.userData.LastName}} al programa Pasión por Vivir</h1> -->
+  <swiper [config]="swipperConfig" >
+    <ng-template swiperSlide>
+      <div class="sItem reverse">
+        <div class="textoSlide">
+          <p>
+            El programa <span>pasión por vivir</span> consiste en ayudar a las personas que están bajo un tratamiento médico, a obtener producto para incrementar su adherencia, cumpliendo su terapia mejorando la calidad de vida en pacientes con enfermedades crónicas, a través de producto gratuito para tu tratamiento en las <span>farmacias participantes</span>.
+          </p>
+          <span class="linkRegis" *ngIf="!authServ.userToken" (click)="selectSection('registro')">
+            Registrarme en el programa.
+          </span>
+          <span class="linkRegis" *ngIf="authServ.userToken" (click)="selectSection('canjes')">
+            Ver registro de mis canjes.
+          </span>
+        </div>
+        <div class="iniImage"><img src="assets/images/ppv_1.jpg"></div>
+      </div>
+    </ng-template>
+    <ng-template swiperSlide>
+      <div class="sItem">
+        <div class="iniImage"><img src="assets/images/ppv_2.jpg"></div>
+        <div class="textoSlide">
+          <h2>Recuerda identificarte</h2>
+          <p>
+            Al acudir a tu <span>farmacia de elección</span> recuerda que debes brindar tu número de identificación al realizar tu compra. Los colaboradores registrarán tu compra en el programa <span>Pasión por Vivir</span> y de esta manera se validará la acumulación necesaria para poder realizar tus canjes.
+          </p>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template swiperSlide>
+      <div class="sItem reverse">
+        <div class="textoSlide">
+          <h2>¿Cómo registrarme?</h2>
+          <p>
+            Al ingresar al programa <span>Pasión por vivir</span> tienes la oportunidad de llevar el control de tus canjes de dos maneras:
+          </p>
+          <ul>
+            <li>En la <span>farmacia de tu elección</span> con ayuda de los <span>colaboradores</span> quienes te brindarán información del proceso de inscripción, términos y condiciones de compra.</li>
+            <li>De <span>manera personal</span> en el <span>dispositivo de tu elección</span>, donde podrás dar seguimiento a tus canjes, actualizar la información personal e ingresar una compra.</li>
+          </ul>
+          <span class="linkRegis" (click)="selectSection('info')">
+            Ver más.
+          </span>
+        </div>
+        <div class="iniImage"><img src="assets/images/ppv_3.jpg"></div>
+      </div>
+    </ng-template>
+  </swiper>
+
+  <div class="bene">
+    <h1>Beneficios del programa</h1>
+    <p>
+      Laboratorio Luveck es una empresa comprometida con la salud de sus clientes, es por eso que hemos creado “Pasión por Vivir” un programa el cual brindará la oportunidad de mejorar la adherencia de los medicamentos prescritos por su médico.
+    </p>
+    <p>
+      Sabemos que su médico le ha explicado la importancia del uso constante de su tratamiento, cumpliendo con éxito su terapia, en base a esto nos hemos propuesto crear esta alternativa donde podrá obtener beneficios para su salud como redimir cierta cantidad de canjes al año según el medicamento prescrito, te invitamos a que conozcas más y seas parte de nuestra familia.
+    </p>
+
+    <div class="listBene">
+      <ul>
+        <strong><span>Algunos de los beneficios son:</span></strong>
+        <br>
+        <li>Mejorar la calidad de vida en pacientes con enfermedades crónicas.</li>
+        <li>Cumplimiento terapéutico.</li>
+        <li>Concientización del uso del medicamento en la población.</li>
+        <li>Adherencia al medicamento.</li>
+        <li>Una plataforma amigable con nuestros pacientes donde encontrarás datos de tus compras y canjes disponibles.</li>
+        <li>Disponibilidad en tu farmacia favorita.</li>
+      </ul>
+      <div class="beneImg">
+        <img src="assets/images/ppv_9.jpg">
+      </div>
+    </div>
+  </div>
+</div>

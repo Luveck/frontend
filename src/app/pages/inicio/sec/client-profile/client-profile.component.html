@@ -1,0 +1,76 @@
+<h2 mat-dialog-title>Mi Perfil</h2>
+<main mat-dialog-content>
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+
+  <div class="perfil_header">
+    <section class="avatar">
+      <div class="datos">
+        <p>{{userData?.name}} {{userData?.lastName}}</p>
+        <div class="bots">
+          <button mat-raised-button color="primary" style="margin-bottom: 3px;" (click)="onChangePwd()">
+            <mat-icon>security</mat-icon>
+            Cambiar contraseña
+          </button>
+          <button mat-raised-button color="accent" (click)="onEdit()">
+            <mat-icon>edit</mat-icon>
+            Editar información
+          </button>
+        </div>
+      </div>
+    </section>
+    <section class="resumen">
+      <ul>
+        <li> <mat-icon class="example-tab-icon">fingerprint</mat-icon> DNI: {{userData?.dni}}</li>
+        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de nacimiento: {{userData?.bornDate |date: 'dd/MM/yyyy'}}</li>
+        <li> <mat-icon class="example-tab-icon">badge</mat-icon> Rol: {{userData?.role}}</li>
+      </ul>
+    </section>
+  </div>
+
+  <form class="wrapForm" [formGroup]="perfilForm" autocomplete="off">
+    <div class="inputs">
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Nombre" formControlName="name">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Apellido</mat-label>
+        <input matInput placeholder="Apellido" formControlName="lastName">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Email</mat-label>
+        <input matInput placeholder="Email" formControlName="email">
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Fecha de nacimiento</mat-label>
+        <input matInput [matDatepicker]="picker" formControlName="bornDate">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Género</mat-label>
+        <mat-select formControlName="sex">
+          <mat-option value="hombre">Masculino</mat-option>
+          <mat-option value="mujer">Femenino</mat-option>
+          <mat-option value="otro">Otro</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Teléfono</mat-label>
+        <input matInput placeholder="Teléfono" formControlName="phone">
+      </mat-form-field>
+      <mat-form-field appearance="fill" class="area">
+        <mat-label>Dirección</mat-label>
+        <textarea matInput placeholder="Dirección" formControlName="address" rows="2"></textarea>
+      </mat-form-field>
+    </div>
+  </form>
+</main>
+<div mat-dialog-actions *ngIf="enabledEdit">
+  <div class="btns">
+    <button mat-raised-button color="primary" [disabled]="perfilForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
+    <button mat-raised-button color="warn" (click)="cancelEdit()">Cancelar</button>
+  </div>
+</div>

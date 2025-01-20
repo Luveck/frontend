@@ -1,0 +1,114 @@
+<main>
+  <div class="btn">
+    <h1>Panel de Administración</h1>
+  </div>
+  <div class="mainBody">
+    <mat-card class="mat-elevation-z8" *ngIf="viewInfoPanel('Registro-ventas')">
+      <div class="texto">
+        <span>{{counterVentas || 0}}</span>
+        <h2>Ventas registradas</h2>
+        <button mat-stroked-button routerLink="/admin/ventas/ventas">
+          Ver detalles
+          <mat-icon color="accent">arrow_forward</mat-icon>
+        </button>
+      </div>
+      <mat-icon class="icoGrande">point_of_sale</mat-icon>
+    </mat-card>
+
+    <mat-card class="mat-elevation-z8" *ngIf="viewInfoPanel('Productos')">
+      <div class="texto">
+        <span>{{counterProductos || 0}}</span>
+        <h2>Productos registrados</h2>
+        <button mat-stroked-button routerLink="/admin/inventario/productos">
+          Ver detalles
+          <mat-icon color="accent">arrow_forward</mat-icon>
+        </button>
+      </div>
+      <mat-icon class="icoGrande">shopping_basket</mat-icon>
+    </mat-card>
+
+    <mat-card class="mat-elevation-z8" *ngIf="viewInfoPanel('Reglas-Canje')">
+      <div class="texto">
+        <span>{{counterRules || 0}}</span>
+        <h2>Reglas de Canje</h2>
+        <button mat-stroked-button routerLink="/admin/inventario/reglas">
+          Ver detalles
+          <mat-icon color="accent">arrow_forward</mat-icon>
+        </button>
+      </div>
+      <mat-icon class="icoGrande">rule</mat-icon>
+    </mat-card>
+
+    <mat-card class="mat-elevation-z8" *ngIf="viewInfoPanel('Farmacias')">
+      <div class="texto">
+        <span>{{counterFarmacias || 0}}</span>
+        <h2>Farmacias registradas</h2>
+        <button mat-stroked-button routerLink="/admin/zonas/farmacias">
+          Ver detalles
+          <mat-icon color="accent">arrow_forward</mat-icon>
+        </button>
+      </div>
+      <mat-icon class="icoGrande">add_business</mat-icon>
+    </mat-card>
+
+    <mat-card class="mat-elevation-z8" *ngIf="viewInfoPanel('Usuarios')">
+      <div class="texto">
+        <span>{{counterUsers || 0}}</span>
+        <h2>Usuarios registrados</h2>
+        <button mat-stroked-button routerLink="/admin/security/usuarios">
+          Ver detalles
+          <mat-icon color="accent">arrow_forward</mat-icon>
+        </button>
+      </div>
+      <mat-icon class="icoGrande">group</mat-icon>
+    </mat-card>
+
+    <mat-card class="mat-elevation-z8" *ngIf="viewInfoPanel('Medicos')">
+      <div class="texto">
+        <span>{{counterMedicos || 0}}</span>
+        <h2>Médicos registrados</h2>
+        <button mat-stroked-button routerLink="/admin/medicos/medicos">
+          Ver detalles
+          <mat-icon color="accent">arrow_forward</mat-icon>
+        </button>
+      </div>
+      <mat-icon class="icoGrande">medical_information</mat-icon>
+    </mat-card>
+
+    <mat-card class="mat-elevation-z8" *ngIf="viewInfoPanel('Paises')">
+      <div class="texto">
+        <span>{{counterPaises || 0}}</span>
+        <h2>Paises Registrados</h2>
+        <button mat-stroked-button routerLink="/admin/zonas/paises">
+          Ver detalles
+          <mat-icon color="accent">arrow_forward</mat-icon>
+        </button>
+      </div>
+      <mat-icon class="icoGrande">flag</mat-icon>
+    </mat-card>
+
+    <mat-card class="mat-elevation-z8" *ngIf="viewInfoPanel('Departamentos')">
+      <div class="texto">
+        <span>{{counterDepartamentos || 0}}</span>
+        <h2>Departamentos Registrados</h2>
+        <button mat-stroked-button routerLink="/admin/zonas/departamentos">
+          Ver detalles
+          <mat-icon color="accent">arrow_forward</mat-icon>
+        </button>
+      </div>
+      <mat-icon class="icoGrande">signpost</mat-icon>
+    </mat-card>
+
+    <mat-card class="mat-elevation-z8" *ngIf="viewInfoPanel('Ciudades')">
+      <div class="texto">
+        <span>{{counterCiudades || 0}}</span>
+        <h2>Ciudades Registradas</h2>
+        <button mat-stroked-button routerLink="/admin/zonas/ciudades">
+          Ver detalles
+          <mat-icon color="accent">arrow_forward</mat-icon>
+        </button>
+      </div>
+      <mat-icon class="icoGrande">apartment</mat-icon>
+    </mat-card>
+  </div>
+</main>

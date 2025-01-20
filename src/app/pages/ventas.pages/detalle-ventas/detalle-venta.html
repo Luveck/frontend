@@ -1,0 +1,196 @@
+<main>
+  <h1>{{currentVenta ?'Factura detalle' :'Nueva factura'}}</h1>
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+
+  <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
+
+  <div class="fm_header" *ngIf="currentVenta">
+    <section class="avatar">
+      <div class="datos">
+        <p>{{currentVenta?.noPurchase}}</p>
+        <div class="bots">
+          <span
+            class="chip"
+            [ngClass]="{'active': currentVenta?.purchaseReviewed == true,
+            'inactive': currentVenta?.purchaseReviewed == false}"
+            >Estado: {{currentVenta?.purchaseReviewed ?'Verificado' :
+            'Sin verificar'}}</span
+          >
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <form class="wrapForm" [formGroup]="ventaForm" autocomplete="off">
+    <div class="inputs">
+      <mat-form-field appearance="fill">
+        <mat-label>Farmacia</mat-label>
+        <mat-select formControlName="pharmacyId">
+          <div *ngFor="let farma of farmacias">
+            <mat-option *ngIf="farma.isActive" [value]="farma.id">
+              {{farma.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+        <button mat-icon-button matSuffix (click)="filterFharmacy($event)">
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>No. de factura</mat-label>
+        <input
+          matInput
+          placeholder="No. de factura"
+          formControlName="noPurchase"
+        />
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Cliente</mat-label>
+        <mat-select
+          [formControl]="userCtrl"
+          #singleSelect
+          [(ngModel)]="selectedUserId"
+          (selectionChange)="onUserSelect($event)"
+        >
+          <mat-option>
+            <ngx-mat-select-search
+              [formControl]="userFilterCtrl"
+              placeholderLabel="Buscar por DNI"
+              noEntriesFoundLabel="'Registro no encontrado.'"
+            ></ngx-mat-select-search>
+          </mat-option>
+          <div *ngFor="let user of filteredUsers | async">
+            <mat-option *ngIf="user.isActive" [value]="user.userId">
+              {{user.dni}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill" class="area">
+        <mat-label>Observación</mat-label>
+        <textarea
+          matInput
+          placeholder="Descripción de la factura"
+          formControlName="observation"
+          rows="2"
+          matTooltip="Observaciones que se deseen adicionar a la factura"
+        ></textarea>
+      </mat-form-field>
+
+      <div class="contentImgs">
+        <mat-card class="drop">
+          <mat-card-header>
+            <mat-card-title>Factura</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div
+              class="drop-zone"
+              appFiles
+              (mouseOver)="isOverDrop = $event"
+              [ngClass]="{'file-over': isOverDrop}"
+            >
+              <label class="custon-file" *ngIf="files.length == 0">
+                <h4>Arrastre y suelte aquí la factura</h4>
+                <mat-icon>cloud_upload</mat-icon>
+                <input
+                  type="file"
+                  accept="*"
+                  single-file="true"
+                  (change)="onSelectFile($event)"
+                />
+              </label>
+              <label class="custon-file" *ngIf="files.length > 0">
+                <h4>Factura Cargada</h4>
+                <mat-icon>task</mat-icon>
+                <input
+                  type="file"
+                  accept="*"
+                  single-file="true"
+                  (change)="onSelectFile($event)"
+                />
+              </label>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </form>
+
+  <div *ngIf="selectedUser" style="text-align: center">
+    <h3>Detalles de usuario:</h3>
+    <p>Nombre: {{ selectedUser.fullName }}</p>
+  </div>
+  <mat-divider></mat-divider>
+
+  <section class="wrapForm ver2">
+    <h2>Productos</h2>
+    <div
+      class="inputs ver2"
+      *ngFor="let p of productsOnCurrentVenta ; index as i"
+    >
+      <button
+        mat-icon-button
+        color="warn"
+        (click)="eliminarProd(i)"
+        matTooltip="Eliminar producto"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+      <mat-form-field appearance="fill">
+        <mat-label>Producto</mat-label>
+        <mat-select
+          [(ngModel)]="productsOnCurrentVenta[i].productId"
+          (selectionChange)="onProductChange(i)"
+        >
+          <div *ngFor="let prod of availableProducts(i)">
+            <mat-option *ngIf="prod.isActive" [value]="prod.id">
+              {{prod.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Cantidad</mat-label>
+        <input
+          matInput
+          type="number"
+          placeholder="Cantidad comprada"
+          [(ngModel)]="productsOnCurrentVenta[i].Quantity"
+          (ngModelChange)="onQuantityChange(i)"
+          [max]="20"
+        />
+      </mat-form-field>
+    </div>
+
+    <button
+      mat-raised-button
+      color="accent"
+      (click)="addProd()"
+      [disabled]="!canAddProduct()"
+    >
+      Agregar producto <mat-icon>add</mat-icon>
+    </button>
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <div class="btns">
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="ventaForm.invalid || files.length == 0 || !isProductsValid()"
+      (click)="save()"
+    >
+      Guardar <mat-icon>save</mat-icon>
+    </button>
+    <button mat-raised-button color="warn" (click)="resetForm()">
+      Limpiar datos
+    </button>
+  </div>
+</main>

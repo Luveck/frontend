@@ -1,0 +1,18 @@
+<main [ngClass]="{'light': localTheme, 'dark': !localTheme}">
+  <div class="brand-logo">
+    <img [src]="localTheme ?'assets/icons/logo_light.png' :'assets/icons/logo_dark.png'">
+    <h1>Pasión por Vivir</h1>
+  </div>
+  <div class="rest">
+    <div class="w-100">
+      <h2 class="mb">No autorizado! 🔐</h2>
+      <p class="mb">
+        Su cuenta no tiene las credenciales necesarioas para acceder a esta página.
+      </p>
+      <span class="linkRegis" routerLink="/">
+        Volver
+      </span>
+      <img src="assets/not-authorized.svg"/>
+    </div>
+  </div>
+</main>

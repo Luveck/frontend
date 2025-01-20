@@ -1,0 +1,94 @@
+<main>
+  <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
+
+  <header>
+    <div>
+      <button mat-raised-button color="primary" (click)="on('new')">
+        <mat-icon>add</mat-icon>
+        Agregar Venta
+      </button>
+      &nbsp;
+      <button mat-raised-button color="primary" (click)="generateReport()">
+        <mat-icon>task</mat-icon>
+        Generar reporte
+      </button>
+    </div>
+
+    <mat-form-field appearance="standard">
+      <mat-icon matPrefix>search</mat-icon>
+      <mat-label>Buscar</mat-label>
+      <input matInput (keyup)="applyFilter($event)" placeholder="Buscar" #input autocomplete="off">
+    </mat-form-field>
+  </header>
+
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource" matSort>
+
+      <ng-container matColumnDef="id" style="display: none;">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Id </th>
+        <td mat-cell *matCellDef="let row"> {{row.id}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="noPurchase">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> No. Factura </th>
+        <td mat-cell *matCellDef="let row"> {{row.noPurchase}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="country">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Farmacia </th>
+        <td mat-cell *matCellDef="let row"> {{row.country.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="namePharmacy">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Farmacia </th>
+        <td mat-cell *matCellDef="let row"> {{row.pharmacy.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="reviewed">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Verificación </th>
+        <td mat-cell *matCellDef="let row">
+          <span class="chip" [ngClass]="{'active': row.purchaseReviewed == true, 'inactive': row.purchaseReviewed == false}">{{row.purchaseReviewed ?'Verificado' :'Sin verificar'}}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="creationDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha de venta </th>
+        <td mat-cell *matCellDef="let row"> {{row.dateShiped |date:'M/d/yy'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="userId" style="display: none;">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Usuario</th>
+        <td mat-cell *matCellDef="let row"> {{row.userId }} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="acctions">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
+        <td mat-cell *matCellDef="let row">
+          <button mat-stroked-button (click)="on(row.id)">
+            Ver detalles
+            <mat-icon color="accent">arrow_forward</mat-icon>
+          </button>
+
+          <button mat-stroked-button (click)="chageState(row)" *ngIf="!row.purchaseReviewed">
+            Verificar venta
+            <mat-icon color="warn">published_with_changes</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No hay datos que coincidan con el filtro: "{{input.value}}"</td>
+      </tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[5, 10]" aria-label="Select page of users"></mat-paginator>
+  </div>
+</main>

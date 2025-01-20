@@ -1,0 +1,43 @@
+<h2 mat-dialog-title>{{data.title}}</h2>
+<main mat-dialog-content>
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+
+  <div class="fm_header" *ngIf="data.ciudadId">
+    <section class="avatar">
+      <div class="datos">
+        <p>{{currentCiudad?.name}}</p>
+        <div class="bots">
+          <span class="chip" [ngClass]="{'active': currentCiudad?.isActive== true, 'inactive': currentCiudad?.isActive == false}">Estado: {{currentCiudad?.isActive ?'Activo' :'Inactivo'}}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <form class="wrapForm" [formGroup]="ciudadForm" autocomplete="off">
+    <div class="inputs">
+      <mat-form-field appearance="fill">
+        <mat-label>Departamento</mat-label>
+        <mat-select formControlName="departymentId">
+          <div *ngFor="let departamento of departamentos">
+            <mat-option *ngIf="departamento.isActive" [value]="departamento.id">
+              {{departamento.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Nombre" formControlName="name">
+      </mat-form-field>
+    </div>
+  </form>
+</main>
+<div mat-dialog-actions>
+  <div class="btns">
+    <button mat-raised-button color="primary" [disabled]="ciudadForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
+    <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
+  </div>
+</div>

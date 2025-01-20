@@ -1,0 +1,27 @@
+<main mat-dialog-content>
+    <button mat-icon-button (click)="onClose()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  <img [src]="prodData.urlImages[0]">
+  <div class="infoProd">
+    <h1>{{prodData.nameProduct}}</h1>
+    <ul>
+      <li>
+        <span>Presentación: </span>
+        {{prodData.presentation}}
+      </li>
+      <li>
+        <span>Regla de Canje: </span>
+        Tienes derecho a {{prodData.quantityGive}} por cada {{prodData.quantityBuy}} que compres.
+      </li>
+      <li>
+        <span>Canje máximo anual: </span>
+        {{prodData.maxYear}}
+      </li>
+      <li>
+        <span>Descripción: </span>
+        {{prodData.description}}
+      </li>
+    </ul>
+  </div>
+</main>

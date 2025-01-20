@@ -1,0 +1,198 @@
+<section class="registro">
+  <h1>Iniciar sesión para obtener canjes</h1>
+  <p>Inscríbete a través de este formulario para ser parte del proyecto "Pasión por Vivir".</p>
+
+  <div class="regis_content">
+    <div class="regisImg"><img src="assets/images/ppv_8.jpg" alt=""></div>
+    <div class="regForm">
+      <form [formGroup]="loginForm" autocomplete="off" *ngIf="typeForm == 'login'">
+        <mat-form-field appearance="outline">
+          <mat-label>DNI</mat-label>
+          <input matInput placeholder="DNI de usuario" formControlName="dni" maxlength="20">
+          <mat-icon matPrefix>person</mat-icon>
+          <mat-error
+            *ngIf="loginForm.get('dni')?.invalid && (loginForm.get('dni')?.dirty || loginForm.get('dni')?.touched) && loginForm.get('dni')?.errors?.['required']">
+            DNI requerido
+          </mat-error>
+          <mat-error *ngIf="!loginForm.get('dni')?.errors?.['required'] && (loginForm.get('dni')?.errors?.['pattern'])">
+            DNI invalido
+          </mat-error>
+          <mat-error *ngIf="loginForm.get('dni')?.errors?.['minlength']">
+            DNI debe tener minimo 2 caracteres.
+          </mat-error>
+        </mat-form-field>
+
+        <p style="text-align: end;"><span (click)="typeForm = 'forgot'">Olvide mi contraseña</span></p>
+        <mat-form-field appearance="outline">
+          <mat-label>Contraseña</mat-label>
+          <input matInput [type]="hidePassword ?'password' :'text'" placeholder="Contraseña" formControlName="password" required>
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+            <mat-icon>{{hidePassword ?'visibility_off' :'visibility'}}</mat-icon>
+          </button>
+          <mat-error>
+            Contraseña requerida
+          </mat-error>
+        </mat-form-field>
+
+        <mat-checkbox formControlName="remember">Recordar usuario</mat-checkbox>
+        <br>
+
+        <button mat-raised-button color="primary" [disabled]="!loginForm.valid"
+          (click)="onLogin(loginForm.value)">Iniciar Sesión
+          <mat-icon class="lod" *ngIf="dataServ.progress">cached</mat-icon>
+        </button>
+
+        <p>¿Nuevo en la plataforma?  <span (click)="typeForm = 'register'">Crea una cuenta</span></p>
+      </form>
+
+      <form [formGroup]="registerForm" autocomplete="off" *ngIf="typeForm == 'register'">
+        <mat-form-field appearance="outline">
+          <mat-label>DNI</mat-label>
+          <input matInput placeholder="DNI de usuario" formControlName="dni" maxlength="20">
+          <mat-error
+            *ngIf="registerForm.get('dni')?.invalid && (registerForm.get('dni')?.dirty || registerForm.get('dni')?.touched) && registerForm.get('dni')?.errors?.['required']">
+            DNI requerido
+          </mat-error>
+          <mat-error *ngIf="!registerForm.get('dni')?.errors?.['required'] && (registerForm.get('dni')?.errors?.['pattern'])">
+            DNI invalido
+          </mat-error>
+          <mat-error *ngIf="registerForm.get('dni')?.errors?.['minlength']">
+            DNI debe tener minimo 2 digitos.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>email</mat-label>
+          <input matInput placeholder="Correo" formControlName="email">
+          <mat-error *ngIf="!registerForm.get('email')?.errors?.['required'] && (registerForm.get('email')?.errors?.['pattern'])">
+            Correo invalido
+          </mat-error>
+          <mat-error
+            *ngIf="registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched) && registerForm.get('email')?.errors?.['required']">
+            Correo requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input matInput placeholder="Nombre de usuario" formControlName="name" required>
+          <mat-error
+            *ngIf="registerForm.get('name')?.invalid && (registerForm.get('name')?.dirty || registerForm.get('name')?.touched) && registerForm.get('name')?.errors?.['required']">
+            Nombre requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Apellido</mat-label>
+          <input matInput placeholder="Apellido de usuario" formControlName="lastName" required>
+          <mat-error
+            *ngIf="registerForm.get('lastName')?.invalid && (registerForm.get('lastName')?.dirty || registerForm.get('lastName')?.touched) && registerForm.get('lastName')?.errors?.['required']">
+            Apellido requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Teléfono</mat-label>
+          <input matInput placeholder="Teléfono" formControlName="phone" required>
+          <mat-error *ngIf="!registerForm.get('phone')?.errors?.['required'] && (registerForm.get('phone')?.errors?.['pattern'])">
+            Teléfono invalido
+          </mat-error>
+          <mat-error
+            *ngIf="registerForm.get('phone')?.invalid && (registerForm.get('phone')?.dirty || registerForm.get('phone')?.touched) && registerForm.get('phone')?.errors?.['required']">
+            Teléfono requerido
+          </mat-error>
+          <mat-error *ngIf="!registerForm.get('phone')?.errors?.['minLength']">
+            Teléfono debe tener minimo 8 digitos.
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha de nacimiento</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="bornDate">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error
+            *ngIf="registerForm.get('bornDate')?.invalid && (registerForm.get('bornDate')?.dirty || registerForm.get('bornDate')?.touched) && registerForm.get('bornDate')?.errors?.['required']">
+            Fecha de nacimiento requerida
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Género</mat-label>
+          <mat-select formControlName="sex">
+            <mat-option value="hombre">Masculino</mat-option>
+            <mat-option value="mujer">Femenino</mat-option>
+            <mat-option value="otro">Otro</mat-option>
+          </mat-select>
+          <mat-error
+            *ngIf="registerForm.get('sex')?.invalid && (registerForm.get('sex')?.dirty || registerForm.get('sex')?.touched) && registerForm.get('sex')?.errors?.['required']">
+            Género requerido
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Dirección</mat-label>
+          <input matInput placeholder="Dirección" formControlName="address" required>
+          <mat-error
+            *ngIf="registerForm.get('address')?.invalid && (registerForm.get('address')?.dirty || registerForm.get('address')?.touched) && registerForm.get('address')?.errors?.['required']">
+            Dirección requerida
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Contraseña</mat-label>
+          <input matInput [type]="hidePassword ?'password' :'text'" formControlName="password" placeholder="Contraseña" [NgPasswordValidator]="options">
+          <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword">
+            <mat-icon>{{hidePassword ?'visibility_off' :'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="!registerForm.get('password')?.errors?.['required'] && (registerForm.get('password')?.errors?.['pattern'])">
+            Contraseña insegura
+          </mat-error>
+          <mat-error
+            *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched) && registerForm.get('password')?.errors?.['required']">
+            Contraseña requerida
+          </mat-error>
+        </mat-form-field>
+
+        <button class="btnReg" mat-flat-button color="primary" [disabled]="registerForm.invalid"
+          (click)="onRegister()">
+          Registro
+          <mat-icon class="lod" *ngIf="dataServ.progress">cached</mat-icon>
+        </button>
+
+        <p>¿Ya tienes una cuenta? <span (click)="typeForm = 'login'">Inicia sesión</span></p>
+      </form>
+
+      <form [formGroup]="forgotPassForm" autocomplete="off" *ngIf="typeForm == 'forgot'">
+        <div class="formHeader">
+          <p>¿Ha olvidado su contraseña? 🔒</p>
+          <span>Ingrese su correo electrónico y le enviaremos instrucciones para restablecer su contraseña.</span>
+        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>email</mat-label>
+          <input matInput placeholder="Correo" formControlName="email">
+          <mat-error *ngIf="!forgotPassForm.get('email')?.errors?.['required'] && (forgotPassForm.get('email')?.errors?.['pattern'])">
+            Correo invalido
+          </mat-error>
+          <mat-error
+            *ngIf="forgotPassForm.get('email')?.invalid && (forgotPassForm.get('email')?.dirty || forgotPassForm.get('email')?.touched) && forgotPassForm.get('email')?.errors?.['required']">
+            Correo requerido
+          </mat-error>
+        </mat-form-field>
+
+        <div class="btnForm">
+          <button [disabled]="!forgotPassForm.valid" mat-raised-button color="primary" mat-button (click)="onForgot(forgotPassForm.value)">
+            Enviar
+            <mat-icon class="lod" *ngIf="dataServ.progress">cached</mat-icon>
+          </button>
+        </div>
+
+        <div class="sendMsg" *ngIf="resetEmailSendMsg.length > 1">
+          <p>{{resetEmailSendMsg}}</p>
+        </div>
+
+        <p><span (click)="typeForm = 'login'">< Regresar</span></p>
+      </form>
+    </div>
+  </div>
+</section>

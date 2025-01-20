@@ -1,0 +1,65 @@
+<h2 mat-dialog-title>Buscar Farmacia</h2>
+<main mat-dialog-content>
+  <form class="wrapForm" [formGroup]="farmaForm" autocomplete="off">
+    <div class="inputs">
+      <mat-form-field appearance="fill">
+        <mat-label>Pais</mat-label>
+        <mat-select formControlName="countryId" (selectionChange)="onCountryChange($event.value)">
+          <div *ngFor="let pais of paises">
+            <mat-option *ngIf="pais.isActive" [value]="pais.id">
+              {{pais.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" *ngIf="countrySelected">
+        <mat-label>Departamento</mat-label>
+        <mat-select formControlName="departmentId" (selectionChange)="onDepartmentChange($event.value)">
+          <div *ngFor="let departamento of filteredDepartments">
+            <mat-option *ngIf="departamento.isActive" [value]="departamento.id">
+              {{departamento.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill"  *ngIf="filteredDepartments.length > 0 && filteredCities.length > 0">
+        <mat-label>Ciudad</mat-label>
+        <mat-select formControlName="cityId" (selectionChange)="onCityChange($event.value)">
+          <div *ngFor="let ciudad of filteredCities">
+            <mat-option *ngIf="ciudad.isActive" [value]="ciudad.id">
+              {{ciudad.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill"  *ngIf="filteredDepartments.length > 0 && filteredCities.length > 0 && filteredPharmacy.length > 0">
+        <mat-label>Farmacia</mat-label>
+        <mat-select formControlName="pharmacyId" (selectionChange)="onPharmacyChange($event.value)">
+          <div *ngFor="let pharmacy of filteredPharmacy">
+            <mat-option *ngIf="pharmacy.isActive" [value]="pharmacy.id">
+              {{pharmacy.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+  <div class="infoPharmacy" style="display: flex; flex-direction: row; justify-content: space-around; width: 100%;" *ngIf="farmacia">
+    <div class="name" >
+      <span>Nombre Farmacia:</span>
+      <p>{{farmacia.name}}</p>
+    </div>
+    <div class="address">
+      <span>Direccion:</span>
+      <p>{{farmacia.adress}}</p>
+    </div>
+  </div>
+</main>
+<div mat-dialog-actions>
+  <button mat-raised-button color="primary" (click)="onSelect()" *ngIf="farmacia" >
+    Seleccionar
+  </button>
+  <button mat-raised-button color="warn" (click)="onClose()">
+    Cerrar
+  </button>
+</div>

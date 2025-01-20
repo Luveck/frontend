@@ -1,0 +1,102 @@
+/* You can add global styles to this file, and also import other style files */
+@import './myStyles.scss';
+
+router-outlet~* {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.mat-sidenav{
+  top: 0 !important;
+}
+
+/* Scroll */
+::-webkit-scrollbar{
+  width: 4px;
+}
+::-webkit-scrollbar-thumb{
+  border-radius: 10px;
+  background-color: #145483;
+  box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+}
+::-webkit-scrollbar-track{
+  border-radius: 10px;
+  background-color: transparent;
+  box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+}
+
+/* Loading data */
+.loading-shade {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 56px;
+  right: 0;
+  background: rgba(0, 0, 0, 0.15);
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+span.chip{
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border-radius: 30px;
+  &.active{
+    background-color: #14ce63;
+    color: #444;
+  }
+  &.inactive{
+    background-color: #ff0000;
+    color: #eee;
+  }
+}
+
+/* loding */
+.lod {
+  animation: rot 1.5s infinite linear;
+}
+
+@keyframes rot {
+  from{
+    transform: rotate(360deg);
+  }
+  to{
+    transform: rotate(0deg);
+  }
+}
+
+/* animate */
+.animated {
+  -webkit-animation-duration: 1s;
+  animation-duration: 1s;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.fadeIn {
+  -webkit-animation-name: fadeIn;
+  animation-name: fadeIn;
+}
+
+/* Tooltip styles */
+.mat-tooltip{
+  font-size: 1rem !important;
+}
+

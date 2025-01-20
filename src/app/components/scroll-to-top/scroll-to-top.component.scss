@@ -1,0 +1,14 @@
+:host {
+  position: fixed;
+  float: right;
+  cursor: pointer;
+  right: 14px;
+  bottom: 14px;
+  z-index: 100;
+  opacity: 0;
+  transition: all .2s ease-in-out;
+}
+.showBtn{
+  opacity: 1;
+  transition: all .2s ease-in-out;
+}

@@ -1,0 +1,180 @@
+main{
+  width: 90%;
+  padding-top: 6rem;
+  margin: 0 auto;
+  h1{
+    text-align: center;
+    margin: 0;
+  }
+
+  .fm_header{
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    section.avatar{
+      width: 40%;
+      padding: .5rem;
+      display: flex;
+      align-items: center;
+      .avatarImg{
+        border: 1px solid gray;
+        img{
+          width: 150px;
+          height: 150px;
+        }
+      }
+      .datos{
+        width: 250px;
+        margin: 0.5rem;
+        text-align: center;
+        p{
+          font-size: 2em;
+        }
+        .bots{
+          padding-top: 1rem;
+          text-align: center;
+        }
+      }
+    }
+    section.resumen{
+      width: 60%;
+      padding: 1rem;
+      ul{
+        border-left: 1px solid gray;
+        list-style: none;
+        padding-left: 1rem;
+        li{
+          .example-tab-icon {
+            margin-right: 8px;
+          }
+          margin: 0.3rem 0;
+          display: flex;
+          align-items: center;
+        }
+      }
+    }
+  }
+  .wrapForm{
+    width: 100%;
+    padding: 10px 0;
+    .inputs{
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      mat-form-field{
+        margin: .5rem;
+        &.barCode{
+          grid-column: 2 / span 2;
+        }
+        &.area{
+          resize: none;
+          grid-column: 1 / span 4;
+        }
+      }
+    }
+  }
+
+  .contentImgs{
+    width: 80%;
+    margin: 1rem auto;
+    display: grid;
+    grid-template-columns: 30% 70%;
+    grid-gap: 10px;
+    mat-card.drop{
+      height: 200px;
+    }
+    mat-card mat-card-header{
+      justify-content: center;
+    }
+    mat-card mat-card-content{
+      .drop-zone {
+        border: dotted 3px lightgray;
+        .custon-file{
+          cursor: pointer;
+          input[type='file']{
+            display: none;
+          }
+          height: 160px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+          mat-icon{
+            color: #2190f0;
+            font-size: 2rem;
+            overflow: visible;
+            text-align: center;
+          }
+        }
+      }
+
+      .file-over {
+        border: solid 3px #22dc80;
+      }
+    }
+
+    mat-card mat-card-content{
+      .table{
+        width: 100%;
+        max-height: 170px;
+        border-collapse: collapse;
+
+        thead{
+          border-bottom: 1px solid #999;
+          th{
+            text-align: left;
+            padding: 10px;
+          }
+        }
+        tbody{
+          border-bottom: 1px solid #999;
+          tr td{
+            text-align: left;
+            &.name{
+              display: flex;
+              align-items: center;
+              overflow: hidden;
+              padding-right: 2px;
+            }
+          }
+        }
+      }
+    }
+    mat-card-actions{
+      padding: 0;
+      text-align: center;
+    }
+  }
+
+  .listImgs{
+    width: 90%;
+    margin: 2rem auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    .imgItem{
+      width: 220px;
+      height: 220px;
+      padding: 10px;
+      border: 1px solid gray;
+      .mat-mini-fab{
+        position: absolute;
+        margin: 3px;
+      }
+      img{
+        height: 100%;
+      }
+    }
+  }
+
+  .container-btn{
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+  }
+}
+

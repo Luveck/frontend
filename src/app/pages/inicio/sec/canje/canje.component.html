@@ -1,0 +1,112 @@
+<section class="canjes">
+  <!-- <h1>Informa de canjes</h1>
+  <p>
+    Llevamos un control del registro de canjes obtenidos en el proyecto "Pasión
+    por Vivir".
+  </p> -->
+  <mat-tab-group mat-align-tabs="center">
+    <!-- <mat-tab>
+      <ng-template mat-tab-label> Ingresar Canje </ng-template>
+      <div class="contentRegistroCanje">
+        <h1>Registrar factura</h1>
+
+        <div class="contVenta">
+          <div class="vent">
+            <form class="wrapForm" [formGroup]="ventaForm" autocomplete="off">
+              <div class="inputs">
+                <mat-form-field appearance="fill">
+                  <mat-label>Farmacia</mat-label>
+                  <mat-select formControlName="pharmacyId">
+                    <div *ngFor="let farma of farmacias">
+                      <mat-option *ngIf="farma.isActive" [value]="farma.id">
+                        {{ farma.name }}
+                      </mat-option>
+                    </div>
+                  </mat-select>
+                  <button mat-icon-button matSuffix (click)="filterFharmacy($event)">
+                    <mat-icon>search</mat-icon>
+                  </button>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                  <mat-label>No. de factura</mat-label>
+                  <input
+                    matInput
+                    placeholder="No. de factura"
+                    formControlName="noPurchase"
+                  />
+                </mat-form-field>
+              </div>
+            </form>
+
+            <mat-divider></mat-divider>
+
+            <section class="wrapForm">
+              <h2>Productos</h2>
+              <div
+                class="inputs ver2"
+                *ngFor="let p of productsOnCurrentVenta; index as i"
+              >
+                <button
+                  mat-icon-button
+                  color="warn"
+                  (click)="eliminarProd(i)"
+                  matTooltip="Eliminar producto"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+                <mat-form-field appearance="fill">
+                  <mat-label>Producto</mat-label>
+                  <mat-select [(ngModel)]="productsOnCurrentVenta[i].productId">
+                    <div *ngFor="let prod of productos">
+                      <mat-option *ngIf="prod.isActive" [value]="prod.id">
+                        {{ prod.name }}
+                      </mat-option>
+                    </div>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="fill">
+                  <mat-label>Cantidad</mat-label>
+                  <input
+                    matInput
+                    type="number"
+                    placeholder="Cantidad comprada"
+                  />
+                </mat-form-field>
+              </div>
+
+              <button mat-raised-button color="accent" (click)="addProd()">
+                Agregar producto <mat-icon>add</mat-icon>
+              </button>
+            </section>
+          </div>
+
+          <mat-divider></mat-divider>
+
+          <div class="btns">
+            <button
+              mat-raised-button
+              color="primary"
+              [disabled]="ventaForm.invalid"
+              (click)="save()"
+            >
+              Guardar <mat-icon>save</mat-icon>
+            </button>
+            <button mat-raised-button color="warn" (click)="resetForm()">
+              Limpiar datos
+            </button>
+          </div>
+        </div>
+      </div>
+    </mat-tab> -->
+    <mat-tab>
+      <ng-template mat-tab-label> Facturas Registradas </ng-template>
+      <div class="contentRegistroCanje">
+        <h1>Canjes Completados</h1>
+        <p>Aun no tiene canjes procesados.</p>
+        <app-products-purchase></app-products-purchase>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</section>

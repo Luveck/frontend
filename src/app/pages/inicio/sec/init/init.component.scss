@@ -1,0 +1,178 @@
+@import '~swiper/scss';
+@import '~swiper/scss/navigation';
+
+.inicio{
+  margin-top: 1.5rem;
+  h1{
+    font-size: 2rem;
+    text-align: center;
+    padding: 0;
+  }
+  .swiper{
+    --swiper-navigation-color: #b9ccda;
+    --swiper-navigation-size: 50px;
+
+    width: 100%;
+    .swiper-slide{
+      .sItem{
+        width: 90%;
+        height: 100%;
+        margin: 1rem auto;
+        display: flex;
+        flex-direction: row;
+        gap: 5px;
+        align-items: center;
+        justify-content: center;
+        .textoSlide{
+          width: 50%;
+          padding: 0 2rem;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          align-items: flex-start;
+          justify-content: center;
+          p, li{
+            font-size: 1.2rem;
+            line-height: 1.5;
+            text-align: justify;
+            span{
+              font-weight: 600;
+              color: #578dff;
+            }
+          }
+          .linkRegis{
+            border: 1px solid #145483;
+            border-radius: 10px;
+            padding: .8rem 2rem;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: background .5s;
+            &:hover{
+              background: #145483;
+              color: #fff;
+            }
+          }
+        }
+        .iniImage{
+          width: 50%;
+          padding: 0 2rem;
+          img{
+            width: 100%;
+            border-radius: 10px;
+          }
+        }
+      }
+    }
+  }
+  .bene{
+    width: 80%;
+    margin: 3rem auto;
+    h1{
+      text-align: start;
+    }
+    p, li, span{
+      font-size: 1.2rem;
+      line-height: 1.5;
+    }
+    p, span{
+      text-align: justify
+    }
+    .listBene{
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      ul, .beneImg{
+        width: 50%;
+        padding: 0 2rem;
+      }
+      .beneImg img{
+        width: 100%;
+        border-radius: 10px;
+      }
+    }
+  }
+}
+
+@media (max-width: 1000px){
+  .inicio{
+    margin-top: 2rem;
+    h1{
+      font-size: 1.5rem;
+      width: 90%;
+      margin: 0 auto;
+    }
+    .swiper{
+      .swiper-slide .sItem{
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        &.reverse{
+          flex-direction: column-reverse;
+        }
+        .textoSlide{
+          padding: 0 1rem;
+          width: 90%;
+          align-items: center;
+          justify-content: center;
+          .linkRegis{
+            font-size: 1rem;
+          }
+        }
+        .iniImage{
+          img{
+            width: 100%;
+            height: 300px;
+          }
+        }
+      }
+    }
+
+  }
+}
+
+@media (max-width: 600px){
+  .inicio{
+    margin-top: 2rem;
+    h1{
+      font-size: 1.5rem;
+      width: 90%;
+      margin: 0 auto;
+    }
+    .swiper{
+      .swiper-slide .sItem{
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        &.reverse{
+          flex-direction: column-reverse;
+        }
+        .textoSlide{
+          padding: 0 1rem;
+          width: 90%;
+          align-items: center;
+          justify-content: center;
+          .linkRegis{
+            font-size: 1rem;
+          }
+        }
+        .iniImage{
+          width: 100%;
+          img{
+            width: 100%;
+            height: 300px;
+          }
+        }
+      }
+    }
+    .bene .listBene{
+      flex-direction: column;
+      ul, .beneImg{
+        width: 80%;
+        padding: 0 2rem;
+      }
+    }
+  }
+}
