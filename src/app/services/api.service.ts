@@ -1,24 +1,26 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+  HttpParams,
+} from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApiService {
   private headers: { [key: string]: string } = {};
-  private readonly url = environment.urlApi;
-  private token : string = '';
+  private url = environment.urlApi;
+  private token: string = '';
 
-  constructor(
-    private readonly http: HttpClient,
-  ) {
+  constructor(private readonly http: HttpClient) {
     this.headers['Content-Type'] = 'application/json';
     this.token = localStorage.getItem('LuveckUserToken') || '';
     this.headers['Authorization'] = `Bearer ${this.token}`;
   }
-
 
   public setCustomHeader(customHeaders: { [key: string]: string } = {}): void {
     this.headers = { ...this.headers, ...customHeaders };
@@ -47,13 +49,17 @@ export class ApiService {
 
   public async put<T>(path: string, data: any): Promise<T> {
     return await lastValueFrom(
-      this.http.put<T>(`${this.url}/${path}`, data, { headers: this.createHeaders() })
+      this.http.put<T>(`${this.url}/${path}`, data, {
+        headers: this.createHeaders(),
+      })
     ).catch(this.handleError);
   }
 
   public async patch<T>(path: string, data: any): Promise<T> {
     return await lastValueFrom(
-      this.http.patch<T>(`${this.url}/${path}`, data, { headers: this.createHeaders() })
+      this.http.patch<T>(`${this.url}/${path}`, data, {
+        headers: this.createHeaders(),
+      })
     ).catch(this.handleError);
   }
 
@@ -63,9 +69,9 @@ export class ApiService {
       body: data,
     };
 
-    return await lastValueFrom(this.http.delete<T>(`${this.url}/${path}`, options)).catch(
-      this.handleError
-    );
+    return await lastValueFrom(
+      this.http.delete<T>(`${this.url}/${path}`, options)
+    ).catch(this.handleError);
   }
 
   private handleError(error: HttpErrorResponse): Promise<never> {

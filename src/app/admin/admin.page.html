@@ -1,21 +1,36 @@
 <div class="admin-content">
   <mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #sidenav class="sidenav-body mat-elevation-z8" mode="side" opened
-       [fixedTopGap]="56" [fixedBottomGap]="1">
+    <mat-sidenav
+      #sidenav
+      class="sidenav-body mat-elevation-z8"
+      mode="side"
+      opened
+      [fixedTopGap]="56"
+      [fixedBottomGap]="1"
+    >
       <header>
-        <img [src]="localTheme ?'assets/icons/logo_light.png' :'assets/icons/logo_dark.png'"  alt="Logo"/>
+        <img
+          [src]="localTheme ?'assets/icons/logo_light.png' :'assets/icons/logo_dark.png'"
+          alt="Logo"
+        />
       </header>
 
       <mat-nav-list class="side-navnar">
         <ng-container *ngFor="let menu of menuList; index as i;">
-          <ng-container [ngTemplateOutlet]="menu.children ?  childMenu : parentMenu"
-            [ngTemplateOutletContext]="{menu:menu}">
+          <ng-container
+            [ngTemplateOutlet]="menu.children ?  childMenu : parentMenu"
+            [ngTemplateOutletContext]="{menu:menu}"
+          >
           </ng-container>
         </ng-container>
       </mat-nav-list>
 
       <ng-template #parentMenu let-menu="menu">
-        <mat-list-item [routerLink]="menu.routerLink" routerLinkActive="is-active" [routerLinkActiveOptions]="{exact:true}">
+        <mat-list-item
+          [routerLink]="menu.routerLink"
+          routerLinkActive="is-active"
+          [routerLinkActiveOptions]="{exact:true}"
+        >
           <mat-icon>{{menu.icon}}</mat-icon> {{menu.text}}
         </mat-list-item>
       </ng-template>
@@ -27,8 +42,12 @@
               <mat-icon mat-list-icon>{{menu.icon}}</mat-icon>{{menu.text}}
             </mat-expansion-panel-header>
             <mat-nav-list>
-              <mat-list-item [routerLink]="submenu.routerLink" *ngFor="let submenu of menu.children"
-                routerLinkActive="is-active" [routerLinkActiveOptions]="{exact:true}">
+              <mat-list-item
+                [routerLink]="submenu.routerLink"
+                *ngFor="let submenu of menu.children"
+                routerLinkActive="is-active"
+                [routerLinkActiveOptions]="{exact:true}"
+              >
                 <mat-icon>{{submenu.icon}}</mat-icon> {{submenu.text}}
               </mat-list-item>
             </mat-nav-list>
@@ -38,29 +57,56 @@
 
       <footer>
         <p color="dark">Powered by</p>
-        <img src="assets/icons/logo-appland.png" alt="logo-appland">
+        <img src="assets/icons/logo-appland.png" alt="logo-appland" />
       </footer>
     </mat-sidenav>
 
-    <mat-sidenav-content [@fadeAnimation]="outlet.isActivated ? outlet.activatedRoute : ''">
+    <mat-sidenav-content
+      [@fadeAnimation]="outlet.isActivated ? outlet.activatedRoute : ''"
+    >
       <mat-toolbar>
         Luveck - Pasión por vivir
         <span class="example-spacer"></span>
 
-        <button style="color: #ffc409;" mat-icon-button matTooltip="Cambiar tema" (click)="setTheme()">
+        <button
+          style="color: #ffc409"
+          mat-icon-button
+          matTooltip="Cambiar tema"
+          (click)="setTheme()"
+        >
           <mat-icon>{{localTheme ?'light_mode' :'brightness_3'}}</mat-icon>
         </button>
-        <mat-form-field appearance="outline" style="width: 110px; margin-left: 5px; margin-top: 25px">
-          <mat-select [(ngModel)]="selectedCountry" (selectionChange)="changeCountry()" [disabled]="!isAdmin">
+        <mat-form-field
+          appearance="outline"
+          style="width: 110px; margin-left: 5px; margin-top: 25px"
+        >
+          <mat-select
+            [(ngModel)]="selectedCountry"
+            (selectionChange)="changeCountry()"
+            [disabled]="!isAdmin"
+          >
             <mat-select-trigger>
-              <div class="flag" >
-                <img [src]="getFlag(selectedCountry)" alt="Flag" width="20" height="15" />
+              <div class="flag">
+                <img
+                  [src]="getFlag(selectedCountry)"
+                  alt="Flag"
+                  width="20"
+                  height="15"
+                />
                 {{ selectedCountry }}
               </div>
             </mat-select-trigger>
-            <mat-option *ngFor="let country of countryCombo" [value]="country.iso3">
+            <mat-option
+              *ngFor="let country of countryCombo"
+              [value]="country.iso3"
+            >
               <div class="flag">
-                <img [src]="getFlag(country.iso3)" alt="Flag" width="20" height="15" />
+                <img
+                  [src]="getFlag(country.iso3)"
+                  alt="Flag"
+                  width="20"
+                  height="15"
+                />
                 {{ country.name }}
               </div>
             </mat-option>
@@ -69,10 +115,13 @@
         <button mat-button (click)="openProfile()">
           <div class="nameDate">
             <div class="imgCont">
-              <img appNotImage [src]="img" alt="imagen">
+              <img appNotImage [src]="img" alt="imagen" />
             </div>
             <div class="nam">
-              <span>{{authServ.dataUser().UserName}} {{authServ.dataUser().LastName}}</span>
+              <span
+                >{{authServ.dataUser().UserName}}
+                {{authServ.dataUser().LastName}}</span
+              >
               <span>{{authServ.dataUser().Role}}</span>
             </div>
           </div>

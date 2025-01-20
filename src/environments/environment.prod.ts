@@ -1,7 +1,8 @@
 export const environment = {
   production: true,
-  urlSecuritySevice: 'https://security.dev.pasionporvivir.luveck.com/api/',
-  urlAdminSevice: 'https://admin.dev.pasionporvivir.luveck.com/api',
+  urlSecuritySevice: '',
+  urlAdminSevice: '',
+  urlApi: 'https://security.dev.pasionporvivir.luveck.com/api',
   menu: [
     {
       text: 'Inicio',

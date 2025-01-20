@@ -4,10 +4,8 @@
 
 export const environment = {
   production: false,
-  urlSecuritySevice: 'https://localhost:7066/api/',
-  //urlSecuritySevice: 'https://appluvecksecurity.azurewebsites.net/api',
-  //urlAdminSevice: 'https://appluveckadmin.azurewebsites.net/api',
-  urlAdminSevice: 'https://localhost:7294/api',
+  urlSecuritySevice: '',
+  urlAdminSevice: '',
   urlApi: 'https://localhost:7150/api',
   menu: [
     {
