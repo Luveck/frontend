@@ -1,23 +1,60 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router } from '@angular/router';
+import {
+  ActivatedRouteSnapshot,
+  CanActivate,
+  Router,
+  RouterStateSnapshot,
+} from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { SessionService } from '../services/session.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
+  private excludedRoutes: string[] = ['/admin/panelControl', 'combo'];
+  constructor(
+    private readonly sessionService: SessionService,
+    private readonly router: Router,
+    private readonly authService: AuthService
+  ) {}
 
-  constructor(private authServ: AuthService, private router: Router) { }
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    const currentRoute = state.url.split('?')[0];
+    const token = this.sessionService.getToken();
 
-  canActivate() {
-    if(this.authServ.userToken){
-      if(this.authServ.dataUser().Role === 'Cliente'){
-        this.router.navigate(['authentication/noauthorized']);
-        return false
-      }
-      return true
+    if (this.excludedRoutes.includes(currentRoute)) {
+      return true;
     }
+
+    if (token) {
+      const expToken = this.sessionService.getExpToken();
+
+      if (this.authService.checkTokenDate(expToken)) {
+        this.sessionService.clearSession();
+        this.authService.showSesionEndModal();
+        return false;
+      }
+
+      if (this.sessionService.getUserData().Role === 'Cliente') {
+        this.router.navigate(['authentication/noauthorized']);
+        return false;
+      }
+
+      return true;
+    }
+
     this.router.navigate(['authentication/login']);
-    return false
+    return false;
+
+    // if (this.sessionService.getToken()) {
+    //   if (this.sessionService.getUserData().Role === 'Cliente') {
+    //     this.router.navigate(['authentication/noauthorized']);
+    //     return false;
+    //   }
+    //   return true;
+    // }
+    // this.router.navigate(['authentication/login']);
+    // return false;
   }
 }

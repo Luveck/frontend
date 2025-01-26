@@ -18,11 +18,7 @@ export class MedicosService {
     private readonly apiService: ApiService,
     private readonly errorHandlerService: ErrorHandlerService,
     private readonly sharedService: SharedService
-  ) {
-    this.sharedService.getUserDevice();
-    this.sharedService.getUserIP();
-    this._authServ.getCurrentUser();
-  }
+  ) {}
 
   public async setSpecialties() {
     try {

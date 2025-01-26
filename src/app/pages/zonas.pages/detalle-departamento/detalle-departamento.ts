@@ -3,7 +3,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Departamento, Pais } from 'src/app/interfaces/models';
-import { ZonasService } from 'src/app/services/zonas.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { ApiService } from 'src/app/services/api.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
@@ -77,8 +76,6 @@ export class Detalledepartamento implements OnInit {
     let department: any = {
       countryId: this.departamentoForm.value.idCountry,
       name: this.departamentoForm.value.name,
-      Ip: this.sharedService.userIP,
-      Device: this.sharedService.userDevice,
     };
     if (this.data.departamentoId) {
       department = {

@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { SessionService } from '../services/session.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LoginGuard implements CanActivate {
-
-  constructor(private authServ: AuthService) { }
+  constructor(private readonly sessionService: SessionService) {}
 
   canActivate() {
-    if(!this.authServ.userToken){
-      return true
+    if (!this.sessionService.getToken()) {
+      return true;
     }
-    return false
+    return false;
   }
 }

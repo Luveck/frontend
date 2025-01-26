@@ -114,25 +114,25 @@ export class RolesModulePage implements OnInit {
     this.dataSource.data.forEach((element) => {
       if (element.selected) modulesAccess.push(element.id);
     });
-    const res = this.usuariosServ.updateModuleRole(
+    const res = this.usuariosServ.updateModulesByRole(
       modulesAccess,
       this.selected
     );
-    res?.subscribe(
-      (res) => {
-        if (res) {
-          this.usuariosServ.notify('Accesos actualizados', 'success');
-          this.isLoadingResults = true;
-          this.getAllRoles();
-          this.dataSource.data = [];
-          this.selected = '';
-        }
-      },
-      (err) => {
-        this.getAllRoles();
-        this.usuariosServ.notify('Ocurrio un error con el proceso.', 'error');
-      }
-    );
+    // res?.subscribe(
+    //   (res) => {
+    //     if (res) {
+    //       this.usuariosServ.notify('Accesos actualizados', 'success');
+    //       this.isLoadingResults = true;
+    //       this.getAllRoles();
+    //       this.dataSource.data = [];
+    //       this.selected = '';
+    //     }
+    //   },
+    //   (err) => {
+    //     this.getAllRoles();
+    //     this.usuariosServ.notify('Ocurrio un error con el proceso.', 'error');
+    //   }
+    // );
   }
 
   onCheckboxChange(event: MatCheckboxChange, roleId: string) {

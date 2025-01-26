@@ -79,8 +79,6 @@ export class DetallePais implements OnInit {
       currency: this.paisForm.value.currency,
       currencyName: this.paisForm.value.currencyName,
       currencySymbol: this.paisForm.value.currencySymbol,
-      Ip: this.sharedService.userIP,
-      Device: this.sharedService.userDevice,
     };
     if (this.data.paisId) {
       country = {

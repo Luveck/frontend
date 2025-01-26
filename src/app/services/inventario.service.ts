@@ -21,9 +21,7 @@ export class InventarioService {
     private readonly dataService: DataService,
     private readonly errorHandlerService: ErrorHandlerService,
     private readonly sharedService: SharedService
-  ) {
-    this._authServ.getCurrentUser();
-  }
+  ) {}
 
   public async setCategories() {
     try {
@@ -43,6 +41,19 @@ export class InventarioService {
   public async setProducts() {
     try {
       this.listProducts = await this.apiService.get('Product');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando productos:'),
+        'error'
+      );
+    }
+  }
+
+  public async setProductsByCountry(countryId: string) {
+    try {
+      this.listProducts = await this.apiService.get(
+        'Product/GetByCountry' + countryId
+      );
     } catch (error) {
       this.sharedService.notify(
         this.errorHandlerService.handleError(error, 'Listando productos:'),

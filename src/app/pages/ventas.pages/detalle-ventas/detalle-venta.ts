@@ -15,12 +15,13 @@ import { PharmacySearchComponent } from '../pharmacy-search/pharmacy-search.comp
 import { ApiService } from 'src/app/services/api.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { FileValidator } from './FileValidator';
+import { SessionService } from 'src/app/services/session.service';
 
 @Component({
   selector: 'app-detalle-venta',
   templateUrl: './detalle-venta.html',
   styleUrls: ['./detalle-venta.scss'],
-  providers:[FileValidator]
+  providers: [FileValidator],
 })
 export class DetalleVenta implements OnInit, OnDestroy {
   public breadcrumb = {
@@ -50,13 +51,19 @@ export class DetalleVenta implements OnInit, OnDestroy {
   usuarios: any[] = [];
   userId!: string;
   isLoadingResults!: boolean;
-  files: Array<{ base64: string; extension: string; name: string; type: string }> = [];
+  files: Array<{
+    base64: string;
+    extension: string;
+    name: string;
+    type: string;
+  }> = [];
   isOverDrop = false;
+  private countryId = '';
 
   public ventaForm = new FormGroup({
     pharmacyId: new FormControl('', Validators.required),
     noPurchase: new FormControl('', Validators.required),
-    observation: new FormControl()
+    observation: new FormControl(),
   });
 
   public userCtrl: FormControl<any> = new FormControl<any>(null);
@@ -78,47 +85,44 @@ export class DetalleVenta implements OnInit, OnDestroy {
     private readonly usersServ: UsuariosService,
     private readonly apiService: ApiService,
     private readonly sharedService: SharedService,
-    private readonly validator:FileValidator,
-
+    private readonly validator: FileValidator,
+    public readonly sessionService: SessionService
   ) {}
 
   ngOnInit(): void {
-    const noPurchase = this.route.snapshot.params['noPurchase'];
+    this.countryId = this.sessionService.getUserData().countryId;
     this.loadConfig();
 
     this.userFilterCtrl.valueChanges
-    .pipe(takeUntil(this._onDestroy))
-    .subscribe(() => {
-      this.filterUsers();
-    });
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(() => {
+        this.filterUsers();
+      });
+  }
 
+  public editPurchase() {
+    const noPurchase = this.route.snapshot.params['noPurchase'];
     if (noPurchase != 'new') {
       this.getPurchase(noPurchase);
     }
   }
 
   private async getPurchase(noPurchase: any) {
-    try {
-      this.currentVenta = await this.apiService.get(`Purchase/id/${noPurchase}`)
-      console.log(this.currentVenta)
-      this.initValores();
-
-    } catch (error) {
-      this.sharedService.notify('Error consultando la informacion', 'error');
-    } finally {
-      this.isLoadingResults = false;
-    }
+    this.currentVenta = await this.ventasServ.getPurchaseById(noPurchase);
+    this.initValores();
+    this.isLoadingResults = false;
   }
-  onQuantityChange(index: number) {
-    const currentProduct = this.productsOnCurrentVenta[index];
-    if (currentProduct.Quantity > 20) {
-      currentProduct.Quantity = 20;
+  onQuantityChange(i: number) {
+    if (this.productsOnCurrentVenta[i].Quantity > 20) {
+      this.productsOnCurrentVenta[i].error = true;
+    } else {
+      this.productsOnCurrentVenta[i].error = false;
     }
   }
 
-  public onSelectFile(event:any){
-    for(const file of event.target.files){
-      if(this.validator.validateType(file.type)){
+  public onSelectFile(event: any) {
+    for (const file of event.target.files) {
+      if (this.validator.validateType(file.type)) {
         const reader = new FileReader();
         reader.onload = (e: any) => {
           const base64String = e.target.result.split(',')[1];
@@ -127,7 +131,7 @@ export class DetalleVenta implements OnInit, OnDestroy {
             base64: base64String,
             extension: extension,
             name: file.name,
-            type: file.type
+            type: file.type,
           });
         };
         reader.readAsDataURL(file);
@@ -136,9 +140,9 @@ export class DetalleVenta implements OnInit, OnDestroy {
   }
   private async loadConfig() {
     try {
-      await this.farmaServ.setPharmacies();
-      await this.inveServ.setProducts();
-      await this.usersServ.setUserCombo();
+      await this.farmaServ.setPharmaciesBycountry(this.countryId);
+      await this.inveServ.setProductsByCountry(this.countryId);
+      await this.usersServ.setUserComboByCountry(this.countryId);
     } catch (error) {
       this.sharedService.notify('Error consultando la informacion', 'error');
     } finally {
@@ -148,7 +152,17 @@ export class DetalleVenta implements OnInit, OnDestroy {
       this.usuarios = this.usersServ.getUserCombo();
       this.userCtrl.setValue(this.usuarios[1]);
       this.filteredUsers.next(this.usuarios.slice());
+      if (this.sessionService.getUserData().pharmacyId != '0') {
+        this.initFarm(this.sessionService.getUserData().pharmacyId);
+      }
+      this.editPurchase();
     }
+  }
+
+  private initFarm(pharmacyId: any) {
+    this.ventaForm.patchValue({
+      pharmacyId: pharmacyId,
+    });
   }
 
   ngOnDestroy() {
@@ -197,7 +211,16 @@ export class DetalleVenta implements OnInit, OnDestroy {
     this.ventaForm.patchValue({
       pharmacyId: this.currentVenta.pharmacyId,
       noPurchase: this.currentVenta.noPurchase,
+      observation: this.currentVenta.observation,
     });
+
+    this.currentVenta.productPurchases.forEach((element: any) => {
+      this.productsOnCurrentVenta.push({
+        productId: element.productId,
+        Quantity: element.quantity,
+      });
+    });
+
     const selectedUser = this.usuarios.find(
       (c) => c.id === this.currentVenta.userId
     );
@@ -226,24 +249,25 @@ export class DetalleVenta implements OnInit, OnDestroy {
     }
 
     if (this.currentVentaId) {
-      console.log("Editar factura")
+      console.log('Editar factura');
     } else {
       this.addPurchase();
     }
   }
 
-  private createPurchase(){
-    var products: any =  [];
+  private createPurchase() {
+    let products: any = [];
 
-    this.productsOnCurrentVenta.forEach(element => {
+    this.productsOnCurrentVenta.forEach((element) => {
       products.push({
         productId: element.productId,
-        Quantity: element.quantity
-      })
+        Quantity: element.Quantity,
+      });
     });
-    var purchase: any = {
+
+    let purchase: any = {
       pharmacyId: this.ventaForm.value.pharmacyId,
-      userId: this.selectedUser.id,
+      userId: this.selectedUser.userId,
       noPurchase: this.ventaForm.value.noPurchase,
       purchaseReviewed: false,
       dateShiped: new Date().toISOString(),
@@ -251,35 +275,20 @@ export class DetalleVenta implements OnInit, OnDestroy {
       observation: this.ventaForm.value.observation,
       file: this.files[0].base64.toString(),
       fileExtension: this.files[0].extension,
-      products: products
-    }
-
-    purchase = this.sharedService.addIpDevice(purchase);
+      products: products,
+    };
     return purchase;
   }
-  private async addPurchase(){
-    try {
-      let purchase = this.createPurchase();
-      purchase = {
-        ...purchase,
-        isActive: true,
-      }
-      await this.apiService.post('Purchase/CreatePruchase', purchase);
-      this.sharedService.notify('Factura agregado', 'success');
-    } catch (error) {
-      this.sharedService.notify('Error agregado la factura', 'error');
-    } finally {
-      this.isLoadingResults = false;
-    }
+  private async addPurchase() {
+    this.isLoadingResults = true;
+    let purchase = this.createPurchase();
+    purchase = {
+      ...purchase,
+      isActive: true,
+    };
+    this.ventasServ.addPurchase(purchase);
+    this.isLoadingResults = false;
   }
-  // initProds(resultProds: any[]) {
-  //   resultProds.map((prod) => {
-  //     this.productsOnCurrentVenta.push({
-  //       productId: prod.productId,
-  //       Quantity: prod.quantity,
-  //     });
-  //   });
-  // }
 
   addProd() {
     this.productsOnCurrentVenta.push({
@@ -301,7 +310,8 @@ export class DetalleVenta implements OnInit, OnDestroy {
 
   canAddProduct(): boolean {
     if (this.productsOnCurrentVenta.length === 0) return true;
-    const lastProduct = this.productsOnCurrentVenta[this.productsOnCurrentVenta.length - 1];
+    const lastProduct =
+      this.productsOnCurrentVenta[this.productsOnCurrentVenta.length - 1];
     return lastProduct.productId && lastProduct.Quantity > 0;
   }
 
@@ -324,5 +334,9 @@ export class DetalleVenta implements OnInit, OnDestroy {
         product.Quantity > 0 &&
         product.Quantity <= 20
     );
+  }
+
+  seePurchase() {
+    window.open(this.currentVenta.urlPurchase, '_blank');
   }
 }

@@ -125,7 +125,6 @@ export class MedicosPage implements AfterViewInit {
       register: row.register,
       countryId: '1',
     };
-    this.sharedservice.addIpDevice(medical);
     let msgDialog: string;
     if (row.isActive) {
       msgDialog = '¿Seguro de querer inhabilitar el registro de este médico?';

@@ -135,8 +135,6 @@ export class PaisesPage implements OnInit {
       currencyName: row.currencyName,
       currencySymbol: row.currencySymbol,
       IsActive: !row.isActive,
-      Ip: this.sharedService.userIP,
-      Device: this.sharedService.userDevice,
     };
     try {
       this.isLoadingResults = true;

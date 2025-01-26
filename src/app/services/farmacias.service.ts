@@ -30,6 +30,19 @@ export class FarmaciasService {
     }
   }
 
+  public async setPharmaciesBycountry(countryId: string) {
+    try {
+      this.pharmacyList = await this.apiService.get(
+        'Pharmacy/GetByCountry' + countryId
+      );
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando farmacias:'),
+        'error'
+      );
+    }
+  }
+
   public getPharmacies() {
     return this.pharmacyList;
   }

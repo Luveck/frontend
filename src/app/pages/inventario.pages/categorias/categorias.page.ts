@@ -93,8 +93,6 @@ export class CategoriasPage implements OnInit {
             id: row.id,
             name: row.name,
             isActive: !row.isActive,
-            ip: this.sharedService.userIP,
-            device: this.sharedService.userDevice,
           };
           this.updateCategory(category);
           row.isActive = !row.isActive;

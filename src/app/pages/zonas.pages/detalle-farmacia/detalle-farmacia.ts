@@ -9,9 +9,7 @@ import {
   Departamento,
   Cadena,
 } from 'src/app/interfaces/models';
-import { ZonasService } from 'src/app/services/zonas.service';
 import { FarmaciasService } from 'src/app/services/farmacias.service';
-import { CadenaService } from 'src/app/services/cadenas.service';
 import { ApiService } from 'src/app/services/api.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
@@ -153,7 +151,6 @@ export class DetalleFarmacia implements OnInit {
       cityId: this.farmaForm.value.cityId,
       chainId: this.farmaForm.value.cadenaId,
     };
-    pharmacy = this.sharedService.addIpDevice(pharmacy);
     if (this.data.farmaId) {
       pharmacy = {
         ...pharmacy,

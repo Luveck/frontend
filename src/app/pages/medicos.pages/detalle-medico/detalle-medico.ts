@@ -110,7 +110,6 @@ export class DetalleMedico implements OnInit {
       disciplineId: this.medicForm.value.patologyId,
       countryId: 1,
     };
-    medical = this.sharedService.addIpDevice(medical);
     if (this.data.medicoId) {
       medical = {
         ...medical,

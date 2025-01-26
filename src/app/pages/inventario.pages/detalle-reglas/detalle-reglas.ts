@@ -100,7 +100,6 @@ export class DetalleReglas implements OnInit {
       countryId: this.ruleForm.value.countryId,
     };
 
-    rule = this.sharedService.addIpDevice(rule);
     if (this.data.ruleId) {
       rule = {
         id: this.data.ruleId,

@@ -9,7 +9,6 @@ import {
 } from 'src/app/interfaces/models';
 import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { SharedService } from 'src/app/services/shared.service';
-import { ZonasService } from 'src/app/services/zonas.service';
 
 @Component({
   selector: 'app-pharmacy-search',
@@ -34,7 +33,6 @@ export class PharmacySearchComponent implements OnInit {
   });
 
   constructor(
-    private readonly _zonasServ: ZonasService,
     private _farmaServ: FarmaciasService,
     public dialogo: MatDialogRef<PharmacySearchComponent>,
 
@@ -61,8 +59,11 @@ export class PharmacySearchComponent implements OnInit {
       await this.sharedService.setDepartments();
       await this.sharedService.setCities();
       await this.pharmaService.setPharmacies();
-    } catch ( err ) {
-      this.sharedService.notify('Ocurrio un error consultando las configuraciones', 'error')
+    } catch (err) {
+      this.sharedService.notify(
+        'Ocurrio un error consultando las configuraciones',
+        'error'
+      );
     } finally {
       this.ciudades = this.sharedService.getCityList();
       this.paises = this.sharedService.getCountryList();

@@ -80,8 +80,6 @@ export class DetalleCategoria implements OnInit {
   save() {
     let categoria: any = {
       name: this.name,
-      ip: this.sharedService.userIP,
-      device: this.sharedService.userDevice,
     };
     if (this.data.catId) {
       categoria = {

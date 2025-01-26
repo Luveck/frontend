@@ -1,42 +1,52 @@
-main{
+main {
   width: 90%;
   padding-top: 6rem;
   margin: 0 auto;
-  h1{
+
+  h1 {
     text-align: center;
     margin: 0;
   }
-  .fm_header{
+
+  .fm_header {
     width: 80%;
     margin: 0 auto;
     display: flex;
     justify-content: center;
-    section.avatar{
+
+    section.avatar {
       padding: .5rem;
       display: flex;
       align-items: center;
-      .datos{
+
+      .datos {
         margin: 0.5rem;
         text-align: center;
-        p{
+
+        p {
           font-size: 2rem;
         }
-        .bots{
+
+        .bots {
           padding-top: 1rem;
           text-align: center;
         }
       }
     }
-    section.resumen{
+
+    section.resumen {
       padding: 1rem;
-      ul{
+
+      ul {
         border-left: 1px solid gray;
         list-style: none;
         padding-left: 1rem;
-        li{
+
+        li {
           .example-tab-icon {
             margin-right: 8px;
           }
+
           margin: 0.3rem 0;
           display: flex;
           align-items: center;
@@ -44,30 +54,38 @@ main{
       }
     }
   }
-  .wrapForm{
+
+  .wrapForm {
     width: 100%;
     padding: 10px 0;
-    &.ver2{
+
+    &.ver2 {
       width: 70%;
       margin: 0 auto;
-      h2{
+
+      h2 {
         text-align: center;
       }
     }
-    .inputs{
+
+    .inputs {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
-      &.ver2{
+
+      &.ver2 {
         grid-template-columns: auto 1fr 1fr;
-        button{
+
+        button {
           margin: 1rem 0;
         }
       }
-      mat-form-field{
+
+      mat-form-field {
         width: 90%;
         margin: auto;
         align-content: center;
-        &.area{
+
+        &.area {
           resize: none;
           grid-column: 1 / span 2;
         }
@@ -75,40 +93,49 @@ main{
     }
   }
 }
-.btns{
+
+.btns {
   padding-top: 2rem;
   text-align: center;
-  button{
+
+  button {
     margin: 0 0.5rem;
   }
 }
 
 
-.contentImgs{
+.contentImgs {
   width: 80%;
   margin: 1rem auto;
   display: grid;
-  mat-card.drop{
+
+  mat-card.drop {
     height: 120px;
   }
-  mat-card mat-card-header{
+
+  mat-card mat-card-header {
     justify-content: center;
   }
-  mat-card mat-card-content{
+
+  mat-card mat-card-content {
     .drop-zone {
       border: dotted 3px lightgray;
-      .custon-file{
+
+      .custon-file {
         cursor: pointer;
-        input[type='file']{
+
+        input[type='file'] {
           display: none;
         }
+
         height: 80px;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
         text-align: center;
-        mat-icon{
+
+        mat-icon {
           color: #2190f0;
           font-size: 2rem;
           overflow: visible;
@@ -122,8 +149,17 @@ main{
     }
   }
 
-  mat-card-actions{
+  mat-card-actions {
     padding: 0;
     text-align: center;
   }
+}
+
+.invalid {
+  border: 1px solid red;
+}
+
+.error-message {
+  color: red;
+  font-size: 12px;
 }

@@ -9,8 +9,6 @@ import { ErrorHandlerService } from './error-handler.service';
   providedIn: 'root',
 })
 export class SharedService {
-  userDevice: string = '';
-  userIP: string = '';
   private countryList: Pais[] = [];
   private departmentList: Departamento[] = [];
   private cityList: Ciudad[] = [];
@@ -22,41 +20,13 @@ export class SharedService {
   };
 
   constructor(
-    private http: HttpClient,
     private readonly apiService: ApiService,
     private readonly dataServicio: DataService,
     private readonly errorHandlerService: ErrorHandlerService
-  ) {
-    this.getUserIP();
-    this.getUserDevice();
-  }
+  ) {}
 
   notify(msg: string, icon: any) {
     this.dataServicio.fir(msg, icon);
-  }
-  getUserDevice() {
-    const userAgent = window.navigator.userAgent;
-    const device = /Mobile/.test(userAgent) ? 'Mobile' : 'Desktop';
-    this.userDevice = device;
-  }
-
-  getUserIP() {
-    this.http.get('https://api.ipify.org/?format=json').subscribe(
-      (res: any) => {
-        this.userIP = res.ip;
-      },
-      (err) => {
-        this.userIP = 'Error IP ' + err;
-      }
-    );
-  }
-
-  public addIpDevice<T>(model: T): T {
-    return (model = {
-      ...model,
-      Ip: this.userIP,
-      Device: this.userDevice,
-    });
   }
 
   public async setCountry() {

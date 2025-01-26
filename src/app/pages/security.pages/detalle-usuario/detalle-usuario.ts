@@ -7,7 +7,6 @@ import {
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { UsuariosService } from 'src/app/services/usuarios.service';
-import { AuthService } from 'src/app/services/auth.service';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { ApiService } from 'src/app/services/api.service';
 import { SharedService } from 'src/app/services/shared.service';
@@ -17,6 +16,7 @@ import { MatSelectChange } from '@angular/material/select';
 import { UserRoles } from 'src/app/shared/enums/roles.enum';
 import { PharmacySearchComponent } from '../../ventas.pages/pharmacy-search/pharmacy-search.component';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { SessionService } from 'src/app/services/session.service';
 
 @Component({
   selector: 'app-detalle-usuario',
@@ -63,7 +63,7 @@ export class DetalleUsuario implements OnInit {
     private readonly usersServ: UsuariosService,
     private readonly pharmaService: FarmaciasService,
     private readonly dialogPharmacy: MatDialog,
-    private readonly authServ: AuthService,
+    private readonly sessionService: SessionService,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private readonly errorHandlerService: ErrorHandlerService
   ) {}
@@ -135,12 +135,8 @@ export class DetalleUsuario implements OnInit {
   }
 
   save(chageState?: boolean) {
-    let state =
-      chageState != null
-        ? !this.currentUser.isActive
-        : this.currentUser.isActive;
     if (this.data.userDni) {
-      this.updateUser(state);
+      this.updateUser();
     } else {
       this.addUser();
     }
@@ -148,7 +144,7 @@ export class DetalleUsuario implements OnInit {
   }
 
   changeUserState(state: boolean, idUser: string) {
-    if (this.authServ.dataUser().UserId === idUser) {
+    if (this.sessionService.getUserData().UserId === idUser) {
       this.usersServ.notify(
         'No es posible inhabilitar su propia cuenta.',
         'info'
@@ -173,7 +169,6 @@ export class DetalleUsuario implements OnInit {
   private async addUser() {
     try {
       let user: any = this.createModel();
-      user = this.sharedService.addIpDevice(user);
       user = {
         ...user,
         isActive: true,
@@ -191,13 +186,13 @@ export class DetalleUsuario implements OnInit {
     }
   }
 
-  private async updateUser(chageState: boolean) {
+  private async updateUser() {
     try {
+      let state = !this.currentUser.isActive;
       let user: any = this.createModel();
-      user = this.sharedService.addIpDevice(user);
       user = {
         ...user,
-        IsActive: chageState,
+        IsActive: state,
         id: this.data.userDni,
       };
       await this.apiService.put(`User`, user);

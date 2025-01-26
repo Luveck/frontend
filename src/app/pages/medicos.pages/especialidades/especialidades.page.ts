@@ -90,8 +90,6 @@ export class EspecialidadesPage implements OnInit {
             id: row.id,
             name: row.name,
             isActive: !row.isActive,
-            Ip: this.sharedService.userIP,
-            Device: this.sharedService.userDevice,
           };
           this.updateStatus(specialty);
         }

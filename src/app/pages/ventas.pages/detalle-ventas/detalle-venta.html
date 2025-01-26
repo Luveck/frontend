@@ -13,10 +13,10 @@
         <div class="bots">
           <span
             class="chip"
-            [ngClass]="{'active': currentVenta?.purchaseReviewed == true,
-            'inactive': currentVenta?.purchaseReviewed == false}"
-            >Estado: {{currentVenta?.purchaseReviewed ?'Verificado' :
-            'Sin verificar'}}</span
+            [ngClass]="{'active': currentVenta?.purchaseReviewed == true, 'inactive': currentVenta?.purchaseReviewed == false}"
+          >
+            Estado: {{ currentVenta?.purchaseReviewed ? 'Verificado' : 'Sin
+            verificar' }}</span
           >
         </div>
       </div>
@@ -27,7 +27,10 @@
     <div class="inputs">
       <mat-form-field appearance="fill">
         <mat-label>Farmacia</mat-label>
-        <mat-select formControlName="pharmacyId">
+        <mat-select
+          formControlName="pharmacyId"
+          [disabled]="sessionService.getUserData().pharmacyId != '0'"
+        >
           <div *ngFor="let farma of farmacias">
             <mat-option *ngIf="farma.isActive" [value]="farma.id">
               {{farma.name}}
@@ -82,7 +85,7 @@
         ></textarea>
       </mat-form-field>
 
-      <div class="contentImgs">
+      <div class="contentImgs" *ngIf="!currentVenta">
         <mat-card class="drop">
           <mat-card-header>
             <mat-card-title>Factura</mat-card-title>
@@ -117,6 +120,11 @@
             </div>
           </mat-card-content>
         </mat-card>
+      </div>
+      <div *ngIf="currentVenta">
+        <button mat-raised-button color="accent" (click)="seePurchase()">
+          Ver factura
+        </button>
       </div>
     </div>
   </form>
@@ -164,7 +172,12 @@
           [(ngModel)]="productsOnCurrentVenta[i].Quantity"
           (ngModelChange)="onQuantityChange(i)"
           [max]="20"
+          [class.invalid]="productsOnCurrentVenta[i].error"
         />
+
+        <div *ngIf="productsOnCurrentVenta[i].error" class="error-message">
+          La cantidad no puede ser mayor a 20.
+        </div>
       </mat-form-field>
     </div>
 

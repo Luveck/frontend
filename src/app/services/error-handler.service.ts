@@ -11,7 +11,9 @@ export class ErrorHandlerService {
     let message = '';
     if (error instanceof HttpErrorResponse) {
       if (error.error) {
-        message = `${where} ${error.error}`;
+        message = error.error.includes('permisos')
+          ? `${where} ${error.error}`
+          : `${error.error}`;
       } else {
         console.log('Error HTTP:', error.statusText);
       }

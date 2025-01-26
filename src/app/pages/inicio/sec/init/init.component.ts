@@ -1,7 +1,13 @@
-import { Component, ViewEncapsulation, EventEmitter, Output  } from '@angular/core';
+import {
+  Component,
+  ViewEncapsulation,
+  EventEmitter,
+  Output,
+} from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
+import { SessionService } from 'src/app/services/session.service';
 import SwiperCore, { Autoplay, SwiperOptions, Navigation } from 'swiper';
-SwiperCore.use([ Autoplay, Navigation])
+SwiperCore.use([Autoplay, Navigation]);
 
 @Component({
   selector: 'app-init',
@@ -20,13 +26,13 @@ export class InitComponent {
     autoplay: {
       delay: 8000,
       pauseOnMouseEnter: true,
-      disableOnInteraction: false
-    }
+      disableOnInteraction: false,
+    },
   };
 
-  constructor(public authServ:AuthService) { }
+  constructor(public readonly sessionService: SessionService) {}
 
-  selectSection(sec:string){
-    this.sectionEvent.emit(sec)
+  selectSection(sec: string) {
+    this.sectionEvent.emit(sec);
   }
 }

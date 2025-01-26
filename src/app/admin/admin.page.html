@@ -119,10 +119,10 @@
             </div>
             <div class="nam">
               <span
-                >{{authServ.dataUser().UserName}}
-                {{authServ.dataUser().LastName}}</span
+                >{{sessionService.getUserData().UserName}}
+                {{sessionService.getUserData().LastName}}</span
               >
-              <span>{{authServ.dataUser().Role}}</span>
+              <span>{{sessionService.getUserData().Role}}</span>
             </div>
           </div>
         </button>

@@ -124,8 +124,6 @@ export class DepartamentosPage implements OnInit {
             name: row.name,
             countryId: row.countryId,
             isActive: !row.isActive,
-            Ip: this.sharedService.userIP,
-            Device: this.sharedService.getUserDevice,
           };
           this.isLoadingResults = true;
           this.updateState(department);

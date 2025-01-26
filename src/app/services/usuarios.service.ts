@@ -5,6 +5,7 @@ import { DataService } from './data.service';
 import { SharedService } from './shared.service';
 import { ApiService } from './api.service';
 import { ErrorHandlerService } from './error-handler.service';
+import { SessionService } from './session.service';
 
 @Injectable({
   providedIn: 'root',
@@ -25,17 +26,26 @@ export class UsuariosService {
 
     private _http: HttpClient,
     private _authServ: AuthService,
-    private _dataServ: DataService
-  ) {
-    this._authServ.getCurrentUser();
-    this.headers = { Authorization: `Bearer ${this._authServ.userToken}` };
-    this.sharedService.getUserDevice();
-    this.sharedService.getUserIP();
-  }
+    private _dataServ: DataService,
+    private readonly sessionService: SessionService
+  ) {}
 
   public async setUserCombo() {
     try {
       this.usersCombo = await this.apiService.get('User/GetUsersCombo');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando usuarios:'),
+        'error'
+      );
+    }
+  }
+
+  public async setUserComboByCountry(countryId: string) {
+    try {
+      this.usersCombo = await this.apiService.get(
+        'User/GetUsersComboByCountry' + countryId
+      );
     } catch (error) {
       this.sharedService.notify(
         this.errorHandlerService.handleError(error, 'Listando usuarios:'),
@@ -94,6 +104,24 @@ export class UsuariosService {
   public getUsersList() {
     return this.usersList;
   }
+
+  public async updateModulesByRole(modules: any, rolId: string) {
+    try {
+      let data = {
+        RoleId: rolId,
+        modules: modules,
+      };
+      return await this.apiService.post('ModuleRole/UpdateModulesByRole', data);
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(
+          error,
+          'Actualizando los modulos por rol:'
+        ),
+        'error'
+      );
+    }
+  }
   ////////////////////////BORRAR //////////////////////////////////
 
   notify(msg: string, icon: any) {
@@ -101,7 +129,7 @@ export class UsuariosService {
   }
 
   public getUsers() {
-    if (!this._authServ.checkTokenDate(this._authServ.expToken)) {
+    if (!this._authServ.checkTokenDate(this.sessionService.getExpToken())) {
       this._authServ.showSesionEndModal();
       return;
     }
@@ -111,7 +139,7 @@ export class UsuariosService {
   }
 
   public getUserInfo(id: string) {
-    if (!this._authServ.checkTokenDate(this._authServ.expToken)) {
+    if (!this._authServ.checkTokenDate(this.sessionService.getExpToken())) {
       this._authServ.showSesionEndModal();
       return;
     }
@@ -122,7 +150,7 @@ export class UsuariosService {
   }
 
   addUsuario(formData: any) {
-    if (!this._authServ.checkTokenDate(this._authServ.expToken)) {
+    if (!this._authServ.checkTokenDate(this.sessionService.getExpToken())) {
       this._authServ.showSesionEndModal();
       return;
     }
@@ -131,8 +159,6 @@ export class UsuariosService {
     dataUser = {
       ...formData,
       state: true,
-      ip: this.sharedService.userIP,
-      device: this.sharedService.userDevice,
       password: 'SoloInformativo',
     };
     return this._http.post(
@@ -143,7 +169,7 @@ export class UsuariosService {
   }
 
   UpdateUsuario(formData: any, state: boolean) {
-    if (!this._authServ.checkTokenDate(this._authServ.expToken)) {
+    if (!this._authServ.checkTokenDate(this.sessionService.getExpToken())) {
       this._authServ.showSesionEndModal();
       return;
     }
@@ -151,8 +177,6 @@ export class UsuariosService {
     dataUser = {
       ...formData,
       state: state,
-      ip: this.sharedService.userIP,
-      device: this.sharedService.userDevice,
       password: 'SoloInformativo',
     };
     return this._http.post(
@@ -163,7 +187,7 @@ export class UsuariosService {
   }
 
   changePassword(formData: any) {
-    if (!this._authServ.checkTokenDate(this._authServ.expToken)) {
+    if (!this._authServ.checkTokenDate(this.sessionService.getExpToken())) {
       this._authServ.showSesionEndModal();
       return;
     }
@@ -171,8 +195,6 @@ export class UsuariosService {
     let dataUser: any;
     dataUser = {
       ...formData,
-      ip: this.sharedService.userIP,
-      device: this.sharedService.userDevice,
     };
     return this._http.post(
       `${this._dataServ.baseURLSec}Security/ChangePassword`,
@@ -184,7 +206,7 @@ export class UsuariosService {
   /* Endpoints de Roles */
 
   public getAllRoles() {
-    if (!this._authServ.checkTokenDate(this._authServ.expToken)) {
+    if (!this._authServ.checkTokenDate(this.sessionService.getExpToken())) {
       this._authServ.showSesionEndModal();
       return;
     }
@@ -194,7 +216,7 @@ export class UsuariosService {
   }
 
   public getRole(id: string) {
-    if (!this._authServ.checkTokenDate(this._authServ.expToken)) {
+    if (!this._authServ.checkTokenDate(this.sessionService.getExpToken())) {
       this._authServ.showSesionEndModal();
       return;
     }
@@ -205,7 +227,7 @@ export class UsuariosService {
   }
 
   public createRole(nameRole: string) {
-    if (!this._authServ.checkTokenDate(this._authServ.expToken)) {
+    if (!this._authServ.checkTokenDate(this.sessionService.getExpToken())) {
       this._authServ.showSesionEndModal();
       return;
     }
@@ -213,8 +235,6 @@ export class UsuariosService {
       RoleId: '',
       roleName: nameRole,
       state: true,
-      ip: this.sharedService.userIP,
-      device: this.sharedService.userDevice,
     };
     return this._http.post(
       `${this._dataServ.baseURLSec}Roles/CreateRole`,
@@ -224,7 +244,7 @@ export class UsuariosService {
   }
 
   public updateRole(nameRole: string, idRole: string, state: boolean) {
-    if (!this._authServ.checkTokenDate(this._authServ.expToken)) {
+    if (!this._authServ.checkTokenDate(this.sessionService.getExpToken())) {
       this._authServ.showSesionEndModal();
       return;
     }
@@ -232,8 +252,6 @@ export class UsuariosService {
       RoleId: idRole,
       roleName: nameRole,
       state: state,
-      ip: this.sharedService.userIP,
-      device: this.sharedService.userDevice,
     };
     return this._http.post(
       `${this._dataServ.baseURLSec}Roles/UpdateRole`,
@@ -243,7 +261,7 @@ export class UsuariosService {
   }
 
   public deletRole(nameRole: string, idRole: string, state: boolean) {
-    if (!this._authServ.checkTokenDate(this._authServ.expToken)) {
+    if (!this._authServ.checkTokenDate(this.sessionService.getExpToken())) {
       this._authServ.showSesionEndModal();
       return;
     }
@@ -251,8 +269,6 @@ export class UsuariosService {
       RoleId: idRole,
       roleName: nameRole,
       state: !state,
-      ip: this.sharedService.userIP,
-      device: this.sharedService.userDevice,
     };
     return this._http.post(
       `${this._dataServ.baseURLSec}Roles/DeleteRole`,
@@ -264,7 +280,7 @@ export class UsuariosService {
   /* Endpoints de modules role */
 
   public getAllModules() {
-    if (!this._authServ.checkTokenDate(this._authServ.expToken)) {
+    if (!this._authServ.checkTokenDate(this.sessionService.getExpToken())) {
       this._authServ.showSesionEndModal();
       return;
     }
@@ -275,7 +291,7 @@ export class UsuariosService {
   }
 
   public getModulesByRole(idRole: string) {
-    if (!this._authServ.checkTokenDate(this._authServ.expToken)) {
+    if (!this._authServ.checkTokenDate(this.sessionService.getExpToken())) {
       this._authServ.showSesionEndModal();
       return;
     }
@@ -286,14 +302,12 @@ export class UsuariosService {
   }
 
   public updateModuleRole(modules: any, rolId: string) {
-    if (!this._authServ.checkTokenDate(this._authServ.expToken)) {
+    if (!this._authServ.checkTokenDate(this.sessionService.getExpToken())) {
       this._authServ.showSesionEndModal();
       return;
     }
     let data = {
       rolId: rolId,
-      ip: this.sharedService.userIP,
-      device: this.sharedService.userDevice,
       modules: modules,
     };
     return this._http.post(

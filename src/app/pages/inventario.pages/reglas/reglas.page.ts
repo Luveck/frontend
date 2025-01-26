@@ -103,7 +103,6 @@ export class ReglasPage implements OnInit {
 
   private async chageStatus(rule: any) {
     try {
-      rule = this.sharedService.addIpDevice(rule);
       this.isLoadingResults = true;
       await this.apiService.put('ProductChangeRule', rule);
       this.sharedService.notify('Regla actualizada', 'success');

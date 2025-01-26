@@ -139,8 +139,6 @@ export class DetalleProducto implements OnInit {
       urlOficial: '',
       CategoryId: this.prodForm.value.idCategory,
       countryId: this.prodForm.value.countryId,
-      Ip: this.sharedService.userIP,
-      Device: this.sharedService.userDevice,
     };
     if (this.currentProdId != 'new') {
       product = {
@@ -223,8 +221,6 @@ export class DetalleProducto implements OnInit {
         this.uploadImages({
           productId: this.currentProdId,
           images: this.image,
-          Ip: this.sharedService.userIP,
-          Device: this.sharedService.userDevice,
         });
       })
       .catch((error) => {

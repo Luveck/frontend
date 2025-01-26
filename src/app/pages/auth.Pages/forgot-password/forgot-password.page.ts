@@ -27,10 +27,7 @@ export class ForgotPasswordPage implements OnInit {
     private info: SharedService
   ) {}
 
-  ngOnInit(): void {
-    this.info.getUserIP();
-    this.info.getUserDevice();
-  }
+  ngOnInit(): void {}
 
   onForgot(formData: any) {
     if (!this.dataServ.progress) {

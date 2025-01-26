@@ -4,22 +4,35 @@ import {
   HttpHeaders,
   HttpParams,
 } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { SessionService } from './session.service';
+import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
   private headers: { [key: string]: string } = {};
-  private url = environment.urlApi;
+  private readonly url = environment.urlApi;
   private token: string = '';
 
-  constructor(private readonly http: HttpClient) {
+  constructor(
+    private readonly http: HttpClient,
+    private readonly sessionService: SessionService
+  ) {}
+
+  private setHeaders() {
+    this.sessionService.setUserDevice();
+    this.sessionService.setUserIP();
     this.headers['Content-Type'] = 'application/json';
-    this.token = localStorage.getItem('LuveckUserToken') || '';
-    this.headers['Authorization'] = `Bearer ${this.token}`;
+    this.headers['X-Client-IP'] = this.sessionService.getUserIP();
+    this.headers['X-Client-Device'] = this.sessionService.getUserDevice();
+    this.token = this.sessionService.getToken() ?? '';
+    if (this.token !== '') {
+      this.headers['Authorization'] = `Bearer ${this.token}`;
+    }
   }
 
   public setCustomHeader(customHeaders: { [key: string]: string } = {}): void {
@@ -27,6 +40,7 @@ export class ApiService {
   }
 
   private createHeaders(): HttpHeaders {
+    this.setHeaders();
     return new HttpHeaders({ ...this.headers });
   }
 

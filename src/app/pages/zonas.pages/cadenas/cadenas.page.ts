@@ -100,8 +100,6 @@ export class CadenasPage implements AfterViewInit {
       name: row.name,
       isActive: !row.isActive,
       id: row.id,
-      ip: this.sharedService.userIP,
-      device: this.sharedService.userDevice,
     };
     let msgDialog: string;
     if (row.isActive) {

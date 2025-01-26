@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Component, HostBinding, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterOutlet } from '@angular/router';
-import { elementAt, Observable } from 'rxjs';
 
 import { fadeAnimation } from '../animations';
 import { DialogConfComponent } from '../components/dialog-conf/dialog-conf.component';
@@ -13,6 +12,7 @@ import { DataService } from '../services/data.service';
 import { environment } from 'src/environments/environment';
 import { SharedService } from '../services/shared.service';
 import { UserRoles } from '../shared/enums/roles.enum';
+import { SessionService } from '../services/session.service';
 
 @Component({
   selector: 'app-admin',
@@ -25,9 +25,9 @@ export class AdminPage implements OnInit {
   menuList = environment.menu;
   localTheme: boolean = true;
   darkClassName: string = 'theme-dark';
-  countryCombo : any[] = [];
-  selectedCountry : string = 'hn';
-  isAdmin : boolean = false;
+  countryCombo: any[] = [];
+  selectedCountry: string = 'hn';
+  isAdmin: boolean = false;
 
   @HostBinding('class') className = '';
 
@@ -35,26 +35,26 @@ export class AdminPage implements OnInit {
     private _http: HttpClient,
     private _overlay: OverlayContainer,
     private _dialogo: MatDialog,
-    private _dataServ: DataService,
-    public authServ: AuthService,
-    public dataServ: DataService,
-    private readonly sharedService:SharedService
+
+    public authService: AuthService,
+    public dataService: DataService,
+    private readonly sharedService: SharedService,
+    public readonly sessionService: SessionService
   ) {
-    let theme = this._dataServ.getTheme();
+    let theme = this.dataService.getTheme();
     if (theme === 'dark') {
       this.localTheme = false;
       this.className = this.darkClassName;
-      this._dataServ.setTheme('dark');
+      this.dataService.setTheme('dark');
       this._overlay.getContainerElement().classList.add(this.darkClassName);
     } else {
       this.localTheme = true;
       this.className = '';
-      this._dataServ.setTheme('light');
+      this.dataService.setTheme('light');
       this._overlay.getContainerElement().classList.remove(this.darkClassName);
     }
 
-    this.updateMenu(this.menuList, this.authServ.getPermissions());
-
+    this.updateMenu(this.menuList, this.authService.getPermissions());
   }
 
   // Función para actualizar el menú
@@ -67,8 +67,10 @@ export class AdminPage implements OnInit {
       menuItem.enabled = hasAccess;
 
       if (start) {
-        start = false
-        if(!moduleRoleResponse.some((role) => role.moduleName == 'PanelControl') ) {
+        start = false;
+        if (
+          !moduleRoleResponse.some((role) => role.moduleName == 'PanelControl')
+        ) {
           menuItem.enabled = true;
         }
       }
@@ -92,15 +94,15 @@ export class AdminPage implements OnInit {
     menu.forEach((element) => {
       if (element.enabled) {
         if (element.children != undefined) {
-          var subMenu:any = []
-          element.children.forEach((item : any) => {
+          var subMenu: any = [];
+          element.children.forEach((item: any) => {
             if (item.enabled) {
               subMenu.push(item);
             }
           });
           element.children = subMenu;
         }
-        newMenu.push(element)
+        newMenu.push(element);
       }
     });
     this.menuList = newMenu;
@@ -123,18 +125,21 @@ export class AdminPage implements OnInit {
 
   ngOnInit(): void {
     this.getInformation();
+    this.sessionService.getUserData();
   }
 
   private async getInformation() {
     try {
-      await this.sharedService.setCountryCombo()
+      await this.sharedService.setCountryCombo();
     } catch (error) {
-
     } finally {
       this.countryCombo = this.sharedService.getCountryCombo();
       this.countryCombo = this.sharedService.getCountryCombo();
-      this.selectedCountry = this.countryCombo.find(c => c.iso3 === this.dataServ.getCountry()).iso3;
-      this.isAdmin = this.authServ.dataUser().Role === UserRoles.Admin.toString();
+      this.selectedCountry = this.countryCombo.find(
+        (c) => c.iso3 === this.dataService.getCountry()
+      ).iso3;
+      this.isAdmin =
+        this.sessionService.getUserData().Role === UserRoles.Admin.toString();
     }
   }
 
@@ -146,7 +151,7 @@ export class AdminPage implements OnInit {
       .afterClosed()
       .subscribe((confirmado: Boolean) => {
         if (confirmado) {
-          this.authServ.logOut(this.authServ.dataUser().Role);
+          this.authService.logOut();
         }
       });
   }
@@ -156,28 +161,30 @@ export class AdminPage implements OnInit {
     if (!this.localTheme) {
       this.localTheme = false;
       this.className = this.darkClassName;
-      this._dataServ.setTheme('dark');
+      this.dataService.setTheme('dark');
       this._overlay.getContainerElement().classList.add(this.darkClassName);
     } else {
       this.localTheme = true;
       this.className = '';
-      this._dataServ.setTheme('light');
+      this.dataService.setTheme('light');
       this._overlay.getContainerElement().classList.remove(this.darkClassName);
     }
   }
 
   openProfile() {
     const config = {
-      data: this.authServ.dataUser().UserId,
+      data: this.sessionService.getUserData().UserId,
     };
     this._dialogo.open(ClientProfileComponent, config);
   }
 
   public changeCountry() {
-    this.dataServ.setCountry(this.countryCombo.find(c => c.iso3 ===this.selectedCountry));
+    this.dataService.setCountry(
+      this.countryCombo.find((c) => c.iso3 === this.selectedCountry)
+    );
   }
 
   public getFlag(flag: string) {
-    return `https://flagcdn.com/${flag.toLowerCase()}.svg`
+    return `https://flagcdn.com/${flag.toLowerCase()}.svg`;
   }
 }

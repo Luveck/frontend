@@ -112,7 +112,6 @@ export class FarmaciasPage implements OnInit {
       cityId: row.cityId,
       chainId: row.chainId,
     };
-    pharmacy = this.sharedService.addIpDevice(pharmacy);
     let msgDialog: string;
     if (row.isActive) {
       msgDialog = '¿Seguro de querer inhabilitar esta farmacia?';

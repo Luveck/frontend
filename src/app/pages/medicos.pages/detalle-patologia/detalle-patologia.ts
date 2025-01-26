@@ -51,8 +51,6 @@ export class DetallePatologia implements OnInit {
   save() {
     let patology: any = {
       name: this.name,
-      Ip: this.sharedService.userIP,
-      Device: this.sharedService.userDevice,
     };
     if (this.data.especialId) {
       patology = {

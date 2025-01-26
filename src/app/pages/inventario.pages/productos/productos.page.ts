@@ -120,8 +120,6 @@ export class ProductosPage implements OnInit {
       urlOficial: '',
       categoryId: row.category.id,
       countryId: '1',
-      Ip: this.sharedService.userIP,
-      Device: this.sharedService.userDevice,
       isActive: !row.isActive,
       id: row.id,
     };

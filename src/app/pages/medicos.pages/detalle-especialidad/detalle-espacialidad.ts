@@ -53,8 +53,6 @@ export class DetalleEspacialidad implements OnInit {
   save() {
     let Specialty: any = {
       name: this.name,
-      ip: this.sharedService.userIP,
-      device: this.sharedService.userDevice,
     };
     if (this.data.especialId) {
       Specialty = {

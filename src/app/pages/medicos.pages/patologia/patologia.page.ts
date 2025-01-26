@@ -88,8 +88,6 @@ export class PatologiaPage implements OnInit {
             id: row.id,
             name: row.name,
             isActive: !row.isActive,
-            Ip: this.sharedService.userIP,
-            Device: this.sharedService.userDevice,
           };
           this.updatePatology(patology);
         }

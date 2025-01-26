@@ -9,10 +9,9 @@ import { UsuariosService } from 'src/app/services/usuarios.service';
 import { DetalleUsuario } from '../detalle-usuario/detalle-usuario';
 import { RolesPage } from '../roles/roles.page';
 import { SharedService } from 'src/app/services/shared.service';
-import { AuthService } from 'src/app/services/auth.service';
 import { UserRoles } from 'src/app/shared/enums/roles.enum';
-import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { SessionService } from 'src/app/services/session.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -48,8 +47,7 @@ export class UsuariosPage implements OnInit {
     private readonly errorHandlerService: ErrorHandlerService,
     private readonly usuariosServ: UsuariosService,
     private readonly sharedService: SharedService,
-    private readonly authService: AuthService,
-    private readonly pharmacyService: FarmaciasService
+    private readonly sessionService: SessionService
   ) {}
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
@@ -67,7 +65,7 @@ export class UsuariosPage implements OnInit {
       );
     } finally {
       this.isLoadingResults = false;
-      if (this.authService.dataUser().Role !== UserRoles.Admin) {
+      if (this.sessionService.getUserData().Role !== UserRoles.Admin) {
         this.dataSource.data = this.usuariosServ.getUsersList().filter((x) => {
           x.roles.includes(UserRoles.Cliente);
         });
