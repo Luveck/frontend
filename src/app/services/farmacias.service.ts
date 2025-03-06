@@ -8,10 +8,8 @@ import { ErrorHandlerService } from './error-handler.service';
   providedIn: 'root',
 })
 export class FarmaciasService {
-  private chainList: Cadena[] = [];
-  private pharmacyList: Farmacia[] = [];
-  listFarmacias!: Farmacia[];
-  headers: any;
+  private chainList: any[] = [];
+  private pharmacyList: any[] = [];
 
   constructor(
     private readonly apiService: ApiService,
@@ -35,11 +33,13 @@ export class FarmaciasService {
       this.pharmacyList = await this.apiService.get(
         'Pharmacy/GetByCountry' + countryId
       );
+      return this.pharmacyList;
     } catch (error) {
       this.sharedService.notify(
         this.errorHandlerService.handleError(error, 'Listando farmacias:'),
         'error'
       );
+      return [];
     }
   }
 
@@ -55,6 +55,21 @@ export class FarmaciasService {
         this.errorHandlerService.handleError(error, 'Listando cadenas:'),
         'error'
       );
+    }
+  }
+
+  public async setChainByCountry(countryId: string) {
+    try {
+      return await this.apiService.get(
+        'Chain/GetChainByCountry?countryId=' + countryId
+      );
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando cadenas:'),
+        'error'
+      );
+
+      return [];
     }
   }
 

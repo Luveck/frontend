@@ -4,6 +4,7 @@ import { NgPasswordValidatorOptions } from 'ng-password-validator';
 import { AuthService } from 'src/app/services/auth.service';
 
 import { DataService } from 'src/app/services/data.service';
+import { SessionService } from 'src/app/services/session.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 
 @Component({
@@ -13,11 +14,6 @@ import { UsuariosService } from 'src/app/services/usuarios.service';
 })
 export class ChangePasswordPage {
   public changePassForm = new FormGroup({
-    mail: new FormControl('', [
-      Validators.required,
-      Validators.email,
-      Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,63}$'),
-    ]),
     password: new FormControl('', [Validators.required]),
     newPassword: new FormControl('', [
       Validators.required,
@@ -48,7 +44,8 @@ export class ChangePasswordPage {
   constructor(
     public dataServ: DataService,
     private _usersServ: UsuariosService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly sessionService: SessionService
   ) {}
 
   chagePass(formData: any) {
@@ -65,25 +62,27 @@ export class ChangePasswordPage {
 
     if (!this.dataServ.progress) {
       this.dataServ.progress = true;
-      const peticion = this._usersServ.changePassword(formData);
-      peticion?.subscribe(
-        (res: any) => {
-          console.log(res);
-          this.dataServ.progress = false;
-          this.dataServ.fir(
-            `${res.messages} Ya puede iniciar sesión con su nueva contraseña.`,
-            'success',
-            5000
-          );
-          this.authService.logOut();
-        },
-        (err) => {
-          console.log(err);
-          this.dataServ.progress = false;
-          let msgError = err.error.messages;
-          this._usersServ.notify(`${msgError}`, 'error');
-        }
+      const data = {
+        currentPassword: formData.password,
+        NewPassword: formData.newPassword,
+        user: this.sessionService.getUserData().UserId,
+      };
+      this.updatePass(data);
+    }
+  }
+
+  private async updatePass(data: any) {
+    const response = await this.authService.changePasswordAsync(data);
+
+    this.dataServ.progress = false;
+
+    if (response != null) {
+      this.dataServ.fir(
+        `Ya puede iniciar sesión con su nueva contraseña.`,
+        'success',
+        5000
       );
+      this.authService.logOut();
     }
   }
 }

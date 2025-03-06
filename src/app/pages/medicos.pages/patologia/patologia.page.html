@@ -13,6 +13,18 @@
         Generar reporte
       </button>
     </div>
+
+    <mat-form-field appearance="standard">
+      <mat-icon matPrefix>search</mat-icon>
+      <mat-label>Buscar</mat-label>
+      <input
+        matInput
+        (keyup)="applyFilter($event)"
+        placeholder="Buscar por nombre"
+        #input
+        autocomplete="off"
+      />
+    </mat-form-field>
   </header>
 
   <div class="loading-shade" *ngIf="isLoadingResults">

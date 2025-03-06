@@ -19,6 +19,7 @@ import { ModalReportComponent } from 'src/app/components/modal-report/modal-repo
 import { SharedService } from 'src/app/services/shared.service';
 import { ApiService } from 'src/app/services/api.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-productos',
@@ -53,6 +54,7 @@ export class ProductosPage implements OnInit {
   dataSource = new MatTableDataSource<Producto>(this.ELEMENT_DATA);
 
   isLoadingResults: boolean = true;
+  public countryId = '';
 
   constructor(
     private readonly _liveAnnouncer: LiveAnnouncer,
@@ -61,19 +63,23 @@ export class ProductosPage implements OnInit {
     public readonly sharedService: SharedService,
     public readonly apiService: ApiService,
     private readonly _dataServ: DataService,
-    private readonly errorHandlerService: ErrorHandlerService
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly countryService: CountryService
   ) {}
 
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.getProducts();
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+      this.getProducts();
+    });
   }
 
   public async getProducts() {
     try {
       this.isLoadingResults = true;
-      await this.inveServ.setProducts();
+      await this.inveServ.setProductsByCountry(this.countryId);
       this.dataSource.data = this.inveServ.getProducts();
     } catch (error) {
       this.sharedService.notify(
@@ -82,6 +88,20 @@ export class ProductosPage implements OnInit {
       );
     } finally {
       this.isLoadingResults = false;
+      this.dataSource.filterPredicate = (
+        data: any,
+        filter: string
+      ): boolean => {
+        if (!filter) return true;
+
+        const searchTerm = filter.trim().toLowerCase();
+
+        return (
+          data.name?.toLowerCase().includes(searchTerm) || // Nombre del producto
+          data.category?.name?.toLowerCase().includes(searchTerm) || // Categoría
+          (data.isActive ? 'activo' : 'inactivo').includes(searchTerm) // Estado en texto
+        );
+      };
     }
   }
 

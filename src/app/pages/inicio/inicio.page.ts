@@ -8,6 +8,7 @@ import { ClientProfileComponent } from './sec/client-profile/client-profile.comp
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { SharedService } from 'src/app/services/shared.service';
 import { SessionService } from 'src/app/services/session.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-inicio',
@@ -30,7 +31,8 @@ export class InicioPage implements OnInit {
 
     public authService: AuthService,
     private readonly sharedService: SharedService,
-    public readonly sessionService: SessionService
+    public readonly sessionService: SessionService,
+    private readonly countryService: CountryService
   ) {
     let theme = this.dataServ.getTheme();
     if (theme === 'dark') {
@@ -116,11 +118,17 @@ export class InicioPage implements OnInit {
   }
 
   public getFlag(flag: string) {
+    if (!flag) {
+      return;
+    }
     return `https://flagcdn.com/${flag.toLowerCase()}.svg`;
   }
 
   public changeCountry() {
     this.dataServ.setCountry(
+      this.countryCombo.find((c) => c.iso3 === this.selectedCountry)
+    );
+    this.countryService.setCountry(
       this.countryCombo.find((c) => c.iso3 === this.selectedCountry)
     );
   }

@@ -1,5 +1,11 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -11,13 +17,14 @@ import { DetalleCadena } from '../detalle-cadena/detalle-cadena';
 import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { ApiService } from 'src/app/services/api.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-cadenas',
   templateUrl: './cadenas.page.html',
   styleUrls: ['./cadenas.page.scss'],
 })
-export class CadenasPage implements AfterViewInit {
+export class CadenasPage implements OnInit {
   public breadcrumb = {
     links: [
       {
@@ -32,32 +39,36 @@ export class CadenasPage implements AfterViewInit {
     ],
   };
 
-  @Input('ELEMENT_DATA') ELEMENT_DATA!: Cadena[];
+  @Input('ELEMENT_DATA') ELEMENT_DATA!: any[];
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort | null;
   displayedColumns: string[] = ['name', 'isDeleted', 'acctions'];
-  dataSource = new MatTableDataSource<Cadena>(this.ELEMENT_DATA);
+  dataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
 
   isLoadingResults: boolean = true;
+  private countryId: string = '';
 
   constructor(
     private readonly _liveAnnouncer: LiveAnnouncer,
     private readonly _dialog: MatDialog,
     private readonly chainService: FarmaciasService,
     private readonly sharedService: SharedService,
-    private readonly apiService: ApiService
+    private readonly apiService: ApiService,
+    private readonly countryService: CountryService
   ) {}
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.getChains();
+  ngOnInit(): void {
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+      this.getChains();
+    });
   }
 
   public async getChains() {
-    await this.chainService.setChain();
+    const chains = await this.chainService.setChainByCountry(this.countryId);
     this.isLoadingResults = false;
-    this.dataSource.data = this.chainService.getChainList();
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.dataSource.data = chains as any[];
   }
 
   applyFilter(event: Event) {
@@ -100,6 +111,7 @@ export class CadenasPage implements AfterViewInit {
       name: row.name,
       isActive: !row.isActive,
       id: row.id,
+      countryId: this.countryId,
     };
     let msgDialog: string;
     if (row.isActive) {

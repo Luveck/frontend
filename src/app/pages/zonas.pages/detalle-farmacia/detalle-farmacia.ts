@@ -13,6 +13,7 @@ import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { ApiService } from 'src/app/services/api.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-detalle-farmacia',
@@ -22,18 +23,17 @@ import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 export class DetalleFarmacia implements OnInit {
   currentFarmacia!: Farmacia | any;
   ciudades!: Ciudad[];
-  paises!: Pais[];
   cadenas!: Cadena[];
   departamentos!: Departamento[];
   isLoadingResults!: boolean;
   filteredDepartments: Departamento[] = [];
   filteredCities: Ciudad[] = [];
+  private countryId = '';
 
   public farmaForm = new FormGroup({
     name: new FormControl('', Validators.required),
     adress: new FormControl('', Validators.required),
     cityId: new FormControl('', Validators.required),
-    countryId: new FormControl('', Validators.required),
     departmentId: new FormControl('', Validators.required),
     cadenaId: new FormControl('', Validators.required),
   });
@@ -44,13 +44,17 @@ export class DetalleFarmacia implements OnInit {
     private readonly sharedService: SharedService,
     public dialogo: MatDialogRef<DetalleFarmacia>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private readonly errorHandlerService: ErrorHandlerService
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly countryService: CountryService
   ) {}
 
   ngOnInit(): void {
     if (this.data.farmaId) {
       this.getPharmacy();
     }
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+    });
     this.getConfigurations();
   }
 
@@ -83,11 +87,7 @@ export class DetalleFarmacia implements OnInit {
       if (this.sharedService.getDepartmentList().length == 0) {
         await this.sharedService.setDepartments();
       }
-      if (this.sharedService.getCountryList().length == 0) {
-        await this.sharedService.setCountry();
-      }
       this.ciudades = this.sharedService.getCityList();
-      this.paises = this.sharedService.getCountryList();
       this.departamentos = this.sharedService.getDepartmentList();
       this.cadenas = this.farmaServ.getChainList();
     } catch (error) {
@@ -97,6 +97,7 @@ export class DetalleFarmacia implements OnInit {
       );
     } finally {
       this.isLoadingResults = false;
+      this.onCountryChange();
     }
   }
 
@@ -107,13 +108,11 @@ export class DetalleFarmacia implements OnInit {
     const departamento = this.departamentos.find(
       (d) => d.id === ciudad!.departmentId
     );
-    const country = this.paises.find((x) => x.id === departamento!.countryId);
-    this.onCountryChange(country!.id);
+    this.onCountryChange();
     this.onDepartmentChange(departamento!.id);
     this.farmaForm.patchValue({
       name: this.currentFarmacia.name,
       adress: this.currentFarmacia.adress,
-      countryId: country!.id as any,
       departmentId: departamento!.id as any,
       cityId: this.currentFarmacia.cityId,
       cadenaId: this.currentFarmacia.chainId,
@@ -124,9 +123,9 @@ export class DetalleFarmacia implements OnInit {
     this.farmaForm.reset();
   }
 
-  onCountryChange(countryId: number) {
+  onCountryChange() {
     this.filteredDepartments = this.departamentos.filter(
-      (dept) => dept.countryId === countryId
+      (dept) => dept.countryId === Number(this.countryId)
     );
     this.farmaForm.get('departmentId')?.enable();
     this.farmaForm.get('departmentId')?.reset();

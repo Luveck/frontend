@@ -8,6 +8,7 @@ import { UserRoles } from '../shared/enums/roles.enum';
 import { ApiService } from './api.service';
 import { ErrorHandlerService } from './error-handler.service';
 import { SessionService } from './session.service';
+import { CountryService } from './country.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,9 +25,55 @@ export class AuthService {
     private readonly sharedService: SharedService,
     private readonly apiService: ApiService,
     private readonly errorHandlerService: ErrorHandlerService,
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly countryService: CountryService
   ) {
     this.getPermissions();
+  }
+
+  public async changePasswordAsync(data: any) {
+    try {
+      return await this.apiService.post('User/ChangePassword', data);
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Cambiando contrasena:'),
+        'error'
+      );
+      return null;
+    }
+  }
+
+  public async forgotPassword(userDNI: string) {
+    try {
+      await this.apiService.get(`User/forgot${userDNI}`);
+      this.sharedService.notify(
+        'Si su usuario existe recibirá un correo de recuperación de contraseña en su bandeja',
+        'success'
+      );
+    } catch (error) {
+      this.errorHandlerService.handleError(
+        error,
+        'Error al enviar correo de recuperación de contraseña'
+      );
+    }
+  }
+
+  public async resetPassword(data: any) {
+    try {
+      const response = await this.apiService.post(`User/Reset`, data);
+      this.sharedService.notify(
+        'Se ha actualizado su contraseña correctamente, por favor iniciar sesion de nuevo',
+        'success'
+      );
+      return response;
+    } catch (error) {
+      this.errorHandlerService.handleError(
+        error,
+        'Error al enviar correo de recuperación de contraseña'
+      );
+
+      return null;
+    }
   }
 
   public async login(formData: any) {
@@ -40,12 +87,14 @@ export class AuthService {
       )) as any;
       this.updateDataLogin(login);
     } catch (error) {
-      this.errorHandlerService.handleError(error, 'Login failed');
-      console.log(error);
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Login failed'),
+        'error'
+      );
     }
   }
 
-  private updateDataLogin(responseLogin: any) {
+  public updateDataLogin(responseLogin: any) {
     this.sessionService.setToken(responseLogin['token'].token);
     this.setPermissions(responseLogin['moduleRoleResponse']);
     this.sessionService.setUserData(responseLogin['pharmacyId']);
@@ -74,6 +123,37 @@ export class AuthService {
     role === 'Admin'
       ? this.dataService.goTo('/authentication/login')
       : this.dataService.goTo('/inicio');
+  }
+
+  public async getUserById(id: string) {
+    try {
+      return await this.apiService.get(`User/GetUserById/${id}`);
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(
+          error,
+          'Consultando la información'
+        ),
+        'error'
+      );
+    }
+  }
+
+  public async changePassword(data: any) {
+    try {
+      const response = await this.apiService.post(`User/ChangePassword`, data);
+      this.sharedService.notify('Contraseña cambiada correctamente', 'success');
+      return response;
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(
+          error,
+          'Consultando la información'
+        ),
+        'error'
+      );
+      return null;
+    }
   }
 
   /////////////////////////////
@@ -114,27 +194,6 @@ export class AuthService {
       .toPromise();
   }
 
-  public async forgotPass(data: any) {
-    let info = {
-      emailDni: data.dni,
-    };
-
-    return this._http
-      .post(`${this._dataServ.baseURLSec}Security/Forgot`, info)
-      .toPromise();
-  }
-
-  public resetPass(formData: any) {
-    let info = {
-      newPassword: formData.newPassword,
-      confirmPassword: formData.confirmPassword,
-      EmailDNI: formData.email,
-      code: formData.code,
-    };
-    return this._http
-      .post(`${this._dataServ.baseURLSec}Security/Reset`, info)
-      .toPromise();
-  }
   // no borrar
   // public decodeToken(token: string, changePass?: boolean) {
   //   try {

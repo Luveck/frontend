@@ -15,6 +15,7 @@ import { ImageValidator } from './imageValidator';
 import { ApiService } from 'src/app/services/api.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-detalle-producto',
@@ -48,7 +49,7 @@ export class DetalleProducto implements OnInit {
   isLoadingResults!: boolean;
   image: string[] = [];
   public countries: Pais[] = [];
-
+  public countryId = '';
   files: File[] = [];
   isOverDrop = false;
   filesFormated: FilesToProduct[] = [];
@@ -60,7 +61,6 @@ export class DetalleProducto implements OnInit {
     presentation: new FormControl('', Validators.required),
     quantity: new FormControl('', Validators.required),
     typeSell: new FormControl('', Validators.required),
-    countryId: new FormControl('', Validators.required),
     idCategory: new FormControl('', Validators.required),
   });
 
@@ -71,10 +71,14 @@ export class DetalleProducto implements OnInit {
     private readonly _validate: ImageValidator,
     private readonly apiService: ApiService,
     private readonly sharedService: SharedService,
-    private readonly errorHandlerService: ErrorHandlerService
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly countryService: CountryService
   ) {}
 
   ngOnInit(): void {
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+    });
     this.currentProdId = this._route.snapshot.params['id'];
     if (this.currentProdId != 'new') {
       this.getProduct();
@@ -116,7 +120,6 @@ export class DetalleProducto implements OnInit {
       presentation: this.currentProd.presentation,
       quantity: this.currentProd.quantity,
       typeSell: this.currentProd.typeSell,
-      countryId: this.currentProd.country.id,
       idCategory: this.currentProd.category.id,
     });
   }
@@ -138,7 +141,7 @@ export class DetalleProducto implements OnInit {
       descuento: '',
       urlOficial: '',
       CategoryId: this.prodForm.value.idCategory,
-      countryId: this.prodForm.value.countryId,
+      countryId: this.countryId,
     };
     if (this.currentProdId != 'new') {
       product = {

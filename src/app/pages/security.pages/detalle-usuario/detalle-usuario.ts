@@ -14,9 +14,10 @@ import { Farmacia, Pais } from 'src/app/interfaces/models';
 import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { MatSelectChange } from '@angular/material/select';
 import { UserRoles } from 'src/app/shared/enums/roles.enum';
-import { PharmacySearchComponent } from '../../ventas.pages/pharmacy-search/pharmacy-search.component';
+
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { SessionService } from 'src/app/services/session.service';
+import { PharmacySearchComponent } from 'src/app/components/pharmacy-search/pharmacy-search.component';
 
 @Component({
   selector: 'app-detalle-usuario',

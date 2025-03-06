@@ -8,6 +8,7 @@ import { RulesService } from 'src/app/services/rules.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { ApiService } from 'src/app/services/api.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-detalle-reglas',
@@ -18,8 +19,7 @@ export class DetalleReglas implements OnInit {
   currentRegla!: Rule | any;
   prods!: Producto[];
   isLoadingResults!: boolean;
-
-  public countries: any[] = [];
+  public countryId = '';
 
   public ruleForm = new FormGroup({
     daysAround: new FormControl('', Validators.required),
@@ -28,7 +28,6 @@ export class DetalleReglas implements OnInit {
     quantityGive: new FormControl('', Validators.required),
     maxChangeYear: new FormControl('', Validators.required),
     productId: new FormControl('', Validators.required),
-    countryId: new FormControl('', Validators.required),
   });
 
   constructor(
@@ -38,10 +37,14 @@ export class DetalleReglas implements OnInit {
     private readonly sharedService: SharedService,
     private readonly rulesServ: RulesService,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private readonly errorHandlerService: ErrorHandlerService
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly countryService: CountryService
   ) {}
 
   ngOnInit(): void {
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+    });
     if (this.data.ruleId) {
       this.getRule();
     }
@@ -50,10 +53,8 @@ export class DetalleReglas implements OnInit {
 
   private async loadData() {
     this.isLoadingResults = true;
-    await this.sharedService.setCountry();
-    await this.prodService.setProducts();
+    await this.prodService.setProductsByCountry(this.countryId);
     this.prods = this.prodService.getProducts();
-    this.countries = this.sharedService.getCountryList();
     this.isLoadingResults = false;
   }
   private async getRule() {
@@ -81,7 +82,6 @@ export class DetalleReglas implements OnInit {
       quantityGive: this.currentRegla.quantityGive,
       maxChangeYear: this.currentRegla.maxChangeYear,
       productId: this.currentRegla.productId,
-      countryId: this.currentRegla.countryId,
     });
   }
 
@@ -97,7 +97,7 @@ export class DetalleReglas implements OnInit {
       quantityGive: this.ruleForm.value.quantityGive,
       maxChangeYear: this.ruleForm.value.maxChangeYear,
       productId: this.ruleForm.value.productId,
-      countryId: this.ruleForm.value.countryId,
+      countryId: this.countryId,
     };
 
     if (this.data.ruleId) {

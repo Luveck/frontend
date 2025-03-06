@@ -61,4 +61,17 @@ export class MedicosService {
   public getMedicos() {
     return this.medicList;
   }
+
+  public async setMedicalByCountry(countryId: string) {
+    try {
+      this.medicList = await this.apiService.get(
+        'Medical/GetByCountry' + countryId
+      );
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando medicos:'),
+        'error'
+      );
+    }
+  }
 }

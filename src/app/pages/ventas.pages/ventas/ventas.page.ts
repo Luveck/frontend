@@ -1,5 +1,11 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -13,13 +19,17 @@ import { ModalReportComponent } from 'src/app/components/modal-report/modal-repo
 import { SharedService } from 'src/app/services/shared.service';
 import { FilterPurchase } from 'src/app/entities/filter-purchases.entiy';
 import { SessionService } from 'src/app/services/session.service';
+import { CountryService } from 'src/app/services/country.service';
+import { FarmaciasService } from 'src/app/services/farmacias.service';
+import { FormControl, FormGroup } from '@angular/forms';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-ventas',
   templateUrl: './ventas.page.html',
   styleUrls: ['./ventas.page.scss'],
 })
-export class VentasPage implements AfterViewInit {
+export class VentasPage implements AfterViewInit, OnInit {
   public breadcrumb = {
     links: [
       {
@@ -49,6 +59,16 @@ export class VentasPage implements AfterViewInit {
 
   isLoadingResults: boolean = true;
   public filter: FilterPurchase = {} as FilterPurchase;
+  selectedCountry: string = '';
+  selectedCountryId: string = '';
+  public pharmacies!: any[];
+  public filterPharmacies: any[] = [];
+  public purchases!: any[];
+  public filterPurchases: any[] = [];
+  public range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
 
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
@@ -57,25 +77,66 @@ export class VentasPage implements AfterViewInit {
 
     private readonly ventasService: VentasService,
     private readonly sharedService: SharedService,
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly countryService: CountryService,
+    private readonly pharamcyService: FarmaciasService
   ) {
-    this.filter.pharmacyId = sessionService.getUserData().pharmacyId;
+    this.filter.pharmacyId =
+      sessionService.getUserData().pharmacyId == '0'
+        ? null
+        : sessionService.getUserData().pharmacyId;
+    this.filter.countryId = sessionService.getUserData().countryId;
+  }
+
+  ngOnInit(): void {
+    this.countryService.countryId$.subscribe((country) => {
+      this.filter.countryId = country;
+      this.getPurchases();
+    });
+
+    this.range.valueChanges
+      .pipe(filter((value: any) => value.start && value.end))
+      .subscribe((value) => {
+        this.consultarDatos(value.start, value.end);
+      });
+  }
+
+  consultarDatos(start: Date, end: Date) {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    const differenceInTime = endDate.getTime() - startDate.getTime();
+    const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+
+    if (differenceInDays > 60) {
+      this.sharedService.notify('No puede filtrar mas de 60 dias.', 'error');
+      return;
+    }
+
+    this.filter.dateBuyStart = startDate.toISOString();
+    this.filter.dateBuyEnd = endDate.toISOString();
+    this.getPurchases();
   }
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.getPurchases();
   }
 
   private async getPurchases() {
-    await this.ventasService.setProductsPurchasesFiltered(this.filter);
+    await this.ventasService.setPurchasesFiltered(this.filter);
     this.isLoadingResults = false;
-    this.dataSource.data = this.ventasService.getPurchases();
+    this.purchases = await this.ventasService.getPurchases();
+    this.filterPurchases = [...this.purchases];
+    this.dataSource.data = this.purchases;
     this.dataSource.data = this.dataSource.data.sort((a) => {
       if (a.reviewed) return 0;
       else return 1;
     });
+    this.pharmacies = await this.pharamcyService.setPharmaciesBycountry(
+      this.filter.countryId
+    );
+    this.filterPharmacies = [...this.pharmacies];
   }
 
   applyFilter(event: Event) {
@@ -141,6 +202,18 @@ export class VentasPage implements AfterViewInit {
         title: 'Reporte General de Ventas',
         body: this.dataSource.data,
       },
+    });
+  }
+
+  public filterByFharmacy(event: Event) {
+    this.purchases = this.filterPurchases.filter(
+      (p) => p.pharmacyId === Number(event)
+    );
+
+    this.dataSource.data = this.purchases;
+    this.dataSource.data = this.dataSource.data.sort((a) => {
+      if (a.reviewed) return 0;
+      else return 1;
     });
   }
 }

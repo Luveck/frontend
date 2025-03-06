@@ -11,6 +11,7 @@ import { ModalReportComponent } from 'src/app/components/modal-report/modal-repo
 import { ApiService } from 'src/app/services/api.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-ciudades',
@@ -43,7 +44,8 @@ export class CiudadesPage implements OnInit {
     'acctions',
   ];
   dataSource = new MatTableDataSource<Ciudad>(this.ELEMENT_DATA);
-
+  public countryId = '';
+  public cities: Ciudad[] = [];
   isLoadingResults: boolean = true;
 
   constructor(
@@ -51,21 +53,21 @@ export class CiudadesPage implements OnInit {
     private readonly _dialog: MatDialog,
     private readonly sharedService: SharedService,
     private readonly apiService: ApiService,
-    private readonly errorHandlerService: ErrorHandlerService
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly countryService: CountryService
   ) {}
   ngOnInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.dataSource.data = this.sharedService.getCityList();
-    if (this.sharedService.getCityList().length == 0) {
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
       this.getCitites();
-    }
-    this.isLoadingResults = false;
+    });
   }
 
   public async getCitites() {
-    await this.sharedService.setCities();
-    this.dataSource.data = this.sharedService.getCityList();
+    this.cities = await this.sharedService.setCitiesByCountry(this.countryId);
+    this.dataSource.data = this.cities;
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     this.isLoadingResults = false;
   }
 

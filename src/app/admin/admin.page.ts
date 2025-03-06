@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment';
 import { SharedService } from '../services/shared.service';
 import { UserRoles } from '../shared/enums/roles.enum';
 import { SessionService } from '../services/session.service';
+import { CountryService } from '../services/country.service';
 
 @Component({
   selector: 'app-admin',
@@ -39,7 +40,8 @@ export class AdminPage implements OnInit {
     public authService: AuthService,
     public dataService: DataService,
     private readonly sharedService: SharedService,
-    public readonly sessionService: SessionService
+    public readonly sessionService: SessionService,
+    private readonly countryService: CountryService
   ) {
     let theme = this.dataService.getTheme();
     if (theme === 'dark') {
@@ -134,12 +136,13 @@ export class AdminPage implements OnInit {
     } catch (error) {
     } finally {
       this.countryCombo = this.sharedService.getCountryCombo();
-      this.countryCombo = this.sharedService.getCountryCombo();
-      this.selectedCountry = this.countryCombo.find(
-        (c) => c.iso3 === this.dataService.getCountry()
-      ).iso3;
+      const country = this.countryCombo.find(
+        (c) => c.id === Number(this.sessionService.getUserData().countryId)
+      );
+      this.selectedCountry = country.iso3;
       this.isAdmin =
         this.sessionService.getUserData().Role === UserRoles.Admin.toString();
+      this.countryService.setCountry(country);
     }
   }
 
@@ -182,9 +185,15 @@ export class AdminPage implements OnInit {
     this.dataService.setCountry(
       this.countryCombo.find((c) => c.iso3 === this.selectedCountry)
     );
+    this.countryService.setCountry(
+      this.countryCombo.find((c) => c.iso3 === this.selectedCountry)
+    );
   }
 
   public getFlag(flag: string) {
+    if (!flag) {
+      return;
+    }
     return `https://flagcdn.com/${flag.toLowerCase()}.svg`;
   }
 }

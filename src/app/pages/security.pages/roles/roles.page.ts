@@ -35,7 +35,7 @@ export class RolesPage implements OnInit {
   @Input('ELEMENT_DATA') ELEMENT_DATA!: Role[];
   @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort!: MatSort | null;
-  displayedColumns: string[] = ['name', 'acctions'];
+  displayedColumns: string[] = ['name', 'state', 'acctions'];
   dataSource = new MatTableDataSource<Role>(this.ELEMENT_DATA);
   isLoadingResults: boolean = true;
 

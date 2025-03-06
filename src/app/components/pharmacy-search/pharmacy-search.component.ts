@@ -7,6 +7,7 @@ import {
   Farmacia,
   Pais,
 } from 'src/app/interfaces/models';
+import { CountryService } from 'src/app/services/country.service';
 import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { SharedService } from 'src/app/services/shared.service';
 
@@ -17,48 +18,45 @@ import { SharedService } from 'src/app/services/shared.service';
 })
 export class PharmacySearchComponent implements OnInit {
   ciudades!: Ciudad[];
-  paises!: Pais[];
   departamentos!: Departamento[];
   farmacias!: Farmacia[];
-  countrySelected: Pais = {} as Pais;
   filteredDepartments: Departamento[] = [];
   filteredCities: Ciudad[] = [];
   filteredPharmacy: Farmacia[] = [];
   farmacia: Farmacia | null = null;
+  chains!: any[];
+  filteredChains: any[] = [];
+
+  private countryId = '';
 
   public farmaForm = new FormGroup({
     cityId: new FormControl('', Validators.required),
-    countryId: new FormControl('', Validators.required),
+    chainId: new FormControl('', Validators.required),
     departmentId: new FormControl('', Validators.required),
   });
 
   constructor(
-    private _farmaServ: FarmaciasService,
     public dialogo: MatDialogRef<PharmacySearchComponent>,
-
     private readonly sharedService: SharedService,
     private readonly pharmaService: FarmaciasService,
-    @Inject(MAT_DIALOG_DATA) public prodData: any
+    @Inject(MAT_DIALOG_DATA) public prodData: any,
+    private readonly countryService: CountryService
   ) {}
 
   ngOnInit(): void {
-    // this._zonasServ.getAll();
-    // this.ciudades = this._zonasServ.listCiudades;
-    // this.paises = this._zonasServ.listPaises;
-    // this.departamentos = this._zonasServ.listDepartamentos;
-    // this.farmacias = this._farmaServ.listFarmacias;
-    // this.filteredDepartments = this.departamentos.filter(
-    //   (dept) => dept.countryId === 1
-    // );
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+    });
     this.getConfiguration();
   }
 
   private async getConfiguration() {
     try {
-      await this.sharedService.setCountry();
       await this.sharedService.setDepartments();
       await this.sharedService.setCities();
       await this.pharmaService.setPharmacies();
+      const chains = await this.pharmaService.setChainByCountry(this.countryId);
+      this.chains = chains as any[];
     } catch (err) {
       this.sharedService.notify(
         'Ocurrio un error consultando las configuraciones',
@@ -66,16 +64,15 @@ export class PharmacySearchComponent implements OnInit {
       );
     } finally {
       this.ciudades = this.sharedService.getCityList();
-      this.paises = this.sharedService.getCountryList();
       this.departamentos = this.sharedService.getDepartmentList();
       this.farmacias = this.pharmaService.getPharmacies();
+      this.onCountryChange();
     }
   }
 
-  onCountryChange(countryId: number) {
-    this.countrySelected = this.paises.filter((p) => p.id === countryId)[0];
+  onCountryChange() {
     this.filteredDepartments = this.departamentos.filter(
-      (dept) => dept.countryId === countryId
+      (dept) => dept.countryId === Number(this.countryId)
     );
     this.farmaForm.get('departmentId')?.enable();
     this.farmaForm.get('departmentId')?.reset();
@@ -114,5 +111,12 @@ export class PharmacySearchComponent implements OnInit {
 
   onSelect() {
     this.dialogo.close(this.farmacia);
+  }
+
+  public onChainChange(chainId: number) {
+    this.filteredPharmacy = this.farmacias.filter(
+      (pharmacy) => pharmacy.chainId === chainId
+    );
+    this.farmacia = null;
   }
 }

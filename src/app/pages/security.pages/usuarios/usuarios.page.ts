@@ -12,6 +12,7 @@ import { SharedService } from 'src/app/services/shared.service';
 import { UserRoles } from 'src/app/shared/enums/roles.enum';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { SessionService } from 'src/app/services/session.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-usuarios',
@@ -38,8 +39,11 @@ export class UsuariosPage implements OnInit {
   @ViewChild(MatSort, { static: true }) sort!: MatSort | null;
   displayedColumns: string[] = ['dni', 'name', 'role', 'state', 'acctions'];
   dataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
+  dataUsers!: any[];
 
   isLoadingResults: boolean = true;
+
+  private countryId = '';
 
   constructor(
     private readonly _liveAnnouncer: LiveAnnouncer,
@@ -47,17 +51,21 @@ export class UsuariosPage implements OnInit {
     private readonly errorHandlerService: ErrorHandlerService,
     private readonly usuariosServ: UsuariosService,
     private readonly sharedService: SharedService,
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly countryService: CountryService
   ) {}
   ngOnInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.getUsers();
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+      this.getUsers();
+    });
   }
 
   private async getUsers() {
     try {
-      await this.usuariosServ.setUsers();
+      this.dataUsers = await this.usuariosServ.setUsersByCountry(
+        this.countryId
+      );
     } catch (error) {
       this.sharedService.notify(
         this.errorHandlerService.handleError(error, 'Consultando usuarios:'),
@@ -66,21 +74,27 @@ export class UsuariosPage implements OnInit {
     } finally {
       this.isLoadingResults = false;
       if (this.sessionService.getUserData().Role !== UserRoles.Admin) {
-        this.dataSource.data = this.usuariosServ.getUsersList().filter((x) => {
+        this.dataSource.data = this.dataUsers.filter((x) => {
           x.roles.includes(UserRoles.Cliente);
         });
       } else {
-        this.dataSource.data = this.usuariosServ.getUsersList();
+        this.dataSource.data = this.dataUsers;
       }
+
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
     }
   }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    if (this.dataSource) {
+      this.dataSource.filter = filterValue;
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+      if (this.dataSource.paginator) {
+        this.dataSource.paginator.firstPage();
+      }
     }
   }
 

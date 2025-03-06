@@ -6,6 +6,7 @@ import { Ciudad, Departamento } from 'src/app/interfaces/models';
 import { ApiService } from 'src/app/services/api.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-detalle-ciudad',
@@ -16,6 +17,7 @@ export class DetalleCiudad implements OnInit {
   currentCiudad!: Ciudad | any;
   departamentos!: Departamento[];
   isLoadingResults!: boolean;
+  public countryId = '';
 
   public ciudadForm = new FormGroup({
     departymentId: new FormControl('', Validators.required),
@@ -27,15 +29,19 @@ export class DetalleCiudad implements OnInit {
     private readonly apiService: ApiService,
     public dialogo: MatDialogRef<DetalleCiudad>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private readonly errorHandlerService: ErrorHandlerService
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly countryService: CountryService
   ) {}
 
   ngOnInit(): void {
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+      this.comboDepartment();
+    });
     if (this.data.ciudadId) {
       this.isLoadingResults = true;
       this.getCity();
     }
-    this.comboDepartment();
   }
 
   public async getCity() {
@@ -55,10 +61,9 @@ export class DetalleCiudad implements OnInit {
   }
 
   public async comboDepartment() {
-    if (this.sharedService.getDepartmentList().length == 0) {
-      await this.sharedService.setDepartments();
-    }
-    this.departamentos = this.sharedService.getDepartmentList();
+    this.departamentos = await this.sharedService.setDepartmentsByCountry(
+      this.countryId
+    );
   }
 
   initValores() {

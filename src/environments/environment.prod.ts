@@ -53,6 +53,14 @@ export const environment = {
       enabled: true,
     },
     {
+      text: 'Registro de Canjes',
+      subText: 'Gestión de canjes',
+      icon: 'published_with_changes',
+      routerLink: 'canjes/canjes',
+      module: 'Gestion-Canjes',
+      enabled: true,
+    },
+    {
       text: 'Seguridad',
       subText: 'Gestión de seguridad',
       icon: 'admin_panel_settings',

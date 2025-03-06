@@ -11,27 +11,21 @@ import { ComponentsModule } from 'src/app/components/components.module';
 
 import { VentasPage } from './ventas/ventas.page';
 import { DetalleVenta } from './detalle-ventas/detalle-venta';
-import { PharmacySearchComponent } from './pharmacy-search/pharmacy-search.component';
 import { FilesDirective } from './detalle-ventas/files.directive';
 
 const routes: Routes = [
   {
     path: 'ventas',
-    component: VentasPage
+    component: VentasPage,
   },
   {
     path: 'venta-detalle/:noPurchase/:buyer',
-    component: DetalleVenta
-  }
+    component: DetalleVenta,
+  },
 ];
 
 @NgModule({
-  declarations:[
-    VentasPage,
-    DetalleVenta,
-    PharmacySearchComponent,
-    FilesDirective
-  ],
+  declarations: [VentasPage, DetalleVenta, FilesDirective],
   imports: [
     CommonModule,
     FormsModule,
@@ -39,14 +33,13 @@ const routes: Routes = [
     ComponentsModule,
     MaterialModule,
     NgxMatSelectSearchModule,
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
   ],
   providers: [
     {
       provide: MatPaginatorIntl,
-      useClass: CustomMatPaginatorIntl
-    }
-  ]
+      useClass: CustomMatPaginatorIntl,
+    },
+  ],
 })
-
 export class VentasModule {}

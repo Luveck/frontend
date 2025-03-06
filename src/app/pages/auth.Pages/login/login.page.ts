@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-login',
@@ -22,10 +23,13 @@ export class LoginPage implements OnInit {
 
   constructor(
     public dataService: DataService,
-    private readonly authService: AuthService
+    private readonly authService: AuthService,
+    private readonly sharedService: SharedService
   ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.sharedService.setCountryCombo();
+  }
 
   public async onLogin(formData: any) {
     if (!this.dataService.progress) {

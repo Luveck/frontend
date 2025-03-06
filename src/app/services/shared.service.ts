@@ -11,7 +11,7 @@ import { ErrorHandlerService } from './error-handler.service';
 export class SharedService {
   private countryList: Pais[] = [];
   private departmentList: Departamento[] = [];
-  private cityList: Ciudad[] = [];
+  private cityList: any[] = [];
   private countryCombo: any[] = [];
   defaultCountry: any = {
     id: 1,
@@ -49,11 +49,28 @@ export class SharedService {
       this.departmentList = await this.apiService.get<Departamento[]>(
         `Department`
       );
+      return this.departmentList;
     } catch (error) {
       this.notify(
         this.errorHandlerService.handleError(error, 'Listando departamenos:'),
         'error'
       );
+      return [];
+    }
+  }
+
+  public async setDepartmentsByCountry(countryId: string) {
+    try {
+      this.departmentList = await this.apiService.get<Departamento[]>(
+        `Department/ComboByCountry?id=${countryId}`
+      );
+      return this.departmentList;
+    } catch (error) {
+      this.notify(
+        this.errorHandlerService.handleError(error, 'Listando departamenos:'),
+        'error'
+      );
+      return [];
     }
   }
 
@@ -64,11 +81,28 @@ export class SharedService {
   public async setCities() {
     try {
       this.cityList = await this.apiService.get<Ciudad[]>(`City`);
+      return this.cityList;
     } catch (error) {
       this.notify(
         this.errorHandlerService.handleError(error, 'Listando ciudades:'),
         'error'
       );
+      return [];
+    }
+  }
+
+  public async setCitiesByCountry(countryId: string) {
+    try {
+      this.cityList = await this.apiService.get<Ciudad[]>(
+        `City/GetByCountryAsync${countryId}`
+      );
+      return this.cityList;
+    } catch (error) {
+      this.notify(
+        this.errorHandlerService.handleError(error, 'Listando ciudades:'),
+        'error'
+      );
+      return [];
     }
   }
 

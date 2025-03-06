@@ -1,32 +1,40 @@
-.canjes{
+.canjes {
   width: 90%;
   margin: 2rem auto;
+
   h1 {
     margin: 1rem 0;
     width: 100%;
     font-size: 2rem;
     text-align: center;
   }
-  p{
+
+  p {
     text-align: center;
   }
-  .contentRegistroCanje{
+
+  .contentRegistroCanje {
     padding: 2rem 1rem;
     text-align: center;
-    .wrapForm{
+
+    .wrapForm {
       width: 80%;
       margin: 0 auto;
       padding: 10px 0;
-      .inputs{
+
+      .inputs {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        &.ver2{
+
+        &.ver2 {
           grid-template-columns: auto 1fr 1fr;
-          button{
+
+          button {
             margin: 1rem 0;
           }
         }
-        mat-form-field{
+
+        mat-form-field {
           width: 90%;
           margin: auto;
           align-content: center;
@@ -36,16 +44,43 @@
   }
 }
 
-.btns{
+.btns {
   padding-top: 2rem;
   text-align: center;
-  button{
+
+  button {
     margin: 0 0.5rem;
   }
 }
 
-@media (max-width: 560px){
-  .canjes{
+@media (max-width: 560px) {
+  .canjes {
     height: 100%;
   }
+}
+
+
+table {
+  width: 100%;
+}
+
+th {
+  color: var(--dark-text);
+  font-weight: 900;
+}
+
+th,
+td {
+  text-align: center;
+}
+
+.mi-tabla th.mat-header-cell {
+  text-align: center !important;
+}
+
+.filter {
+  width: 100%;
+  gap: 20px;
+  display: flex;
+  justify-content: center;
 }

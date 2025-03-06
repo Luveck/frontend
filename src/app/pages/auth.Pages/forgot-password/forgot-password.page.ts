@@ -23,29 +23,18 @@ export class ForgotPasswordPage implements OnInit {
 
   constructor(
     public dataServ: DataService,
-    private _authServ: AuthService,
-    private info: SharedService
+    private readonly authServ: AuthService,
+    private readonly info: SharedService
   ) {}
 
   ngOnInit(): void {}
 
   onForgot(formData: any) {
-    if (!this.dataServ.progress) {
-      this.dataServ.progress = true;
-      this._authServ
-        .forgotPass(formData)
-        .then((res: any) => {
-          console.log(res);
-          this.dataServ.progress = false;
-          this.dataServ.fir(`${res.messages}`, 'success');
-          this.resetEmailSendMsg = res.messages;
-        })
-        .catch((error: any) => {
-          this.dataServ.progress = false;
-          console.log(error);
-          let msgError = error.error.messages;
-          this.dataServ.fir(`${msgError}`, 'error');
-        });
-    }
+    const dni = formData.dni;
+    this.getForgot(dni);
+  }
+
+  private async getForgot(dni: string) {
+    await this.authServ.forgotPassword(dni);
   }
 }

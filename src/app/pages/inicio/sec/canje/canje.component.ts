@@ -1,117 +1,105 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
-
-import { VentasService } from 'src/app/services/ventas.service';
-import { InventarioService } from 'src/app/services/inventario.service';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { ExchangeService } from 'src/app/services/exchange.service';
+import { SessionService } from 'src/app/services/session.service';
+import { CanjeConfig } from './canje.config';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { FormControl, FormGroup } from '@angular/forms';
+import { filter } from 'rxjs';
+import { SharedService } from 'src/app/services/shared.service';
+import { FilterPurchase } from 'src/app/entities/filter-purchases.entiy';
 import { FarmaciasService } from 'src/app/services/farmacias.service';
-import { Farmacia, Venta } from 'src/app/interfaces/models';
-import { AuthService } from 'src/app/services/auth.service';
-import { PharmacySearchComponent } from 'src/app/pages/ventas.pages/pharmacy-search/pharmacy-search.component';
-import { MatDialog } from '@angular/material/dialog';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-canje',
   templateUrl: './canje.component.html',
   styleUrls: ['./canje.component.scss'],
 })
-export class CanjeComponent implements OnInit {
+export class CanjeComponent implements OnInit, AfterViewInit {
+  public exchanges!: any;
+  public isLoadingResults?: boolean;
+  public config = CanjeConfig;
+  public dataSource = new MatTableDataSource<any>();
+  public filter: FilterPurchase = {} as FilterPurchase;
+  public filterExchanges: any[] = [];
+  public pharmacies!: any[];
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  public range = new FormGroup({
+    start: new FormControl<Date | null>(null),
+    end: new FormControl<Date | null>(null),
+  });
+
+  constructor(
+    private readonly sessionService: SessionService,
+    private readonly exchangeService: ExchangeService,
+    private readonly sharedService: SharedService,
+    private readonly pharmacyService: FarmaciasService,
+    private readonly countryService: CountryService
+  ) {}
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    this.countryService.countryId$.subscribe((country) => {
+      this.filter.countryId = country;
+    });
+
+    this.getExchanges();
+
+    this.range.valueChanges
+      .pipe(filter((value: any) => value.start && value.end))
+      .subscribe((value) => {
+        this.consultarDatos(value.start, value.end);
+      });
   }
-  // @Output() sectionEvent = new EventEmitter<string>();
-  // productsOnCurrentVenta: any[] = [];
-  // productos!: any[];
-  // farmacias!: Farmacia[];
-  // currentVenta!: Venta | any;
-  // currentVentaId: any;
-  // isLoadingResults!: boolean;
-  // public ventaForm = new FormGroup({
-  //   pharmacyId: new FormControl('', Validators.required),
-  //   noPurchase: new FormControl('', Validators.required),
-  // });
-  // constructor(
-  //   private _ventasServ: VentasService,
-  //   private _inveServ: InventarioService,
-  //   private _farmaServ: FarmaciasService,
-  //   public authServ: AuthService,
-  //   public dialog: MatDialog
-  // ) {}
-  // ngOnInit(): void {
-  //   if (!this.authServ.checkTokenDate(this.authServ.expToken)) {
-  //     this.authServ.showSesionEndModal();
-  //     this.sectionEvent.emit('inicio');
-  //     return;
-  //   }
-  //   // const peticion2 = this._inveServ.getProductos();
-  //   // peticion2?.subscribe((res: any) => {
-  //   //   this.productos = res.result;
-  //   // });
-  //   // this.zonas.getDepartamentos()?.subscribe((res) => {
-  //   //   this.zonas.listDepartamentos = res.result;
-  //   // });
-  //   // this.zonas.getCiudades()?.subscribe((res) => {
-  //   //   this.zonas.listCiudades = res.result;
-  //   // });
-  //   // this._farmaServ.getFarmacias()?.subscribe((res) => {
-  //   //   this._farmaServ.listFarmacias = res.result;
-  //   //   this.farmacias = res.result;
-  //   // });
-  // }
-  // resetForm() {
-  //   this.ventaForm.reset();
-  // }
-  // save() {
-  //   if (
-  //     this.productsOnCurrentVenta.filter((product) =>
-  //       product.hasOwnProperty('productId')
-  //     ).length === 0
-  //   ) {
-  //     // this._inveServ.notify(
-  //     //   'La factura debe tener al menos un producto.',
-  //     //   'info'
-  //     // );
-  //     return;
-  //   }
-  //   // const peticion = this._ventasServ.addVenta(
-  //   //   this.ventaForm.value,
-  //   //   // this.authServ.userData.UserId,
-  //   //   this.productsOnCurrentVenta
-  //   // );
-  //   // peticion?.subscribe(
-  //   //   (resultOfVenta: any) => {
-  //   //     this.currentVentaId = resultOfVenta.result.id;
-  //   //     this.currentVenta = resultOfVenta.result;
-  //   //     this._inveServ.notify('Factura registrada.', 'success');
-  //   //     this.ventaForm.disable();
-  //   //     this.addProd();
-  //   //   },
-  //   //   (err) => {
-  //   //     this._ventasServ.notify(
-  //   //       err.error.result == 'La factura que desea registrar ya existe.'
-  //   //         ? err.error.result
-  //   //         : 'Ocurrio un error con el proceso',
-  //   //       'error'
-  //   //     );
-  //   //   }
-  //   // );
-  // }
-  // addProd() {
-  //   this.productsOnCurrentVenta.push({
-  //     Quantity: 1,
-  //   });
-  // }
-  // eliminarProd(index: number) {
-  //   this.productsOnCurrentVenta.splice(index, 1);
-  // }
-  // filterFharmacy(event: MouseEvent) {
-  //   event.stopPropagation();
-  //   const dialogRef = this.dialog.open(PharmacySearchComponent, {});
-  //   dialogRef.afterClosed().subscribe((result) => {
-  //     if (result) {
-  //       this.ventaForm.patchValue({
-  //         pharmacyId: result.id,
-  //       });
-  //     }
-  //   });
-  // }
+
+  consultarDatos(start: Date, end: Date) {
+    const startDate = new Date(start);
+    const endDate = new Date(end);
+
+    const differenceInTime = endDate.getTime() - startDate.getTime();
+    const differenceInDays = differenceInTime / (1000 * 3600 * 24);
+
+    if (differenceInDays > 60) {
+      this.sharedService.notify('No puede filtrar mas de 60 dias.', 'error');
+      return;
+    }
+    this.filter.dateBuyStart = startDate.toISOString();
+    this.filter.dateBuyEnd = endDate.toISOString();
+    this.getExchanges();
+  }
+
+  ngAfterViewInit() {
+    if (this.sort) {
+      this.dataSource.sort = this.sort;
+    }
+  }
+  private async getExchanges() {
+    this.isLoadingResults = true;
+    this.filter.userId = this.sessionService.getUserData().UserId;
+    this.exchanges = await this.exchangeService.setExchangesFiltered(
+      this.filter
+    );
+    this.filterExchanges = [...this.exchanges];
+    this.dataSource.data = this.exchanges;
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.isLoadingResults = false;
+
+    this.pharmacies = await this.pharmacyService.setPharmaciesBycountry(
+      this.filter.countryId
+    );
+  }
+
+  public filterByFharmacy(event: Event) {
+    this.exchanges = this.filterExchanges.filter(
+      (p) => p.pharmacyId === Number(event)
+    );
+
+    this.dataSource.data = this.exchanges;
+    this.dataSource.data = this.dataSource.data.sort((a) => {
+      if (a.reviewed) return 0;
+      else return 1;
+    });
+  }
 }

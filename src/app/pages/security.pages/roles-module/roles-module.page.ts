@@ -98,11 +98,6 @@ export class RolesModulePage implements OnInit {
     try {
       this.isLoadingResults = true;
       await this.usuariosServ.setModules();
-    } catch (error) {
-      this.sharedService.notify(
-        this.errorHandlerService.handleError(error, 'Actualizando roles:'),
-        'error'
-      );
     } finally {
       this.modules = this.usuariosServ.getModules();
       this.isLoadingResults = false;
@@ -118,21 +113,6 @@ export class RolesModulePage implements OnInit {
       modulesAccess,
       this.selected
     );
-    // res?.subscribe(
-    //   (res) => {
-    //     if (res) {
-    //       this.usuariosServ.notify('Accesos actualizados', 'success');
-    //       this.isLoadingResults = true;
-    //       this.getAllRoles();
-    //       this.dataSource.data = [];
-    //       this.selected = '';
-    //     }
-    //   },
-    //   (err) => {
-    //     this.getAllRoles();
-    //     this.usuariosServ.notify('Ocurrio un error con el proceso.', 'error');
-    //   }
-    // );
   }
 
   onCheckboxChange(event: MatCheckboxChange, roleId: string) {

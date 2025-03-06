@@ -4,41 +4,46 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { RulesService } from 'src/app/services/rules.service';
 import { ModalProdIniComponent } from '../modal-prod-ini/modal-prod-ini.component';
 import { DataService } from 'src/app/services/data.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-prods',
   templateUrl: './prods.component.html',
-  styleUrls: ['./prods.component.scss']
+  styleUrls: ['./prods.component.scss'],
 })
 export class ProdsComponent implements OnInit {
-  @Input() color!:boolean
-  selectedCategory:number = 0
-  prodsCanje:any[] = []
+  @Input() color!: boolean;
+  selectedCategory: number = 0;
+  prodsCanje: any[] = [];
+  countryId = '';
 
   constructor(
     private _dialog: MatDialog,
-    private readonly rulesServ:RulesService,
-    private readonly dataServ: DataService,
-  ) { }
+    private readonly rulesServ: RulesService,
+    private readonly countryService: CountryService
+  ) {}
 
   ngOnInit(): void {
-    this.getProductsRules();
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+      console.log(this.countryId);
+      this.getProductsRules();
+    });
   }
 
-  private async getProductsRules(){
+  private async getProductsRules() {
     try {
-      await this.rulesServ.setProductsRuleByCountry(this.dataServ.getCountryId());
+      await this.rulesServ.setProductsRuleByCountryLandingPage(this.countryId);
     } catch (error) {
-
     } finally {
       this.prodsCanje = this.rulesServ.getProductsRuleByCountry();
     }
   }
 
-  openModalProd(prod:any){
-    const config:MatDialogConfig = {
-      data: prod
-    }
-    this._dialog.open(ModalProdIniComponent, config)
+  openModalProd(prod: any) {
+    const config: MatDialogConfig = {
+      data: prod,
+    };
+    this._dialog.open(ModalProdIniComponent, config);
   }
 }

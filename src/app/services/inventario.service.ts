@@ -54,12 +54,14 @@ export class InventarioService {
       this.listProducts = await this.apiService.get(
         'Product/GetByCountry' + countryId
       );
+      return this.listProducts;
     } catch (error) {
       this.sharedService.notify(
         this.errorHandlerService.handleError(error, 'Listando productos:'),
         'error'
       );
     }
+    return [];
   }
 
   public getProducts() {

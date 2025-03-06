@@ -5,7 +5,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { Farmacia } from 'src/app/interfaces/models';
+import { Ciudad, Departamento, Farmacia } from 'src/app/interfaces/models';
 import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { DetalleFarmacia } from '../detalle-farmacia/detalle-farmacia';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
@@ -13,6 +13,7 @@ import { ModalReportComponent } from 'src/app/components/modal-report/modal-repo
 import { SharedService } from 'src/app/services/shared.service';
 import { ApiService } from 'src/app/services/api.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-farmacias',
@@ -47,6 +48,13 @@ export class FarmaciasPage implements OnInit {
   dataSource = new MatTableDataSource<Farmacia>(this.ELEMENT_DATA);
 
   isLoadingResults: boolean = true;
+  private countryId = '';
+  departamentos!: Departamento[];
+  filteredDepartments: Departamento[] = [];
+  ciudades!: Ciudad[];
+  filteredCities: Ciudad[] = [];
+  public pharmacies: any[] = [];
+  public filteredPharmacies: any[] = [];
 
   constructor(
     private readonly _liveAnnouncer: LiveAnnouncer,
@@ -54,20 +62,69 @@ export class FarmaciasPage implements OnInit {
     private readonly farmaServ: FarmaciasService,
     private readonly sharedService: SharedService,
     private readonly apiService: ApiService,
-    private readonly errorHandlerService: ErrorHandlerService
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly countryService: CountryService
   ) {}
   ngOnInit(): void {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    this.getPharmacies();
+    this.getConfigurations().then(() => {
+      this.countryService.countryId$.subscribe((country) => {
+        this.countryId = country;
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+        this.getPharmacies();
+        this.getDepartments();
+      });
+    });
   }
 
+  private async getConfigurations() {
+    this.departamentos = await this.sharedService.setDepartments();
+    this.filteredDepartments = [...this.departamentos];
+    this.ciudades = await this.sharedService.setCities();
+    this.filteredCities = [...this.ciudades];
+  }
   private async getPharmacies() {
-    await this.farmaServ.setPharmacies();
-    this.dataSource.data = this.farmaServ.getPharmacies();
+    await this.farmaServ.setPharmaciesBycountry(this.countryId);
+    this.pharmacies = this.farmaServ.getPharmacies();
+    this.filteredPharmacies = [...this.pharmacies];
+    this.dataSource.data = this.pharmacies;
     this.isLoadingResults = false;
   }
 
+  private getDepartments() {
+    this.departamentos = this.filteredDepartments.filter(
+      (dept) => dept.countryId === Number(this.countryId)
+    );
+    this.getCites();
+  }
+
+  private getCites() {
+    const cities = this.sharedService.getCityList();
+    this.ciudades = cities.filter(
+      (cities) => cities.department.countryId === Number(this.countryId)
+    );
+  }
+
+  public filterByDepartment(event: Event) {
+    const cities = this.sharedService.getCityList();
+    this.ciudades = cities.filter(
+      (city) => city.departmentId === Number(event) && city.isActive
+    );
+
+    this.pharmacies = this.filteredPharmacies.filter(
+      (pharmacy) => pharmacy.city.departmentId === Number(event)
+    );
+
+    this.dataSource.data = this.pharmacies;
+  }
+
+  public filterByCity(event: Event) {
+    this.pharmacies = this.filteredPharmacies.filter(
+      (pharmacy) => pharmacy.cityId === Number(event)
+    );
+
+    this.dataSource.data = this.pharmacies;
+  }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();

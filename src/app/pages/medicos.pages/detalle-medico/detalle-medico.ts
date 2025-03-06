@@ -7,6 +7,7 @@ import { MedicosService } from 'src/app/services/medicos.service';
 import { ApiService } from 'src/app/services/api.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-detalle-medico',
@@ -30,7 +31,8 @@ export class DetalleMedico implements OnInit {
     private readonly sharedService: SharedService,
     public dialogo: MatDialogRef<DetalleMedico>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private readonly errorHandlerService: ErrorHandlerService
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly countryService: CountryService
   ) {}
 
   ngOnInit(): void {
@@ -104,11 +106,12 @@ export class DetalleMedico implements OnInit {
     }
   }
   save() {
+    this.isLoadingResults = true;
     let medical: any = {
       name: this.medicForm.value.name,
       register: this.medicForm.value.register,
       disciplineId: this.medicForm.value.patologyId,
-      countryId: 1,
+      countryId: this.countryService.getCountryId(),
     };
     if (this.data.medicoId) {
       medical = {

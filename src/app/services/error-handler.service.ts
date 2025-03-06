@@ -14,6 +14,10 @@ export class ErrorHandlerService {
         message = error.error.includes('permisos')
           ? `${where} ${error.error}`
           : `${error.error}`;
+
+        message = message.includes('clave duplicada')
+          ? 'Ya existe un registro con el mismo nombre'
+          : message;
       } else {
         console.log('Error HTTP:', error.statusText);
       }

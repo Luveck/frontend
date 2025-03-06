@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -13,13 +13,14 @@ import { ModalReportComponent } from 'src/app/components/modal-report/modal-repo
 import { ApiService } from 'src/app/services/api.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-medicos',
   templateUrl: './medicos.page.html',
   styleUrls: ['./medicos.page.scss'],
 })
-export class MedicosPage implements AfterViewInit {
+export class MedicosPage implements OnInit {
   public breadcrumb = {
     links: [
       {
@@ -46,6 +47,7 @@ export class MedicosPage implements AfterViewInit {
   dataSource = new MatTableDataSource<Medico>(this.ELEMENT_DATA);
 
   isLoadingResults: boolean = true;
+  public countryId = '';
 
   constructor(
     private readonly _liveAnnouncer: LiveAnnouncer,
@@ -53,17 +55,20 @@ export class MedicosPage implements AfterViewInit {
     public medicServ: MedicosService,
     private readonly apiService: ApiService,
     private readonly sharedservice: SharedService,
-    private readonly errorHandlerService: ErrorHandlerService
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly countryService: CountryService
   ) {}
-
-  ngAfterViewInit(): void {
+  ngOnInit(): void {
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+      this.getMedicals();
+    });
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.getMedicals();
   }
 
   private async getMedicals() {
-    await this.medicServ.setMedicos();
+    await this.medicServ.setMedicalByCountry(this.countryId);
     this.dataSource.data = this.medicServ.getMedicos();
     this.isLoadingResults = false;
   }
@@ -105,8 +110,10 @@ export class MedicosPage implements AfterViewInit {
 
   private async updateMedical(medical: any) {
     try {
+      this.isLoadingResults = true;
       await this.apiService.put(`Medical`, medical);
       this.sharedservice.notify('Médico actualizado', 'success');
+      this.getMedicals();
     } catch (error) {
       this.sharedservice.notify(
         this.errorHandlerService.handleError(error, 'Actualizando medicos:'),

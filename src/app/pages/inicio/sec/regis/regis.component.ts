@@ -8,6 +8,7 @@ import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DataService } from 'src/app/services/data.service';
 import { SharedService } from 'src/app/services/shared.service';
+import { UsuariosService } from 'src/app/services/usuarios.service';
 
 @Component({
   selector: 'app-regis',
@@ -59,10 +60,10 @@ export class RegisComponent {
   });
 
   public forgotPassForm = new FormGroup({
-    email: new FormControl('', [
+    dni: new FormControl('', [
       Validators.required,
-      Validators.email,
-      Validators.pattern('[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,63}$'),
+      Validators.pattern('^[a-zA-Z0-9]+$'),
+      Validators.minLength(2),
     ]),
   });
 
@@ -86,10 +87,10 @@ export class RegisComponent {
 
   constructor(
     public dataServ: DataService,
-    public authServ: AuthService,
     private readonly dialogo: MatDialog,
-    private readonly apiService: ApiService,
-    private readonly sharedService: SharedService
+    private readonly sharedService: SharedService,
+    private readonly userService: UsuariosService,
+    private readonly authService: AuthService
   ) {}
 
   onLogin(formData: any) {
@@ -144,61 +145,41 @@ export class RegisComponent {
   }
 
   private async Register() {
-    // try {
-    //   var user = {
-    //     Password: this.registerForm.value.password,
-    //     Role: '',
-    //     DNI: this.registerForm.value.dni,
-    //     Name: this.registerForm.value.name,
-    //     LastName: this.registerForm.value.lastName,
-    //     Email: this.registerForm.value.email,
-    //     Phone: this.registerForm.value.phone,
-    //     BornDate: this.registerForm.value.bornDate,
-    //     Sex: this.registerForm.value.sex,
-    //     ChangePass: false,
-    //     IsActive: true,
-    //     Address: this.registerForm.value.address,
-    //     CountryId: this.dataServ.getCountryId(),
-    //     pharmacyId: 0,
-    //   };
-    //   user = this.sharedService.addIpDevice(user);
-    //   var dataUser: any = await this.apiService.post('User/RegisterUser', user);
-    //   var token = dataUser.token;
-    //   localStorage.setItem('LuveckUserToken', token);
-    //   this.authServ.decodeToken(token, false);
-    //   this.sectionEvent.emit('inicio');
-    // } catch (error: any) {
-    //   if (error.error && error.error.includes('is already taken')) {
-    //     this.sharedService.notify(
-    //       `El DNI ${this.registerForm.value.dni} ya esta siendo usado.`,
-    //       'error'
-    //     );
-    //   } else {
-    //     this.sharedService.notify(
-    //       `Se presento un error, por favor contactar a soporte.`,
-    //       'error'
-    //     );
-    //   }
-    // } finally {
-    //   this.dataServ.progress = false;
-    // }
+    try {
+      var user = {
+        Password: this.registerForm.value.password,
+        Role: '',
+        DNI: this.registerForm.value.dni,
+        Name: this.registerForm.value.name,
+        LastName: this.registerForm.value.lastName,
+        Email: this.registerForm.value.email,
+        Phone: this.registerForm.value.phone,
+        BornDate: this.registerForm.value.bornDate,
+        Sex: this.registerForm.value.sex,
+        IsActive: true,
+        Address: this.registerForm.value.address,
+        CountryId: this.dataServ.getCountryId(),
+        pharmacyId: 0,
+      };
+      await this.userService.registerUser(user);
+      this.sharedService.notify(
+        `Usuario registrado exitosamente. Por favor iniciar sesion..`,
+        'success'
+      );
+      this.dataServ.goTo('/authentication/login');
+    } catch (error) {
+      this.sharedService.notify(
+        `Se presento un error, por favor contactar a soporte.`,
+        'error'
+      );
+    } finally {
+      this.dataServ.progress = false;
+    }
   }
 
-  onForgot(formData: any) {
+  async onForgot(formData: any) {
     if (!this.dataServ.progress) {
-      this.dataServ.progress = true;
-      this.authServ
-        .forgotPass(formData.email)
-        .then((res: any) => {
-          this.dataServ.progress = false;
-          this.dataServ.fir(`${res.messages}`, 'success');
-          this.resetEmailSendMsg = res.messages;
-        })
-        .catch((error: any) => {
-          this.dataServ.progress = false;
-          let msgError = error.error.messages;
-          this.dataServ.fir(`${msgError}`, 'error');
-        });
+      await this.authService.forgotPassword(formData.dni);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { MedicosService } from 'src/app/services/medicos.service';
 import { InventarioService } from 'src/app/services/inventario.service';
@@ -9,13 +9,14 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ApiService } from 'src/app/services/api.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { SessionService } from 'src/app/services/session.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-panel-control',
   templateUrl: './panel-control.page.html',
   styleUrls: ['./panel-control.page.scss'],
 })
-export class PanelControlPage implements AfterViewInit {
+export class PanelControlPage implements OnInit {
   counterVentas?: number;
   counterProductos?: number;
   counterRules?: number;
@@ -26,6 +27,7 @@ export class PanelControlPage implements AfterViewInit {
   counterDepartamentos?: number;
   counterCiudades?: number;
   counterCadena?: number;
+  countryId = '';
 
   constructor(
     private readonly sharedService: SharedService,
@@ -36,24 +38,29 @@ export class PanelControlPage implements AfterViewInit {
     private readonly rulesServ: RulesService,
     private readonly ventasServ: VentasService,
     private readonly authService: AuthService,
-    private readonly sessionService: SessionService
+    private readonly sessionService: SessionService,
+    private readonly countryService: CountryService
   ) {}
+
+  ngOnInit(): void {
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+      setTimeout(() => {
+        if (
+          this.authService.checkTokenDate(this.sessionService.getExpToken()) &&
+          this.sessionService.getToken()
+        ) {
+          this.getData();
+        }
+      }, 500);
+    });
+  }
 
   viewInfoPanel(module: string) {
     if (this.authService.hasPermission(module)) {
       return true;
     }
     return false;
-  }
-  ngAfterViewInit(): void {
-    setTimeout(() => {
-      if (
-        this.authService.checkTokenDate(this.sessionService.getExpToken()) &&
-        this.sessionService.getToken()
-      ) {
-        this.getData();
-      }
-    }, 500);
   }
 
   public async getData() {
@@ -73,31 +80,33 @@ export class PanelControlPage implements AfterViewInit {
     }
 
     if (this.authService.hasPermission('Productos')) {
-      await this.inveServ.setProducts();
+      await this.inveServ.setProductsByCountry(this.countryId);
       this.counterProductos = this.inveServ.getProducts().length;
     }
 
     if (this.authService.hasPermission('Farmacias')) {
-      await this.farmaServ.setPharmacies();
+      await this.farmaServ.setPharmaciesBycountry(this.countryId);
       this.counterFarmacias = this.farmaServ.getPharmacies().length;
     }
 
     if (this.authService.hasPermission('Medicos')) {
-      await this.medicServ.setMedicos();
+      await this.medicServ.setMedicalByCountry(this.countryId);
       this.counterMedicos = this.medicServ.getMedicos().length;
     }
 
     if (this.authService.hasPermission('Usuarios')) {
-      await this.usersServ.setUsers();
-      this.counterUsers = this.usersServ.getUsersList().length;
+      await this.usersServ.setUserComboByCountry(this.countryId);
+      this.counterUsers = this.usersServ.getUserCombo().length;
     }
 
     if (this.authService.hasPermission('Reglas-Canje')) {
-      await this.rulesServ.setRules();
+      await this.rulesServ.setProductsRuleByCountry(this.countryId);
       this.counterRules = this.rulesServ.getRules().length;
     }
     if (this.authService.hasPermission('Registro-ventas')) {
-      await this.ventasServ.setPurchase();
+      await this.ventasServ.setProductsPurchasesFiltered({
+        countryId: this.countryId,
+      });
       this.counterVentas = this.ventasServ.getPurchases().length;
     }
   }

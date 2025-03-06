@@ -87,16 +87,6 @@
         />
       </mat-form-field>
       <mat-form-field appearance="fill">
-        <mat-label>Pais</mat-label>
-        <mat-select formControlName="countryId">
-          <div *ngFor="let country of countries">
-            <mat-option *ngIf="country.isActive" [value]="country.id">
-              {{country.name}}
-            </mat-option>
-          </div>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="fill">
         <mat-label>Categoría</mat-label>
         <mat-select
           formControlName="idCategory"
@@ -202,7 +192,10 @@
   </div>
 
   <div class="listImgs" *ngIf="currentProdId != 'new'">
-    <div class="imgItem" *ngFor="let img of currentProd?.productImages ; index as i">
+    <div
+      class="imgItem"
+      *ngFor="let img of currentProd?.productImages ; index as i"
+    >
       <button mat-mini-fab color="warn" (click)="deleteOneFile(img.image, i)">
         <mat-icon>delete</mat-icon>
       </button>

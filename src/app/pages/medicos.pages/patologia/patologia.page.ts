@@ -30,6 +30,7 @@ export class PatologiaPage implements OnInit {
     ],
   };
   public patologyList: any[] = [];
+  public filteredPatology: any[] = [];
   isLoadingResults: boolean = true;
 
   constructor(
@@ -49,6 +50,7 @@ export class PatologiaPage implements OnInit {
     this.isLoadingResults = true;
     await this.medicServ.setPatology();
     this.patologyList = this.medicServ.getPatology();
+    this.filteredPatology = [...this.patologyList];
     this.isLoadingResults = false;
   }
 
@@ -118,5 +120,15 @@ export class PatologiaPage implements OnInit {
     } finally {
       this.isLoadingResults = false;
     }
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value
+      .toLowerCase()
+      .trim();
+
+    this.patologyList = this.filteredPatology.filter((x) =>
+      x.name.toLowerCase().includes(filterValue)
+    );
   }
 }

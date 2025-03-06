@@ -19,12 +19,10 @@ export class DetalleRole implements OnInit {
   isLoadingResults!: boolean;
 
   constructor(
-    public usuariosServ: UsuariosService,
     public dialogo: MatDialogRef<DetalleRole>,
-    private readonly apiService: ApiService,
     private readonly sharedService: SharedService,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private readonly errorHandlerService: ErrorHandlerService
+    private readonly usuariosServ: UsuariosService
   ) {}
 
   ngOnInit(): void {
@@ -34,21 +32,14 @@ export class DetalleRole implements OnInit {
   }
 
   private async getRole() {
-    try {
-      this.isLoadingResults = true;
-      this.role = await this.apiService.get(`Role?id=${this.data.roleId}`);
-      this.name = this.role.name;
-    } catch (error) {
-      this.sharedService.notify(
-        this.errorHandlerService.handleError(error, 'Consultando roles:'),
-        'error'
-      );
-    } finally {
-      this.isLoadingResults = false;
-    }
+    this.isLoadingResults = true;
+    this.role = await this.usuariosServ.getRoleById(this.data.roleId);
+    this.name = this.role.name;
+    this.isLoadingResults = false;
   }
 
   save() {
+    this.isLoadingResults = true;
     if (this.data.roleId) {
       this.updateRole(this.name, this.data.roleId);
     } else {
@@ -58,30 +49,12 @@ export class DetalleRole implements OnInit {
   }
 
   private async addRole(role: string) {
-    try {
-      await this.apiService.post(`Role?name=${role}`, {});
-      this.sharedService.notify('Role registrado', 'success');
-    } catch (error) {
-      this.sharedService.notify(
-        this.errorHandlerService.handleError(error, 'Creando roels:'),
-        'error'
-      );
-    } finally {
-      this.isLoadingResults = false;
-    }
+    await this.usuariosServ.addRole(role);
+    this.isLoadingResults = false;
   }
 
   private async updateRole(role: string, id: string) {
-    try {
-      await this.apiService.put(`Role?id=${id}&name=${role}`, {});
-      this.sharedService.notify('Role actualizado', 'success');
-    } catch (error) {
-      this.sharedService.notify(
-        this.errorHandlerService.handleError(error, 'Actualizando roles:'),
-        'error'
-      );
-    } finally {
-      this.isLoadingResults = false;
-    }
+    await this.usuariosServ.updateRole(role, id);
+    this.isLoadingResults = false;
   }
 }

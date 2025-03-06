@@ -34,10 +34,23 @@ export class RulesService {
     return this.rules;
   }
 
-  public async setProductsRuleByCountry(countryId: string) {
+  public async setProductsRuleByCountryLandingPage(countryId: string) {
     try {
       this.productsRuleByCountry = await this.apiService.get(
         `ProductChangeRule/GetProductsLandingByCountry/${countryId}`
+      );
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando productos:'),
+        'error'
+      );
+    }
+  }
+
+  public async setProductsRuleByCountry(countryId: string) {
+    try {
+      this.rules = await this.apiService.get(
+        `ProductChangeRule/GetByCountryAsync/${countryId}`
       );
     } catch (error) {
       this.sharedService.notify(

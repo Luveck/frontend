@@ -9,6 +9,7 @@ import { ModalReportComponent } from 'src/app/components/modal-report/modal-repo
 import { SharedService } from 'src/app/services/shared.service';
 import { ApiService } from 'src/app/services/api.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-reglas',
@@ -33,21 +34,26 @@ export class ReglasPage implements OnInit {
   isLoadingResults: boolean = true;
   filterRules: Rule[] = [];
   public rules: any[] = [];
+  public countryId = '';
 
   constructor(
     private readonly dialog: MatDialog,
     private readonly rulesServ: RulesService,
     private readonly sharedService: SharedService,
     private readonly apiService: ApiService,
-    private readonly errorHandlerService: ErrorHandlerService
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly countryService: CountryService
   ) {}
 
   ngOnInit(): void {
-    this.getRules();
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+      this.getRules();
+    });
   }
 
   private async getRules() {
-    await this.rulesServ.setRules();
+    await this.rulesServ.setProductsRuleByCountry(this.countryId);
     this.filterRules = this.rulesServ.getRules();
     this.rules = this.rulesServ.getRules();
     this.isLoadingResults = false;

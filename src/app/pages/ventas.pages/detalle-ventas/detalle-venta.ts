@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatSelect as MatSelect } from '@angular/material/select';
+import { MatSelect } from '@angular/material/select';
 import { ReplaySubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -11,11 +11,12 @@ import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { PharmacySearchComponent } from '../pharmacy-search/pharmacy-search.component';
-import { ApiService } from 'src/app/services/api.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { FileValidator } from './FileValidator';
 import { SessionService } from 'src/app/services/session.service';
+import { PharmacySearchComponent } from 'src/app/components/pharmacy-search/pharmacy-search.component';
+import { DetalleVentaConfig } from './detalle-venta.config';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-detalle-venta',
@@ -53,20 +54,21 @@ export class DetalleVenta implements OnInit, OnDestroy {
   isLoadingResults!: boolean;
   files: Array<{
     base64: string;
-    extension: string;
+    extension: string | undefined;
     name: string;
     type: string;
   }> = [];
   isOverDrop = false;
   private countryId = '';
+  public config = DetalleVentaConfig;
 
   public ventaForm = new FormGroup({
     pharmacyId: new FormControl('', Validators.required),
     noPurchase: new FormControl('', Validators.required),
     observation: new FormControl(),
+    userCtrl: new FormControl('', Validators.required),
   });
 
-  public userCtrl: FormControl<any> = new FormControl<any>(null);
   public userFilterCtrl: FormControl<string | null> = new FormControl<
     string | null
   >('');
@@ -83,15 +85,17 @@ export class DetalleVenta implements OnInit, OnDestroy {
     private readonly inveServ: InventarioService,
     private readonly farmaServ: FarmaciasService,
     private readonly usersServ: UsuariosService,
-    private readonly apiService: ApiService,
     private readonly sharedService: SharedService,
     private readonly validator: FileValidator,
-    public readonly sessionService: SessionService
+    public readonly sessionService: SessionService,
+    private readonly countryService: CountryService
   ) {}
 
   ngOnInit(): void {
-    this.countryId = this.sessionService.getUserData().countryId;
-    this.loadConfig();
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+      this.loadConfig();
+    });
 
     this.userFilterCtrl.valueChanges
       .pipe(takeUntil(this._onDestroy))
@@ -120,37 +124,20 @@ export class DetalleVenta implements OnInit, OnDestroy {
     }
   }
 
-  public onSelectFile(event: any) {
-    for (const file of event.target.files) {
-      if (this.validator.validateType(file.type)) {
-        const reader = new FileReader();
-        reader.onload = (e: any) => {
-          const base64String = e.target.result.split(',')[1];
-          const extension = file.name.split('.').pop();
-          this.files.push({
-            base64: base64String,
-            extension: extension,
-            name: file.name,
-            type: file.type,
-          });
-        };
-        reader.readAsDataURL(file);
-      }
-    }
-  }
   private async loadConfig() {
+    this.isLoadingResults = true;
     try {
-      await this.farmaServ.setPharmaciesBycountry(this.countryId);
-      await this.inveServ.setProductsByCountry(this.countryId);
-      await this.usersServ.setUserComboByCountry(this.countryId);
+      this.farmacias = await this.farmaServ.setPharmaciesBycountry(
+        this.countryId
+      );
+      this.productos = await this.inveServ.setProductsByCountry(this.countryId);
+      this.usuarios = await this.usersServ.setUserComboByCountry(
+        this.countryId
+      );
     } catch (error) {
       this.sharedService.notify('Error consultando la informacion', 'error');
     } finally {
       this.isLoadingResults = false;
-      this.farmacias = this.farmaServ.getPharmacies();
-      this.productos = this.inveServ.getProducts();
-      this.usuarios = this.usersServ.getUserCombo();
-      this.userCtrl.setValue(this.usuarios[1]);
       this.filteredUsers.next(this.usuarios.slice());
       if (this.sessionService.getUserData().pharmacyId != '0') {
         this.initFarm(this.sessionService.getUserData().pharmacyId);
@@ -189,8 +176,7 @@ export class DetalleVenta implements OnInit, OnDestroy {
 
   onUserSelect(event: any) {
     const userId = event.value;
-    this.selectedUser =
-      this.usuarios.find((user) => user.userId === userId) || null;
+    this.selectedUser = event.value;
   }
 
   protected filterUsers() {
@@ -212,25 +198,32 @@ export class DetalleVenta implements OnInit, OnDestroy {
       pharmacyId: this.currentVenta.pharmacyId,
       noPurchase: this.currentVenta.noPurchase,
       observation: this.currentVenta.observation,
+      userCtrl: this.currentVenta.userId,
     });
+
+    this.files.push({ name: '', base64: '', extension: '', type: '' });
 
     this.currentVenta.productPurchases.forEach((element: any) => {
       this.productsOnCurrentVenta.push({
         productId: element.productId,
         Quantity: element.quantity,
+        state: element.state,
+        observation: element.observation,
       });
     });
 
-    const selectedUser = this.usuarios.find(
-      (c) => c.id === this.currentVenta.userId
-    );
+    this.selectedUser =
+      this.usuarios.find((user) => user.userId === this.currentVenta.userId) ||
+      null;
 
-    if (selectedUser) {
-      this.userCtrl.setValue(selectedUser.id);
-      this.userFilterCtrl.setValue(selectedUser.userName);
+    if (this.selectedUser) {
+      this.ventaForm.patchValue({ userCtrl: this.selectedUser });
     }
   }
 
+  compareUsers(user1: any, user2: any): boolean {
+    return user1 && user2 ? user1.userId === user2.userId : user1 === user2;
+  }
   resetForm() {
     this.ventaForm.reset();
   }
@@ -248,13 +241,23 @@ export class DetalleVenta implements OnInit, OnDestroy {
       return;
     }
 
-    if (this.currentVentaId) {
-      console.log('Editar factura');
+    if (this.currentVenta) {
+      this.updatePurchase();
     } else {
       this.addPurchase();
     }
   }
-
+  private async updatePurchase() {
+    this.isLoadingResults = true;
+    let purchase = this.createPurchase();
+    purchase = {
+      ...purchase,
+      isActive: this.currentVenta.isActive,
+      id: this.currentVenta.id,
+    };
+    await this.ventasServ.updatePurchase(purchase);
+    this.isLoadingResults = false;
+  }
   private createPurchase() {
     let products: any = [];
 
@@ -265,9 +268,10 @@ export class DetalleVenta implements OnInit, OnDestroy {
       });
     });
 
+    let user: any = this.ventaForm.value.userCtrl;
     let purchase: any = {
       pharmacyId: this.ventaForm.value.pharmacyId,
-      userId: this.selectedUser.userId,
+      userId: user.userId,
       noPurchase: this.ventaForm.value.noPurchase,
       purchaseReviewed: false,
       dateShiped: new Date().toISOString(),
@@ -286,7 +290,7 @@ export class DetalleVenta implements OnInit, OnDestroy {
       ...purchase,
       isActive: true,
     };
-    this.ventasServ.addPurchase(purchase);
+    await this.ventasServ.addPurchase(purchase);
     this.isLoadingResults = false;
   }
 
@@ -338,5 +342,48 @@ export class DetalleVenta implements OnInit, OnDestroy {
 
   seePurchase() {
     window.open(this.currentVenta.urlPurchase, '_blank');
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isOverDrop = true;
+  }
+
+  onDragLeave() {
+    this.isOverDrop = false;
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.isOverDrop = false;
+
+    if (event.dataTransfer?.files.length) {
+      this.handleFiles(event.dataTransfer.files);
+    }
+  }
+
+  onSelectFile(event: any) {
+    this.handleFiles(event.target.files);
+  }
+
+  private handleFiles(files: FileList) {
+    for (const file of Array.from(files)) {
+      if (this.validator.validateType(file.type)) {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          const base64String = e.target.result.split(',')[1];
+          const extension = file.name.split('.').pop();
+          this.files.push({
+            base64: base64String,
+            extension: extension,
+            name: file.name,
+            type: file.type,
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    }
   }
 }

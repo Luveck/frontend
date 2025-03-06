@@ -13,6 +13,7 @@ import { DataService } from 'src/app/services/data.service';
 export class ResetPasswordPage implements OnInit {
   email: string = '';
   code: string = '';
+  dni: string = '';
 
   public resetPassForm = new FormGroup({
     newPassword: new FormControl('', [
@@ -43,14 +44,15 @@ export class ResetPasswordPage implements OnInit {
 
   constructor(
     public dataServ: DataService,
-    private _authServ: AuthService,
-    private route: ActivatedRoute
+    private readonly _authServ: AuthService,
+    private readonly route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params: any) => {
       this.email = params.mail;
       this.code = params.id;
+      this.dni = params.dni;
     });
   }
 
@@ -66,27 +68,15 @@ export class ResetPasswordPage implements OnInit {
       return;
     }
 
-    // if(!this.dataServ.progress){
-    //   this.dataServ.progress = true
-    //   let formData:any = this.resetPassForm.value
-    //   formData.email = this.email
-    //   formData.code = this.code
-    //   console.log(formData)
-    //   this._authServ.resetPass(formData)
-    //     .then((res:any) => {
-    //       console.log(res)
-    //       this.dataServ.progress = false
-    //       this._authServ.userToken = res.result.token
-    //       localStorage.setItem('LuveckUserToken', this._authServ.userToken)
-    //       this.dataServ.fir('Su contraseña se ha cambiado correctamente.', 'success')
-    //       this._authServ.decodeToken(this._authServ.userToken)
-    //     })
-    //     .catch ((error:any)=>{
-    //       this.dataServ.progress = false
-    //       console.log(error)
-    //       let msgError = error.error.messages
-    //       this.dataServ.fir(`${msgError}`, 'error')
-    //     })
-    // }
+    const response = this._authServ.resetPassword({
+      email: this.email,
+      token: this.code,
+      dni: this.dni,
+      password: this.resetPassForm.get('newPassword')?.value,
+    });
+
+    if (response != null) {
+      this.dataServ.goTo('/authentication/login');
+    }
   }
 }

@@ -6,6 +6,7 @@ import { Cadena } from 'src/app/interfaces/models';
 import { ApiService } from 'src/app/services/api.service';
 import { SharedService } from 'src/app/services/shared.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-detalle-cadena',
@@ -15,6 +16,7 @@ import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 export class DetalleCadena implements OnInit {
   currentCadena!: Cadena | any;
   isLoadingResults!: boolean;
+  private countryId: string = '';
 
   public cadenaForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -25,13 +27,17 @@ export class DetalleCadena implements OnInit {
     private readonly sharedService: SharedService,
     private readonly apiService: ApiService,
     public dialogo: MatDialogRef<DetalleCadena>,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private readonly countryService: CountryService
   ) {}
 
   ngOnInit(): void {
     if (this.data.id) {
       this.getChain();
     }
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+    });
   }
 
   private async getChain() {
@@ -62,6 +68,7 @@ export class DetalleCadena implements OnInit {
   save() {
     let chain: any = {
       name: this.cadenaForm.value.name,
+      countryId: this.countryId,
     };
     if (this.data.id) {
       chain = {
