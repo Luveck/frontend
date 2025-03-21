@@ -29,7 +29,7 @@
         <mat-label>Farmacia</mat-label>
         <mat-select
           formControlName="pharmacyId"
-          [disabled]="sessionService.getUserData().pharmacyId != '0'"
+          [disabled]="sessionService.getUserData().pharmacyId != '0' || isVentaDisabled "
         >
           <div *ngFor="let farma of farmacias">
             <mat-option *ngIf="farma.isActive" [value]="farma.id">
@@ -41,7 +41,7 @@
           mat-icon-button
           matSuffix
           (click)="filterFharmacy($event)"
-          [disabled]="sessionService.getUserData().pharmacyId != '0'"
+          [disabled]="sessionService.getUserData().pharmacyId != '0' || isVentaDisabled"
         >
           <mat-icon>search</mat-icon>
         </button>
@@ -51,6 +51,7 @@
         <mat-label>No. de factura</mat-label>
         <input
           matInput
+          [disabled]="isVentaDisabled"
           placeholder="No. de factura"
           formControlName="noPurchase"
         />
@@ -63,6 +64,7 @@
           #singleSelect
           (selectionChange)="onUserSelect($event)"
           [compareWith]="compareUsers"
+          [disabled]="isVentaDisabled"
         >
           <mat-option>
             <ngx-mat-select-search
@@ -83,6 +85,7 @@
         <mat-label>Observación</mat-label>
         <textarea
           matInput
+          [disabled]="isVentaDisabled"
           placeholder="Descripción de la factura"
           formControlName="observation"
           rows="2"
@@ -90,7 +93,7 @@
         ></textarea>
       </mat-form-field>
 
-      <div class="contentImgs" *ngIf="!currentVenta">
+      <div class="contentImgs" *ngIf="!isVentaDisabled">
         <mat-card class="drop">
           <mat-card-header>
             <mat-card-title>Factura</mat-card-title>
@@ -129,7 +132,7 @@
           </mat-card-content>
         </mat-card>
       </div>
-      <div *ngIf="currentVenta">
+      <div *ngIf="isVentaDisabled">
         <button mat-raised-button color="accent" (click)="seePurchase()">
           Ver factura
         </button>
@@ -154,6 +157,7 @@
         color="warn"
         (click)="eliminarProd(i)"
         matTooltip="Eliminar producto"
+        [disabled]="isVentaDisabled"
       >
         <mat-icon>close</mat-icon>
       </button>
@@ -162,7 +166,7 @@
         <mat-select
           [(ngModel)]="productsOnCurrentVenta[i].productId"
           (selectionChange)="onProductChange(i)"
-          [disabled]="productsOnCurrentVenta[i].state == 'Rejected' || productsOnCurrentVenta[i].state == 'Exchanged'"
+          [disabled]="productsOnCurrentVenta[i].state == 'Rejected' || productsOnCurrentVenta[i].state == 'Exchanged' || isVentaDisabled"
         >
           <div *ngFor="let prod of availableProducts(i)">
             <mat-option *ngIf="prod.isActive" [value]="prod.id">
@@ -182,7 +186,7 @@
           (ngModelChange)="onQuantityChange(i)"
           [max]="20"
           [class.invalid]="productsOnCurrentVenta[i].error"
-          [disabled]="productsOnCurrentVenta[i].state == 'Rejected' || productsOnCurrentVenta[i].state == 'Exchanged'"
+          [disabled]="productsOnCurrentVenta[i].state == 'Rejected' || productsOnCurrentVenta[i].state == 'Exchanged' || currentVenta"
         />
 
         <div *ngIf="productsOnCurrentVenta[i].error" class="error-message">
@@ -205,7 +209,7 @@
       </mat-form-field>
       <mat-form-field
         appearance="fill"
-        *ngIf="currentVenta"
+        *ngIf="isVentaDisabled"
         style="display: none"
       >
         <mat-label>Observaciones</mat-label>
@@ -220,6 +224,7 @@
     </div>
 
     <button
+      *ngIf="!isVentaDisabled"
       mat-raised-button
       color="accent"
       (click)="addProd()"
@@ -233,6 +238,7 @@
 
   <div class="btns">
     <button
+      *ngIf="!isVentaDisabled"
       mat-raised-button
       color="primary"
       [disabled]="ventaForm.invalid || files.length == 0 || !isProductsValid()"
@@ -240,7 +246,12 @@
     >
       Guardar <mat-icon>save</mat-icon>
     </button>
-    <button mat-raised-button color="warn" (click)="resetForm()">
+    <button
+      mat-raised-button
+      color="warn"
+      (click)="resetForm()"
+      *ngIf="!isVentaDisabled"
+    >
       Limpiar datos
     </button>
   </div>

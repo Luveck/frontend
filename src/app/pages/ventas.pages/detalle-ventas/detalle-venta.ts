@@ -193,6 +193,10 @@ export class DetalleVenta implements OnInit, OnDestroy {
     );
   }
 
+  get isVentaDisabled() {
+    return this.currentVenta;
+  }
+
   initValores() {
     this.ventaForm.patchValue({
       pharmacyId: this.currentVenta.pharmacyId,

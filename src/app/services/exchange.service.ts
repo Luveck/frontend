@@ -29,7 +29,7 @@ export class ExchangeService {
         this.errorHandlerService.handleError(error, 'Listando canjes:'),
         'error'
       );
-      return null;
+      return [];
     }
   }
 
@@ -56,7 +56,9 @@ export class ExchangeService {
 
   public async addExchange(data: any) {
     try {
-      return await this.apiService.post('Exchange/AddExchange', data);
+      const response = await this.apiService.post('Exchange/AddExchange', data);
+      this.sharedService.notify('Se creo el canje exitosamente', 'success');
+      return response;
     } catch (error) {
       this.sharedService.notify(
         this.errorHandlerService.handleError(

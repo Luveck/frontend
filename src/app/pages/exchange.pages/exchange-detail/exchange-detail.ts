@@ -9,7 +9,7 @@ import { VentasService } from 'src/app/services/ventas.service';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { PharmacySearchComponent } from '../../../components/pharmacy-search/pharmacy-search.component';
 import { ApiService } from 'src/app/services/api.service';
@@ -20,6 +20,7 @@ import { ExchangeDetialConfig } from './exchange-detail.config';
 import { Product } from 'src/app/entities/product.entity';
 import { ExchangeService } from 'src/app/services/exchange.service';
 import { CountryService } from 'src/app/services/country.service';
+import { ResponseService } from 'src/app/entities/response.entity';
 
 @Component({
   selector: 'app-exchange-detail',
@@ -89,7 +90,7 @@ export class ExchangeDetail implements OnInit, OnDestroy {
   protected _onDestroy = new Subject<void>();
 
   constructor(
-    private readonly route: ActivatedRoute,
+    private readonly route: Router,
     public dialog: MatDialog,
     private readonly ventasServ: VentasService,
     private readonly farmaServ: FarmaciasService,
@@ -254,9 +255,15 @@ export class ExchangeDetail implements OnInit, OnDestroy {
   private async addExchange() {
     this.isLoadingResults = true;
     let exchange = this.createExchange();
-    console.log(exchange);
-    await this.exchangeService.addExchange(exchange);
+    const response = (await this.exchangeService.addExchange(
+      exchange
+    )) as ResponseService;
+
     this.isLoadingResults = false;
+
+    if (response?.wasSuccessful) {
+      this.route.navigate(['admin/canjes/canjes']);
+    }
   }
   private createExchange() {
     return {

@@ -29,6 +29,7 @@ export class DetalleUsuario implements OnInit {
   isLoadingResults?: boolean;
   farmacias!: Farmacia[];
   public countries: Pais[] = [];
+  public showRole = true;
 
   public newUserForm = new FormGroup({
     dni: new FormControl('', [
@@ -73,6 +74,12 @@ export class DetalleUsuario implements OnInit {
     this.configuration();
     if (this.data.userDni) {
       this.getUser();
+    }
+
+    if (this.sessionService.getUserData().Role == UserRoles.PharmacyUser) {
+      this.newUserForm.get('role')?.clearValidators();
+      this.newUserForm.get('role')?.updateValueAndValidity();
+      this.showRole = false;
     }
   }
 
@@ -220,7 +227,9 @@ export class DetalleUsuario implements OnInit {
       sex: this.newUserForm.value.sex,
       BornDate: this.newUserForm.value.bornDate,
       Phone: this.newUserForm.value.phone,
-      Role: this.newUserForm.value.role,
+      Role: this.showRole
+        ? this.newUserForm.value.role
+        : UserRoles.PharmacyUser,
       Password: '',
       ConfirmPassword: '',
       CreatedAt: Date.now(),

@@ -55,6 +55,7 @@ export class UsuariosPage implements OnInit {
     private readonly countryService: CountryService
   ) {}
   ngOnInit(): void {
+    console.log(this.sessionService.getUserData().Role);
     this.countryService.countryId$.subscribe((country) => {
       this.countryId = country;
       this.getUsers();

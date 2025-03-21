@@ -79,7 +79,8 @@ export class ExchangePage implements OnInit {
     public readonly sessionService: SessionService,
     private readonly countryService: CountryService,
     private readonly exchangeService: ExchangeService,
-    private readonly pharamcyService: FarmaciasService
+    private readonly pharamcyService: FarmaciasService,
+    private readonly dialog: MatDialog
   ) {
     this.filter.pharmacyId =
       sessionService.getUserData().pharmacyId == '0'
@@ -122,9 +123,10 @@ export class ExchangePage implements OnInit {
     this.getExchanges();
   }
   private async getExchanges() {
-    await this.exchangeService.setExchangesFiltered(this.filter);
+    this.exchanges = await this.exchangeService.setExchangesFiltered(
+      this.filter
+    );
     this.isLoadingResults = false;
-    this.exchanges = this.exchangeService.getExchanges();
     this.filterExchanges = [...this.exchanges];
     this.dataSource.data = this.exchanges;
     this.dataSource.data = this.dataSource.data.sort((a) => {
@@ -161,8 +163,24 @@ export class ExchangePage implements OnInit {
   }
 
   revers(row: any) {
-    this.exchangeService.ReversExchangeAsync(row);
-    this.getExchanges();
+    this.dialog
+      .open(DialogConfComponent, {
+        data: `¿Está seguro de anular el canje?`,
+      })
+      .afterClosed()
+      .subscribe((confirmado: Boolean) => {
+        if (confirmado) {
+          this.reverseData(row);
+          this.getExchanges();
+        }
+      });
+  }
+
+  private async reverseData(row: any) {
+    const response = await this.exchangeService.ReversExchangeAsync(row);
+    if (response) {
+      this.getExchanges();
+    }
   }
 
   give(row: any) {
