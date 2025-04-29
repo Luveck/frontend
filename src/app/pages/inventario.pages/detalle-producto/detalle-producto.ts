@@ -269,7 +269,10 @@ export class DetalleProducto implements OnInit {
 
   deleteOneFile(nameFile: string, indexImgProd: number) {
     if (this.currentProd?.urlImgs.length == 1) {
-      // this._inveServ.notify('El registro del producto debe temer por lo menos una imágen.', 'info')
+      this.sharedService.notify(
+        'El registro del producto debe temer por lo menos una imágen.',
+        'info'
+      );
       return;
     }
 

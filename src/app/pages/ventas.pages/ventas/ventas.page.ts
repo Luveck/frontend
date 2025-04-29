@@ -23,6 +23,7 @@ import { CountryService } from 'src/app/services/country.service';
 import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { filter } from 'rxjs';
+import { UserRoles } from 'src/app/shared/enums/roles.enum';
 
 @Component({
   selector: 'app-ventas',
@@ -49,9 +50,9 @@ export class VentasPage implements AfterViewInit, OnInit {
   @ViewChild(MatSort, { static: true }) sort!: MatSort | null;
   displayedColumns: string[] = [
     'noPurchase',
-    'country',
+    'dniiUser',
+    'UserFullName',
     'namePharmacy',
-    'reviewed',
     'creationDate',
     'acctions',
   ];
@@ -73,8 +74,8 @@ export class VentasPage implements AfterViewInit, OnInit {
   constructor(
     private _liveAnnouncer: LiveAnnouncer,
     private _dataServ: DataService,
-    private _dialog: MatDialog,
 
+    private readonly dialog: MatDialog,
     private readonly ventasService: VentasService,
     private readonly sharedService: SharedService,
     private readonly sessionService: SessionService,
@@ -160,43 +161,51 @@ export class VentasPage implements AfterViewInit, OnInit {
     this._dataServ.goTo(`admin/ventas/venta-detalle/${noPurchase}/${buyer}`);
   }
 
-  chageState(row: Venta) {
-    const formData = {
-      pharmacyId: row.idPharmacy,
-      userId: row.userId,
-      noPurchase: row.noPurchase,
-    };
-    let msgDialog: string;
-    if (!row.reviewed) {
-      msgDialog = '¿Seguro de querer verificar esta venta?';
-    } else {
-      msgDialog = '¿Seguro de querer invalidar esta venta?';
-    }
-    this._dialog
+  revers(row: any) {
+    this.dialog
       .open(DialogConfComponent, {
-        data: msgDialog,
+        data: `¿Está seguro de anular la venta?`,
       })
       .afterClosed()
-      .subscribe((confirmado: boolean) => {
+      .subscribe((confirmado: Boolean) => {
         if (confirmado) {
-          // row.reviewed = !row.reviewed
-          // const res = this._ventasServ.checkVenta(formData, row.id, row.reviewed)
-          //   res?.subscribe(res => {
-          //     if(res){
-          //       this._ventasServ.notify('Venta validada', 'success')
-          //       this.isLoadingResults = true
-          //       this.getAllVentas()
-          //     }
-          //   }, (err => {
-          //     console.log(err)
-          //     this._ventasServ.notify('Ocurrio un error con el proceso.', 'error')
-          //   }))
+          this.cancelPurchase(row);
+          this.getPurchases();
         }
       });
   }
 
+  public async cancelPurchase(row: any) {
+    this.isLoadingResults = true;
+    await this.ventasService.cancelPurchase(row.id);
+    this.isLoadingResults = false;
+  }
+
+  public checkCancel(row: any) {
+    if (this.sessionService.getUserData().Role === UserRoles.Admin.toString()) {
+      return true;
+    }
+
+    if (row.state == 'Anulada') {
+      return false;
+    }
+    const dateShiped = new Date(row.dateShiped);
+    const dateToday = new Date();
+    const differenceInMillis = dateToday.getTime() - dateShiped.getTime();
+    const differenceInHours = differenceInMillis / (1000 * 60 * 60);
+    if (
+      this.sessionService.getUserData().Role ===
+        UserRoles.PharmacyUser.toString() &&
+      differenceInHours < 48
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
   generateReport() {
-    this._dialog.open(ModalReportComponent, {
+    this.dialog.open(ModalReportComponent, {
       disableClose: true,
       data: {
         title: 'Reporte General de Ventas',

@@ -55,7 +55,6 @@ export class UsuariosPage implements OnInit {
     private readonly countryService: CountryService
   ) {}
   ngOnInit(): void {
-    console.log(this.sessionService.getUserData().Role);
     this.countryService.countryId$.subscribe((country) => {
       this.countryId = country;
       this.getUsers();
@@ -75,9 +74,10 @@ export class UsuariosPage implements OnInit {
     } finally {
       this.isLoadingResults = false;
       if (this.sessionService.getUserData().Role !== UserRoles.Admin) {
-        this.dataSource.data = this.dataUsers.filter((x) => {
-          x.roles.includes(UserRoles.Cliente);
+        const data = this.dataUsers.filter((x) => {
+          return x.roles.includes(UserRoles.Cliente);
         });
+        this.dataSource.data = data;
       } else {
         this.dataSource.data = this.dataUsers;
       }

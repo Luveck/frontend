@@ -111,7 +111,7 @@ export class VentasService {
   public async setPurchasesFiltered(filter: any) {
     try {
       this.purchases = await this.apiService.post(
-        'Purchase/GetPurchaseFiltered',
+        'Purchase/GetPurchaseByFiltered',
         filter
       );
     } catch (error) {
@@ -120,6 +120,24 @@ export class VentasService {
           error,
           'Listando productos por farmacia:'
         ),
+        'error'
+      );
+    }
+  }
+
+  public async cancelPurchase(purchaseId: string) {
+    try {
+      await this.apiService.put(
+        `Purchase/CancelPurchase?purchase=${purchaseId}`,
+        purchaseId
+      );
+      this.sharedService.notify(
+        'Se ha anulado la factura correctamente.',
+        'success'
+      );
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Cancelando venta:'),
         'error'
       );
     }

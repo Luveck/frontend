@@ -227,9 +227,7 @@ export class DetalleUsuario implements OnInit {
       sex: this.newUserForm.value.sex,
       BornDate: this.newUserForm.value.bornDate,
       Phone: this.newUserForm.value.phone,
-      Role: this.showRole
-        ? this.newUserForm.value.role
-        : UserRoles.PharmacyUser,
+      Role: this.showRole ? this.newUserForm.value.role : UserRoles.Cliente,
       Password: '',
       ConfirmPassword: '',
       CreatedAt: Date.now(),

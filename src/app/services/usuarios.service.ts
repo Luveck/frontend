@@ -142,7 +142,7 @@ export class UsuariosService {
   public async setUsersByCountry(countryId: string) {
     try {
       this.usersList = await this.apiService.get(
-        'User/GetUsersRole/' + countryId
+        'User/GetUsersWithRole/' + countryId
       );
       return this.usersList;
     } catch (error) {
