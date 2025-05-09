@@ -1,0 +1,129 @@
+<main>
+  <h1>{{currentVenta ? config.labels.exist : config.labels.new }}</h1>
+  <div class="loading-shade" *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+  </div>
+
+  <app-breadcrumb [breadcrumb]="breadcrumb"></app-breadcrumb>
+
+  <div class="fm_header" *ngIf="currentVenta">
+    <section class="avatar">
+      <div class="datos">
+        <p>{{currentVenta?.noPurchase}}</p>
+        <div class="bots">
+          <span
+            class="chip"
+            [ngClass]="{'active': currentVenta?.purchaseReviewed == true, 'inactive': currentVenta?.purchaseReviewed == false}"
+          >
+            Estado: {{ currentVenta?.purchaseReviewed ? config.labels.verified :
+            config.labels.notVerified }}
+          </span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <form class="wrapForm" [formGroup]="ventaForm" autocomplete="off">
+    <div class="inputs">
+      <mat-form-field appearance="fill">
+        <mat-label>Farmacia</mat-label>
+        <mat-select
+          formControlName="pharmacyId"
+          [disabled]="sessionService.getUserData().pharmacyId != '0'"
+        >
+          <div *ngFor="let farma of farmacias">
+            <mat-option *ngIf="farma.isActive" [value]="farma.id">
+              {{farma.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+        <button mat-icon-button matSuffix (click)="filterFharmacy($event)">
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <mat-form-field appearance="fill">
+        <mat-label>Cliente</mat-label>
+        <mat-select
+          formControlName="userCtrl"
+          #singleSelect
+          (selectionChange)="onUserSelect($event)"
+          [compareWith]="compareUsers"
+        >
+          <mat-option>
+            <ngx-mat-select-search
+              [formControl]="userFilterCtrl"
+              placeholderLabel="Buscar por DNI"
+              noEntriesFoundLabel="'Registro no encontrado.'"
+            ></ngx-mat-select-search>
+          </mat-option>
+          <div *ngFor="let user of filteredUsers | async">
+            <mat-option *ngIf="user.isActive" [value]="user">
+              {{user.dni}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </form>
+
+  <div *ngIf="selectedUser" style="text-align: center">
+    <h3>Detalles de usuario:</h3>
+    <p>Nombre: {{ selectedUser.fullName }}</p>
+  </div>
+  <mat-divider></mat-divider>
+
+  <section class="wrapForm ver2" *ngIf="selectedUser">
+    <h2>{{config.labels.product}}</h2>
+    <div class="inputs ver2">
+      <mat-form-field appearance="fill">
+        <mat-label>{{config.labels.product}}</mat-label>
+        <mat-select #singleSelect (selectionChange)="onProductSelect($event)">
+          <mat-option>
+            <ngx-mat-select-search
+              [formControl]="productsFilter"
+              placeholderLabel="Buscar por nombre de producto"
+              noEntriesFoundLabel="'Registro no encontrado.'"
+            ></ngx-mat-select-search>
+          </mat-option>
+          <div *ngFor="let prod of filteredProduct | async">
+            <mat-option [value]="prod"> {{prod.productName}} </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" *ngIf="product">
+        <mat-label>Cantidad a canjear</mat-label>
+        <input matInput [value]="product.quantityToExchange" disabled="true" />
+      </mat-form-field>
+      <mat-form-field appearance="fill">
+        <mat-label>Cantidad</mat-label>
+        <input
+          matInput
+          type="number"
+          placeholder="Cantidad comprada"
+          [(ngModel)]="quantity"
+          [max]="5"
+        />
+        <div *ngIf="quantity > 5" class="error-message">
+          {{ config.labels.errorQuantity}}
+        </div>
+      </mat-form-field>
+    </div>
+  </section>
+
+  <mat-divider></mat-divider>
+
+  <div class="btns">
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="ventaForm.invalid || quantity == 0 || product == null || quantity > 5 || checkQuantity()"
+      (click)="save()"
+    >
+      {{config.labels.register}} <mat-icon>save</mat-icon>
+    </button>
+    <button mat-raised-button color="warn" (click)="resetForm()">
+      Limpiar datos
+    </button>
+  </div>
+</main>

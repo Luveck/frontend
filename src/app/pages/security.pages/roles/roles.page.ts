@@ -1,46 +1,116 @@
-import { Component, OnInit } from '@angular/core'
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
+import { Role } from 'src/app/interfaces/models';
 import { DataService } from 'src/app/services/data.service';
 import { UsuariosService } from 'src/app/services/usuarios.service';
+import { DetalleRole } from '../detalle-role/detalle-role';
+import { SharedService } from 'src/app/services/shared.service';
+import { ApiService } from 'src/app/services/api.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 @Component({
   selector: 'app-roles',
   templateUrl: './roles.page.html',
   styleUrls: ['./roles.page.scss'],
 })
-
 export class RolesPage implements OnInit {
-  name: string = ''
-  isLoadingResults:boolean = true;
+  public breadcrumb = {
+    links: [
+      {
+        name: 'Inicio',
+        isLink: true,
+        link: '/admin/home',
+      },
+      {
+        name: 'Gestión de Roles',
+        isLink: false,
+      },
+    ],
+  };
+
+  @Input('ELEMENT_DATA') ELEMENT_DATA!: Role[];
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort | null;
+  displayedColumns: string[] = ['name', 'state', 'acctions'];
+  dataSource = new MatTableDataSource<Role>(this.ELEMENT_DATA);
+  isLoadingResults: boolean = true;
 
   constructor(
-    private _dataServ:DataService,
-    public usuariosServ:UsuariosService
-  ){}
-
+    private readonly _dataServ: DataService,
+    private readonly _dialog: MatDialog,
+    public readonly usuariosServ: UsuariosService,
+    private readonly sharedService: SharedService,
+    private readonly apiService: ApiService,
+    private readonly errorHandlerService: ErrorHandlerService
+  ) {}
   ngOnInit(): void {
-    this.isLoadingResults = true
-    this.usuariosServ.getAllRoles()?.subscribe((res:any) => {
-      console.log(res)
-      this.isLoadingResults = false
-      this.usuariosServ.localRoles = res.result
-    }, (error)=>{
-      this.isLoadingResults = false
-      console.log(error)
-      let msgError = error.error.messages
-      this._dataServ.fir(`${msgError}`, 'error')
-    })
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+    this.getRoles();
   }
 
-  on(name:string){
-    this.name = name
+  chageState(row: any) {
+    let msgDialog: string = '¿Seguro de querer eliminar el role?';
+    this._dialog
+      .open(DialogConfComponent, {
+        data: msgDialog,
+      })
+      .afterClosed()
+      .subscribe((confirmado: boolean) => {
+        if (confirmado) {
+          this.deleteRole(row.id);
+        }
+      });
   }
 
-  save(){
-    let cant = this.usuariosServ.localRoles.length
-    this.usuariosServ.localRoles.push({
-      id: cant + 1,
-      name: this.name
-    })
-    this.usuariosServ.notify('Registro actualizado', 'success')
+  private async deleteRole(role: any) {
+    try {
+      await this.apiService.delete(`Role?id=${role}`);
+      this.sharedService.notify('Role eliminado.', 'success');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Borrar role:'),
+        'error'
+      );
+    } finally {
+      this.isLoadingResults = false;
+      this.getRoles();
+    }
+  }
+  private async getRoles() {
+    this.isLoadingResults = true;
+    await this.usuariosServ.setRoles();
+    this.dataSource.data = this.usuariosServ.getRoles();
+    this.isLoadingResults = false;
+  }
+
+  on(id?: string) {
+    const config = {
+      data: {
+        title: id ? 'Editar Role' : 'Agregar Role',
+        roleId: id,
+      },
+    };
+    this._dialog
+      .open(DetalleRole, config)
+      .afterClosed()
+      .subscribe((confirm: boolean) => {
+        if (confirm) {
+          this.getRoles();
+        }
+      });
+  }
+
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
   }
 }

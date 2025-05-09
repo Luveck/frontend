@@ -1,68 +1,73 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core'
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
 import { Departamento } from 'src/app/interfaces/models';
-import { ZonasService } from 'src/app/services/zonas.service';
 import { Detalledepartamento } from '../detalle-departamento/detalle-departamento';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
+import { SharedService } from 'src/app/services/shared.service';
+import { ApiService } from 'src/app/services/api.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 @Component({
   selector: 'app-departamentos',
   templateUrl: './departamentos.page.html',
   styleUrls: ['./departamentos.page.scss'],
 })
-
-export class DepartamentosPage implements AfterViewInit {
+export class DepartamentosPage implements OnInit {
   public breadcrumb = {
     links: [
       {
         name: 'Inicio',
         isLink: true,
-        link: '/admin/home'
+        link: '/admin/home',
       },
       {
         name: 'Gestión de Departamentos',
         isLink: false,
-      }
-    ]
-  }
+      },
+    ],
+  };
 
-  @Input('ELEMENT_DATA')  ELEMENT_DATA!:Departamento[];
-  @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns:string[] = ['name', 'countryName', 'countryCode', 'status', 'creationDate', 'acctions'];
+  @Input('ELEMENT_DATA') ELEMENT_DATA!: Departamento[];
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort | null;
+  displayedColumns: string[] = [
+    'name',
+    'countryName',
+    'countryCode',
+    'status',
+    'acctions',
+  ];
   dataSource = new MatTableDataSource<Departamento>(this.ELEMENT_DATA);
 
-  isLoadingResults:boolean = true
+  isLoadingResults: boolean = true;
 
   constructor(
-    private _liveAnnouncer: LiveAnnouncer,
-    private _dialog: MatDialog,
-    private _zonasServ:ZonasService,
-  ){}
+    private readonly _liveAnnouncer: LiveAnnouncer,
+    private readonly _dialog: MatDialog,
+    private readonly sharedService: SharedService,
+    private readonly apiService: ApiService,
+    private readonly errorHandlerService: ErrorHandlerService
+  ) {}
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator
+  ngOnInit(): void {
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.getAllDepartamentos()
+    this.dataSource.data = this.sharedService.getDepartmentList();
+    if (this.sharedService.getDepartmentList().length == 0)
+      this.getDepartments();
+    this.isLoadingResults = false;
   }
 
-  getAllDepartamentos() {
-    const resp = this._zonasServ.getDepartamentos()
-    resp?.subscribe(departamentos => {
-      this.dataSource.data = departamentos.result as Departamento[]
-      this._zonasServ.listDepartamentos = departamentos.result
-      this.isLoadingResults = false
-      console.log(this.dataSource.data)
-    }, (err => {
-      this.isLoadingResults = false
-      console.log(err)
-    }))
+  public async getDepartments() {
+    await this.sharedService.setDepartments();
+    this.dataSource.data = this.sharedService.getDepartmentList();
+    this.isLoadingResults = false;
   }
 
   applyFilter(event: Event) {
@@ -82,63 +87,75 @@ export class DepartamentosPage implements AfterViewInit {
     }
   }
 
-  on(id?:string){
+  on(id?: string) {
     const config = {
       data: {
-        title: id ?'Editar Departamento' :'Agregar Departamento',
-        departamentoId: id
-      }
-    }
-    this._dialog.open(Detalledepartamento, config)
-    .afterClosed()
-    .subscribe((confirm:boolean) => {
-      if(confirm){
-        this.isLoadingResults = true
-        this.getAllDepartamentos()
-      }
-    })
+        title: id ? 'Editar Departamento' : 'Agregar Departamento',
+        departamentoId: id,
+      },
+    };
+    this._dialog
+      .open(Detalledepartamento, config)
+      .afterClosed()
+      .subscribe((confirm: boolean) => {
+        if (confirm) {
+          this.isLoadingResults = true;
+          this.getDepartments();
+        }
+      });
   }
 
-  chageState(row:Departamento){
-    const formData = {
-      "name": row.name,
-      "idCountry": row.countryId
+  chageState(row: Departamento) {
+    let msgDialog: string;
+    if (row.isActive) {
+      msgDialog = '¿Seguro de querer inhabilitar este departamento?';
+    } else {
+      msgDialog = '¿Seguro de querer habilitar este departamento?';
     }
-    let msgDialog:string
-    if(row.status){
-      msgDialog = '¿Seguro de querer inhabilitar este departamento?'
-    }else{
-      msgDialog = '¿Seguro de querer habilitar este departamento?'
-    }
-    this._dialog.open(DialogConfComponent, {
-      data: msgDialog
-    })
-    .afterClosed()
-    .subscribe((confirmado:boolean)=>{
-      if(confirmado){
-        row.status = !row.status
-        const res = this._zonasServ.updateDepartamento(formData, row.id, row.status)
-          res?.subscribe(res => {
-            if(res){
-              this._zonasServ.notify('Departamento actualizado', 'success')
-              this.isLoadingResults = true
-              this.getAllDepartamentos()
-            }
-          }, (err => {
-            console.log(err)
-            this._zonasServ.notify('Ocurrio un error con el proceso.', 'error')
-          }))
-      }
-    })
+    this._dialog
+      .open(DialogConfComponent, {
+        data: msgDialog,
+      })
+      .afterClosed()
+      .subscribe((confirmado: boolean) => {
+        if (confirmado) {
+          const department = {
+            id: row.id,
+            name: row.name,
+            countryId: row.countryId,
+            isActive: !row.isActive,
+          };
+          this.isLoadingResults = true;
+          this.updateState(department);
+        }
+      });
   }
 
-  generateReport(){
+  generateReport() {
     this._dialog.open(ModalReportComponent, {
       disableClose: true,
       data: {
-        'title': 'Reporte General de Departamentos',
-        'body': this.dataSource.data
-      }
-    })
+        title: 'Reporte General de Departamentos',
+        body: this.dataSource.data,
+      },
+    });
+  }
+
+  public async updateState(departement: any) {
+    try {
+      await this.apiService.put('Department', departement);
+      this.getDepartments();
+      this.sharedService.notify('Departamento actualizado', 'success');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(
+          error,
+          'Actualizando departamentos:'
+        ),
+        'error'
+      );
+    } finally {
+      this.isLoadingResults = false;
+    }
   }
 }

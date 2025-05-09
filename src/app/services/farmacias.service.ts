@@ -1,75 +1,79 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Farmacia } from '../interfaces/models';
-import { AuthService } from './auth.service';
-import { DataService } from './data.service';
+import { Cadena, Farmacia } from '../interfaces/models';
+import { SharedService } from './shared.service';
+import { ApiService } from './api.service';
+import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FarmaciasService {
-  listFarmacias!:Farmacia[]
-  headers:any
+  private chainList: any[] = [];
+  private pharmacyList: any[] = [];
 
   constructor(
-    private _http:HttpClient,
-    private _dataServ:DataService,
-    private _authServ:AuthService
-  ) {
-    this.headers = {'Authorization':`Bearer ${this._authServ.userToken}`}
+    private readonly apiService: ApiService,
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly sharedService: SharedService
+  ) {}
+
+  public async setPharmacies() {
+    try {
+      this.pharmacyList = await this.apiService.get('Pharmacy');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando farmacias:'),
+        'error'
+      );
+    }
   }
 
-  notify(msg:string, icon:any){
-    this._dataServ.fir(msg, icon)
+  public async setPharmaciesBycountry(countryId: string) {
+    try {
+      this.pharmacyList = await this.apiService.get(
+        'Pharmacy/GetByCountry' + countryId
+      );
+      return this.pharmacyList;
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando farmacias:'),
+        'error'
+      );
+      return [];
+    }
   }
 
-  getFarmacias(){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
-    }
-    return this._http.get<any>(`${this._dataServ.baseURL}/Pharmacy/GetPharmacies`,
-      {headers: this.headers}
-    )
+  public getPharmacies() {
+    return this.pharmacyList;
   }
 
-  getFarmaciaById(id:string){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
+  public async setChain() {
+    try {
+      this.chainList = await this.apiService.get('Chain');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando cadenas:'),
+        'error'
+      );
     }
-    return this._http.get<any>(`${this._dataServ.baseURL}/Pharmacy/GetPharmacy?id=${id}`,
-      {headers: this.headers}
-    )
   }
 
-  addFarmacia(formData:any){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
+  public async setChainByCountry(countryId: string) {
+    try {
+      return await this.apiService.get(
+        'Chain/GetChainByCountry?countryId=' + countryId
+      );
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando cadenas:'),
+        'error'
+      );
+
+      return [];
     }
-    let dataFarmacia:Farmacia = {
-      ...formData,
-      "isDeleted": true
-    }
-    return this._http.post(`${this._dataServ.baseURL}/Pharmacy/CreatePharmacy`, dataFarmacia, {
-      headers: this.headers
-    })
   }
 
-  updateFarmacia(formData:any, idFarmacia:number, state:boolean){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
-    }
-    let dataFarmacia:Farmacia = {
-      "id": idFarmacia,
-      ...formData,
-      "isDeleted": state,
-    }
-    console.log(dataFarmacia)
-    return this._http.post(`${this._dataServ.baseURL}/Pharmacy/UpdatePharmacy`, dataFarmacia, {
-      headers: this.headers
-    })
+  public getChainList() {
+    return this.chainList;
   }
 }

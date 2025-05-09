@@ -1,20 +1,25 @@
-import { Component, Inject, OnInit } from '@angular/core'
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 import { Producto, Rule } from 'src/app/interfaces/models';
 import { InventarioService } from 'src/app/services/inventario.service';
 import { RulesService } from 'src/app/services/rules.service';
+import { SharedService } from 'src/app/services/shared.service';
+import { ApiService } from 'src/app/services/api.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-detalle-reglas',
   templateUrl: './detalle-reglas.html',
-  styleUrls: ['./detalle-reglas.scss']
+  styleUrls: ['./detalle-reglas.scss'],
 })
 export class DetalleReglas implements OnInit {
-  currentRegla!:Rule | any
-  prods!: Producto[]
-  isLoadingResults!:boolean
+  currentRegla!: Rule | any;
+  prods!: Producto[];
+  isLoadingResults!: boolean;
+  public countryId = '';
 
   public ruleForm = new FormGroup({
     daysAround: new FormControl('', Validators.required),
@@ -22,68 +27,121 @@ export class DetalleReglas implements OnInit {
     quantityBuy: new FormControl('', Validators.required),
     quantityGive: new FormControl('', Validators.required),
     maxChangeYear: new FormControl('', Validators.required),
-    productId: new FormControl('', Validators.required)
-  })
+    productId: new FormControl('', Validators.required),
+  });
 
   constructor(
-    private _inveServ:InventarioService,
-    private _rulesServ:RulesService,
+    private readonly prodService: InventarioService,
     public dialogo: MatDialogRef<DetalleReglas>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
+    private readonly apiService: ApiService,
+    private readonly sharedService: SharedService,
+    private readonly rulesServ: RulesService,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly countryService: CountryService
+  ) {}
 
   ngOnInit(): void {
-    if(this.data.ruleId){
-      this.isLoadingResults = true
-      const farmacia = this._rulesServ.getRuleById(this.data.ruleId)
-      farmacia?.subscribe(res => {
-        console.log(res)
-        this.currentRegla = res.result
-        this.isLoadingResults = false
-        this.initValores()
-      }, (err => {
-        console.log(err)
-        this.isLoadingResults = false
-        this._rulesServ.notify('Ocurrio un error con la petición', 'error')
-      }))
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+    });
+    if (this.data.ruleId) {
+      this.getRule();
     }
-    this.prods = this._inveServ.listProducts
+    this.loadData();
   }
 
-  initValores(){
+  private async loadData() {
+    this.isLoadingResults = true;
+    await this.prodService.setProductsByCountry(this.countryId);
+    this.prods = this.prodService.getProducts();
+    this.isLoadingResults = false;
+  }
+  private async getRule() {
+    try {
+      this.isLoadingResults = true;
+      this.currentRegla = await this.apiService.get(
+        `ProductChangeRule/${this.data.ruleId}`
+      );
+      this.initValores();
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Consultando reglas:'),
+        'error'
+      );
+    } finally {
+      this.isLoadingResults = false;
+    }
+  }
+
+  initValores() {
     this.ruleForm.patchValue({
       daysAround: this.currentRegla.daysAround,
       periodicity: this.currentRegla.periodicity,
       quantityBuy: this.currentRegla.quantityBuy,
       quantityGive: this.currentRegla.quantityGive,
       maxChangeYear: this.currentRegla.maxChangeYear,
-      productId: this.currentRegla.productId
-    })
+      productId: this.currentRegla.productId,
+    });
   }
 
-  resetForm(){
-    this.ruleForm.reset()
+  resetForm() {
+    this.ruleForm.reset();
   }
 
-  save(){
-    if(this.data.ruleId){
-      const peticion = this._rulesServ.updateRule(this.ruleForm.value, this.data.ruleId, this.currentRegla.state)
-       peticion?.subscribe(() => {
-        this._rulesServ.notify('Regla actualizada', 'success')
-        this.dialogo.close(true);
-      }, (err => {
-        console.log(err)
-        this._rulesServ.notify('Ocurrio un error con el proceso', 'error')
-      }))
-    }else{
-      const peticion = this._rulesServ.addRule(this.ruleForm.value)
-      peticion?.subscribe(() => {
-        this._rulesServ.notify('Regla registrada', 'success')
-        this.dialogo.close(true);
-      }, (err => {
-        console.log(err)
-        this._rulesServ.notify('Ocurrio un error con el proceso', 'error')
-      }))
+  save() {
+    let rule: any = {
+      daysAround: this.ruleForm.value.daysAround,
+      periodicity: this.ruleForm.value.periodicity,
+      quantityBuy: this.ruleForm.value.quantityBuy,
+      quantityGive: this.ruleForm.value.quantityGive,
+      maxChangeYear: this.ruleForm.value.maxChangeYear,
+      productId: this.ruleForm.value.productId,
+      countryId: this.countryId,
+    };
+
+    if (this.data.ruleId) {
+      rule = {
+        id: this.data.ruleId,
+        isActive: this.currentRegla.isActive,
+        ...rule,
+      };
+      this.updateRule(rule);
+    } else {
+      rule = {
+        isActive: true,
+        ...rule,
+      };
+      this.addRule(rule);
+    }
+    this.dialogo.close(true);
+  }
+
+  private async addRule(rule: any) {
+    try {
+      await this.apiService.post('ProductChangeRule', rule);
+      this.sharedService.notify('Regla registrada', 'success');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Creando reglas:'),
+        'error'
+      );
+    } finally {
+      this.isLoadingResults = false;
+    }
+  }
+
+  private async updateRule(rule: any) {
+    try {
+      await this.apiService.put('ProductChangeRule', rule);
+      this.sharedService.notify('Regla actualizada', 'success');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Actualizando reglas:'),
+        'error'
+      );
+    } finally {
+      this.isLoadingResults = false;
     }
   }
 }

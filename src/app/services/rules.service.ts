@@ -1,81 +1,66 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Rule } from '../interfaces/models';
-import { AuthService } from './auth.service';
-import { DataService } from './data.service';
+import { SharedService } from './shared.service';
+import { ApiService } from './api.service';
+import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class RulesService {
-  reglas!: Rule[]
-  headers:any
+  private rules: any[] = [];
+  private productsRuleByCountry: any[] = [];
 
   constructor(
-    private _http:HttpClient,
-    private _dataServ:DataService,
-    private _authServ:AuthService
-  ) {
-    this.headers = {'Authorization':`Bearer ${this._authServ.userToken}`}
+    private readonly sharedService: SharedService,
+    private readonly apiService: ApiService,
+    private readonly errorHandlerService: ErrorHandlerService
+  ) {}
+
+  public async setRules() {
+    try {
+      this.rules = await this.apiService.get('ProductChangeRule');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(
+          error,
+          'Listando reglas de canje:'
+        ),
+        'error'
+      );
+    }
   }
 
-  notify(msg:string, icon:any){
-    this._dataServ.fir(msg, icon)
+  public getRules() {
+    return this.rules;
   }
 
-  getRules(){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
+  public async setProductsRuleByCountryLandingPage(countryId: string) {
+    try {
+      this.productsRuleByCountry = await this.apiService.get(
+        `ProductChangeRule/GetProductsLandingByCountry/${countryId}`
+      );
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando productos:'),
+        'error'
+      );
     }
-    return this._http.get<any>(`${this._dataServ.baseURL}/RuleChange/GetRules`,
-      {headers: this.headers}
-    )
   }
 
-  getRuleById(id:string){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
+  public async setProductsRuleByCountry(countryId: string) {
+    try {
+      this.rules = await this.apiService.get(
+        `ProductChangeRule/GetByCountryAsync/${countryId}`
+      );
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando productos:'),
+        'error'
+      );
     }
-    return this._http.get<any>(`${this._dataServ.baseURL}/RuleChange/GetRuleById?Id=${id}`,
-      {headers: this.headers}
-    )
   }
 
-  addRule(formData:any){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
-    }
-    let dataRule:Rule = {
-      ...formData
-    }
-    console.log(dataRule)
-    return this._http.post(`${this._dataServ.baseURL}/RuleChange/CreateRule`, dataRule, {
-      headers: this.headers
-    })
-  }
-
-  updateRule(formData:any, ruleId:number|undefined, state:boolean){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
-    }
-    let dataRule:Rule = {
-      "id": ruleId,
-      ...formData,
-      "state": state
-    }
-    console.log(dataRule)
-    return this._http.post(`${this._dataServ.baseURL}/RuleChange/UpdateRule`, dataRule, {
-      headers: this.headers
-    })
-  }
-
-  getProdConRules(){
-    return this._http.get<any>(`${this._dataServ.baseURL}/RuleChange/GetProductsLanding`,
-      {headers: this.headers}
-    )
+  public getProductsRuleByCountry() {
+    return this.productsRuleByCountry;
   }
 }

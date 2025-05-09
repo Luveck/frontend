@@ -40,9 +40,10 @@ export class RegisterPage {
     }
   }
 
-  constructor(private _authServ:AuthService){}
+  constructor(private _authServ:AuthService){
+  }
 
-  onRegister(formData:any){
+  onRegister(formData:any){    
     this._authServ.register(formData)
   }
 }

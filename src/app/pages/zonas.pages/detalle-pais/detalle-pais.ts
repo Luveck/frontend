@@ -1,20 +1,21 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormControl, FormGroup, Validators } from '@angular/forms'
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { Pais } from 'src/app/interfaces/models'
-import { ZonasService } from 'src/app/services/zonas.service'
+import { Pais } from 'src/app/interfaces/models';
+import { SharedService } from 'src/app/services/shared.service';
+import { ApiService } from 'src/app/services/api.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 
 @Component({
   selector: 'app-detalle-pais',
   templateUrl: './detalle-pais.html',
   styleUrls: ['./detalle-pais.scss'],
 })
-
 export class DetallePais implements OnInit {
-  currentPais!: Pais | any
-  isLoadingResults!:boolean
-  urlFlag!:string
+  currentPais!: Pais | any;
+  isLoadingResults!: boolean;
+  urlFlag!: string;
 
   public paisForm = new FormGroup({
     name: new FormControl('', Validators.required),
@@ -22,67 +23,106 @@ export class DetallePais implements OnInit {
     phoneCode: new FormControl('', Validators.required),
     currency: new FormControl('', Validators.required),
     currencyName: new FormControl('', Validators.required),
-    currencySymbol: new FormControl('', Validators.required)
-  })
+    currencySymbol: new FormControl('', Validators.required),
+  });
 
   constructor(
-    private _zonasServ:ZonasService,
     public dialogo: MatDialogRef<DetallePais>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ){}
+    public sharedService: SharedService,
+    public apiService: ApiService,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private readonly errorHandlerService: ErrorHandlerService
+  ) {}
 
   ngOnInit(): void {
-    if(this.data.paisId){
-      this.isLoadingResults = true
-      const pais = this._zonasServ.getPaisById(this.data.paisId)
-      pais?.subscribe(res => {
-        console.log(res)
-        this.currentPais = res.result
-        this.isLoadingResults = false
-        this.initValores()
-      }, (err => {
-        this.isLoadingResults = false
-        console.log(err)
-        this._zonasServ.notify('Ocurrio un error con la petición', 'error')
-      }))
+    if (this.data.paisId) {
+      this.getCountry();
     }
   }
 
-  initValores(){
-    this.urlFlag = `https://flagcdn.com/${this.currentPais.iso3.toLowerCase()}.svg`
+  public async getCountry() {
+    try {
+      this.currentPais = await this.apiService.get<Pais>(
+        `Country/${this.data.paisId}`
+      );
+      this.initValores();
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Consultado paises:'),
+        'error'
+      );
+    } finally {
+      this.isLoadingResults = false;
+    }
+  }
+  initValores() {
+    this.urlFlag = `https://flagcdn.com/${this.currentPais.iso3.toLowerCase()}.svg`;
     this.paisForm.patchValue({
       name: this.currentPais.name,
       iso3: this.currentPais.iso3,
       phoneCode: this.currentPais.phoneCode,
       currency: this.currentPais.currency,
       currencyName: this.currentPais.currencyName,
-      currencySymbol: this.currentPais.currencySymbol
-    })
+      currencySymbol: this.currentPais.currencySymbol,
+    });
   }
 
-  resetForm(){
-    this.paisForm.reset()
+  resetForm() {
+    this.paisForm.reset();
   }
 
-  save(){
-    if(this.data.paisId){
-      let peticion = this._zonasServ.updatePais(this.paisForm.value, this.data.paisId, this.currentPais?.status)
-      peticion?.subscribe(res => {
-        this._zonasServ.notify('Registro actualizado', 'success')
-        this.dialogo.close(true)
-      }, err => {
-        console.log(err)
-        this._zonasServ.notify('Ocurrio un error con el proceso.', 'error')
-      })
-    }else{
-      const peticion = this._zonasServ.addPais(this.paisForm.value)
-      peticion?.subscribe(res => {
-        this._zonasServ.notify('País registrado', 'success')
-        this.dialogo.close(true)
-      }, err => {
-        console.log(err)
-        this._zonasServ.notify('Ocurrio un error con el proceso.', 'error')
-      })
+  save() {
+    let country: any = {
+      name: this.paisForm.value.name,
+      iso3: this.paisForm.value.iso3,
+      phoneCode: this.paisForm.value.phoneCode,
+      currency: this.paisForm.value.currency,
+      currencyName: this.paisForm.value.currencyName,
+      currencySymbol: this.paisForm.value.currencySymbol,
+    };
+    if (this.data.paisId) {
+      country = {
+        ...country,
+        id: this.data.paisId,
+        IsActive: this.currentPais.isActive,
+      };
+      this.updateCountry(country);
+    } else {
+      country = {
+        ...country,
+        IsActive: true,
+      };
+      this.saveCountry(country);
+    }
+  }
+
+  public async saveCountry(counrty: any) {
+    try {
+      await this.apiService.post(`Country`, counrty);
+      this.sharedService.notify('País actualizado', 'success');
+      this.dialogo.close(true);
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Creando paises:'),
+        'error'
+      );
+    } finally {
+      this.isLoadingResults = false;
+    }
+  }
+
+  public async updateCountry(counrty: any) {
+    try {
+      await this.apiService.put(`Country`, counrty);
+      this.sharedService.notify('País actualizado', 'success');
+      this.dialogo.close(true);
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Actualizando paises:'),
+        'error'
+      );
+    } finally {
+      this.isLoadingResults = false;
     }
   }
 }

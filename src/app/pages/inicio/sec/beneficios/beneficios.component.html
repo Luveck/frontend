@@ -4,42 +4,60 @@
     <div class="text">
       <div class="badg">1</div>
       <span>Recibe la receta de tu médico</span>
-      <p>Revisa nuestros productos disponibles para canje según la prescripción de tu médico tratante.</p>
+      <p>
+        Revisa nuestros productos disponibles para canje según la prescripción
+        de tu médico tratante.
+      </p>
     </div>
-    <img src="assets/images/ppv_4.jpg">
+    <img src="assets/images/ppv_4.jpg" alt />
   </div>
   <div class="infoItem item2">
-    <img src="assets/images/ppv_5.jpg">
+    <img src="assets/images/ppv_5.jpg" alt />
     <div class="text">
       <div class="badg">2</div>
       <span>Acude a tu farmacia de confianza</span>
-      <p>Recibirás información del programa Pasión por Vivir, y de los beneficios que obtendrás al ser parte de este programa.</p>
+      <p>
+        Recibirás información del programa Pasión por Vivir, y de los beneficios
+        que obtendrás al ser parte de este programa.
+      </p>
     </div>
   </div>
   <div class="infoItem">
     <div class="text">
       <div class="badg">3</div>
       <span>Inscríbete en el programa</span>
-      <p>En la farmacia de tu elección recibirás ayuda de los colaboradores quienes brindarán información de tu proceso de inscripción, términos y condiciones del programa.</p>
+      <p>
+        En la farmacia de tu elección recibirás ayuda de los colaboradores
+        quienes brindarán información de tu proceso de inscripción, términos y
+        condiciones del programa.
+      </p>
     </div>
-    <img src="assets/images/ppv_6.jpg">
+    <img src="assets/images/ppv_6.jpg" alt />
   </div>
   <div class="infoItem item2">
-    <img src="assets/images/ppv_7.jpg">
+    <img src="assets/images/ppv_7.jpg" alt />
     <div class="text">
       <div class="badg">4</div>
       <span>Obtén tu canje</span>
-      <p>Al completar los requisitos obtendrás tu canje totalmente gratis, recuerda que en el año tendrás una cantidad máxima de canjes disponibles por producto.</p>
+      <p>
+        Al completar los requisitos obtendrás tu canje totalmente gratis,
+        recuerda que en el año tendrás una cantidad máxima de canjes disponibles
+        por producto.
+      </p>
     </div>
   </div>
-  <div class="linkRegis" *ngIf="!authServ.userToken" (click)="selectSection('registro')">
-    <span>
-      Registrarme en el programa
-    </span>
+  <div
+    class="linkRegis"
+    *ngIf="!sessionService.getToken()"
+    (click)="selectSection('registro')"
+  >
+    <span> Registrarme en el programa </span>
   </div>
-  <div class="linkRegis" *ngIf="authServ.userToken" (click)="selectSection('canjes')">
-    <span>
-      Ver registro de mis canjes
-    </span>
+  <div
+    class="linkRegis"
+    *ngIf="sessionService.getToken()"
+    (click)="selectSection('canjes')"
+  >
+    <span> Ver registro de mis canjes </span>
   </div>
 </section>

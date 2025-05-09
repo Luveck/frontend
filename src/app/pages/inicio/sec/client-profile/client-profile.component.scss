@@ -41,6 +41,8 @@ main{
           text-align: center;
         }
         .bots{
+          flex-direction: column;
+          display: flex;
           margin-top: 1rem;
           width: 100%;
           text-align: center;

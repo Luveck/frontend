@@ -1,159 +1,77 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
-import { DataService } from './data.service';
 import { AuthService } from './auth.service';
-import { Especialidad, Medico } from '../interfaces/models';
+import { Especialidad, Medico, Patology } from '../interfaces/models';
+import { SharedService } from './shared.service';
+import { ApiService } from './api.service';
+import { ErrorHandlerService } from './error-handler.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MedicosService {
-  especialidades!:Especialidad[]
-  headers:any
+  private patologyList: Patology[] = [];
+  private specialtyList: Especialidad[] = [];
+  private medicList: Medico[] = [];
 
   constructor(
-    private _http:HttpClient,
-    private _authServ:AuthService,
-    private _dataServ:DataService
-  ) {
-    this.headers = {'Authorization':`Bearer ${this._authServ.userToken}`}
+    private readonly _authServ: AuthService,
+    private readonly apiService: ApiService,
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly sharedService: SharedService
+  ) {}
+
+  public async setSpecialties() {
+    try {
+      this.specialtyList = await this.apiService.get('Discipline');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando especialidades:'),
+        'error'
+      );
+    }
+  }
+  public getSpecialties() {
+    return this.specialtyList;
+  }
+  public async setPatology() {
+    try {
+      this.patologyList = await this.apiService.get('Patology');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando Patologias:'),
+        'error'
+      );
+    }
+  }
+  public getPatology() {
+    return this.patologyList;
   }
 
-  notify(msg:string, icon:any){
-    this._dataServ.fir(msg, icon)
+  public async setMedicos() {
+    try {
+      this.medicList = await this.apiService.get('Medical');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando medicos:'),
+        'error'
+      );
+    }
   }
 
-  /* ******endpoints de Especialidades****** */
-  public getEspecialidades(){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
-    }
-    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetPatologies`,
-      {headers: this.headers}
-    )
+  public getMedicos() {
+    return this.medicList;
   }
 
-  public getEspecialidadById(id:string){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
+  public async setMedicalByCountry(countryId: string) {
+    try {
+      this.medicList = await this.apiService.get(
+        'Medical/GetByCountry' + countryId
+      );
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Listando medicos:'),
+        'error'
+      );
     }
-    return this._http.get<any>(`${this._dataServ.baseURL}/Administration/GetPatologyById?Id=${id}`,
-      {headers: this.headers}
-    )
-  }
-
-  public addEspecialidad(name:string){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
-    }
-    let dataEspecial:Especialidad = {
-      "name": name,
-      "isDeleted": false,
-    }
-    return this._http.post(`${this._dataServ.baseURL}/Administration/CreatePatology`, dataEspecial,
-      {headers: this.headers}
-    )
-  }
-
-  public deleteEspecialidad(id:number){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
-    }
-    return this._http.delete(`${this._dataServ.baseURL}/Administration/DeletePatology?Id=${id}`,
-      {headers: this.headers}
-    )
-  }
-
-  public updateEspecial(name:string, especialId:number|undefined, state:boolean){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
-    }
-    let dataEspecial:Especialidad = {
-      "id": especialId,
-      "name": name,
-      "isDeleted": state,
-    }
-    console.log(dataEspecial)
-    return this._http.post(`${this._dataServ.baseURL}/Administration/UpdatePatology`, dataEspecial,
-      {headers: this.headers}
-    )
-  }
-
-  /* ******endpoints de Medicos****** */
-  public getMedicos(){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
-    }
-    return this._http.get<any>(`${this._dataServ.baseURL}/Medical/GetMedicals`,
-      {headers: this.headers}
-    )
-  }
-
-  public getMedicoByName(name:string){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
-    }
-    return this._http.get<Medico>(`${this._dataServ.baseURL}/Medical/GetMedicalByName?nameMedical=${name}`,
-      {headers: this.headers}
-    )
-  }
-
-  public getMedicoById(id:string){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
-    }
-    return this._http.get<any>(`${this._dataServ.baseURL}/Medical/GetMedicalById?id=${id}`,
-      {headers: this.headers}
-    )
-  }
-
-  public addMedico(formData:any){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
-    }
-    let dataMedico:Medico = {
-      ...formData,
-      "isDeleted": false
-    }
-    console.log(dataMedico)
-    return this._http.post(`${this._dataServ.baseURL}/Medical/CreateMedical`, dataMedico,
-      {headers: this.headers}
-    )
-  }
-
-  public deleteMedico(id:number){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
-    }
-    return this._http.delete(`${this._dataServ.baseURL}/Medical/DeleteMedical?Id=${id}`,
-      {headers: this.headers}
-    )
-  }
-
-  public updateMedico(formData:any, medicoId:number, state:boolean){
-    if(!this._authServ.checkTokenDate(this._authServ.expToken)){
-      this._authServ.showSesionEndModal()
-      return
-    }
-    let dataMedico:Medico = {
-      "id": medicoId,
-      ...formData,
-      "isDeleted": state
-    }
-    console.log(dataMedico)
-    return this._http.post(`${this._dataServ.baseURL}/Medical/UpdateMedical`, dataMedico,
-      {headers: this.headers}
-    )
   }
 }

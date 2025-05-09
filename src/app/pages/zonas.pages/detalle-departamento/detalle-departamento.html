@@ -9,17 +9,9 @@
       <div class="datos">
         <p>{{currentDepartamento?.name}}</p>
         <div class="bots">
-          <span class="chip" [ngClass]="{'active': currentDepartamento?.status == true, 'inactive': currentDepartamento?.status == false}">Estado: {{currentDepartamento?.status ?'Activo' :'Inactivo'}}</span>
+          <span class="chip" [ngClass]="{'active': currentDepartamento?.isActive == true, 'inactive': currentDepartamento?.isActive == false}">Estado: {{currentDepartamento?.isActive ?'Activo' :'Inactivo'}}</span>
         </div>
       </div>
-    </section>
-    <section class="resumen">
-      <ul>
-        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentDepartamento?.createBy}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de creación: {{currentDepartamento?.creationDate |date: 'd/M/yy'}}</li>
-        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentDepartamento?.updateBy}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentDepartamento?.updateDate |date: 'd/M/yy'}}</li>
-      </ul>
     </section>
   </div>
 
@@ -29,7 +21,7 @@
         <mat-label>País</mat-label>
         <mat-select formControlName="idCountry">
           <div *ngFor="let pais of paises">
-            <mat-option *ngIf="pais.status" [value]="pais.id">
+            <mat-option *ngIf="pais.isActive" [value]="pais.id">
               {{pais.name}}
             </mat-option>
           </div>

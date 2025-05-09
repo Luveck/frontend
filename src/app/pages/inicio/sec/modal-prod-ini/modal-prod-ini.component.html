@@ -1,5 +1,8 @@
 <main mat-dialog-content>
-  <img [src]="prodData.urlImages[0].url">
+    <button mat-icon-button (click)="onClose()" class="close-button">
+      <mat-icon>close</mat-icon>
+    </button>
+  <img [src]="prodData.urlImages[0]">
   <div class="infoProd">
     <h1>{{prodData.nameProduct}}</h1>
     <ul>

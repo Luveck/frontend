@@ -12,11 +12,17 @@ import { DetalleEspacialidad } from './detalle-especialidad/detalle-espacialidad
 import { DetalleMedico } from './detalle-medico/detalle-medico';
 import { EspecialidadesPage } from './especialidades/especialidades.page';
 import { MedicosPage } from './medicos/medicos.page';
+import { PatologiaPage } from './patologia/patologia.page';
+import { DetallePatologia } from './detalle-patologia/detalle-patologia';
 
 const routes: Routes = [
   {
     path: 'especialidades',
     component: EspecialidadesPage
+  },
+  {
+    path: 'patologias',
+    component: PatologiaPage
   },
   {
     path: 'medicos',
@@ -29,7 +35,9 @@ const routes: Routes = [
     DetalleEspacialidad,
     DetalleMedico,
     EspecialidadesPage,
-    MedicosPage
+    MedicosPage,
+    PatologiaPage,
+    DetallePatologia
   ],
   imports: [
     CommonModule,

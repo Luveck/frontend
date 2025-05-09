@@ -16,6 +16,7 @@ import { RegisComponent } from './sec/regis/regis.component';
 import { ModalProdIniComponent } from './sec/modal-prod-ini/modal-prod-ini.component';
 import { ClientProfileComponent } from './sec/client-profile/client-profile.component';
 import { CanjeComponent } from './sec/canje/canje.component';
+import { ChangePasswordComponent } from './sec/change-password/change-password.component';
 
 const routes: Routes = [
   {
@@ -43,7 +44,10 @@ const routes: Routes = [
     RegisComponent,
     ModalProdIniComponent,
     ClientProfileComponent,
-    CanjeComponent
+    CanjeComponent,
+    ChangePasswordComponent,
+  ], exports: [
+    ChangePasswordComponent
   ]
 })
 export class InicioPageModule {}

@@ -9,17 +9,13 @@
       <div class="datos">
         <p>{{currentFarmacia?.name}}</p>
         <div class="bots">
-          <span class="chip" [ngClass]="{'inactive': currentFarmacia?.isDeleted == true, 'active': currentFarmacia?.isDeleted == false}">Estado: {{currentFarmacia?.isDeleted ?'Inctivo' :'Activo'}}</span>
+          <span
+            class="chip"
+            [ngClass]="{'inactive': currentFarmacia?.isActive== false, 'active': currentFarmacia?.isActive == true}"
+            >Estado: {{currentFarmacia?.isActive ?'Activo' :'Inctivo'}}</span
+          >
         </div>
       </div>
-    </section>
-    <section class="resumen">
-      <ul>
-        <li> <mat-icon class="example-tab-icon">note_add</mat-icon> Creado por: {{currentFarmacia?.createBy}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de creación: {{currentFarmacia?.creationDate |date: 'd/M/yy'}}</li>
-        <li> <mat-icon class="example-tab-icon">edit_note</mat-icon> Modificado por: {{currentFarmacia?.updateBy}}</li>
-        <li> <mat-icon class="example-tab-icon">calendar_month</mat-icon> Fecha de modificación: {{currentFarmacia?.updateDate |date: 'd/M/yy'}}</li>
-      </ul>
     </section>
   </div>
 
@@ -27,17 +23,43 @@
     <div class="inputs">
       <mat-form-field appearance="fill">
         <mat-label>Nombre</mat-label>
-        <input matInput placeholder="Nombre" formControlName="name">
+        <input matInput placeholder="Nombre" formControlName="name" />
       </mat-form-field>
       <mat-form-field appearance="fill">
         <mat-label>Dirección</mat-label>
-        <input matInput placeholder="Presentación" formControlName="adress">
+        <input matInput placeholder="Presentación" formControlName="adress" />
       </mat-form-field>
       <mat-form-field appearance="fill">
+        <mat-label>Cadena</mat-label>
+        <mat-select formControlName="cadenaId">
+          <div *ngFor="let cadena of cadenas">
+            <mat-option *ngIf="cadena.isActive" [value]="cadena.id">
+              {{cadena.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="fill" *ngIf="filteredDepartments.length > 0">
+        <mat-label>Departamento</mat-label>
+        <mat-select
+          formControlName="departmentId"
+          (selectionChange)="onDepartmentChange($event.value)"
+        >
+          <div *ngFor="let departamento of filteredDepartments">
+            <mat-option *ngIf="departamento.isActive" [value]="departamento.id">
+              {{departamento.name}}
+            </mat-option>
+          </div>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field
+        appearance="fill"
+        *ngIf="filteredDepartments.length > 0 && filteredCities.length > 0"
+      >
         <mat-label>Ciudad</mat-label>
         <mat-select formControlName="cityId">
-          <div *ngFor="let ciudad of ciudades">
-            <mat-option *ngIf="ciudad.state" [value]="ciudad.id">
+          <div *ngFor="let ciudad of filteredCities">
+            <mat-option *ngIf="ciudad.isActive" [value]="ciudad.id">
               {{ciudad.name}}
             </mat-option>
           </div>
@@ -48,7 +70,16 @@
 </main>
 <div mat-dialog-actions>
   <div class="btns">
-    <button mat-raised-button color="primary" [disabled]="farmaForm.invalid" (click)="save()">Guardar <mat-icon>save</mat-icon></button>
-    <button mat-raised-button color="warn" (click)="resetForm()">Limpiar datos</button>
+    <button
+      mat-raised-button
+      color="primary"
+      [disabled]="farmaForm.invalid"
+      (click)="save()"
+    >
+      Guardar <mat-icon>save</mat-icon>
+    </button>
+    <button mat-raised-button color="warn" (click)="resetForm()">
+      Limpiar datos
+    </button>
   </div>
 </div>

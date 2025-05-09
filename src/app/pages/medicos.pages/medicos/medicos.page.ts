@@ -1,5 +1,5 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { AfterViewInit, Component, Input, ViewChild } from '@angular/core'
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
@@ -10,58 +10,67 @@ import { MedicosService } from 'src/app/services/medicos.service';
 import { DetalleMedico } from '../detalle-medico/detalle-medico';
 import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
 import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
+import { ApiService } from 'src/app/services/api.service';
+import { SharedService } from 'src/app/services/shared.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { CountryService } from 'src/app/services/country.service';
 
 @Component({
   selector: 'app-medicos',
   templateUrl: './medicos.page.html',
   styleUrls: ['./medicos.page.scss'],
 })
-
-export class MedicosPage implements AfterViewInit {
+export class MedicosPage implements OnInit {
   public breadcrumb = {
     links: [
       {
         name: 'Inicio',
         isLink: true,
-        link: '/admin/home'
+        link: '/admin/home',
       },
       {
         name: 'Gestión de Médicos',
         isLink: false,
-      }
-    ]
-  }
+      },
+    ],
+  };
 
-  @Input('ELEMENT_DATA')  ELEMENT_DATA!:Medico[];
-  @ViewChild(MatPaginator, {static: true}) paginator!: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort!: MatSort | null;
-  displayedColumns: string[] = ['name', 'patologyName', 'isDeleted', 'creationDate', 'acctions'];
+  @Input('ELEMENT_DATA') ELEMENT_DATA!: Medico[];
+  @ViewChild(MatPaginator, { static: true }) paginator!: MatPaginator;
+  @ViewChild(MatSort, { static: true }) sort!: MatSort | null;
+  displayedColumns: string[] = [
+    'name',
+    'patologyName',
+    'isDeleted',
+    'acctions',
+  ];
   dataSource = new MatTableDataSource<Medico>(this.ELEMENT_DATA);
 
-  isLoadingResults:boolean = true;
+  isLoadingResults: boolean = true;
+  public countryId = '';
 
   constructor(
-    private _liveAnnouncer: LiveAnnouncer,
-    private _dialog:MatDialog,
-    public _medicServ:MedicosService
-  ){}
-
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator
+    private readonly _liveAnnouncer: LiveAnnouncer,
+    private readonly _dialog: MatDialog,
+    public medicServ: MedicosService,
+    private readonly apiService: ApiService,
+    private readonly sharedservice: SharedService,
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly countryService: CountryService
+  ) {}
+  ngOnInit(): void {
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+      this.getMedicals();
+    });
+    this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
-    this.getAllMedics()
   }
 
-  getAllMedics(){
-    let resp = this._medicServ.getMedicos()
-    resp?.subscribe(medicos => {
-      console.log(medicos)
-      this.dataSource.data = medicos.result as Medico[]
-      this.isLoadingResults = false
-    }, (err => {
-      this.isLoadingResults = false
-      console.log(err)
-    }))
+  private async getMedicals() {
+    await this.medicServ.setMedicalByCountry(this.countryId);
+    this.dataSource.data = this.medicServ.getMedicos();
+    this.isLoadingResults = false;
   }
 
   applyFilter(event: Event) {
@@ -81,65 +90,71 @@ export class MedicosPage implements AfterViewInit {
     }
   }
 
-  on(id?:string){
+  on(id?: string) {
     const config = {
       data: {
-        title: id ?'Editar Médico' :'Agregar Médico',
-        medicoId: id
-      }
-    }
-    this._dialog.open(DetalleMedico, config)
-    .afterClosed()
-    .subscribe((confirm:boolean) => {
-      if(confirm){
-        this.isLoadingResults = true
-        this.getAllMedics()
-      }
-    })
+        title: id ? 'Editar Médico' : 'Agregar Médico',
+        medicoId: id,
+      },
+    };
+    this._dialog
+      .open(DetalleMedico, config)
+      .afterClosed()
+      .subscribe((confirm: boolean) => {
+        if (confirm) {
+          this.isLoadingResults = true;
+          this.getMedicals();
+        }
+      });
   }
 
-  chageState(row:Medico){
-    const formData = {
-      "name": row.name,
-      "register": row.register,
-      "patologyId": row.patologyId
+  private async updateMedical(medical: any) {
+    try {
+      this.isLoadingResults = true;
+      await this.apiService.put(`Medical`, medical);
+      this.sharedservice.notify('Médico actualizado', 'success');
+      this.getMedicals();
+    } catch (error) {
+      this.sharedservice.notify(
+        this.errorHandlerService.handleError(error, 'Actualizando medicos:'),
+        'error'
+      );
+    } finally {
+      this.isLoadingResults = false;
     }
-    let msgDialog:string
-    if(!row.isDeleted){
-      msgDialog = '¿Seguro de querer inhabilitar el registro de este médico?'
-    }else{
-      msgDialog = '¿Seguro de querer habilitar el registro de este médico?'
+  }
+  chageState(row: any) {
+    let medical = {
+      id: row.id,
+      isActive: !row.isActive,
+      name: row.name,
+      disciplineId: row.disciplineId,
+      register: row.register,
+      countryId: '1',
+    };
+    let msgDialog: string;
+    if (row.isActive) {
+      msgDialog = '¿Seguro de querer inhabilitar el registro de este médico?';
+    } else {
+      msgDialog = '¿Seguro de querer habilitar el registro de este médico?';
     }
-    this._dialog.open(DialogConfComponent, {
-      data: msgDialog
-    })
-    .afterClosed()
-    .subscribe((confirmado:boolean)=>{
-      if(confirmado){
-        row.isDeleted = !row.isDeleted
-        const res = this._medicServ.updateMedico(formData, row.id, row.isDeleted)
-          res?.subscribe(res => {
-            if(res){
-              this._medicServ.notify('Médico actualizado', 'success')
-              this.isLoadingResults = true
-              this.getAllMedics()
-            }
-          }, (err => {
-            console.log(err)
-            this.getAllMedics()
-            this._medicServ.notify('Ocurrio un error con el proceso.', 'error')
-          }))
-      }
-    })
+    this._dialog
+      .open(DialogConfComponent, {
+        data: msgDialog,
+      })
+      .afterClosed()
+      .subscribe((confirmado: boolean) => {
+        this.updateMedical(medical);
+      });
   }
 
-  generateReport(){
+  generateReport() {
     this._dialog.open(ModalReportComponent, {
       disableClose: true,
       data: {
-        'title': 'Reporte General de Médicos',
-        'body': this.dataSource.data
-      }
-    })
+        title: 'Reporte General de Médicos',
+        body: this.dataSource.data,
+      },
+    });
   }
 }

@@ -2,65 +2,105 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { Especialidad } from 'src/app/interfaces/models';
-import { MedicosService } from 'src/app/services/medicos.service';
+import { ApiService } from 'src/app/services/api.service';
+import { ErrorHandlerService } from 'src/app/services/error-handler.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-detalle-espacialidad',
   templateUrl: './detalle-espacialidad.html',
-  styleUrls: ['./detalle-espacialidad.scss']
+  styleUrls: ['./detalle-espacialidad.scss'],
 })
-
 export class DetalleEspacialidad implements OnInit {
   currentEspecialidad!: Especialidad | any;
-  name!: string
-  isLoadingResults!:boolean
+  name!: string;
+  isLoadingResults!: boolean;
 
   constructor(
-    private _medicServ:MedicosService,
     public dialogo: MatDialogRef<DetalleEspacialidad>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) { }
+    private readonly apiService: ApiService,
+    private readonly sharedService: SharedService,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private readonly errorHandlerService: ErrorHandlerService
+  ) {}
 
   ngOnInit(): void {
-    if(this.data.especialId){
-      this.isLoadingResults = true
-      const especial = this._medicServ.getEspecialidadById(this.data.especialId)
-      especial?.subscribe(res => {
-        console.log(res)
-        this.currentEspecialidad = res.result
-        this.isLoadingResults = false
-        this.name = this.currentEspecialidad.name
-      },(err => {
-        console.log(err)
-        this.isLoadingResults = false
-        this._medicServ.notify('Ocurrio un error', 'error')
-      }))
+    if (this.data.especialId) {
+      this.getSpecialty();
     }
   }
 
-  save(){
-    if(this.data.especialId){
-      const peticion = this._medicServ.updateEspecial(this.name, this.data.especialId, this.currentEspecialidad.isDeleted)
-      peticion?.subscribe(res => {
-        if(res){
-          this._medicServ.notify('Especialidad actualizada', 'success')
-          this.dialogo.close(true)
-        }
-      }, (err => {
-        console.log(err)
-        this._medicServ.notify('Ocurrio un error', 'error')
-      }))
-    }else{
-      const peticion = this._medicServ.addEspecialidad(this.name)
-      peticion?.subscribe(res => {
-        if(res){
-          this._medicServ.notify('Espedialidad registrada', 'success')
-          this.dialogo.close(true)
-        }
-      }, (err => {
-        console.log(err)
-        this._medicServ.notify('Ocurrio un error', 'error')
-      }))
+  public async getSpecialty() {
+    try {
+      this.isLoadingResults = true;
+      this.currentEspecialidad = await this.apiService.get(
+        `Discipline/${this.data.especialId}`
+      );
+      this.name = this.currentEspecialidad.name;
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(
+          error,
+          'Consultando especialidades:'
+        ),
+        'error'
+      );
+    } finally {
+      this.isLoadingResults = false;
+    }
+  }
+
+  save() {
+    let Specialty: any = {
+      name: this.name,
+    };
+    if (this.data.especialId) {
+      Specialty = {
+        ...Specialty,
+        id: this.data.especialId,
+        isActive: this.currentEspecialidad.isActive,
+      };
+      this.updateSpecialty(Specialty);
+    } else {
+      Specialty = {
+        ...Specialty,
+        isActive: true,
+      };
+      this.addSpecialty(Specialty);
+    }
+    this.dialogo.close(true);
+  }
+
+  public async updateSpecialty(specialty: any) {
+    try {
+      this.isLoadingResults = true;
+      await this.apiService.put(`Discipline`, specialty);
+      this.sharedService.notify('Especialidad actualizada', 'success');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(
+          error,
+          'Actualizando especialidades:'
+        ),
+        'error'
+      );
+    } finally {
+      this.isLoadingResults = false;
+    }
+  }
+
+  public async addSpecialty(specialty: any) {
+    try {
+      this.isLoadingResults = true;
+      await this.apiService.post(`Discipline`, specialty);
+      this.sharedService.notify('Especialidad registrada', 'success');
+    } catch (error) {
+      this.sharedService.notify(
+        this.errorHandlerService.handleError(error, 'Creando especialidades:'),
+        'error'
+      );
+    } finally {
+      this.isLoadingResults = false;
     }
   }
 }

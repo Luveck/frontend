@@ -8,12 +8,9 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class DataService {
-  //baseURL:string = 'https://localhost:44316/api'
-  //baseURLSec:string = 'https://appluvecksecurity.azurewebsites.net/api'
 
   baseURL:string = environment.urlAdminSevice;
   baseURLSec:string = environment.urlSecuritySevice;
-
   progress:boolean = false
 
   constructor(
@@ -40,6 +37,32 @@ export class DataService {
   getTheme(){
     let themeState = localStorage.getItem('LuveckTheme');
     return themeState
+  }
+
+  setCountry(country?: any) {
+    if (country) {
+      localStorage.setItem('countryLuveckIso', country.iso3);
+      localStorage.setItem('countryLuveckId', country.id);
+    } else {
+      localStorage.setItem('countryLuveckIso', 'HN');
+      localStorage.setItem('countryLuveckId', '1');
+    }
+  }
+
+  getCountry(){
+    let country = localStorage.getItem('countryLuveckIso');
+    if(!country){
+      return 'HN';
+    }
+    return country
+  }
+
+  getCountryId(){
+    let country = localStorage.getItem('countryLuveckId');
+    if(!country){
+      return '1';
+    }
+    return country
   }
 
   public fir(title:string, icono:any, timeOut?:number){
