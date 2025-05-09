@@ -260,7 +260,7 @@ export class DetalleProducto implements OnInit {
       // Limpiar archivos seleccionados
       this.files = [];
       this.image = [];
-    } catch (err) {
+    } catch {
       this.sharedService.notify('Ocurrio un error', 'error');
     } finally {
       this.isLoadingResults = false;
@@ -268,7 +268,8 @@ export class DetalleProducto implements OnInit {
   }
 
   deleteOneFile(nameFile: string, indexImgProd: number) {
-    if (this.currentProd?.urlImgs.length == 1) {
+    console.log(this.currentProd.productImages);
+    if (this.currentProd?.productImages.length == 1) {
       this.sharedService.notify(
         'El registro del producto debe temer por lo menos una imágen.',
         'info'
@@ -283,14 +284,24 @@ export class DetalleProducto implements OnInit {
       .afterClosed()
       .subscribe((confirmado: boolean) => {
         if (confirmado) {
-          // const peticion = this._inveServ.deleteImage({  "productId": this.currentProdId,
-          //   "pathImg": nameFile})
-          // peticion?.subscribe((res:any)=>{
-          //   this._inveServ.notify('Imágen eliminada', 'success')
-          //   this.currentProd?.urlImgs.splice(indexImgProd, 1)
-          //   this.getInfoProduct();
-          // })
+          this.deleteImage(indexImgProd);
         }
       });
+  }
+
+  private async deleteImage(indexImgProd: number) {
+    try {
+      this.isLoadingResults = true;
+      await this.apiService.put('ProductImage', {
+        productId: this.currentProd.id,
+        pathImg: this.currentProd.productImages[indexImgProd].image,
+      });
+      this.sharedService.notify('Imágene borrada con exito.', 'success');
+      this.getProduct();
+    } catch {
+      this.sharedService.notify('Ocurrio un error', 'error');
+    } finally {
+      this.isLoadingResults = false;
+    }
   }
 }
