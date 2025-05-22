@@ -1,23 +1,24 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
+  MAT_DIALOG_DATA,
   MatDialog,
   MatDialogRef,
-  MAT_DIALOG_DATA,
 } from '@angular/material/dialog';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 
-import { UsuariosService } from 'src/app/services/usuarios.service';
-import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
-import { ApiService } from 'src/app/services/api.service';
-import { SharedService } from 'src/app/services/shared.service';
-import { Farmacia, Pais } from 'src/app/interfaces/models';
-import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { MatSelectChange } from '@angular/material/select';
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
+import { Farmacia, Pais } from 'src/app/interfaces/models';
+import { ApiService } from 'src/app/services/api.service';
+import { FarmaciasService } from 'src/app/services/farmacias.service';
+import { SharedService } from 'src/app/services/shared.service';
+import { UsuariosService } from 'src/app/services/usuarios.service';
 import { UserRoles } from 'src/app/shared/enums/roles.enum';
 
+import { PharmacySearchComponent } from 'src/app/components/pharmacy-search/pharmacy-search.component';
+import { CountryService } from 'src/app/services/country.service';
 import { ErrorHandlerService } from 'src/app/services/error-handler.service';
 import { SessionService } from 'src/app/services/session.service';
-import { PharmacySearchComponent } from 'src/app/components/pharmacy-search/pharmacy-search.component';
 
 @Component({
   selector: 'app-detalle-usuario',
@@ -56,6 +57,7 @@ export class DetalleUsuario implements OnInit {
 
   public showPharmacy = false;
   public roles: any[] = [];
+  private countryId = '';
 
   constructor(
     private _dialog: MatDialog,
@@ -67,10 +69,14 @@ export class DetalleUsuario implements OnInit {
     private readonly dialogPharmacy: MatDialog,
     private readonly sessionService: SessionService,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private readonly errorHandlerService: ErrorHandlerService
+    private readonly errorHandlerService: ErrorHandlerService,
+    private readonly countryService: CountryService
   ) {}
 
   ngOnInit(): void {
+    this.countryService.countryId$.subscribe((country) => {
+      this.countryId = country;
+    });
     this.configuration();
     if (this.data.userDni) {
       this.getUser();
@@ -89,6 +95,7 @@ export class DetalleUsuario implements OnInit {
       this.currentUser = await this.apiService.get(
         `User/GetUserById/${this.data.userDni}`
       );
+      await this.getPharmacies();
       this.initValues();
     } catch (error) {
       this.sharedService.notify(
@@ -121,13 +128,17 @@ export class DetalleUsuario implements OnInit {
       countryId: this.currentUser.countryId,
     });
     if (this.currentUser.roles[0] === UserRoles.PharmacyUser) {
-      this.newUserForm.patchValue({
-        pharmacyId: this.currentUser.farmaciaId,
-      });
       this.showPharmacy = true;
       const field = this.newUserForm.get('pharmacyId');
       field?.setValidators([Validators.required]);
       field?.updateValueAndValidity();
+
+      this.newUserForm.patchValue({
+        pharmacyId: this.currentUser.farmaciaId,
+      });
+
+      console.log('Farmacia seleccionada:', this.newUserForm.value.pharmacyId);
+      console.log('Farmacias disponibles:', this.farmacias);
     }
   }
 
@@ -262,9 +273,11 @@ export class DetalleUsuario implements OnInit {
 
   private async getPharmacies() {
     this.isLoadingResults = true;
-    await this.pharmaService.setPharmacies();
+    this.farmacias = await this.pharmaService.setPharmaciesBycountry(
+      this.countryId
+    );
     this.isLoadingResults = false;
-    this.farmacias = this.pharmaService.getPharmacies();
+    this.farmacias = this.farmacias.filter((x) => x.isActive);
   }
 
   filterFharmacy(event: MouseEvent) {

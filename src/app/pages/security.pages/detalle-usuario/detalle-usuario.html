@@ -174,11 +174,9 @@
       <mat-form-field appearance="fill" *ngIf="showPharmacy">
         <mat-label>Farmacia</mat-label>
         <mat-select formControlName="pharmacyId">
-          <div *ngFor="let farma of farmacias">
-            <mat-option *ngIf="farma.isActive" [value]="farma.id">
-              {{farma.name}}
-            </mat-option>
-          </div>
+          <mat-option *ngFor="let farma of farmacias" [value]="farma.id">
+            {{ farma.name }}
+          </mat-option>
         </mat-select>
         <button mat-icon-button matSuffix (click)="filterFharmacy($event)">
           <mat-icon>search</mat-icon>

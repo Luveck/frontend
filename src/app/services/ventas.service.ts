@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { SharedService } from './shared.service';
 import { ApiService } from './api.service';
 import { ErrorHandlerService } from './error-handler.service';
 import { SessionService } from './session.service';
+import { SharedService } from './shared.service';
 
 @Injectable({
   providedIn: 'root',
@@ -127,13 +127,14 @@ export class VentasService {
 
   public async cancelPurchase(purchaseId: string) {
     try {
-      await this.apiService.put(
+      const data = await this.apiService.put<ApiResponse<any>>(
         `Purchase/CancelPurchase?purchase=${purchaseId}`,
         purchaseId
       );
+
       this.sharedService.notify(
-        'Se ha anulado la factura correctamente.',
-        'success'
+        data.message,
+        data.message == 'Factura anulada' ? 'success' : 'error'
       );
     } catch (error) {
       this.sharedService.notify(
@@ -142,4 +143,10 @@ export class VentasService {
       );
     }
   }
+}
+
+export interface ApiResponse<T> {
+  message: string;
+  result: T;
+  wasSuccessful: boolean;
 }

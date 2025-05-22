@@ -20,11 +20,13 @@ export class FarmaciasService {
   public async setPharmacies() {
     try {
       this.pharmacyList = await this.apiService.get('Pharmacy');
+      return this.pharmacyList;
     } catch (error) {
       this.sharedService.notify(
         this.errorHandlerService.handleError(error, 'Listando farmacias:'),
         'error'
       );
+      return [];
     }
   }
 

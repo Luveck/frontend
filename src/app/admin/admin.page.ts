@@ -43,23 +43,34 @@ export class AdminPage implements OnInit {
     public readonly sessionService: SessionService,
     private readonly countryService: CountryService
   ) {
-    let theme = this.dataService.getTheme();
-    if (theme === 'dark') {
-      this.localTheme = false;
-      this.className = this.darkClassName;
-      this.dataService.setTheme('dark');
-      this._overlay.getContainerElement().classList.add(this.darkClassName);
-    } else {
-      this.localTheme = true;
-      this.className = '';
-      this.dataService.setTheme('light');
-      this._overlay.getContainerElement().classList.remove(this.darkClassName);
-    }
+    // let theme = this.dataService.getTheme();
+    // if (theme === 'dark') {
+    //   this.localTheme = false;
+    //   this.className = this.darkClassName;
+    //   this.dataService.setTheme('dark');
+    //   this._overlay.getContainerElement().classList.add(this.darkClassName);
+    // } else {
+    //   this.localTheme = true;
+    //   this.className = '';
+    //   this.dataService.setTheme('light');
+    //   this._overlay.getContainerElement().classList.remove(this.darkClassName);
+    // }
 
     this.updateMenu(this.menuList, this.authService.getPermissions());
   }
 
+
+  private initTheme(): void {
+    const theme = this.dataService.getTheme();
+    const isDark = theme === 'dark';
+
+    this.localTheme = !isDark;
+    this.className = isDark ? this.darkClassName : '';
+    this._overlay.getContainerElement().classList.toggle(this.darkClassName, isDark);
+  }
+
   // Función para actualizar el menú
+
   updateMenu(menu: any[], moduleRoleResponse: any[]) {
     var start = true;
     menu.forEach((menuItem) => {
@@ -126,6 +137,7 @@ export class AdminPage implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initTheme();
     this.getInformation();
     this.sessionService.getUserData();
   }
@@ -182,12 +194,11 @@ export class AdminPage implements OnInit {
   }
 
   public changeCountry() {
-    this.dataService.setCountry(
-      this.countryCombo.find((c) => c.iso3 === this.selectedCountry)
+    const selected = this.countryCombo.find(
+      (c) => c.iso3 === this.selectedCountry
     );
-    this.countryService.setCountry(
-      this.countryCombo.find((c) => c.iso3 === this.selectedCountry)
-    );
+    this.dataService.setCountry(selected);
+    this.countryService.setCountry(selected);
   }
 
   public getFlag(flag: string) {

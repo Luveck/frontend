@@ -120,7 +120,7 @@
           <button
             mat-stroked-button
             (click)="revers(row.id)"
-            *ngIf="row.state !== 'Anulado'"
+            *ngIf="row.state == 'No Entregado' "
           >
             Anular
             <mat-icon color="warn">published_with_changes</mat-icon>
