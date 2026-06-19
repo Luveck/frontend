@@ -57,7 +57,7 @@ export const environment = {
       subText: 'Gestión de canjes',
       icon: 'published_with_changes',
       routerLink: 'canjes/canjes',
-      module: 'Gestion-Canjes',
+      module: 'Canjes',
       enabled: true,
     },
     {

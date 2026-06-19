@@ -95,6 +95,13 @@
         </th>
         <td mat-cell *matCellDef="let row">{{row.pharmacyName}}</td>
       </ng-container>
+      <ng-container matColumnDef="ProductName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          Producto Canjeado
+        </th>
+        <td mat-cell *matCellDef="let row">{{row.ProductName}}</td>
+      </ng-container>
+
       <ng-container matColumnDef="QuantityGiven">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           Cantidad Canjeada
@@ -120,7 +127,7 @@
           <button
             mat-stroked-button
             (click)="revers(row.id)"
-            *ngIf="row.state !== 'Anulado'"
+            *ngIf="row.state == 'No Entregado' "
           >
             Anular
             <mat-icon color="warn">published_with_changes</mat-icon>

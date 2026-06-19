@@ -37,7 +37,12 @@
             </mat-option>
           </div>
         </mat-select>
-        <button mat-icon-button matSuffix (click)="filterFharmacy($event)">
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="filterFharmacy($event)"
+          [disabled]="sessionService.getUserData().pharmacyId != '0'"
+        >
           <mat-icon>search</mat-icon>
         </button>
       </mat-form-field>

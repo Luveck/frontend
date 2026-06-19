@@ -4,19 +4,19 @@ import { MatSelect } from '@angular/material/select';
 import { ReplaySubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { Venta, Farmacia } from 'src/app/interfaces/models';
-import { VentasService } from 'src/app/services/ventas.service';
-import { InventarioService } from 'src/app/services/inventario.service';
-import { FarmaciasService } from 'src/app/services/farmacias.service';
-import { UsuariosService } from 'src/app/services/usuarios.service';
-import { ActivatedRoute } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { SharedService } from 'src/app/services/shared.service';
-import { FileValidator } from './FileValidator';
-import { SessionService } from 'src/app/services/session.service';
+import { ActivatedRoute } from '@angular/router';
 import { PharmacySearchComponent } from 'src/app/components/pharmacy-search/pharmacy-search.component';
-import { DetalleVentaConfig } from './detalle-venta.config';
+import { Farmacia, Venta } from 'src/app/interfaces/models';
 import { CountryService } from 'src/app/services/country.service';
+import { FarmaciasService } from 'src/app/services/farmacias.service';
+import { InventarioService } from 'src/app/services/inventario.service';
+import { SessionService } from 'src/app/services/session.service';
+import { SharedService } from 'src/app/services/shared.service';
+import { UsuariosService } from 'src/app/services/usuarios.service';
+import { VentasService } from 'src/app/services/ventas.service';
+import { DetalleVentaConfig } from './detalle-venta.config';
+import { FileValidator } from './FileValidator';
 
 @Component({
   selector: 'app-detalle-venta',
@@ -222,6 +222,14 @@ export class DetalleVenta implements OnInit, OnDestroy {
 
     if (this.selectedUser) {
       this.ventaForm.patchValue({ userCtrl: this.selectedUser });
+    }
+
+    if (this.isVentaDisabled) {
+      this.ventaForm.get('noPurchase')?.disable();
+      this.ventaForm.get('observation')?.disable();
+    } else {
+      this.ventaForm.get('noPurchase')?.enable();
+      this.ventaForm.get('observation')?.enable();
     }
   }
 

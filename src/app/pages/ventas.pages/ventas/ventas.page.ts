@@ -182,12 +182,11 @@ export class VentasPage implements AfterViewInit, OnInit {
   }
 
   public checkCancel(row: any) {
-    if (this.sessionService.getUserData().Role === UserRoles.Admin.toString()) {
-      return true;
-    }
-
     if (row.state == 'Anulada') {
       return false;
+    }
+    if (this.sessionService.getUserData().Role === UserRoles.Admin.toString()) {
+      return true;
     }
     const dateShiped = new Date(row.dateShiped);
     const dateToday = new Date();
