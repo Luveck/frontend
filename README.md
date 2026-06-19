@@ -1,32 +1,117 @@
-# LuveckFrontend
+# Luveck Frontend
 
-## Credenciales Portal Azure:
- -email: coding@yourappland.com
- -contraseña: @ppl@nd&2022 
- -url: https://luveck.azurewebsites.net
- 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 14.0.1.
+Aplicación web de administración de Luveck construida con [Angular](https://angular.io/) 14 y [Angular Material](https://material.angular.io/). Gestiona cadenas, farmacias, inventario, ventas, canjes, médicos y la seguridad/accesibilidad de la plataforma.
 
-## Development server
+## Requisitos previos
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+Antes de empezar asegúrate de tener instalado:
 
-## Code scaffolding
+- **Node.js** 16.10.0 o superior (compatible con Angular CLI 14). Recomendado: la última LTS 16.x o 18.x. Descárgalo desde [nodejs.org](https://nodejs.org/).
+- **npm** 8 o superior (se instala junto con Node.js).
+- **Angular CLI 14** de forma global:
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+  ```bash
+  npm install -g @angular/cli@14
+  ```
 
-## Build
+- **Git** para clonar el repositorio.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+Verifica las versiones instaladas:
 
-## Running unit tests
+```bash
+node -v
+npm -v
+ng version
+```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+## Instalación
 
-## Running end-to-end tests
+1. Clona el repositorio:
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+   ```bash
+   git clone <url-del-repositorio>
+   cd "Front Luveck"
+   ```
 
-## Further help
+2. Instala las dependencias del proyecto:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+   ```bash
+   npm install
+   ```
+
+## Configuración del entorno
+
+La configuración (URL del API y menú de la aplicación) vive en los archivos de entorno:
+
+- `src/environments/environment.ts` — usado en desarrollo.
+- `src/environments/environment.prod.ts` — usado en la build de producción (Angular reemplaza el archivo automáticamente al compilar con `--configuration production`).
+
+Ajusta el valor de `urlApi` para que apunte al backend que quieras consumir. Por ejemplo:
+
+```ts
+export const environment = {
+  production: false,
+  urlApi: 'https://localhost:7150/api', // backend local
+  // ...
+};
+```
+
+## Ejecutar en desarrollo
+
+Levanta el servidor de desarrollo:
+
+```bash
+npm start
+```
+
+o, de forma equivalente:
+
+```bash
+ng serve
+```
+
+Abre el navegador en [http://localhost:4200/](http://localhost:4200/). La aplicación se recarga automáticamente al guardar cambios en el código fuente.
+
+## Compilar para producción
+
+Genera la build optimizada de producción:
+
+```bash
+npm run build
+```
+
+Los artefactos resultantes quedan en el directorio `dist/`.
+
+Para una build de desarrollo en modo *watch* (recompila al detectar cambios):
+
+```bash
+npm run watch
+```
+
+## Pruebas
+
+Ejecuta las pruebas unitarias con [Karma](https://karma-runner.github.io):
+
+```bash
+npm test
+```
+
+o:
+
+```bash
+ng test
+```
+
+## Generar componentes (scaffolding)
+
+Para crear nuevos artefactos con Angular CLI:
+
+```bash
+ng generate component nombre-componente
+```
+
+También puedes generar `directive`, `pipe`, `service`, `class`, `guard`, `interface`, `enum` o `module`.
+
+## Más ayuda
+
+Para más información sobre Angular CLI usa `ng help` o consulta la [referencia oficial de Angular CLI](https://angular.io/cli).

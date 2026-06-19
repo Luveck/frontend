@@ -6,7 +6,9 @@ export const environment = {
   production: false,
   urlSecuritySevice: '',
   urlAdminSevice: '',
-  urlApi: 'https://localhost:7150/api',
+  // urlApi: 'https://localhost:7150/api',
+  urlApi: 'https://security.dev.pasionporvivir.luveck.com/api',
+
   menu: [
     {
       text: 'Inicio',

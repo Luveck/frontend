@@ -1,29 +1,21 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import {
-  AfterViewInit,
-  Component,
-  Input,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { Venta } from 'src/app/interfaces/models';
-import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
-import { VentasService } from 'src/app/services/ventas.service';
-import { DataService } from 'src/app/services/data.service';
-import { ModalReportComponent } from 'src/app/components/modal-report/modal-report.component';
-import { SharedService } from 'src/app/services/shared.service';
-import { FilterPurchase } from 'src/app/entities/filter-purchases.entiy';
-import { SessionService } from 'src/app/services/session.service';
-import { CountryService } from 'src/app/services/country.service';
-import { ExchangeService } from 'src/app/services/exchange.service';
-import { FarmaciasService } from 'src/app/services/farmacias.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { filter } from 'rxjs';
+import { DialogConfComponent } from 'src/app/components/dialog-conf/dialog-conf.component';
+import { FilterPurchase } from 'src/app/entities/filter-purchases.entiy';
+import { Venta } from 'src/app/interfaces/models';
+import { CountryService } from 'src/app/services/country.service';
+import { DataService } from 'src/app/services/data.service';
+import { ExchangeService } from 'src/app/services/exchange.service';
+import { FarmaciasService } from 'src/app/services/farmacias.service';
+import { SessionService } from 'src/app/services/session.service';
+import { SharedService } from 'src/app/services/shared.service';
 
 @Component({
   selector: 'app-exchange',
@@ -54,6 +46,7 @@ export class ExchangePage implements OnInit {
     'UserApproval',
     'UserExchange',
     'PharmacyName',
+    'ProductName',
     'QuantityGiven',
   ];
   dataSource = new MatTableDataSource<Venta>(this.ELEMENT_DATA);
